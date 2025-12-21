@@ -22,10 +22,12 @@ export type Database = {
           duration_seconds: number | null
           id: string
           is_free_preview: boolean | null
+          mux_asset_id: string | null
           mux_playback_id: string | null
           position: number
           title: string
           updated_at: string
+          upload_status: string | null
           video_url: string | null
         }
         Insert: {
@@ -35,10 +37,12 @@ export type Database = {
           duration_seconds?: number | null
           id?: string
           is_free_preview?: boolean | null
+          mux_asset_id?: string | null
           mux_playback_id?: string | null
           position?: number
           title: string
           updated_at?: string
+          upload_status?: string | null
           video_url?: string | null
         }
         Update: {
@@ -48,10 +52,12 @@ export type Database = {
           duration_seconds?: number | null
           id?: string
           is_free_preview?: boolean | null
+          mux_asset_id?: string | null
           mux_playback_id?: string | null
           position?: number
           title?: string
           updated_at?: string
+          upload_status?: string | null
           video_url?: string | null
         }
         Relationships: [
