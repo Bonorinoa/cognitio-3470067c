@@ -35,21 +35,25 @@ const CoursesPage = () => {
           image_url,
           price,
           category,
-          chapters (id)
+          chapters (id, duration_seconds)
         `)
         .eq("is_published", true);
 
       if (error) throw error;
 
-      return data.map((course) => ({
-        id: course.id,
-        title: course.title,
-        description: course.description || "",
-        image: course.image_url || "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600",
-        price: Number(course.price),
-        chaptersCount: course.chapters?.length || 0,
-        category: course.category || "Development",
-      }));
+      return data.map((course) => {
+        const totalDuration = course.chapters?.reduce((sum, ch) => sum + (ch.duration_seconds || 0), 0) || 0;
+        return {
+          id: course.id,
+          title: course.title,
+          description: course.description || "",
+          image: course.image_url || "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600",
+          price: Number(course.price),
+          chaptersCount: course.chapters?.length || 0,
+          category: course.category || "Development",
+          totalDurationSeconds: totalDuration,
+        };
+      });
     },
   });
 
