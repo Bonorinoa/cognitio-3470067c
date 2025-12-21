@@ -25,10 +25,16 @@ serve(async (req) => {
     if (!stripeKey) throw new Error("STRIPE_SECRET_KEY is not set");
     logStep("Stripe key verified");
 
-    // Create Supabase client
+    // Create Supabase clients
     const supabaseClient = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
       Deno.env.get("SUPABASE_ANON_KEY") ?? ""
+    );
+    
+    const supabaseAdmin = createClient(
+      Deno.env.get("SUPABASE_URL") ?? "",
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
+      { auth: { persistSession: false } }
     );
 
     // Get the authorization header
@@ -45,10 +51,22 @@ serve(async (req) => {
     logStep("User authenticated", { userId: user.id, email: user.email });
 
     // Parse request body
-    const { courseId, priceId, courseTitle, price } = await req.json();
-    logStep("Request parsed", { courseId, priceId, courseTitle, price });
+    const { courseId } = await req.json();
+    logStep("Request parsed", { courseId });
 
     if (!courseId) throw new Error("Course ID is required");
+
+    // Fetch course details from database
+    const { data: course, error: courseError } = await supabaseAdmin
+      .from("courses")
+      .select("id, title, description, price, stripe_product_id, stripe_price_id")
+      .eq("id", courseId)
+      .single();
+
+    if (courseError || !course) {
+      throw new Error(`Course not found: ${courseError?.message || "Unknown error"}`);
+    }
+    logStep("Course fetched", { title: course.title, price: course.price });
 
     const stripe = new Stripe(stripeKey, { apiVersion: "2025-08-27.basil" });
 
@@ -62,33 +80,55 @@ serve(async (req) => {
 
     const origin = req.headers.get("origin") || "https://preview--hlnvfkturjctxbiikfoe.lovable.app";
     
-    let lineItems;
+    let priceId = course.stripe_price_id;
     
-    if (priceId) {
-      // Use existing Stripe price
-      lineItems = [{ price: priceId, quantity: 1 }];
-      logStep("Using existing Stripe price", { priceId });
-    } else {
-      // Create price_data for ad-hoc pricing
-      lineItems = [{
-        price_data: {
-          currency: "usd",
-          product_data: {
-            name: courseTitle || "Course Purchase",
-            metadata: { courseId },
-          },
-          unit_amount: Math.round((price || 0) * 100), // Convert to cents
-        },
-        quantity: 1,
-      }];
-      logStep("Using ad-hoc pricing", { price });
+    // If no Stripe price exists, create product and price
+    if (!priceId) {
+      logStep("No Stripe price found, creating product and price");
+      
+      let productId = course.stripe_product_id;
+      
+      // Create product if needed
+      if (!productId) {
+        const product = await stripe.products.create({
+          name: course.title,
+          description: course.description || undefined,
+          metadata: { courseId: course.id },
+        });
+        productId = product.id;
+        logStep("Created Stripe product", { productId });
+      }
+      
+      // Create price
+      const price = await stripe.prices.create({
+        product: productId,
+        currency: "usd",
+        unit_amount: Math.round(Number(course.price) * 100), // Convert to cents
+      });
+      priceId = price.id;
+      logStep("Created Stripe price", { priceId });
+      
+      // Update course with Stripe IDs
+      const { error: updateError } = await supabaseAdmin
+        .from("courses")
+        .update({
+          stripe_product_id: productId,
+          stripe_price_id: priceId,
+        })
+        .eq("id", courseId);
+      
+      if (updateError) {
+        logStep("Warning: Failed to update course with Stripe IDs", { error: updateError.message });
+      } else {
+        logStep("Updated course with Stripe IDs");
+      }
     }
 
     // Create checkout session
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       customer_email: customerId ? undefined : user.email,
-      line_items: lineItems,
+      line_items: [{ price: priceId, quantity: 1 }],
       mode: "payment",
       success_url: `${origin}/course/${courseId}?payment=success`,
       cancel_url: `${origin}/course/${courseId}?payment=canceled`,
