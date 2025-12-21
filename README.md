@@ -1,24 +1,31 @@
-# Dark Bloom Learning Platform
+# LearnHub - Course Management System
 
 A modern, full-featured educational platform enabling teachers to create and sell online courses while providing students with an engaging learning experience.
 
-## 🚀 Features
+## 🎯 Project Status: Pre-MVP
 
-- **Course Management**: Create, publish, and manage courses with video content
-- **Video Learning**: Built-in video player with progress tracking
-- **User Dashboards**: Separate dashboards for students and teachers
-- **Payment Integration**: Stripe integration for course purchases
-- **Progress Tracking**: Automatic tracking of student progress through courses
-- **Analytics**: Revenue and enrollment analytics for teachers
-- **Responsive Design**: Mobile-first, fully responsive interface
-- **Dark/Light Mode**: Theme support with system preference detection
-- **Authentication**: Secure authentication via Supabase
+**Current Version:** 0.9.0 (Development)  
+**Last Updated:** December 2024
 
-For a complete list of features, see [FEATURES.md](./FEATURES.md).
+### What's Working
+- ✅ User authentication (signup/login)
+- ✅ Course creation with Mux video upload
+- ✅ Video playback on course pages
+- ✅ Stripe checkout integration
+- ✅ Course browsing and filtering
+- ✅ Student & teacher dashboards
+
+### In Progress
+- 🔄 Course image upload
+- 🔄 Progress tracking (mark complete)
+- 🔄 Course editing
+
+See **[DEVELOPMENT_PLAN.md](./DEVELOPMENT_PLAN.md)** for the complete MVP roadmap.
 
 ## 📚 Documentation
 
-- **[TECHNOLOGY_STACK.md](./TECHNOLOGY_STACK.md)** - Comprehensive technology stack and dependencies
+- **[DEVELOPMENT_PLAN.md](./DEVELOPMENT_PLAN.md)** - MVP roadmap and development strategy
+- **[TECHNOLOGY_STACK.md](./TECHNOLOGY_STACK.md)** - Comprehensive technology stack
 - **[FEATURES.md](./FEATURES.md)** - Detailed feature documentation
 - **[TESTING.md](./TESTING.md)** - Testing infrastructure and guidelines
 
@@ -105,12 +112,6 @@ npx vitest
 # Run tests with coverage
 npx vitest run --coverage
 ```
-
-### Test Coverage
-- 6 test files with 47 tests
-- 87% pass rate (41 passing, 6 failing)
-- Components: CourseCard, ChapterList, Navbar
-- Pages: Dashboard, TeacherDashboard, CreateCourse
 
 For detailed testing documentation, see [TESTING.md](./TESTING.md).
 
