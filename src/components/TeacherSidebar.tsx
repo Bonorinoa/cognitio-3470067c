@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import {
   LayoutDashboard,
@@ -10,6 +10,7 @@ import {
   GraduationCap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
 
 const menuItems = [
   { icon: LayoutDashboard, label: "Dashboard", href: "/teacher" },
@@ -21,7 +22,17 @@ const menuItems = [
 
 const TeacherSidebar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, signOut } = useAuth();
 
+  const fullName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'User';
+  const email = user?.email || '';
+  const initials = fullName.split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2);
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/');
+  };
   return (
     <div className="flex h-full w-64 flex-col border-r border-border bg-sidebar">
       {/* Logo */}
@@ -61,14 +72,14 @@ const TeacherSidebar = () => {
       <div className="border-t border-border p-4">
         <div className="mb-3 flex items-center gap-3">
           <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center">
-            <span className="text-sm font-medium text-primary">JD</span>
+            <span className="text-sm font-medium text-primary">{initials}</span>
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-foreground truncate">John Doe</p>
-            <p className="text-xs text-muted-foreground truncate">john@example.com</p>
+            <p className="text-sm font-medium text-foreground truncate">{fullName}</p>
+            <p className="text-xs text-muted-foreground truncate">{email}</p>
           </div>
         </div>
-        <Button variant="ghost" size="sm" className="w-full justify-start text-muted-foreground">
+        <Button variant="ghost" size="sm" className="w-full justify-start text-muted-foreground" onClick={handleSignOut}>
           <LogOut className="mr-2 h-4 w-4" />
           Sign Out
         </Button>
