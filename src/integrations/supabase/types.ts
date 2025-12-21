@@ -73,6 +73,8 @@ export type Database = {
           image_url: string | null
           is_published: boolean | null
           price: number
+          stripe_price_id: string | null
+          stripe_product_id: string | null
           teacher_id: string
           title: string
           updated_at: string
@@ -85,6 +87,8 @@ export type Database = {
           image_url?: string | null
           is_published?: boolean | null
           price?: number
+          stripe_price_id?: string | null
+          stripe_product_id?: string | null
           teacher_id: string
           title: string
           updated_at?: string
@@ -97,6 +101,8 @@ export type Database = {
           image_url?: string | null
           is_published?: boolean | null
           price?: number
+          stripe_price_id?: string | null
+          stripe_product_id?: string | null
           teacher_id?: string
           title?: string
           updated_at?: string
