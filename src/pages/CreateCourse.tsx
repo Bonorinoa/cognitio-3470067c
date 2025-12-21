@@ -15,8 +15,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Upload, Plus, Trash2, GripVertical, Save, ArrowLeft } from "lucide-react";
+import { Upload, Plus, Trash2, GripVertical, Save, ArrowLeft, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface Chapter {
   id: string;
@@ -27,6 +29,7 @@ interface Chapter {
 
 const CreateCourse = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -34,6 +37,8 @@ const CreateCourse = () => {
   const [chapters, setChapters] = useState<Chapter[]>([
     { id: "1", title: "", videoUrl: "", isFreePreview: false },
   ]);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isPublishing, setIsPublishing] = useState(false);
 
   const addChapter = () => {
     setChapters([
@@ -54,14 +59,74 @@ const CreateCourse = () => {
     );
   };
 
-  const handleSave = () => {
-    toast.success("Course saved successfully!");
+  const saveCourse = async (publish: boolean) => {
+    if (!user) {
+      toast.error("You must be logged in to create a course");
+      return;
+    }
+
+    if (!title.trim()) {
+      toast.error("Please enter a course title");
+      return;
+    }
+
+    const validChapters = chapters.filter(c => c.title.trim());
+    if (validChapters.length === 0) {
+      toast.error("Please add at least one chapter with a title");
+      return;
+    }
+
+    if (publish) {
+      setIsPublishing(true);
+    } else {
+      setIsSaving(true);
+    }
+
+    try {
+      // Insert the course
+      const { data: courseData, error: courseError } = await supabase
+        .from("courses")
+        .insert({
+          title: title.trim(),
+          description: description.trim() || null,
+          price: parseFloat(price) || 0,
+          category: category || "Development",
+          teacher_id: user.id,
+          is_published: publish,
+        })
+        .select()
+        .single();
+
+      if (courseError) throw courseError;
+
+      // Insert chapters
+      const chaptersToInsert = validChapters.map((chapter, index) => ({
+        course_id: courseData.id,
+        title: chapter.title.trim(),
+        video_url: chapter.videoUrl.trim() || null,
+        is_free_preview: chapter.isFreePreview,
+        position: index,
+      }));
+
+      const { error: chaptersError } = await supabase
+        .from("chapters")
+        .insert(chaptersToInsert);
+
+      if (chaptersError) throw chaptersError;
+
+      toast.success(publish ? "Course published successfully!" : "Course saved as draft!");
+      navigate("/teacher");
+    } catch (error: any) {
+      console.error("Error saving course:", error);
+      toast.error(error.message || "Failed to save course");
+    } finally {
+      setIsSaving(false);
+      setIsPublishing(false);
+    }
   };
 
-  const handlePublish = () => {
-    toast.success("Course published!");
-    navigate("/teacher");
-  };
+  const handleSave = () => saveCourse(false);
+  const handlePublish = () => saveCourse(true);
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -87,11 +152,18 @@ const CreateCourse = () => {
             </div>
           </div>
           <div className="flex gap-3">
-            <Button variant="outline" onClick={handleSave}>
-              <Save className="mr-2 h-4 w-4" />
+            <Button variant="outline" onClick={handleSave} disabled={isSaving || isPublishing}>
+              {isSaving ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <Save className="mr-2 h-4 w-4" />
+              )}
               Save Draft
             </Button>
-            <Button onClick={handlePublish}>Publish Course</Button>
+            <Button onClick={handlePublish} disabled={isSaving || isPublishing}>
+              {isPublishing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Publish Course
+            </Button>
           </div>
         </div>
 
@@ -146,11 +218,11 @@ const CreateCourse = () => {
                         <SelectValue placeholder="Select category" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="development">Development</SelectItem>
-                        <SelectItem value="design">Design</SelectItem>
-                        <SelectItem value="ai-ml">AI & ML</SelectItem>
-                        <SelectItem value="data-science">Data Science</SelectItem>
-                        <SelectItem value="mobile">Mobile</SelectItem>
+                        <SelectItem value="Development">Development</SelectItem>
+                        <SelectItem value="Design">Design</SelectItem>
+                        <SelectItem value="AI & ML">AI & ML</SelectItem>
+                        <SelectItem value="Data Science">Data Science</SelectItem>
+                        <SelectItem value="Mobile">Mobile</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
