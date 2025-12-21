@@ -75,9 +75,10 @@ describe('VideoPlayer', () => {
 
   it('renders with poster image', () => {
     const posterUrl = 'https://example.com/poster.jpg';
-    render(<VideoPlayer poster={posterUrl} />);
+    const { container } = render(<VideoPlayer poster={posterUrl} />);
     
-    const img = screen.getByAltText('');
+    const img = container.querySelector('img');
+    expect(img).toBeInTheDocument();
     expect(img).toHaveAttribute('src', posterUrl);
   });
 

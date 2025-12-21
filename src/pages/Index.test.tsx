@@ -59,8 +59,8 @@ describe('Index (Landing Page)', () => {
 
     render(<Index />);
     
-    // Check for main heading or key content in hero
-    expect(screen.getByRole('main')).toBeInTheDocument();
+    // Check for content in the page (not specific to main tag)
+    expect(screen.getByText(/Complete Web Development Bootcamp/i)).toBeInTheDocument();
   });
 
   it('shows featured courses', () => {
@@ -89,9 +89,9 @@ describe('Index (Landing Page)', () => {
 
     render(<Index />);
     
-    // Check for stats display
+    // Check for stats display - use more specific queries
     expect(screen.getByText(/Active Learners/i)).toBeInTheDocument();
-    expect(screen.getByText(/Courses/i)).toBeInTheDocument();
+    expect(screen.getByText(/50K\+/i)).toBeInTheDocument();
     expect(screen.getByText(/Completion Rate/i)).toBeInTheDocument();
   });
 
