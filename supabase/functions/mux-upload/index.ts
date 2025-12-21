@@ -21,7 +21,7 @@ serve(async (req) => {
       throw new Error("Mux credentials not configured");
     }
 
-    const { action, chapterId, assetId } = await req.json();
+    const { action, chapterId, assetId, uploadId } = await req.json();
     console.log(`Mux upload action: ${action}, chapterId: ${chapterId}`);
 
     // Create Supabase client for database operations
@@ -70,7 +70,6 @@ serve(async (req) => {
 
     if (action === "check-upload") {
       // Check upload status and get asset info
-      const { uploadId } = await req.json();
       console.log("Checking upload status for:", uploadId);
 
       const uploadResponse = await fetch(`https://api.mux.com/video/v1/uploads/${uploadId}`, {
