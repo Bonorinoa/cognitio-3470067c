@@ -155,12 +155,7 @@ const CoursePage = () => {
     
     try {
       const { data, error } = await supabase.functions.invoke("create-course-checkout", {
-        body: {
-          courseId: id,
-          priceId: course?.stripe_price_id,
-          courseTitle: course?.title,
-          price: course?.price,
-        },
+        body: { courseId: id },
       });
 
       if (error) throw error;
