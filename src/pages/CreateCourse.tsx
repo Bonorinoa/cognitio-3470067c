@@ -19,12 +19,15 @@ import { Upload, Plus, Trash2, GripVertical, Save, ArrowLeft, Loader2 } from "lu
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import VideoUpload from "@/components/VideoUpload";
 
 interface Chapter {
   id: string;
   title: string;
   videoUrl: string;
   isFreePreview: boolean;
+  muxPlaybackId?: string;
+  muxAssetId?: string;
 }
 
 const CreateCourse = () => {
@@ -56,6 +59,16 @@ const CreateCourse = () => {
   const updateChapter = (id: string, field: keyof Chapter, value: string | boolean) => {
     setChapters(
       chapters.map((c) => (c.id === id ? { ...c, [field]: value } : c))
+    );
+  };
+
+  const handleVideoUpload = (chapterId: string, playbackId: string, assetId: string) => {
+    setChapters(
+      chapters.map((c) =>
+        c.id === chapterId
+          ? { ...c, muxPlaybackId: playbackId, muxAssetId: assetId }
+          : c
+      )
     );
   };
 
@@ -104,8 +117,11 @@ const CreateCourse = () => {
         course_id: courseData.id,
         title: chapter.title.trim(),
         video_url: chapter.videoUrl.trim() || null,
+        mux_playback_id: chapter.muxPlaybackId || null,
+        mux_asset_id: chapter.muxAssetId || null,
         is_free_preview: chapter.isFreePreview,
         position: index,
+        upload_status: chapter.muxPlaybackId ? "ready" : "pending",
       }));
 
       const { error: chaptersError } = await supabase
@@ -284,13 +300,12 @@ const CreateCourse = () => {
                         }
                         className="bg-background border-border"
                       />
-                      <Input
-                        placeholder="Mux Video URL or Playback ID"
-                        value={chapter.videoUrl}
-                        onChange={(e) =>
-                          updateChapter(chapter.id, "videoUrl", e.target.value)
+                      <VideoUpload
+                        chapterId={chapter.id}
+                        currentPlaybackId={chapter.muxPlaybackId}
+                        onUploadComplete={(playbackId, assetId) =>
+                          handleVideoUpload(chapter.id, playbackId, assetId)
                         }
-                        className="bg-background border-border"
                       />
                     </div>
                     <Button
