@@ -1,1 +1,7 @@
 project_id = "hlnvfkturjctxbiikfoe"
+
+[functions.create-course-checkout]
+verify_jwt = false
+
+[functions.record-purchase]
+verify_jwt = false

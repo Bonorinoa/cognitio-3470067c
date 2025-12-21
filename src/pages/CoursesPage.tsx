@@ -2,8 +2,8 @@ import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import CourseCard from "@/components/CourseCard";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Select,
   SelectContent,
@@ -12,76 +12,65 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Search, Filter } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
-const allCourses = [
-  {
-    id: "1",
-    title: "Complete Web Development Bootcamp 2024",
-    description: "Learn HTML, CSS, JavaScript, React, Node.js, and more. Build real-world projects.",
-    image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600",
-    price: 89.99,
-    chaptersCount: 42,
-    category: "Development",
-  },
-  {
-    id: "2",
-    title: "Machine Learning & AI Fundamentals",
-    description: "Master Python, TensorFlow, and deep learning. From basics to advanced concepts.",
-    image: "https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=600",
-    price: 129.99,
-    chaptersCount: 38,
-    category: "AI & ML",
-  },
-  {
-    id: "3",
-    title: "UI/UX Design Masterclass",
-    description: "Create stunning user interfaces and experiences with Figma and design thinking.",
-    image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=600",
-    price: 79.99,
-    chaptersCount: 28,
-    category: "Design",
-  },
-  {
-    id: "4",
-    title: "Advanced React & TypeScript",
-    description: "Take your React skills to the next level with TypeScript, testing, and patterns.",
-    image: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=600",
-    price: 99.99,
-    chaptersCount: 35,
-    category: "Development",
-  },
-  {
-    id: "5",
-    title: "Data Science with Python",
-    description: "Learn data analysis, visualization, and machine learning with Python.",
-    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600",
-    price: 109.99,
-    chaptersCount: 45,
-    category: "Data Science",
-  },
-  {
-    id: "6",
-    title: "Mobile App Development with Flutter",
-    description: "Build beautiful cross-platform apps for iOS and Android with Flutter.",
-    image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=600",
-    price: 94.99,
-    chaptersCount: 32,
-    category: "Mobile",
-  },
-];
-
-const categories = ["All", "Development", "AI & ML", "Design", "Data Science", "Mobile"];
+const categories = ["All", "Development", "AI & ML", "Design", "Data Science", "Mobile", "Business"];
 
 const CoursesPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [sortBy, setSortBy] = useState("popular");
 
-  const filteredCourses = allCourses.filter((course) => {
+  // Fetch published courses from database
+  const { data: courses = [], isLoading } = useQuery({
+    queryKey: ["courses"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("courses")
+        .select(`
+          id,
+          title,
+          description,
+          image_url,
+          price,
+          category,
+          chapters (id)
+        `)
+        .eq("is_published", true);
+
+      if (error) throw error;
+
+      return data.map((course) => ({
+        id: course.id,
+        title: course.title,
+        description: course.description || "",
+        image: course.image_url || "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600",
+        price: Number(course.price),
+        chaptersCount: course.chapters?.length || 0,
+        category: course.category || "Development",
+      }));
+    },
+  });
+
+  const filteredCourses = courses.filter((course) => {
     const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory =
       selectedCategory === "All" || course.category === selectedCategory;
     return matchesSearch && matchesCategory;
+  });
+
+  // Sort courses
+  const sortedCourses = [...filteredCourses].sort((a, b) => {
+    switch (sortBy) {
+      case "price-low":
+        return a.price - b.price;
+      case "price-high":
+        return b.price - a.price;
+      case "newest":
+      default:
+        return 0;
+    }
   });
 
   return (
@@ -143,23 +132,41 @@ const CoursesPage = () => {
 
         {/* Results count */}
         <p className="text-sm text-muted-foreground mb-6">
-          Showing {filteredCourses.length} of {allCourses.length} courses
+          {isLoading ? "Loading..." : `Showing ${sortedCourses.length} of ${courses.length} courses`}
         </p>
 
+        {/* Loading state */}
+        {isLoading && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div key={i} className="space-y-4">
+                <Skeleton className="aspect-video w-full rounded-lg" />
+                <Skeleton className="h-6 w-3/4" />
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-1/2" />
+              </div>
+            ))}
+          </div>
+        )}
+
         {/* Courses Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredCourses.map((course) => (
-            <CourseCard key={course.id} {...course} />
-          ))}
-        </div>
+        {!isLoading && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {sortedCourses.map((course) => (
+              <CourseCard key={course.id} {...course} />
+            ))}
+          </div>
+        )}
 
         {/* Empty state */}
-        {filteredCourses.length === 0 && (
+        {!isLoading && sortedCourses.length === 0 && (
           <div className="text-center py-12">
             <Filter className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
             <h3 className="text-lg font-medium text-foreground mb-2">No courses found</h3>
             <p className="text-muted-foreground">
-              Try adjusting your search or filter criteria
+              {courses.length === 0 
+                ? "No courses have been published yet. Check back soon!" 
+                : "Try adjusting your search or filter criteria"}
             </p>
           </div>
         )}
