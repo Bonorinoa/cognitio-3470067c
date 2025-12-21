@@ -8,6 +8,7 @@ import {
   Settings,
   LogOut,
   GraduationCap,
+  Home,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
@@ -48,6 +49,14 @@ const TeacherSidebar = () => {
 
       {/* Navigation */}
       <nav className="flex-1 space-y-1 p-4">
+        <Link
+          to="/"
+          className="mb-4 flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
+        >
+          <Home className="h-5 w-5" />
+          Back to Main Site
+        </Link>
+        <div className="my-3 border-t border-border" />
         {menuItems.map((item) => {
           const isActive = location.pathname === item.href;
           return (
