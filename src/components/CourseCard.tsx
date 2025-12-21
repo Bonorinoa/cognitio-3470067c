@@ -12,6 +12,7 @@ interface CourseCardProps {
   chaptersCount: number;
   progress?: number;
   category?: string;
+  totalDurationSeconds?: number;
 }
 
 const CourseCard = ({
@@ -23,7 +24,19 @@ const CourseCard = ({
   chaptersCount,
   progress,
   category = "Development",
+  totalDurationSeconds = 0,
 }: CourseCardProps) => {
+  const formatTotalDuration = (seconds: number) => {
+    if (seconds === 0) return null;
+    const hours = Math.floor(seconds / 3600);
+    const mins = Math.floor((seconds % 3600) / 60);
+    if (hours > 0) {
+      return `${hours}h ${mins}m`;
+    }
+    return `${mins}m`;
+  };
+
+  const durationDisplay = formatTotalDuration(totalDurationSeconds);
   return (
     <Link to={`/course/${id}`}>
       <Card className="group overflow-hidden border-border bg-card transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10">
@@ -58,10 +71,12 @@ const CourseCard = ({
               <BookOpen className="h-4 w-4" />
               {chaptersCount} chapters
             </span>
-            <span className="flex items-center gap-1">
-              <Clock className="h-4 w-4" />
-              2h 30m
-            </span>
+            {durationDisplay && (
+              <span className="flex items-center gap-1">
+                <Clock className="h-4 w-4" />
+                {durationDisplay}
+              </span>
+            )}
           </div>
         </CardContent>
         <CardFooter className="border-t border-border p-4">
