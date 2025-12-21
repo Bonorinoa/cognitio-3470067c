@@ -20,6 +20,7 @@ interface Chapter {
   duration_seconds: number | null;
   is_free_preview: boolean | null;
   position: number;
+  mux_playback_id: string | null;
 }
 
 interface Course {
@@ -87,7 +88,8 @@ const CoursePage = () => {
             title,
             duration_seconds,
             is_free_preview,
-            position
+            position,
+            mux_playback_id
           )
         `)
         .eq("id", id)
@@ -244,6 +246,7 @@ const CoursePage = () => {
               {/* Video Player */}
               <div className="lg:col-span-2">
                 <VideoPlayer
+                  playbackId={currentChapter?.mux_playback_id || undefined}
                   poster={course.image_url || "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1200"}
                   title={currentChapter?.title}
                 />
