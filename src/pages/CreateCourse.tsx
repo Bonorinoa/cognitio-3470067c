@@ -37,6 +37,9 @@ const CreateCourse = () => {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("");
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>("");
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [chapters, setChapters] = useState<Chapter[]>([
     { id: "1", title: "", videoUrl: "", isFreePreview: false },
   ]);
@@ -48,6 +51,65 @@ const CreateCourse = () => {
       ...chapters,
       { id: Date.now().toString(), title: "", videoUrl: "", isFreePreview: false },
     ]);
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        toast.error("Please select a valid image file");
+        return;
+      }
+      
+      // Validate file size (2MB)
+      if (file.size > 2 * 1024 * 1024) {
+        toast.error("Image size should be less than 2MB");
+        return;
+      }
+      
+      setImageFile(file);
+      
+      // Create preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const uploadImage = async (): Promise<string | null> => {
+    if (!imageFile || !user) return null;
+    
+    setIsUploadingImage(true);
+    
+    try {
+      const fileExt = imageFile.name.split('.').pop();
+      const fileName = `${user.id}-${Date.now()}.${fileExt}`;
+      const filePath = `course-images/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('course-images')
+        .upload(filePath, imageFile, {
+          cacheControl: '3600',
+          upsert: false
+        });
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('course-images')
+        .getPublicUrl(filePath);
+
+      return publicUrl;
+    } catch (error: any) {
+      console.error('Error uploading image:', error);
+      toast.error(error.message || 'Failed to upload image');
+      return null;
+    } finally {
+      setIsUploadingImage(false);
+    }
   };
 
   const removeChapter = (id: string) => {
@@ -96,6 +158,12 @@ const CreateCourse = () => {
     }
 
     try {
+      // Upload image first if provided
+      let imageUrl = null;
+      if (imageFile) {
+        imageUrl = await uploadImage();
+      }
+      
       // Insert the course
       const { data: courseData, error: courseError } = await supabase
         .from("courses")
@@ -106,6 +174,7 @@ const CreateCourse = () => {
           category: category || "Development",
           teacher_id: user.id,
           is_published: publish,
+          image_url: imageUrl,
         })
         .select()
         .single();
@@ -168,7 +237,7 @@ const CreateCourse = () => {
             </div>
           </div>
           <div className="flex gap-3">
-            <Button variant="outline" onClick={handleSave} disabled={isSaving || isPublishing}>
+            <Button variant="outline" onClick={handleSave} disabled={isSaving || isPublishing || isUploadingImage}>
               {isSaving ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : (
@@ -176,7 +245,7 @@ const CreateCourse = () => {
               )}
               Save Draft
             </Button>
-            <Button onClick={handlePublish} disabled={isSaving || isPublishing}>
+            <Button onClick={handlePublish} disabled={isSaving || isPublishing || isUploadingImage}>
               {isPublishing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Publish Course
             </Button>
@@ -334,15 +403,40 @@ const CreateCourse = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="border-2 border-dashed border-border rounded-lg p-8 text-center hover:border-primary/50 transition-colors cursor-pointer">
-                  <Upload className="mx-auto h-10 w-10 text-muted-foreground mb-3" />
-                  <p className="text-sm text-muted-foreground mb-1">
-                    Click to upload or drag and drop
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    PNG, JPG up to 2MB
-                  </p>
-                </div>
+                <input
+                  type="file"
+                  id="course-image"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="hidden"
+                />
+                <label
+                  htmlFor="course-image"
+                  className="border-2 border-dashed border-border rounded-lg p-8 text-center hover:border-primary/50 transition-colors cursor-pointer block"
+                >
+                  {imagePreview ? (
+                    <div className="space-y-3">
+                      <img 
+                        src={imagePreview} 
+                        alt="Course preview" 
+                        className="mx-auto h-32 w-auto rounded-lg object-cover"
+                      />
+                      <p className="text-sm text-muted-foreground">
+                        Click to change image
+                      </p>
+                    </div>
+                  ) : (
+                    <>
+                      <Upload className="mx-auto h-10 w-10 text-muted-foreground mb-3" />
+                      <p className="text-sm text-muted-foreground mb-1">
+                        Click to upload or drag and drop
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        PNG, JPG up to 2MB
+                      </p>
+                    </>
+                  )}
+                </label>
               </CardContent>
             </Card>
 
