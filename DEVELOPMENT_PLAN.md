@@ -34,16 +34,21 @@ LearnHub is a course management system enabling teachers to create and sell vide
 
 | Feature | Current State | Remaining Work |
 |---------|---------------|----------------|
-| Course image upload | UI placeholder only | Implement Supabase storage upload |
-| Chapter access logic | Works for purchasers | Fix access for course owners/teachers |
-| Progress tracking | DB schema exists | Implement completion marking UI |
 | Teacher analytics | Basic UI exists | Connect to real data |
+
+### ✅ Recently Completed (December 2024)
+
+| Feature | Status | Notes |
+|---------|--------|-------|
+| Course image upload | ✅ Complete | Supabase storage upload with validation |
+| Chapter access logic | ✅ Complete | Teachers can access their own courses |
+| Progress tracking | ✅ Complete | Mark complete button and persistence |
+| UI cleanup | ✅ Complete | Removed unused "Watch Demo" button |
 
 ### ❌ Not Started (MVP Required)
 
 | Feature | Priority | Effort |
 |---------|----------|--------|
-| Mark chapter as complete | High | Small |
 | Course editing | High | Medium |
 | Profile management | Medium | Small |
 | Password reset flow | Medium | Small |
@@ -81,35 +86,37 @@ LearnHub is a course management system enabling teachers to create and sell vide
 
 ## Development Phases
 
-### Phase 1: Core Fixes (Week 1)
+### Phase 1: Core Fixes (Week 1) ✅ COMPLETED
 **Goal:** Fix existing functionality gaps
 
-| Task | Priority | Complexity | Description |
-|------|----------|------------|-------------|
-| Fix chapter access for teachers | High | Small | Teachers should always access their own course videos |
-| Implement course image upload | High | Medium | Supabase storage + UI integration |
-| Fix forwardRef warnings | Low | Small | Add forwardRef to Badge, ChapterList |
-| Clean up unused code | Low | Small | Remove dead files, unused imports |
+| Task | Priority | Complexity | Status | Notes |
+|------|----------|------------|--------|-------|
+| Fix chapter access for teachers | High | Small | ✅ Complete | Teachers can now access their own course videos |
+| Implement course image upload | High | Medium | ✅ Complete | Supabase storage with file validation |
+| Remove unused UI elements | Low | Small | ✅ Complete | Removed "Watch Demo" button |
+| Fix forwardRef warnings | Low | Small | ⏸️ Deferred | Not critical for MVP |
+| Clean up unused code | Low | Small | ⏸️ Deferred | Not critical for MVP |
 
 **Deliverables:**
-- Course owners can always play their videos
-- Teachers can upload course thumbnails
-- Zero console warnings
+- ✅ Course owners can always play their videos
+- ✅ Teachers can upload course thumbnails
+- ✅ Improved UI/UX with removal of placeholder buttons
 
-### Phase 2: Progress Tracking (Week 2)
+### Phase 2: Progress Tracking (Week 2) ✅ COMPLETED
 **Goal:** Complete student progress features
 
-| Task | Priority | Complexity | Description |
-|------|----------|------------|-------------|
-| Mark chapter complete button | High | Small | UI button to mark current chapter done |
-| Auto-complete on video end | Medium | Medium | Detect video completion event |
-| Progress persistence | High | Small | Save progress to user_progress table |
-| Resume functionality | Medium | Small | Start from last watched chapter |
+| Task | Priority | Complexity | Status | Notes |
+|------|----------|------------|--------|-------|
+| Mark chapter complete button | High | Small | ✅ Complete | Button shown for purchased courses |
+| Progress persistence | High | Small | ✅ Complete | Saves to user_progress table |
+| Chapter completion display | High | Small | ✅ Complete | Checkmarks shown in chapter list |
+| Auto-complete on video end | Medium | Medium | ⏸️ Deferred | Can be added later |
+| Resume functionality | Medium | Small | ⏸️ Deferred | Can be added later |
 
 **Deliverables:**
-- Students can manually mark chapters complete
-- Progress persists across sessions
-- Dashboard shows accurate progress
+- ✅ Students can manually mark chapters complete
+- ✅ Progress persists across sessions
+- ✅ Chapter list shows completion status
 
 ### Phase 3: Course Editing (Week 2-3)
 **Goal:** Allow teachers to edit published courses
@@ -251,9 +258,61 @@ VALUES ('course-images', 'course-images', true);
 
 ## Next Steps
 
-1. **Immediate:** Fix chapter access logic for course owners
-2. **This week:** Implement course image upload
-3. **Next sprint:** Complete progress tracking features
+### Completed (December 2024)
+1. ✅ Fixed chapter access logic for course owners
+2. ✅ Implemented course image upload with Supabase storage
+3. ✅ Completed progress tracking features (mark complete, display status)
+4. ✅ Removed unused UI elements (Watch Demo button)
+
+### Immediate Priorities
+1. **Course Editing**: Allow teachers to edit published courses
+2. **Testing & Validation**: Comprehensive testing of all implemented features
+3. **User Management**: Profile settings and password reset
+4. **Analytics**: Connect teacher dashboard to real data
+
+---
+
+## Recent Changes (December 22, 2024)
+
+### 1. UI/UX Improvements
+- **Removed "Watch Demo" button** from landing page (Index.tsx)
+  - Was pointing to dashboard which doesn't make sense for non-authenticated users
+  - Cleaned up unused Play icon import
+
+### 2. Access Control Fixes
+- **Fixed teacher access to own courses** (CoursePage.tsx)
+  - Added `isOwner` check: `user?.id === course?.teacher_id`
+  - Updated `hasAccess` logic: `hasPurchased || isOwner`
+  - Teachers now see "Your Course" badge instead of purchase button
+  - Teachers can view all chapters without purchasing
+
+### 3. Progress Tracking Implementation
+- **Added progress tracking to CoursePage.tsx:**
+  - Queries `user_progress` table for completion status
+  - Displays "Mark as Complete" button for purchased courses
+  - Shows checkmarks for completed chapters in chapter list
+  - Persists progress via `handleMarkComplete` function
+  - Uses `upsert` to update existing or create new progress records
+
+### 4. Course Image Upload
+- **Implemented full image upload in CreateCourse.tsx:**
+  - File input with validation (image type, 2MB max)
+  - Image preview before upload
+  - Upload to Supabase storage (`course-images` bucket)
+  - Saves public URL to course record
+  - Disabled save buttons during upload
+  
+- **Created storage migration:**
+  - Migration: `20251222201400_create_course_images_bucket.sql`
+  - Public bucket for viewing
+  - RLS policies for authenticated uploads
+  - User-specific update/delete permissions
+
+### 5. Database Updates
+- **Progress tracking utilizes existing schema:**
+  - Table: `user_progress`
+  - Columns: `user_id`, `chapter_id`, `is_completed`, `completed_at`
+  - Unique constraint on `(user_id, chapter_id)`
 
 ---
 
