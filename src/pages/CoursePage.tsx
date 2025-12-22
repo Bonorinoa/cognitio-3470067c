@@ -167,9 +167,9 @@ const CoursePage = () => {
   const isOwner = user?.id === course?.teacher_id;
   
   // Check if current chapter is completed
-  const isCurrentChapterCompleted = userProgress?.find(
+  const isCurrentChapterCompleted = userProgress?.some(
     p => p.chapter_id === currentChapterId && p.is_completed
-  );
+  ) ?? false;
 
   const handlePurchase = async () => {
     if (!user) {
