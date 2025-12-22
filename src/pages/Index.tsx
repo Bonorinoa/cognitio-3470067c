@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import Navbar from "@/components/Navbar";
 import CourseCard from "@/components/CourseCard";
 import heroImage from "@/assets/hero-bg.jpg";
-import { ArrowRight, Play, Users, BookOpen, Award, Star } from "lucide-react";
+import { ArrowRight, Users, BookOpen, Award, Star } from "lucide-react";
 
 const featuredCourses = [
   {
@@ -80,12 +80,6 @@ const Index = () => {
               <Button size="lg" className="min-w-[180px]">
                 Explore Courses
                 <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
-            <Link to="/dashboard">
-              <Button size="lg" variant="outline" className="min-w-[180px]">
-                <Play className="mr-2 h-5 w-5" />
-                Watch Demo
               </Button>
             </Link>
           </div>

@@ -45,6 +45,7 @@ const CoursePage = () => {
   const { user, session } = useAuth();
   const [currentChapterId, setCurrentChapterId] = useState<string | null>(null);
   const [isCheckoutLoading, setIsCheckoutLoading] = useState(false);
+  const [isMarkingComplete, setIsMarkingComplete] = useState(false);
 
   // Check for payment success
   useEffect(() => {
@@ -133,6 +134,26 @@ const CoursePage = () => {
     enabled: !!id && !!user,
   });
 
+  // Fetch user progress for this course
+  const { data: userProgress, refetch: refetchProgress } = useQuery({
+    queryKey: ["progress", id, user?.id],
+    queryFn: async () => {
+      if (!user || !course) return [];
+      
+      const chapterIds = course.chapters.map(ch => ch.id);
+      
+      const { data, error } = await supabase
+        .from("user_progress")
+        .select("chapter_id, is_completed, completed_at")
+        .eq("user_id", user.id)
+        .in("chapter_id", chapterIds);
+
+      if (error) throw error;
+      return data || [];
+    },
+    enabled: !!id && !!user && !!course,
+  });
+
   // Set initial chapter
   useEffect(() => {
     if (course?.chapters?.length && !currentChapterId) {
@@ -141,6 +162,14 @@ const CoursePage = () => {
   }, [course, currentChapterId]);
 
   const currentChapter = course?.chapters?.find((c) => c.id === currentChapterId);
+  
+  // Check if user is the course owner (teacher)
+  const isOwner = user?.id === course?.teacher_id;
+  
+  // Check if current chapter is completed
+  const isCurrentChapterCompleted = userProgress?.find(
+    p => p.chapter_id === currentChapterId && p.is_completed
+  );
 
   const handlePurchase = async () => {
     if (!user) {
@@ -172,6 +201,38 @@ const CoursePage = () => {
       toast.error(error.message || "Failed to start checkout");
     } finally {
       setIsCheckoutLoading(false);
+    }
+  };
+
+  const handleMarkComplete = async () => {
+    if (!user || !currentChapterId) {
+      toast.error("Please sign in to track progress");
+      return;
+    }
+
+    setIsMarkingComplete(true);
+    
+    try {
+      const { error } = await supabase
+        .from("user_progress")
+        .upsert({
+          user_id: user.id,
+          chapter_id: currentChapterId,
+          is_completed: true,
+          completed_at: new Date().toISOString(),
+        }, {
+          onConflict: "user_id,chapter_id",
+        });
+
+      if (error) throw error;
+      
+      toast.success("Chapter marked as complete!");
+      refetchProgress();
+    } catch (error: any) {
+      console.error("Error marking complete:", error);
+      toast.error(error.message || "Failed to mark chapter as complete");
+    } finally {
+      setIsMarkingComplete(false);
     }
   };
 
@@ -225,6 +286,7 @@ const CoursePage = () => {
     title: ch.title,
     duration: formatDuration(ch.duration_seconds),
     isPreview: ch.is_free_preview || false,
+    isCompleted: userProgress?.find(p => p.chapter_id === ch.id && p.is_completed) ? true : false,
   }));
 
   const features = [
@@ -250,6 +312,34 @@ const CoursePage = () => {
                   poster={course.image_url || "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1200"}
                   title={currentChapter?.title}
                 />
+                {/* Mark Complete Button - Only show if user has access and is not owner */}
+                {(hasPurchased && !isOwner) && currentChapter && (
+                  <div className="mt-4">
+                    <Button
+                      onClick={handleMarkComplete}
+                      disabled={isMarkingComplete || isCurrentChapterCompleted}
+                      variant={isCurrentChapterCompleted ? "outline" : "default"}
+                      className="w-full"
+                    >
+                      {isMarkingComplete ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Marking...
+                        </>
+                      ) : isCurrentChapterCompleted ? (
+                        <>
+                          <Check className="mr-2 h-4 w-4" />
+                          Completed
+                        </>
+                      ) : (
+                        <>
+                          <Check className="mr-2 h-4 w-4" />
+                          Mark as Complete
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                )}
                 <div className="mt-4">
                   <h1 className="text-2xl font-bold text-foreground mb-2">
                     {course.title}
@@ -275,7 +365,12 @@ const CoursePage = () => {
               <div className="lg:col-span-1">
                 <Card className="sticky top-20 border-border bg-card">
                   <CardContent className="p-6">
-                    {!hasPurchased ? (
+                    {isOwner ? (
+                      <Badge className="w-full justify-center py-2 mb-6 bg-primary/20 text-primary border-primary/30">
+                        <Check className="mr-2 h-4 w-4" />
+                        Your Course
+                      </Badge>
+                    ) : !hasPurchased ? (
                       <>
                         <div className="text-center mb-6">
                           <span className="text-4xl font-bold text-foreground">
@@ -357,7 +452,7 @@ const CoursePage = () => {
                 chapters={chaptersForList}
                 currentChapterId={currentChapterId || ""}
                 onSelectChapter={setCurrentChapterId}
-                hasAccess={hasPurchased || false}
+                hasAccess={hasPurchased || isOwner || false}
               />
             </div>
           </div>
