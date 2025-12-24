@@ -1,40 +1,13 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 import Navbar from "@/components/Navbar";
 import CourseCard from "@/components/CourseCard";
 import heroImage from "@/assets/hero-bg.jpg";
-import { ArrowRight, Users, BookOpen, Award, Star } from "lucide-react";
-
-const featuredCourses = [
-  {
-    id: "1",
-    title: "Complete Web Development Bootcamp 2024",
-    description: "Learn HTML, CSS, JavaScript, React, Node.js, and more. Build real-world projects.",
-    image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600",
-    price: 89.99,
-    chaptersCount: 42,
-    category: "Development",
-  },
-  {
-    id: "2",
-    title: "Machine Learning & AI Fundamentals",
-    description: "Master Python, TensorFlow, and deep learning. From basics to advanced concepts.",
-    image: "https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=600",
-    price: 129.99,
-    chaptersCount: 38,
-    category: "AI & ML",
-  },
-  {
-    id: "3",
-    title: "UI/UX Design Masterclass",
-    description: "Create stunning user interfaces and experiences with Figma and design thinking.",
-    image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=600",
-    price: 79.99,
-    chaptersCount: 28,
-    category: "Design",
-  },
-];
+import { ArrowRight, Users, BookOpen, Award } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 const stats = [
   { icon: Users, value: "50K+", label: "Active Learners" },
@@ -43,6 +16,39 @@ const stats = [
 ];
 
 const Index = () => {
+  // Fetch featured courses from database
+  const { data: featuredCourses, isLoading } = useQuery({
+    queryKey: ["featured-courses"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("courses")
+        .select(`
+          id,
+          title,
+          description,
+          image_url,
+          price,
+          category,
+          chapters (id)
+        `)
+        .eq("is_featured", true)
+        .eq("is_published", true)
+        .limit(6);
+
+      if (error) throw error;
+
+      return (data || []).map(course => ({
+        id: course.id,
+        title: course.title,
+        description: course.description || "",
+        image: course.image_url || "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600",
+        price: course.price,
+        chaptersCount: course.chapters?.length || 0,
+        category: course.category || "General",
+      }));
+    },
+  });
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -113,11 +119,28 @@ const Index = () => {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {featuredCourses.map((course) => (
-              <CourseCard key={course.id} {...course} />
-            ))}
-          </div>
+          {isLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[1, 2, 3].map((i) => (
+                <Skeleton key={i} className="h-80 w-full rounded-lg" />
+              ))}
+            </div>
+          ) : featuredCourses && featuredCourses.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {featuredCourses.map((course) => (
+                <CourseCard key={course.id} {...course} />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-muted-foreground">No featured courses available at the moment.</p>
+              <Link to="/courses">
+                <Button variant="outline" className="mt-4">
+                  Browse All Courses
+                </Button>
+              </Link>
+            </div>
+          )}
         </div>
       </section>
 
