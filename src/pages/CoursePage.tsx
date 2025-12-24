@@ -192,7 +192,8 @@ const CoursePage = () => {
       if (error) throw error;
       
       if (data?.url) {
-        window.open(data.url, "_blank");
+        // Use same-tab redirect so purchase recording works on return
+        window.location.href = data.url;
       } else {
         throw new Error("No checkout URL received");
       }

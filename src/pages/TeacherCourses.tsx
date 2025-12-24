@@ -7,8 +7,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { PlusCircle, Edit, Eye, Trash2 } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { PlusCircle, Edit, Eye, Trash2, Star } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { useUserRole } from "@/hooks/useUserRole";
 
 interface Course {
   id: string;
@@ -16,6 +18,7 @@ interface Course {
   description: string | null;
   price: number;
   is_published: boolean;
+  is_featured: boolean;
   category: string | null;
   updated_at: string;
   chapter_count: number;
@@ -24,6 +27,7 @@ interface Course {
 
 const TeacherCourses = () => {
   const { user } = useAuth();
+  const { isAdmin } = useUserRole();
   const [courses, setCourses] = useState<Course[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -59,6 +63,7 @@ const TeacherCourses = () => {
 
           return {
             ...course,
+            is_featured: course.is_featured || false,
             chapter_count: chapterCount || 0,
             student_count: studentCount || 0,
           };
@@ -99,6 +104,35 @@ const TeacherCourses = () => {
       toast({
         title: "Error",
         description: "Failed to delete course",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleToggleFeatured = async (courseId: string, currentFeatured: boolean) => {
+    try {
+      const { error } = await supabase
+        .from("courses")
+        .update({ is_featured: !currentFeatured })
+        .eq("id", courseId);
+
+      if (error) throw error;
+
+      setCourses(courses.map(c => 
+        c.id === courseId ? { ...c, is_featured: !currentFeatured } : c
+      ));
+      
+      toast({
+        title: !currentFeatured ? "Course featured" : "Course unfeatured",
+        description: !currentFeatured 
+          ? "The course will now appear on the homepage." 
+          : "The course has been removed from featured.",
+      });
+    } catch (error) {
+      console.error("Error toggling featured:", error);
+      toast({
+        title: "Error",
+        description: "Failed to update featured status",
         variant: "destructive",
       });
     }
@@ -153,10 +187,15 @@ const TeacherCourses = () => {
         ) : (
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {courses.map((course) => (
-              <Card key={course.id}>
+              <Card key={course.id} className={course.is_featured ? "ring-2 ring-primary" : ""}>
                 <CardHeader>
                   <div className="flex items-start justify-between">
-                    <CardTitle className="text-lg">{course.title}</CardTitle>
+                    <div className="flex items-center gap-2">
+                      <CardTitle className="text-lg">{course.title}</CardTitle>
+                      {course.is_featured && (
+                        <Star className="h-4 w-4 text-primary fill-primary" />
+                      )}
+                    </div>
                     <Badge variant={course.is_published ? "default" : "secondary"}>
                       {course.is_published ? "Published" : "Draft"}
                     </Badge>
@@ -171,6 +210,19 @@ const TeacherCourses = () => {
                     <span>{course.student_count} students</span>
                     <span>${course.price}</span>
                   </div>
+                  {/* Admin Featured Toggle */}
+                  {isAdmin && (
+                    <div className="mb-4 flex items-center justify-between border-t border-border pt-4">
+                      <div className="flex items-center gap-2 text-sm">
+                        <Star className="h-4 w-4 text-muted-foreground" />
+                        <span className="text-muted-foreground">Featured</span>
+                      </div>
+                      <Switch
+                        checked={course.is_featured}
+                        onCheckedChange={() => handleToggleFeatured(course.id, course.is_featured)}
+                      />
+                    </div>
+                  )}
                   <div className="flex gap-2">
                     <Button variant="outline" size="sm" asChild>
                       <Link to={`/course/${course.id}`}>
