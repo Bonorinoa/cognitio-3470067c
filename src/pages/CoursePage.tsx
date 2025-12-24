@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import VideoPlayer from "@/components/VideoPlayer";
@@ -41,40 +41,26 @@ interface Course {
 
 const CoursePage = () => {
   const { id } = useParams();
-  const [searchParams] = useSearchParams();
-  const { user, session } = useAuth();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { user, session, isLoading: authLoading } = useAuth();
   const [currentChapterId, setCurrentChapterId] = useState<string | null>(null);
   const [isCheckoutLoading, setIsCheckoutLoading] = useState(false);
   const [isMarkingComplete, setIsMarkingComplete] = useState(false);
+  const [pendingPaymentSuccess, setPendingPaymentSuccess] = useState(false);
+  const purchaseRecordedRef = useRef(false);
 
-  // Check for payment success
+  // Capture payment status from URL (runs once on mount or URL change)
   useEffect(() => {
     const paymentStatus = searchParams.get("payment");
-    if (paymentStatus === "success" && user && id) {
-      toast.success("Payment successful! Recording your purchase...");
-      recordPurchase();
+    if (paymentStatus === "success") {
+      setPendingPaymentSuccess(true);
+      // Clear URL params to prevent re-triggering
+      setSearchParams({}, { replace: true });
     } else if (paymentStatus === "canceled") {
       toast.error("Payment was canceled");
+      setSearchParams({}, { replace: true });
     }
-  }, [searchParams, user, id]);
-
-  const recordPurchase = async () => {
-    if (!session || !id) return;
-    
-    try {
-      const { error } = await supabase.functions.invoke("record-purchase", {
-        body: { courseId: id, amount: course?.price || 0 },
-      });
-      
-      if (error) {
-        console.error("Error recording purchase:", error);
-      } else {
-        refetchPurchase();
-      }
-    } catch (error) {
-      console.error("Error recording purchase:", error);
-    }
-  };
+  }, [searchParams, setSearchParams]);
 
   // Fetch course data
   const { data: course, isLoading: courseLoading } = useQuery({
@@ -154,7 +140,44 @@ const CoursePage = () => {
     enabled: !!id && !!user && !!course,
   });
 
-  // Set initial chapter
+  // Record purchase function
+  const recordPurchase = async () => {
+    if (!session || !id || !course) return;
+    
+    try {
+      const { error } = await supabase.functions.invoke("record-purchase", {
+        body: { courseId: id, amount: course.price },
+      });
+      
+      if (error) {
+        console.error("Error recording purchase:", error);
+      } else {
+        refetchPurchase();
+      }
+    } catch (error) {
+      console.error("Error recording purchase:", error);
+    }
+  };
+
+  // Record purchase once all data is ready
+  useEffect(() => {
+    if (
+      pendingPaymentSuccess &&
+      !purchaseRecordedRef.current &&
+      !authLoading &&
+      user &&
+      session &&
+      id &&
+      course &&
+      !courseLoading
+    ) {
+      purchaseRecordedRef.current = true;
+      toast.success("Payment successful! Recording your purchase...");
+      recordPurchase();
+      setPendingPaymentSuccess(false);
+    }
+  }, [pendingPaymentSuccess, authLoading, user, session, id, course, courseLoading]);
+
   useEffect(() => {
     if (course?.chapters?.length && !currentChapterId) {
       setCurrentChapterId(course.chapters[0].id);
@@ -192,15 +215,30 @@ const CoursePage = () => {
       if (error) throw error;
       
       if (data?.url) {
-        // Use same-tab redirect so purchase recording works on return
-        window.location.href = data.url;
+        // Check if we're in an iframe (Lovable Preview)
+        const inIframe = window.self !== window.top;
+        
+        if (inIframe) {
+          // In iframe: open in new tab to avoid navigation issues
+          const newWindow = window.open(data.url, "_blank", "noopener,noreferrer");
+          if (!newWindow) {
+            // Popup blocked, fall back to same-tab navigation
+            toast.info("Opening checkout in same tab...");
+            window.location.assign(data.url);
+          } else {
+            toast.info("Checkout opened in a new tab. Complete payment there.");
+            setIsCheckoutLoading(false);
+          }
+        } else {
+          // Normal browser: use same-tab redirect
+          window.location.assign(data.url);
+        }
       } else {
         throw new Error("No checkout URL received");
       }
     } catch (error: any) {
       console.error("Checkout error:", error);
       toast.error(error.message || "Failed to start checkout");
-    } finally {
       setIsCheckoutLoading(false);
     }
   };
