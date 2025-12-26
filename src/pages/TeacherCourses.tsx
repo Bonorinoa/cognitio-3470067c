@@ -4,12 +4,13 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import TeacherSidebar from "@/components/TeacherSidebar";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { PlusCircle, Edit, Eye, Trash2, Star } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
 import { useUserRole } from "@/hooks/useUserRole";
 
 interface Course {
@@ -158,16 +159,19 @@ const TeacherCourses = () => {
         </div>
 
         {isLoading ? (
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
             {[1, 2, 3].map((i) => (
-              <Card key={i}>
-                <CardHeader>
+              <Card key={i} className="flex flex-col">
+                <CardHeader className="pb-3">
                   <Skeleton className="h-6 w-3/4" />
                 </CardHeader>
-                <CardContent>
-                  <Skeleton className="mb-2 h-4 w-full" />
-                  <Skeleton className="h-4 w-2/3" />
+                <CardContent className="flex-1">
+                  <Skeleton className="mb-4 h-4 w-full" />
+                  <Skeleton className="mb-2 h-20 w-full rounded-lg" />
                 </CardContent>
+                <CardFooter>
+                  <Skeleton className="h-9 w-full" />
+                </CardFooter>
               </Card>
             ))}
           </div>
@@ -185,34 +189,52 @@ const TeacherCourses = () => {
             </Button>
           </Card>
         ) : (
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
             {courses.map((course) => (
-              <Card key={course.id} className={course.is_featured ? "ring-2 ring-primary" : ""}>
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-2">
-                      <CardTitle className="text-lg">{course.title}</CardTitle>
+              <Card 
+                key={course.id} 
+                className={cn(
+                  "flex flex-col border-border/50",
+                  course.is_featured && "border-primary/50 bg-primary/5"
+                )}
+              >
+                <CardHeader className="pb-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <CardTitle className="text-lg truncate">{course.title}</CardTitle>
                       {course.is_featured && (
-                        <Star className="h-4 w-4 text-primary fill-primary" />
+                        <Star className="h-4 w-4 shrink-0 text-primary fill-primary" />
                       )}
                     </div>
-                    <Badge variant={course.is_published ? "default" : "secondary"}>
+                    <Badge variant={course.is_published ? "default" : "secondary"} className="shrink-0">
                       {course.is_published ? "Published" : "Draft"}
                     </Badge>
                   </div>
                 </CardHeader>
-                <CardContent>
-                  <p className="mb-4 line-clamp-2 text-sm text-muted-foreground">
+                <CardContent className="flex-1">
+                  <p className="mb-4 line-clamp-2 text-sm text-muted-foreground leading-relaxed">
                     {course.description || "No description"}
                   </p>
-                  <div className="mb-4 flex gap-4 text-sm text-muted-foreground">
-                    <span>{course.chapter_count} chapters</span>
-                    <span>{course.student_count} students</span>
-                    <span>${course.price}</span>
+                  
+                  {/* Stats Grid */}
+                  <div className="mb-4 grid grid-cols-3 gap-2 rounded-lg bg-muted/30 p-3 text-center">
+                    <div>
+                      <div className="font-medium text-foreground">{course.chapter_count}</div>
+                      <div className="text-xs text-muted-foreground">chapters</div>
+                    </div>
+                    <div>
+                      <div className="font-medium text-foreground">{course.student_count}</div>
+                      <div className="text-xs text-muted-foreground">students</div>
+                    </div>
+                    <div>
+                      <div className="font-medium text-foreground">${course.price}</div>
+                      <div className="text-xs text-muted-foreground">price</div>
+                    </div>
                   </div>
+                  
                   {/* Admin Featured Toggle */}
                   {isAdmin && (
-                    <div className="mb-4 flex items-center justify-between border-t border-border pt-4">
+                    <div className="flex items-center justify-between rounded-lg bg-muted/20 p-3">
                       <div className="flex items-center gap-2 text-sm">
                         <Star className="h-4 w-4 text-muted-foreground" />
                         <span className="text-muted-foreground">Featured</span>
@@ -223,29 +245,29 @@ const TeacherCourses = () => {
                       />
                     </div>
                   )}
-                  <div className="flex gap-2">
-                    <Button variant="outline" size="sm" asChild>
-                      <Link to={`/course/${course.id}`}>
-                        <Eye className="mr-1 h-3 w-3" />
-                        View
-                      </Link>
-                    </Button>
-                    <Button variant="outline" size="sm" asChild>
-                      <Link to={`/teacher/edit/${course.id}`}>
-                        <Edit className="mr-1 h-3 w-3" />
-                        Edit
-                      </Link>
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleDelete(course.id)}
-                    >
-                      <Trash2 className="mr-1 h-3 w-3" />
-                      Delete
-                    </Button>
-                  </div>
                 </CardContent>
+                <CardFooter className="gap-2 pt-4 border-t border-border/30">
+                  <Button variant="outline" size="sm" className="flex-1" asChild>
+                    <Link to={`/course/${course.id}`}>
+                      <Eye className="mr-1.5 h-3.5 w-3.5" />
+                      View
+                    </Link>
+                  </Button>
+                  <Button variant="outline" size="sm" className="flex-1" asChild>
+                    <Link to={`/teacher/edit/${course.id}`}>
+                      <Edit className="mr-1.5 h-3.5 w-3.5" />
+                      Edit
+                    </Link>
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                    onClick={() => handleDelete(course.id)}
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </Button>
+                </CardFooter>
               </Card>
             ))}
           </div>
