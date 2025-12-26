@@ -90,7 +90,7 @@ const CourseCard = ({
             )}
             <span className="flex items-center gap-1 text-sm text-primary">
               <PlayCircle className="h-4 w-4" />
-              {progress !== undefined ? "Continue" : "Enroll Now"}
+              {progress !== undefined ? "Continuar" : "Inscribirse"}
             </span>
           </div>
         </CardFooter>

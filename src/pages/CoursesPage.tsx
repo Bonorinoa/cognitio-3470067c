@@ -15,11 +15,11 @@ import { Search, Filter } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
-const categories = ["All", "Development", "AI & ML", "Design", "Data Science", "Mobile", "Business"];
+const categories = ["Todos", "Desarrollo", "IA & ML", "Diseño", "Ciencia de Datos", "Móvil", "Negocios"];
 
 const CoursesPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedCategory, setSelectedCategory] = useState("Todos");
   const [sortBy, setSortBy] = useState("popular");
 
   // Fetch published courses from database
@@ -60,7 +60,7 @@ const CoursesPage = () => {
   const filteredCourses = courses.filter((course) => {
     const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory =
-      selectedCategory === "All" || course.category === selectedCategory;
+      selectedCategory === "Todos" || course.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
@@ -84,9 +84,9 @@ const CoursesPage = () => {
       <main className="container mx-auto px-4 pt-24 pb-12">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">Browse Courses</h1>
+          <h1 className="text-3xl font-bold text-foreground mb-2">Explorar Cursos</h1>
           <p className="text-muted-foreground">
-            Explore our library of courses and start learning today
+            Descubre nuestra biblioteca de cursos y comienza a aprender hoy
           </p>
         </div>
 
@@ -95,7 +95,7 @@ const CoursesPage = () => {
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Search courses..."
+              placeholder="Buscar cursos..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10 bg-card border-border"
@@ -104,13 +104,13 @@ const CoursesPage = () => {
           <div className="flex gap-3">
             <Select value={sortBy} onValueChange={setSortBy}>
               <SelectTrigger className="w-[180px] bg-card border-border">
-                <SelectValue placeholder="Sort by" />
+                <SelectValue placeholder="Ordenar por" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="popular">Most Popular</SelectItem>
-                <SelectItem value="newest">Newest</SelectItem>
-                <SelectItem value="price-low">Price: Low to High</SelectItem>
-                <SelectItem value="price-high">Price: High to Low</SelectItem>
+                <SelectItem value="popular">Más Popular</SelectItem>
+                <SelectItem value="newest">Más Reciente</SelectItem>
+                <SelectItem value="price-low">Precio: Menor a Mayor</SelectItem>
+                <SelectItem value="price-high">Precio: Mayor a Menor</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -136,7 +136,7 @@ const CoursesPage = () => {
 
         {/* Results count */}
         <p className="text-sm text-muted-foreground mb-6">
-          {isLoading ? "Loading..." : `Showing ${sortedCourses.length} of ${courses.length} courses`}
+          {isLoading ? "Cargando..." : `Mostrando ${sortedCourses.length} de ${courses.length} cursos`}
         </p>
 
         {/* Loading state */}
@@ -166,11 +166,11 @@ const CoursesPage = () => {
         {!isLoading && sortedCourses.length === 0 && (
           <div className="text-center py-12">
             <Filter className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-medium text-foreground mb-2">No courses found</h3>
+            <h3 className="text-lg font-medium text-foreground mb-2">No se encontraron cursos</h3>
             <p className="text-muted-foreground">
               {courses.length === 0 
-                ? "No courses have been published yet. Check back soon!" 
-                : "Try adjusting your search or filter criteria"}
+                ? "Aún no hay cursos publicados. ¡Vuelve pronto!" 
+                : "Intenta ajustar tu búsqueda o los filtros"}
             </p>
           </div>
         )}
