@@ -12,7 +12,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useUserRole } from "@/hooks/useUserRole";
-import LanguageToggle from "@/components/LanguageToggle";
 
 const Navbar = () => {
   const { t } = useTranslation();
@@ -60,7 +59,6 @@ const Navbar = () => {
 
         {/* User Menu */}
         <div className="flex items-center gap-3">
-          <LanguageToggle />
           {isLoading ? (
             <div className="h-9 w-9 animate-pulse rounded-full bg-muted" />
           ) : user ? (
