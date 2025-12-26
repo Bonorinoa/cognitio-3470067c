@@ -1,3 +1,5 @@
+import { motion } from "framer-motion";
+
 interface StickyInstructorCardProps {
   name: string;
   bio: string;
@@ -26,9 +28,19 @@ const StickyInstructorCard = ({
 
   return (
     <div
-      className={`sticky ${topClass} ${zClass} min-h-[60vh] w-full max-w-5xl mx-auto mb-4`}
+      className={`sticky ${topClass} ${zClass} min-h-[60vh] w-full max-w-3xl mx-auto mb-4`}
     >
-      <div className="bg-primary rounded-2xl shadow-xl overflow-hidden transition-all duration-300">
+      <motion.div
+        initial={{ opacity: 0, y: 60, scale: 0.95 }}
+        whileInView={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ 
+          duration: 0.5, 
+          ease: [0.25, 0.1, 0.25, 1],
+          delay: 0.1 
+        }}
+        viewport={{ once: true, amount: 0.3 }}
+        className="bg-primary rounded-2xl shadow-xl overflow-hidden"
+      >
         <div className="flex flex-col md:flex-row min-h-[50vh]">
           {/* Left side - Bio (60%) */}
           <div className="flex-1 md:w-3/5 p-8 md:p-12 flex flex-col justify-between">
@@ -51,7 +63,7 @@ const StickyInstructorCard = ({
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };
