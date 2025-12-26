@@ -1,0 +1,58 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "courses": "Cursos",
+    "about": "Sobre Nosotros",
+    "login": "Iniciar Sesión",
+    "myLearning": "Mi Aprendizaje",
+    "instructorPanel": "Panel de Instructor",
+    "logout": "Cerrar Sesión"
+  },
+  "home": {
+    "heroTitle": "Bienvenido a Cognitio",
+    "heroSubtitle": "Una plataforma de aprendizaje donde expertos comparten su conocimiento a través de cursos diseñados para transformar tu carrera profesional.",
+    "exploreCourses": "Explorar Cursos",
+    "learnMore": "Conocer Más",
+    "visionTitle": "Nuestra Visión",
+    "visionText": "Creemos que el aprendizaje de calidad debe ser accesible. Por eso, conectamos a estudiantes ambiciosos con instructores expertos que han demostrado excelencia en sus campos.",
+    "offeringsTitle": "Lo Que Ofrecemos",
+    "forStudents": "Para Estudiantes",
+    "forStudentsText": "Accede a cursos creados por profesionales activos en la industria. Aprende habilidades prácticas que puedes aplicar inmediatamente en tu trabajo o proyectos personales.",
+    "forInstructors": "Para Instructores",
+    "forInstructorsText": "Nuestra plataforma es por invitación. Trabajamos con expertos selectos que comparten nuestra pasión por la educación de calidad.",
+    "featuredTitle": "Cursos Destacados",
+    "viewAllCourses": "Ver Todos los Cursos"
+  },
+  "about": {
+    "title": "Las Personas Detrás de Nuestros Cursos",
+    "subtitle": "Conoce a los fundadores y expertos que hacen posible Cognitio",
+    "foundersTitle": "Nuestros Fundadores",
+    "futureInstructorsTitle": "Próximos Instructores",
+    "futureInstructorsText": "Estamos en constante búsqueda de expertos apasionados que quieran compartir su conocimiento. Si eres un profesional con experiencia y deseas formar parte de nuestra comunidad de instructores, nos encantaría conocerte."
+  },
+  "courses": {
+    "title": "Explorar Cursos",
+    "searchPlaceholder": "Buscar cursos...",
+    "allCategories": "Todos",
+    "development": "Desarrollo",
+    "design": "Diseño",
+    "business": "Negocios",
+    "marketing": "Marketing",
+    "sortMostPopular": "Más Popular",
+    "sortNewest": "Más Reciente",
+    "sortPriceLow": "Precio: Menor a Mayor",
+    "sortPriceHigh": "Precio: Mayor a Menor",
+    "resultsCount": "{{count}} cursos encontrados",
+    "noResults": "No se encontraron cursos",
+    "noResultsHint": "Intenta ajustar tus filtros de búsqueda"
+  },
+  "courseCard": {
+    "chapters": "capítulos",
+    "complete": "completado",
+    "continue": "Continuar",
+    "enroll": "Inscribirse"
+  },
+  "footer": {
+    "rights": "Todos los derechos reservados."
+  }
+}

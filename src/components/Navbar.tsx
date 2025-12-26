@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
-import { LayoutDashboard, LogOut, User, BookOpen } from "lucide-react";
+import { LayoutDashboard, LogOut, BookOpen } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -11,8 +12,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useUserRole } from "@/hooks/useUserRole";
+import LanguageToggle from "@/components/LanguageToggle";
 
 const Navbar = () => {
+  const { t } = useTranslation();
   const { user, signOut, isLoading } = useAuth();
   const { isTeacher } = useUserRole();
 
@@ -39,24 +42,25 @@ const Navbar = () => {
             to="/" 
             className="text-muted-foreground hover:text-foreground transition-colors font-medium"
           >
-            Inicio
+            {t('nav.home')}
           </Link>
           <Link 
             to="/courses" 
             className="text-muted-foreground hover:text-foreground transition-colors font-medium"
           >
-            Cursos
+            {t('nav.courses')}
           </Link>
           <Link 
             to="/about" 
             className="text-muted-foreground hover:text-foreground transition-colors font-medium"
           >
-            Sobre Nosotros
+            {t('nav.about')}
           </Link>
         </div>
 
         {/* User Menu */}
         <div className="flex items-center gap-3">
+          <LanguageToggle />
           {isLoading ? (
             <div className="h-9 w-9 animate-pulse rounded-full bg-muted" />
           ) : user ? (
@@ -80,28 +84,28 @@ const Navbar = () => {
                 <DropdownMenuItem asChild>
                   <Link to="/dashboard" className="cursor-pointer">
                     <LayoutDashboard className="mr-2 h-4 w-4" />
-                    Mi Aprendizaje
+                    {t('nav.myLearning')}
                   </Link>
                 </DropdownMenuItem>
                 {isTeacher && (
                   <DropdownMenuItem asChild>
                     <Link to="/teacher" className="cursor-pointer">
                       <BookOpen className="mr-2 h-4 w-4" />
-                      Panel de Instructor
+                      {t('nav.instructorPanel')}
                     </Link>
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-destructive">
                   <LogOut className="mr-2 h-4 w-4" />
-                  Cerrar Sesión
+                  {t('nav.logout')}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
             <Link to="/auth">
               <Button size="sm" className="font-medium">
-                Iniciar Sesión
+                {t('nav.login')}
               </Button>
             </Link>
           )}

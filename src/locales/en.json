@@ -1,0 +1,58 @@
+{
+  "nav": {
+    "home": "Home",
+    "courses": "Courses",
+    "about": "About Us",
+    "login": "Sign In",
+    "myLearning": "My Learning",
+    "instructorPanel": "Instructor Panel",
+    "logout": "Sign Out"
+  },
+  "home": {
+    "heroTitle": "Welcome to Cognitio",
+    "heroSubtitle": "A learning platform where experts share their knowledge through courses designed to transform your professional career.",
+    "exploreCourses": "Explore Courses",
+    "learnMore": "Learn More",
+    "visionTitle": "Our Vision",
+    "visionText": "We believe quality learning should be accessible. That's why we connect ambitious students with expert instructors who have demonstrated excellence in their fields.",
+    "offeringsTitle": "What We Offer",
+    "forStudents": "For Students",
+    "forStudentsText": "Access courses created by active industry professionals. Learn practical skills you can apply immediately in your work or personal projects.",
+    "forInstructors": "For Instructors",
+    "forInstructorsText": "Our platform is invite-only. We work with select experts who share our passion for quality education.",
+    "featuredTitle": "Featured Courses",
+    "viewAllCourses": "View All Courses"
+  },
+  "about": {
+    "title": "The People Behind Our Courses",
+    "subtitle": "Meet the founders and experts who make Cognitio possible",
+    "foundersTitle": "Our Founders",
+    "futureInstructorsTitle": "Future Instructors",
+    "futureInstructorsText": "We are constantly looking for passionate experts who want to share their knowledge. If you are a professional with experience and want to be part of our instructor community, we would love to meet you."
+  },
+  "courses": {
+    "title": "Explore Courses",
+    "searchPlaceholder": "Search courses...",
+    "allCategories": "All",
+    "development": "Development",
+    "design": "Design",
+    "business": "Business",
+    "marketing": "Marketing",
+    "sortMostPopular": "Most Popular",
+    "sortNewest": "Newest",
+    "sortPriceLow": "Price: Low to High",
+    "sortPriceHigh": "Price: High to Low",
+    "resultsCount": "{{count}} courses found",
+    "noResults": "No courses found",
+    "noResultsHint": "Try adjusting your search filters"
+  },
+  "courseCard": {
+    "chapters": "chapters",
+    "complete": "complete",
+    "continue": "Continue",
+    "enroll": "Enroll"
+  },
+  "footer": {
+    "rights": "All rights reserved."
+  }
+}
