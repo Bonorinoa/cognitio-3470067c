@@ -9,6 +9,7 @@ import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import CoursesPage from "./pages/CoursesPage";
 import CoursePage from "./pages/CoursePage";
+import AboutPage from "./pages/AboutPage";
 import TeacherDashboard from "./pages/TeacherDashboard";
 import TeacherCourses from "./pages/TeacherCourses";
 import TeacherAnalytics from "./pages/TeacherAnalytics";
@@ -28,6 +29,7 @@ const App = () => (
         <AuthProvider>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/about" element={<AboutPage />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/courses" element={<CoursesPage />} />
             <Route path="/course/:id" element={<CoursePage />} />

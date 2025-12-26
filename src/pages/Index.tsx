@@ -1,22 +1,14 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import Navbar from "@/components/Navbar";
 import CourseCard from "@/components/CourseCard";
 import heroImage from "@/assets/hero-bg.jpg";
-import { ArrowRight, Users, BookOpen, Award } from "lucide-react";
+import { ArrowRight, GraduationCap, Users, Lightbulb, Target } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
-const stats = [
-  { icon: Users, value: "50K+", label: "Active Learners" },
-  { icon: BookOpen, value: "200+", label: "Courses" },
-  { icon: Award, value: "95%", label: "Completion Rate" },
-];
-
 const Index = () => {
-  // Fetch featured courses from database
   const { data: featuredCourses, isLoading } = useQuery({
     queryKey: ["featured-courses"],
     queryFn: async () => {
@@ -33,7 +25,7 @@ const Index = () => {
         `)
         .eq("is_featured", true)
         .eq("is_published", true)
-        .limit(6);
+        .limit(3);
 
       if (error) throw error;
 
@@ -54,120 +46,148 @@ const Index = () => {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
-        {/* Background Image with Overlay */}
+      <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden pt-16">
         <div className="absolute inset-0">
           <img
             src={heroImage}
-            alt="Abstract learning background"
-            className="h-full w-full object-cover opacity-40"
+            alt="Fondo de aprendizaje"
+            className="h-full w-full object-cover opacity-30"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/80 to-background" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/70 to-background" />
         </div>
 
-        {/* Content */}
         <div className="container relative z-10 mx-auto px-4 py-20 text-center">
-          <Badge className="mb-6 bg-primary/20 text-primary border-primary/30">
-            🚀 New courses added weekly
-          </Badge>
-          <h1 className="mb-6 text-4xl font-bold leading-tight text-foreground sm:text-5xl md:text-6xl lg:text-7xl">
-            Master New Skills
-            <br />
-            <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-              Transform Your Career
-            </span>
+          <h1 className="mb-6 text-4xl font-bold leading-tight text-foreground sm:text-5xl md:text-6xl">
+            Bienvenido a{" "}
+            <span className="text-primary">Cognitio</span>
           </h1>
           <p className="mx-auto mb-8 max-w-2xl text-lg text-muted-foreground sm:text-xl">
-            Join thousands of learners advancing their careers with expert-led courses. 
-            From coding to design, learn at your own pace.
+            Aprende de expertos con cursos diseñados para transformar tu carrera 
+            y expandir tus conocimientos.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link to="/courses">
               <Button size="lg" className="min-w-[180px]">
-                Explore Courses
+                Explorar Cursos
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
+            <Link to="/about">
+              <Button size="lg" variant="outline" className="min-w-[180px]">
+                Conocer al Equipo
+              </Button>
+            </Link>
           </div>
+        </div>
+      </section>
 
-          {/* Stats */}
-          <div className="mt-16 grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-2xl mx-auto">
-            {stats.map((stat, index) => (
-              <div key={index} className="flex flex-col items-center">
-                <stat.icon className="h-8 w-8 text-primary mb-2" />
-                <span className="text-3xl font-bold text-foreground">{stat.value}</span>
-                <span className="text-sm text-muted-foreground">{stat.label}</span>
-              </div>
-            ))}
+      {/* Vision Section */}
+      <section className="py-20 bg-secondary/30">
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl mx-auto text-center">
+            <Lightbulb className="h-12 w-12 text-primary mx-auto mb-6" />
+            <h2 className="text-3xl font-bold text-foreground mb-6">Nuestra Visión</h2>
+            <p className="text-lg text-muted-foreground leading-relaxed">
+              Creemos que el conocimiento de calidad debe ser accesible para todos. 
+              En Cognitio, cada curso está cuidadosamente diseñado por expertos 
+              comprometidos con tu éxito. No somos una plataforma masiva — somos 
+              una comunidad de aprendizaje donde cada estudiante importa.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* What We Offer Section */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-foreground text-center mb-12">
+            Lo Que Ofrecemos
+          </h2>
+          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            {/* For Students */}
+            <div className="bg-card rounded-2xl p-8 border border-border shadow-sm">
+              <GraduationCap className="h-10 w-10 text-primary mb-4" />
+              <h3 className="text-xl font-semibold text-foreground mb-3">
+                Para Estudiantes
+              </h3>
+              <ul className="space-y-2 text-muted-foreground">
+                <li className="flex items-start gap-2">
+                  <Target className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                  Cursos diseñados por expertos en su campo
+                </li>
+                <li className="flex items-start gap-2">
+                  <Target className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                  Aprende a tu propio ritmo, desde cualquier lugar
+                </li>
+                <li className="flex items-start gap-2">
+                  <Target className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                  Contenido actualizado y relevante
+                </li>
+                <li className="flex items-start gap-2">
+                  <Target className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                  Seguimiento de tu progreso
+                </li>
+              </ul>
+            </div>
+
+            {/* For Instructors */}
+            <div className="bg-card rounded-2xl p-8 border border-border shadow-sm">
+              <Users className="h-10 w-10 text-primary mb-4" />
+              <h3 className="text-xl font-semibold text-foreground mb-3">
+                Para Instructores
+              </h3>
+              <p className="text-muted-foreground mb-4">
+                Cognitio trabaja con instructores cuidadosamente seleccionados. 
+                No somos una plataforma abierta — cada instructor es invitado 
+                para garantizar la más alta calidad.
+              </p>
+              <p className="text-sm text-muted-foreground">
+                ¿Eres un experto interesado en enseñar? Contáctanos para explorar 
+                oportunidades de colaboración.
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Featured Courses */}
-      <section className="py-20 bg-card">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-12">
-            <div>
-              <h2 className="text-3xl font-bold text-foreground mb-2">Featured Courses</h2>
-              <p className="text-muted-foreground">Start learning with our most popular courses</p>
-            </div>
-            <Link to="/courses">
-              <Button variant="ghost" className="mt-4 sm:mt-0">
-                View All Courses
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
-          </div>
-
-          {isLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[1, 2, 3].map((i) => (
-                <Skeleton key={i} className="h-80 w-full rounded-lg" />
-              ))}
-            </div>
-          ) : featuredCourses && featuredCourses.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {featuredCourses.map((course) => (
-                <CourseCard key={course.id} {...course} />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-12">
-              <p className="text-muted-foreground">No featured courses available at the moment.</p>
+      {featuredCourses && featuredCourses.length > 0 && (
+        <section className="py-20 bg-secondary/30">
+          <div className="container mx-auto px-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-12">
+              <div>
+                <h2 className="text-3xl font-bold text-foreground mb-2">Cursos Destacados</h2>
+                <p className="text-muted-foreground">Comienza tu aprendizaje con nuestros cursos más populares</p>
+              </div>
               <Link to="/courses">
-                <Button variant="outline" className="mt-4">
-                  Browse All Courses
+                <Button variant="ghost" className="mt-4 sm:mt-0">
+                  Ver Todos los Cursos
+                  <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
             </div>
-          )}
-        </div>
-      </section>
 
-      {/* CTA Section */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="rounded-2xl bg-gradient-to-r from-primary/20 to-accent/20 p-8 md:p-12 text-center border border-border">
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Ready to Start Teaching?
-            </h2>
-            <p className="text-muted-foreground mb-8 max-w-xl mx-auto">
-              Share your knowledge with thousands of learners. Create and publish courses with our easy-to-use tools.
-            </p>
-            <Link to="/teacher">
-              <Button size="lg">
-                Become an Instructor
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
+            {isLoading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[1, 2, 3].map((i) => (
+                  <Skeleton key={i} className="h-80 w-full rounded-lg" />
+                ))}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {featuredCourses.map((course) => (
+                  <CourseCard key={course.id} {...course} />
+                ))}
+              </div>
+            )}
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Footer */}
       <footer className="border-t border-border py-8">
         <div className="container mx-auto px-4 text-center text-muted-foreground">
-          <p>&copy; 2024 LearnHub. All rights reserved.</p>
+          <p>&copy; 2024 Cognitio. Todos los derechos reservados.</p>
         </div>
       </footer>
     </div>
