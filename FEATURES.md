@@ -1,355 +1,384 @@
-# Platform Features
+# Funcionalidades de la Plataforma
 
-## Overview
-Dark Bloom Learning is a comprehensive educational platform that enables teachers to create and sell courses while providing students with an engaging, interactive learning experience.
+## Resumen
 
-## User Roles
+Cognitio es una plataforma educativa integral que permite a instructores crear y vender cursos mientras proporciona a los estudiantes una experiencia de aprendizaje interactiva y atractiva.
 
-### Student Role
-Students can browse, purchase, and complete courses on the platform.
+## Roles de Usuario
 
-### Teacher Role
-Teachers can create courses, manage content, and track student engagement and revenue.
+### Rol de Estudiante
+Los estudiantes pueden navegar, comprar y completar cursos en la plataforma.
 
-## Core Features
+### Rol de Instructor
+Los instructores pueden crear cursos, gestionar contenido y seguir el engagement y los ingresos de los estudiantes.
 
-### 1. Authentication & User Management
-- **Secure Authentication**
-  - Email/password authentication via Supabase Auth
-  - Session management with automatic token refresh
-  - Protected routes requiring authentication
-  - Role-based access control (student/teacher)
+## Funcionalidades Core
+
+### 1. Autenticación y Gestión de Usuarios
+- **Autenticación Segura**
+  - Autenticación email/contraseña vía Supabase Auth
+  - Gestión de sesiones con refresh automático de tokens
+  - Rutas protegidas que requieren autenticación
+  - Control de acceso basado en roles (estudiante/instructor)
   
-- **User Profiles**
-  - Customizable profile information (name, avatar, email)
-  - Role assignment (student/teacher)
-  - Profile persistence across sessions
+- **Perfiles de Usuario**
+  - Información de perfil personalizable (nombre, avatar, email)
+  - Asignación de roles (estudiante/instructor)
+  - Persistencia de perfil entre sesiones
 
-### 2. Landing Page (Index)
-- **Hero Section**
-  - Compelling value proposition
-  - Eye-catching background imagery
-  - Call-to-action buttons for sign-up and course browsing
+### 2. Página de Inicio (Index)
+- **Sección Hero**
+  - Propuesta de valor atractiva
+  - Imagen de fondo llamativa
+  - Botones de llamada a la acción para registro y navegación de cursos
   
-- **Featured Courses**
-  - Showcase of top courses
-  - Course cards with images, prices, and metadata
-  - Quick access to course details
+- **Cursos Destacados**
+  - Showcase de cursos principales
+  - Tarjetas de curso con imágenes, precios y metadatos
+  - Acceso rápido a detalles de cursos
   
-- **Platform Statistics**
-  - Display of key metrics (active learners, available courses, completion rate)
-  - Social proof to build trust
+- **Estadísticas de la Plataforma**
+  - Visualización de métricas clave (estudiantes activos, cursos disponibles, tasa de completación)
+  - Prueba social para construir confianza
   
-- **Navigation**
-  - Responsive navbar with logo
-  - Dynamic menu based on authentication state
-  - Quick access to sign in, browse courses, and user dashboard
+- **Navegación**
+  - Navbar responsive con logo "Cognitio"
+  - Menú dinámico basado en estado de autenticación
+  - Acceso rápido a inicio de sesión, navegación de cursos y dashboard de usuario
+  - Enlaces: Inicio | Cursos | Sobre Nosotros
 
-### 3. Course Browsing & Discovery
-- **Course Catalog (CoursesPage)**
-  - Grid view of all available courses
-  - Course filtering by category
-  - Search functionality
-  - Sorting options
+### 3. Navegación y Descubrimiento de Cursos
+- **Catálogo de Cursos (CoursesPage)**
+  - Vista en grid de todos los cursos disponibles
+  - Filtrado por categoría
+  - Funcionalidad de búsqueda
+  - Opciones de ordenamiento
   
-- **Course Cards**
-  - Course thumbnail image
-  - Title and description
-  - Price display
-  - Category badge
-  - Chapter count
-  - Duration information
-  - Progress indicator (for enrolled students)
-  - Direct links to course details
+- **Tarjetas de Curso**
+  - Imagen thumbnail del curso
+  - Título y descripción
+  - Visualización de precio
+  - Badge de categoría
+  - Conteo de capítulos
+  - Información de duración
+  - Indicador de progreso (para estudiantes inscritos)
+  - Enlaces directos a detalles del curso
 
-### 4. Course Details & Enrollment
-- **Course Page**
-  - Detailed course information
-  - Course curriculum (chapter list)
-  - Teacher information
-  - Course pricing
-  - Enrollment status check
-  - Purchase/enroll functionality
+### 4. Detalles del Curso e Inscripción
+- **Página de Curso**
+  - Información detallada del curso
+  - Curriculum del curso (lista de capítulos)
+  - Información del instructor
+  - Precio del curso
+  - Verificación de estado de inscripción
+  - Funcionalidad de compra/inscripción
   
-- **Chapter Preview**
-  - Free preview chapters for prospective students
-  - Chapter duration display
-  - Locked/unlocked indicators
-  - Sequential chapter ordering
+- **Vista Previa de Capítulos**
+  - Capítulos de vista previa gratuita para estudiantes potenciales
+  - Visualización de duración de capítulos
+  - Indicadores de bloqueado/desbloqueado
+  - Ordenamiento secuencial de capítulos
 
-### 5. Video Learning Experience
-- **Video Player**
-  - HTML5 video player with custom controls
-  - Play/pause functionality
-  - Progress bar with seek capability
-  - Volume control
-  - Fullscreen mode
-  - Chapter navigation
+### 5. Experiencia de Aprendizaje con Video
+- **Reproductor de Video**
+  - Reproductor Mux con controles personalizados
+  - Funcionalidad de play/pausa
+  - Barra de progreso con capacidad de seek
+  - Control de volumen
+  - Modo pantalla completa
+  - Navegación de capítulos
   
-- **Progress Tracking**
-  - Automatic chapter completion tracking
-  - Overall course progress calculation
-  - Resume from last watched position
-  - Visual progress indicators
+- **Seguimiento de Progreso**
+  - Botón "Marcar como Completado"
+  - Seguimiento de completación por capítulo
+  - Cálculo de porcentaje de progreso del curso
+  - Persistencia de progreso entre sesiones
+  - Indicadores visuales de progreso (checkmarks)
 
-### 6. Student Dashboard
-- **Personalized Dashboard**
-  - Welcome message with user's name
-  - Quick access to enrolled courses
-  - Course search functionality
-  - Filter by course status (in-progress, completed)
+### 6. Dashboard del Estudiante
+- **Dashboard Personalizado**
+  - Mensaje de bienvenida con nombre del usuario
+  - Acceso rápido a cursos inscritos
+  - Funcionalidad de búsqueda de cursos
+  - Filtro por estado (en progreso, completado)
   
-- **Learning Statistics**
-  - Courses enrolled count
-  - Courses completed count
-  - Total chapters completed
-  - Overall progress percentage
+- **Estadísticas de Aprendizaje**
+  - Conteo de cursos inscritos
+  - Conteo de cursos completados
+  - Total de capítulos completados
+  - Porcentaje de progreso general
   
-- **Course Management**
-  - View all enrolled courses
-  - Continue learning from last position
-  - Track completion status
-  - Access course materials
+- **Gestión de Cursos**
+  - Ver todos los cursos inscritos
+  - Continuar aprendizaje desde última posición
+  - Seguir estado de completación
+  - Acceder a materiales del curso
 
-### 7. Teacher Dashboard
-- **Overview Dashboard**
-  - Revenue analytics
-  - Total students count
-  - Active courses count
-  - Recent activity feed
+### 7. Dashboard del Instructor
+- **Dashboard General**
+  - Analytics de ingresos
+  - Conteo total de estudiantes
+  - Conteo de cursos activos
+  - Feed de actividad reciente
   
-- **Course Management**
-  - List of all created courses
-  - Course status (published/draft)
-  - Student enrollment numbers per course
-  - Revenue per course
-  - Quick actions (view, edit, analytics)
+- **Gestión de Cursos**
+  - Lista de todos los cursos creados
+  - Estado del curso (publicado/borrador)
+  - Números de inscripción por curso
+  - Ingresos por curso
+  - Acciones rápidas (ver, editar, analytics)
   
-- **Recent Enrollments**
-  - Real-time student enrollment tracking
-  - Student information
-  - Enrollment dates
-  - Course association
+- **Inscripciones Recientes**
+  - Seguimiento de inscripciones en tiempo real
+  - Información del estudiante
+  - Fechas de inscripción
+  - Asociación del curso
 
-### 8. Course Creation & Management
-- **Create Course (CreateCourse)**
-  - Multi-step course creation wizard
-  - Course information form:
-    - Title
-    - Description
-    - Category selection
-    - Price setting
-    - Course image upload
+### 8. Creación y Gestión de Cursos
+- **Crear Curso (CreateCourse)**
+  - Wizard de creación de cursos multi-paso
+  - Formulario de información del curso:
+    - Título
+    - Descripción
+    - Selección de categoría
+    - Configuración de precio
+    - Carga de imagen del curso
   
-- **Chapter Management**
-  - Add multiple chapters
-  - Set chapter order/position
-  - Chapter details:
-    - Title
-    - Description
-    - Video URL
-    - Duration
-    - Free preview toggle
-  - Drag-and-drop chapter reordering
-  - Delete chapters
+- **Gestión de Capítulos**
+  - Agregar múltiples capítulos
+  - Establecer orden/posición de capítulos
+  - Detalles del capítulo:
+    - Título
+    - Descripción
+    - URL de video
+    - Duración
+    - Toggle de vista previa gratuita
+  - Reordenamiento de capítulos
+  - Eliminar capítulos
   
-- **Publishing Controls**
-  - Save as draft
-  - Publish course
-  - Unpublish course
-  - Edit published courses
+- **Controles de Publicación**
+  - Guardar como borrador
+  - Publicar curso
+  - Despublicar curso
+  - Editar cursos publicados
 
-### 9. Payment Integration
-- **Course Purchase Flow**
-  - Secure checkout process
-  - Stripe payment integration (configured)
-  - Purchase confirmation
-  - Automatic enrollment after payment
-  - Purchase history tracking
+### 9. Integración de Pagos
+- **Flujo de Compra de Cursos**
+  - Proceso de checkout seguro
+  - Integración con Stripe
+  - Confirmación de compra
+  - Inscripción automática después del pago
+  - Seguimiento de historial de compras
   
-- **Revenue Tracking**
-  - Total revenue dashboard
-  - Revenue per course
-  - Payment history
-  - Student purchase records
+- **Seguimiento de Ingresos**
+  - Dashboard de ingresos totales
+  - Ingresos por curso
+  - Historial de pagos
+  - Registros de compras de estudiantes
 
-### 10. Progress & Analytics
-- **Student Progress**
-  - Per-chapter completion tracking
-  - Course completion percentage
-  - Time spent tracking
-  - Completion timestamps
+### 10. Progreso y Analytics
+- **Progreso del Estudiante**
+  - Seguimiento de completación por capítulo
+  - Porcentaje de completación del curso
+  - Timestamps de completación
   
-- **Teacher Analytics** (Dashboard)
-  - Student enrollment trends
-  - Course performance metrics
-  - Revenue analytics
-  - Engagement statistics
+- **Analytics del Instructor** (Dashboard)
+  - Tendencias de inscripción de estudiantes
+  - Métricas de rendimiento de cursos
+  - Analytics de ingresos
+  - Estadísticas de engagement
 
-### 11. Responsive Design
-- **Mobile-First Approach**
-  - Fully responsive layouts
-  - Touch-friendly interfaces
-  - Mobile navigation drawer
-  - Optimized media playback
+### 11. Diseño Responsive
+- **Enfoque Mobile-First**
+  - Layouts completamente responsive
+  - Interfaces touch-friendly
+  - Drawer de navegación móvil
+  - Reproducción de medios optimizada
   
-- **Adaptive UI**
-  - Desktop, tablet, and mobile views
-  - Responsive grid layouts
-  - Collapsible sidebars
-  - Flexible typography
+- **UI Adaptativa**
+  - Vistas para desktop, tablet y móvil
+  - Layouts en grid responsive
+  - Sidebars colapsables
+  - Tipografía flexible
 
-### 12. Theme Support
-- **Dark/Light Mode**
-  - System preference detection
-  - Manual theme toggle
-  - Persistent theme selection
-  - Smooth theme transitions
+### 12. Soporte de Temas
+- **Modo Oscuro/Claro**
+  - Detección de preferencia del sistema
+  - Toggle manual de tema
+  - Selección de tema persistente
+  - Transiciones de tema suaves
 
-### 13. Notifications & Feedback
-- **Toast Notifications**
-  - Success messages (enrollment, purchases, progress)
-  - Error handling with user-friendly messages
-  - Loading states
-  - Action confirmations
+### 13. Notificaciones y Feedback
+- **Notificaciones Toast**
+  - Mensajes de éxito (inscripción, compras, progreso)
+  - Manejo de errores con mensajes user-friendly
+  - Estados de carga
+  - Confirmaciones de acciones
   
-- **Visual Feedback**
-  - Loading skeletons
-  - Progress indicators
-  - Button states (loading, disabled)
-  - Form validation messages
+- **Feedback Visual**
+  - Skeletons de carga
+  - Indicadores de progreso
+  - Estados de botones (loading, disabled)
+  - Mensajes de validación de formularios
 
-### 14. Navigation & Routing
-- **Page Routes**
-  - `/` - Landing page
-  - `/auth` - Authentication page
-  - `/dashboard` - Student dashboard
-  - `/courses` - Course catalog
-  - `/course/:id` - Course detail/player
-  - `/teacher` - Teacher dashboard
-  - `/teacher/courses` - Teacher course list
-  - `/teacher/create` - Create new course
-  - `/teacher/analytics` - Analytics dashboard
-  - `/teacher/settings` - Teacher settings
-  - `*` - 404 Not Found page
+### 14. Navegación y Rutas
+- **Rutas de Páginas**
+  - `/` - Página de inicio
+  - `/auth` - Página de autenticación
+  - `/dashboard` - Dashboard del estudiante
+  - `/courses` - Catálogo de cursos
+  - `/course/:id` - Detalle/reproductor de curso
+  - `/about` - Página Sobre Nosotros
+  - `/teacher` - Dashboard del instructor
+  - `/teacher/courses` - Lista de cursos del instructor
+  - `/teacher/create` - Crear nuevo curso
+  - `/teacher/analytics` - Dashboard de analytics
+  - `/teacher/settings` - Configuración del instructor
+  - `*` - Página 404 Not Found
   
-- **Navigation Components**
-  - Global navbar with auth state
-  - Teacher sidebar navigation
-  - Breadcrumb navigation
-  - Back navigation buttons
+- **Componentes de Navegación**
+  - Navbar global con estado de auth
+  - Navegación sidebar del instructor
+  - Navegación breadcrumb
+  - Botones de navegación hacia atrás
 
-## Data Models
+### 15. Página Sobre Nosotros (AboutPage)
+- **Sección de Fundadores**
+  - Efecto de tarjetas apiladas (sticky stack)
+  - 8 tarjetas en total (4 por fundador)
+  - Animaciones de entrada con Framer Motion
+  - Layout responsive: 60% bio, 40% foto
+  
+- **Instructores Destacados**
+  - Gustavo González Bonorino
+  - Augusto González Bonorino
+  
+- **Diseño Visual**
+  - Tarjetas con bordes redondeados
+  - Sombras sutiles
+  - Animaciones de scroll suaves
+  - Efecto de apilamiento al hacer scroll
 
-### Courses
-- Unique identifier
-- Title and description
-- Category classification
-- Pricing information
-- Teacher association
-- Publication status
+- **Lema**
+  - "Nos dedicamos a aprender enseñando"
+
+## Modelos de Datos
+
+### Cursos
+- Identificador único
+- Título y descripción
+- Clasificación por categoría
+- Información de precio
+- Asociación del instructor
+- Estado de publicación
 - Timestamps
-- Image/thumbnail URL
-- Stripe integration IDs
+- URL de imagen/thumbnail
+- IDs de integración Stripe
 
-### Chapters
-- Unique identifier
-- Course association
-- Title and description
-- Video URL/playback ID
-- Duration in seconds
-- Ordering position
-- Free preview flag
+### Capítulos
+- Identificador único
+- Asociación del curso
+- Título y descripción
+- URL de video/playback ID de Mux
+- Duración en segundos
+- Posición de ordenamiento
+- Flag de vista previa gratuita
 - Timestamps
 
-### User Progress
-- User and chapter association
-- Completion status
-- Completion timestamp
-- Progress percentage (calculated)
+### Progreso del Usuario
+- Asociación usuario y capítulo
+- Estado de completación
+- Timestamp de completación
+- Porcentaje de progreso (calculado)
 
-### Purchases
-- User and course association
-- Purchase amount
-- Payment provider ID (Stripe)
-- Purchase timestamp
+### Compras
+- Asociación usuario y curso
+- Monto de compra
+- ID del proveedor de pago (Stripe)
+- Timestamp de compra
 
-### Profiles
-- User information
-- Full name and email
-- Avatar URL
-- Role (student/teacher)
+### Perfiles
+- Información del usuario
+- Nombre completo y email
+- URL de avatar
+- Rol (estudiante/instructor)
 - Timestamps
 
-## Technical Features
+## Características Técnicas
 
-### Performance
-- Code splitting for optimal load times
-- Lazy loading of routes
-- Image optimization
-- Efficient state management with React Query
-- Caching strategies
+### Rendimiento
+- Code splitting para tiempos de carga óptimos
+- Lazy loading de rutas
+- Optimización de imágenes
+- Gestión de estado eficiente con React Query
+- Estrategias de caching
 
-### Security
-- Row-level security in database
-- Secure authentication tokens
-- Environment variable protection
-- CORS protection
-- XSS prevention
+### Animaciones
+- Framer Motion para animaciones fluidas
+- Animaciones de entrada en viewport
+- Transiciones suaves entre estados
+- Efecto de tarjetas apiladas con scroll
 
-### Accessibility
-- WCAG 2.1 AA compliance
-- Keyboard navigation
-- Screen reader support
-- ARIA labels and roles
-- Focus management
-- Semantic HTML structure
+### Seguridad
+- Row-level security en base de datos
+- Tokens de autenticación seguros
+- Protección de variables de entorno
+- Protección CORS
+- Prevención XSS
 
-### Error Handling
-- Graceful error states
-- User-friendly error messages
-- Automatic retry mechanisms
-- Fallback UI components
-- 404 page for invalid routes
+### Accesibilidad
+- Cumplimiento WCAG 2.1 AA
+- Navegación por teclado
+- Compatibilidad con lectores de pantalla
+- Labels y roles ARIA
+- Gestión de focus
+- Estructura HTML semántica
 
-## Future Enhancement Opportunities
+### Manejo de Errores
+- Estados de error elegantes
+- Mensajes de error user-friendly
+- Mecanismos de retry automático
+- Componentes UI de fallback
+- Página 404 para rutas inválidas
 
-### Potential Features
-- **Live Classes** - Real-time video streaming
-- **Assignments & Quizzes** - Interactive assessments
-- **Certificates** - Course completion certificates
-- **Discussion Forums** - Student-teacher communication
-- **Course Reviews** - Rating and review system
-- **Wishlists** - Save courses for later
-- **Coupons & Discounts** - Promotional pricing
-- **Bulk Purchases** - Corporate training packages
-- **Mobile Apps** - Native iOS/Android applications
-- **Content Drip** - Scheduled content release
-- **Transcripts** - Video transcription and subtitles
-- **Downloadable Resources** - PDF, slides, code files
-- **Social Learning** - Study groups and peer interaction
-- **Advanced Analytics** - Detailed engagement metrics
-- **Email Notifications** - Course updates and reminders
-- **Multi-language Support** - Internationalization
+## Oportunidades de Mejora Futura
 
-## Platform Capabilities
+### Funcionalidades Potenciales
+- **Clases en Vivo** - Streaming de video en tiempo real
+- **Tareas y Quizzes** - Evaluaciones interactivas
+- **Certificados** - Certificados de completación de cursos
+- **Foros de Discusión** - Comunicación estudiante-instructor
+- **Reseñas de Cursos** - Sistema de calificación y reseñas
+- **Listas de Deseos** - Guardar cursos para después
+- **Cupones y Descuentos** - Precios promocionales
+- **Compras Masivas** - Paquetes de entrenamiento corporativo
+- **Apps Móviles** - Aplicaciones nativas iOS/Android
+- **Content Drip** - Liberación programada de contenido
+- **Transcripciones** - Transcripción y subtítulos de video
+- **Recursos Descargables** - PDF, slides, archivos de código
+- **Aprendizaje Social** - Grupos de estudio e interacción entre pares
+- **Analytics Avanzados** - Métricas detalladas de engagement
+- **Notificaciones por Email** - Actualizaciones y recordatorios de cursos
+- **Soporte Multi-idioma** - Internacionalización completa
 
-### Scalability
-- Cloud-hosted database (Supabase)
-- CDN-delivered static assets
-- Horizontal scaling ready
-- Optimized queries with indexes
+## Capacidades de la Plataforma
 
-### Maintainability
-- TypeScript for type safety
-- Component-based architecture
-- Modular code organization
-- Comprehensive test coverage
-- ESLint code quality checks
+### Escalabilidad
+- Base de datos alojada en la nube (Supabase)
+- Assets estáticos distribuidos por CDN
+- Listo para escalado horizontal
+- Queries optimizadas con índices
 
-### Extensibility
-- Plugin-based architecture potential
-- API-first design
-- Customizable UI components
-- Themeable styling system
-- Webhook support for integrations
+### Mantenibilidad
+- TypeScript para type safety
+- Arquitectura basada en componentes
+- Organización modular del código
+- Cobertura de tests comprehensiva
+- Verificaciones de calidad de código con ESLint
+
+### Extensibilidad
+- Potencial arquitectura basada en plugins
+- Diseño API-first
+- Componentes UI personalizables
+- Sistema de estilos con temas
+- Soporte de webhooks para integraciones

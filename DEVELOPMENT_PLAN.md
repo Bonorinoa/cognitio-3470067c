@@ -1,183 +1,188 @@
-# LearnHub MVP Development Plan
+# Plan de Desarrollo MVP de Cognitio
 
-## Executive Summary
+## Resumen Ejecutivo
 
-LearnHub is a course management system enabling teachers to create and sell video courses while providing students with an engaging learning experience. This document outlines the strategy to reach a full MVP version.
+Cognitio es un sistema de gestión de cursos que permite a instructores crear y vender cursos de video mientras proporciona a los estudiantes una experiencia de aprendizaje atractiva. Este documento describe la estrategia para alcanzar una versión MVP completa.
 
 ---
 
-## Current State Assessment
+## Evaluación del Estado Actual
 
-### ✅ Completed Features
+### ✅ Funcionalidades Completadas
 
-| Category | Feature | Status |
+| Categoría | Funcionalidad | Estado |
 |----------|---------|--------|
-| **Authentication** | Email/password auth via Supabase | ✅ Complete |
-| | Role-based access (student/teacher) | ✅ Complete |
-| | Protected routes | ✅ Complete |
-| **Course Management** | Course creation (title, description, price, category) | ✅ Complete |
-| | Chapter management with ordering | ✅ Complete |
-| | Draft/Publish workflow | ✅ Complete |
-| **Video Integration** | Mux video upload | ✅ Complete |
-| | Mux video playback | ✅ Complete |
-| | Video duration tracking | ✅ Complete |
-| **Payments** | Stripe checkout integration | ✅ Complete |
-| | Purchase recording | ✅ Complete |
-| | Course access after purchase | ✅ Complete |
-| **Student Experience** | Course browsing with filters | ✅ Complete |
-| | Course enrollment | ✅ Complete |
-| | Student dashboard | ✅ Complete |
-| **Teacher Experience** | Teacher dashboard | ✅ Complete |
-| | Course management sidebar | ✅ Complete |
+| **Autenticación** | Auth email/contraseña vía Supabase | ✅ Completo |
+| | Acceso basado en roles (estudiante/instructor) | ✅ Completo |
+| | Rutas protegidas | ✅ Completo |
+| **Gestión de Cursos** | Creación de cursos (título, descripción, precio, categoría) | ✅ Completo |
+| | Gestión de capítulos con ordenamiento | ✅ Completo |
+| | Flujo de borrador/publicación | ✅ Completo |
+| | Carga de imágenes de cursos | ✅ Completo |
+| **Integración de Video** | Carga de video Mux | ✅ Completo |
+| | Reproducción de video Mux | ✅ Completo |
+| | Seguimiento de duración de video | ✅ Completo |
+| **Pagos** | Integración de checkout Stripe | ✅ Completo |
+| | Registro de compras | ✅ Completo |
+| | Acceso a curso después de compra | ✅ Completo |
+| **Experiencia del Estudiante** | Navegación de cursos con filtros | ✅ Completo |
+| | Inscripción a cursos | ✅ Completo |
+| | Dashboard del estudiante | ✅ Completo |
+| | Seguimiento de progreso | ✅ Completo |
+| **Experiencia del Instructor** | Dashboard del instructor | ✅ Completo |
+| | Sidebar de gestión de cursos | ✅ Completo |
+| **UI/UX** | Página Sobre Nosotros con tarjetas apiladas | ✅ Completo |
+| | Animaciones con Framer Motion | ✅ Completo |
+| | Navbar rebrandeado a "Cognitio" | ✅ Completo |
 
-### ⚠️ Partially Complete
+### ⚠️ Parcialmente Completo
 
-| Feature | Current State | Remaining Work |
+| Funcionalidad | Estado Actual | Trabajo Restante |
 |---------|---------------|----------------|
-| Teacher analytics | Basic UI exists | Connect to real data |
+| Analytics del instructor | UI básica existe | Conectar a datos reales |
 
-### ✅ Recently Completed (December 2024)
+### ✅ Completado Recientemente (Diciembre 2024)
 
-| Feature | Status | Notes |
+| Funcionalidad | Estado | Notas |
 |---------|--------|-------|
-| Course image upload | ✅ Complete | Supabase storage upload with validation |
-| Chapter access logic | ✅ Complete | Teachers can access their own courses |
-| Progress tracking | ✅ Complete | Mark complete button and persistence |
-| UI cleanup | ✅ Complete | Removed unused "Watch Demo" button |
+| Carga de imagen de curso | ✅ Completo | Carga a storage Supabase con validación |
+| Lógica de acceso a capítulos | ✅ Completo | Instructores pueden acceder a sus propios cursos |
+| Seguimiento de progreso | ✅ Completo | Botón marcar como completado y persistencia |
+| Limpieza de UI | ✅ Completo | Removido botón "Watch Demo" sin usar |
+| Página Sobre Nosotros | ✅ Completo | Tarjetas apiladas con efecto sticky |
+| Animaciones Framer Motion | ✅ Completo | Animaciones de entrada en viewport |
+| Rebranding a Cognitio | ✅ Completo | Navbar y navegación actualizados |
 
-### ❌ Not Started (MVP Required)
+### ❌ No Iniciado (Requerido para MVP)
 
-| Feature | Priority | Effort |
+| Funcionalidad | Prioridad | Esfuerzo |
 |---------|----------|--------|
-| Course editing | High | Medium |
-| Profile management | Medium | Small |
-| Password reset flow | Medium | Small |
+| Edición de cursos | Alta | Medio |
+| Gestión de perfil | Media | Pequeño |
+| Flujo de reseteo de contraseña | Media | Pequeño |
 
 ---
 
-## MVP Definition
+## Definición del MVP
 
-### Core MVP Features (Must Have)
+### Funcionalidades Core del MVP (Must Have)
 
-1. **Students can:**
-   - Browse and search courses
-   - View course details and preview content
-   - Purchase courses via Stripe
-   - Watch video lessons
-   - Track their progress (mark chapters complete)
-   - View their enrolled courses
+1. **Los estudiantes pueden:**
+   - Navegar y buscar cursos
+   - Ver detalles del curso y contenido de vista previa
+   - Comprar cursos vía Stripe
+   - Ver lecciones de video
+   - Seguir su progreso (marcar capítulos como completados)
+   - Ver sus cursos inscritos
 
-2. **Teachers can:**
-   - Create courses with chapters
-   - Upload videos via Mux
-   - Upload course thumbnail images
-   - Set pricing and categories
-   - Publish/unpublish courses
-   - Edit existing courses
-   - View basic analytics
+2. **Los instructores pueden:**
+   - Crear cursos con capítulos
+   - Cargar videos vía Mux
+   - Cargar imágenes thumbnail de cursos
+   - Establecer precios y categorías
+   - Publicar/despublicar cursos
+   - Editar cursos existentes
+   - Ver analytics básicos
 
-3. **Platform provides:**
-   - Secure authentication
-   - Payment processing
-   - Video hosting and playback
-   - Progress persistence
+3. **La plataforma proporciona:**
+   - Autenticación segura
+   - Procesamiento de pagos
+   - Hosting y reproducción de video
+   - Persistencia de progreso
 
 ---
 
-## Development Phases
+## Fases de Desarrollo
 
-### Phase 1: Core Fixes (Week 1) ✅ COMPLETED
-**Goal:** Fix existing functionality gaps
+### Fase 1: Correcciones Core (Semana 1) ✅ COMPLETADA
+**Objetivo:** Corregir gaps de funcionalidad existentes
 
-| Task | Priority | Complexity | Status | Notes |
+| Tarea | Prioridad | Complejidad | Estado | Notas |
 |------|----------|------------|--------|-------|
-| Fix chapter access for teachers | High | Small | ✅ Complete | Teachers can now access their own course videos |
-| Implement course image upload | High | Medium | ✅ Complete | Supabase storage with file validation |
-| Remove unused UI elements | Low | Small | ✅ Complete | Removed "Watch Demo" button |
-| Fix forwardRef warnings | Low | Small | ⏸️ Deferred | Not critical for MVP |
-| Clean up unused code | Low | Small | ⏸️ Deferred | Not critical for MVP |
+| Corregir acceso de instructores a sus propios cursos | Alta | Pequeña | ✅ Completo | Instructores ahora pueden acceder a sus propios videos |
+| Implementar carga de imagen de curso | Alta | Media | ✅ Completo | Storage Supabase con validación de archivo |
+| Remover elementos UI sin usar | Baja | Pequeña | ✅ Completo | Removido botón "Watch Demo" |
 
-**Deliverables:**
-- ✅ Course owners can always play their videos
-- ✅ Teachers can upload course thumbnails
-- ✅ Improved UI/UX with removal of placeholder buttons
+**Entregables:**
+- ✅ Dueños de cursos siempre pueden reproducir sus videos
+- ✅ Instructores pueden cargar thumbnails de cursos
+- ✅ UI/UX mejorado con remoción de botones placeholder
 
-### Phase 2: Progress Tracking (Week 2) ✅ COMPLETED
-**Goal:** Complete student progress features
+### Fase 2: Seguimiento de Progreso (Semana 2) ✅ COMPLETADA
+**Objetivo:** Completar funcionalidades de progreso del estudiante
 
-| Task | Priority | Complexity | Status | Notes |
+| Tarea | Prioridad | Complejidad | Estado | Notas |
 |------|----------|------------|--------|-------|
-| Mark chapter complete button | High | Small | ✅ Complete | Button shown for purchased courses |
-| Progress persistence | High | Small | ✅ Complete | Saves to user_progress table |
-| Chapter completion display | High | Small | ✅ Complete | Checkmarks shown in chapter list |
-| Auto-complete on video end | Medium | Medium | ⏸️ Deferred | Can be added later |
-| Resume functionality | Medium | Small | ⏸️ Deferred | Can be added later |
+| Botón marcar capítulo completado | Alta | Pequeña | ✅ Completo | Botón mostrado para cursos comprados |
+| Persistencia de progreso | Alta | Pequeña | ✅ Completo | Guarda en tabla user_progress |
+| Visualización de completación de capítulos | Alta | Pequeña | ✅ Completo | Checkmarks mostrados en lista de capítulos |
 
-**Deliverables:**
-- ✅ Students can manually mark chapters complete
-- ✅ Progress persists across sessions
-- ✅ Chapter list shows completion status
+**Entregables:**
+- ✅ Estudiantes pueden marcar manualmente capítulos como completados
+- ✅ Progreso persiste entre sesiones
+- ✅ Lista de capítulos muestra estado de completación
 
-### Phase 3: Course Editing (Week 2-3)
-**Goal:** Allow teachers to edit published courses
+### Fase 3: Edición de Cursos (Semana 2-3)
+**Objetivo:** Permitir a instructores editar cursos publicados
 
-| Task | Priority | Complexity | Description |
+| Tarea | Prioridad | Complejidad | Descripción |
 |------|----------|------------|-------------|
-| Edit course page | High | Medium | Route /teacher/courses/:id/edit |
-| Update course details | High | Small | Title, description, price, category |
-| Edit chapters | High | Medium | Add, remove, reorder chapters |
-| Replace chapter videos | Medium | Medium | Upload new video for existing chapter |
-| Delete course | Medium | Small | With confirmation dialog |
+| Página de edición de curso | Alta | Media | Ruta /teacher/courses/:id/edit |
+| Actualizar detalles del curso | Alta | Pequeña | Título, descripción, precio, categoría |
+| Editar capítulos | Alta | Media | Agregar, remover, reordenar capítulos |
+| Reemplazar videos de capítulos | Media | Media | Cargar nuevo video para capítulo existente |
+| Eliminar curso | Media | Pequeña | Con diálogo de confirmación |
 
-**Deliverables:**
-- Teachers can fully edit their courses
-- Changes reflect immediately for students
-- Safe deletion with confirmation
+**Entregables:**
+- Instructores pueden editar completamente sus cursos
+- Cambios se reflejan inmediatamente para estudiantes
+- Eliminación segura con confirmación
 
-### Phase 4: User Management (Week 3)
-**Goal:** Complete user profile features
+### Fase 4: Gestión de Usuarios (Semana 3)
+**Objetivo:** Completar funcionalidades de perfil de usuario
 
-| Task | Priority | Complexity | Description |
+| Tarea | Prioridad | Complejidad | Descripción |
 |------|----------|------------|-------------|
-| Profile settings page | Medium | Small | View/edit profile info |
-| Avatar upload | Low | Small | Upload profile picture |
-| Password change | Medium | Small | Change password form |
-| Password reset | Medium | Medium | Email-based reset flow |
+| Página de configuración de perfil | Media | Pequeña | Ver/editar info de perfil |
+| Carga de avatar | Baja | Pequeña | Cargar foto de perfil |
+| Cambio de contraseña | Media | Pequeña | Formulario de cambio de contraseña |
+| Reseteo de contraseña | Media | Media | Flujo de reseteo basado en email |
 
-**Deliverables:**
-- Users can update their profile
-- Password management is complete
+**Entregables:**
+- Usuarios pueden actualizar su perfil
+- Gestión de contraseña completa
 
-### Phase 5: Analytics & Polish (Week 4)
-**Goal:** Teacher insights and UX improvements
+### Fase 5: Analytics y Pulido (Semana 4)
+**Objetivo:** Insights para instructores y mejoras de UX
 
-| Task | Priority | Complexity | Description |
+| Tarea | Prioridad | Complejidad | Descripción |
 |------|----------|------------|-------------|
-| Real analytics data | Medium | Medium | Connect dashboard to actual DB data |
-| Revenue breakdown | Medium | Small | Per-course revenue display |
-| Enrollment metrics | Medium | Small | Student count per course |
-| Email notifications | Low | Medium | Welcome email, purchase confirmation |
-| Loading/error states | Low | Small | Improve edge case handling |
+| Datos de analytics reales | Media | Media | Conectar dashboard a datos reales de DB |
+| Desglose de ingresos | Media | Pequeña | Visualización de ingresos por curso |
+| Métricas de inscripción | Media | Pequeña | Conteo de estudiantes por curso |
+| Notificaciones por email | Baja | Media | Email de bienvenida, confirmación de compra |
+| Estados de carga/error | Baja | Pequeña | Mejorar manejo de edge cases |
 
-**Deliverables:**
-- Teachers see real analytics
-- Platform feels polished and complete
+**Entregables:**
+- Instructores ven analytics reales
+- Plataforma se siente pulida y completa
 
 ---
 
-## Technical Architecture
+## Arquitectura Técnica
 
-### Current Stack
+### Stack Actual
 ```
 Frontend: React 18 + TypeScript + Vite + Tailwind CSS
-UI: shadcn/ui + Radix UI
+UI: shadcn/ui + Radix UI + Framer Motion
 Backend: Supabase (PostgreSQL + Auth + Edge Functions)
 Video: Mux
-Payments: Stripe
-State: TanStack Query
+Pagos: Stripe
+Estado: TanStack Query
+i18n: i18next (español por defecto)
 ```
 
-### Database Schema (Existing)
+### Esquema de Base de Datos (Existente)
 ```
 ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
 │   profiles  │     │   courses   │     │  chapters   │
@@ -204,146 +209,138 @@ State: TanStack Query
 └─────────────┘     └─────────────┘
 ```
 
-### Required Storage Bucket
+### Bucket de Storage Requerido
 ```sql
--- Course thumbnails bucket (to be created)
+-- Bucket de thumbnails de cursos (ya creado)
 INSERT INTO storage.buckets (id, name, public) 
 VALUES ('course-images', 'course-images', true);
 ```
 
 ---
 
-## Risk Assessment
+## Evaluación de Riesgos
 
-| Risk | Probability | Impact | Mitigation |
+| Riesgo | Probabilidad | Impacto | Mitigación |
 |------|-------------|--------|------------|
-| Mux API rate limits | Low | Medium | Implement retry logic, queue uploads |
-| Stripe webhook failures | Medium | High | Add manual purchase verification |
-| Large video uploads | Medium | Medium | Show progress, handle timeouts |
-| Database performance | Low | High | Add indexes, optimize queries |
+| Rate limits de API Mux | Baja | Media | Implementar lógica de retry, encolar cargas |
+| Fallos de webhook Stripe | Media | Alta | Agregar verificación manual de compras |
+| Cargas de video grandes | Media | Media | Mostrar progreso, manejar timeouts |
+| Rendimiento de base de datos | Baja | Alta | Agregar índices, optimizar queries |
 
 ---
 
-## Success Metrics
+## Métricas de Éxito
 
-### MVP Launch Criteria
-- [ ] Teachers can create courses with videos end-to-end
-- [ ] Students can purchase and watch courses
-- [ ] Progress tracking works reliably
-- [ ] No critical bugs or console errors
-- [ ] Mobile responsive on all pages
-- [ ] Page load times < 3 seconds
+### Criterios de Lanzamiento del MVP
+- [x] Instructores pueden crear cursos con videos end-to-end
+- [x] Estudiantes pueden comprar y ver cursos
+- [x] Seguimiento de progreso funciona confiablemente
+- [ ] Sin bugs críticos o errores de consola
+- [ ] Mobile responsive en todas las páginas
+- [ ] Tiempos de carga de página < 3 segundos
 
-### Post-MVP KPIs
-- Course creation completion rate > 80%
-- Video playback success rate > 99%
-- Checkout conversion rate > 60%
-- Student course completion rate > 30%
+### KPIs Post-MVP
+- Tasa de completación de creación de cursos > 80%
+- Tasa de éxito de reproducción de video > 99%
+- Tasa de conversión de checkout > 60%
+- Tasa de completación de cursos por estudiantes > 30%
 
 ---
 
-## Timeline Summary
+## Resumen de Timeline
 
-| Phase | Duration | Focus |
+| Fase | Duración | Enfoque |
 |-------|----------|-------|
-| Phase 1 | Week 1 | Core fixes |
-| Phase 2 | Week 2 | Progress tracking |
-| Phase 3 | Week 2-3 | Course editing |
-| Phase 4 | Week 3 | User management |
-| Phase 5 | Week 4 | Analytics & polish |
+| Fase 1 | Semana 1 | Correcciones core ✅ |
+| Fase 2 | Semana 2 | Seguimiento de progreso ✅ |
+| Fase 3 | Semana 2-3 | Edición de cursos |
+| Fase 4 | Semana 3 | Gestión de usuarios |
+| Fase 5 | Semana 4 | Analytics y pulido |
 
-**Estimated Total: 4 weeks to full MVP**
-
----
-
-## Next Steps
-
-### Completed (December 2024)
-1. ✅ Fixed chapter access logic for course owners
-2. ✅ Implemented course image upload with Supabase storage
-3. ✅ Completed progress tracking features (mark complete, display status)
-4. ✅ Removed unused UI elements (Watch Demo button)
-
-### Immediate Priorities
-1. **Course Editing**: Allow teachers to edit published courses
-2. **Testing & Validation**: Comprehensive testing of all implemented features
-3. **User Management**: Profile settings and password reset
-4. **Analytics**: Connect teacher dashboard to real data
+**Estimado Total: 4 semanas hasta MVP completo**
 
 ---
 
-## Recent Changes (December 22, 2024)
+## Próximos Pasos
 
-### 1. UI/UX Improvements
-- **Removed "Watch Demo" button** from landing page (Index.tsx)
-  - Was pointing to dashboard which doesn't make sense for non-authenticated users
-  - Cleaned up unused Play icon import
+### Completado (Diciembre 2024)
+1. ✅ Corregida lógica de acceso a capítulos para dueños de cursos
+2. ✅ Implementada carga de imagen de curso con storage Supabase
+3. ✅ Completadas funcionalidades de seguimiento de progreso
+4. ✅ Removidos elementos UI sin usar
+5. ✅ Creada página Sobre Nosotros con tarjetas apiladas
+6. ✅ Agregadas animaciones Framer Motion
+7. ✅ Rebrandeado de "LearnHub" a "Cognitio"
 
-### 2. Access Control Fixes
-- **Fixed teacher access to own courses** (CoursePage.tsx)
-  - Added `isOwner` check: `user?.id === course?.teacher_id`
-  - Updated `hasAccess` logic: `hasPurchased || isOwner`
-  - Teachers now see "Your Course" badge instead of purchase button
-  - Teachers can view all chapters without purchasing
-
-### 3. Progress Tracking Implementation
-- **Added progress tracking to CoursePage.tsx:**
-  - Queries `user_progress` table for completion status
-  - Displays "Mark as Complete" button for purchased courses
-  - Shows checkmarks for completed chapters in chapter list
-  - Persists progress via `handleMarkComplete` function
-  - Uses `upsert` to update existing or create new progress records
-
-### 4. Course Image Upload
-- **Implemented full image upload in CreateCourse.tsx:**
-  - File input with validation (image type, 2MB max)
-  - Image preview before upload
-  - Upload to Supabase storage (`course-images` bucket)
-  - Saves public URL to course record
-  - Disabled save buttons during upload
-  
-- **Created storage migration:**
-  - Migration: `20251222201400_create_course_images_bucket.sql`
-  - Public bucket for viewing
-  - RLS policies for authenticated uploads
-  - User-specific update/delete permissions
-
-### 5. Database Updates
-- **Progress tracking utilizes existing schema:**
-  - Table: `user_progress`
-  - Columns: `user_id`, `chapter_id`, `is_completed`, `completed_at`
-  - Unique constraint on `(user_id, chapter_id)`
+### Prioridades Inmediatas
+1. **Edición de Cursos**: Permitir a instructores editar cursos publicados
+2. **Testing y Validación**: Testing comprehensivo de todas las funcionalidades implementadas
+3. **Gestión de Usuarios**: Configuración de perfil y reseteo de contraseña
+4. **Analytics**: Conectar dashboard de instructor a datos reales
 
 ---
 
-## Appendix: File Structure
+## Cambios Recientes (Diciembre 29, 2024)
+
+### 1. Página Sobre Nosotros
+- **Implementado efecto de tarjetas apiladas (sticky stack)** para perfiles de instructores
+  - 8 tarjetas en total (4 por fundador)
+  - Gustavo González Bonorino y Augusto González Bonorino
+  - Posiciones sticky con offsets dinámicos
+  - Z-index incremental para efecto de apilamiento
+  - Layout 60% bio / 40% foto
+
+### 2. Animaciones con Framer Motion
+- **Agregadas animaciones de entrada** a tarjetas de instructor
+  - Fade in desde abajo (y: 60 → 0)
+  - Scale in (0.95 → 1)
+  - Duración suave de 0.5s
+  - Delay de 0.1s entre tarjetas
+
+### 3. Mejoras de UI
+- **Tarjetas más angostas** (max-w-3xl) para mejor legibilidad
+- **Navbar actualizado** con links: Inicio | Cursos | Sobre Nosotros
+- **Footer de página** con lema: "Nos dedicamos a aprender enseñando"
+
+### 4. Limpieza de Código
+- **Removido InstructorCardDeck.tsx** (reemplazado por StickyInstructorCard)
+- **Actualizada estructura de archivos** en documentación
+
+---
+
+## Apéndice: Estructura de Archivos
 
 ```
 src/
 ├── components/
-│   ├── ui/                 # shadcn/ui components
-│   ├── ChapterList.tsx     # Chapter navigation
-│   ├── CourseCard.tsx      # Course display card
-│   ├── Navbar.tsx          # Global navigation
-│   ├── ProgressCard.tsx    # Stats display
-│   ├── TeacherSidebar.tsx  # Teacher nav
-│   ├── VideoPlayer.tsx     # Mux player wrapper
-│   └── VideoUpload.tsx     # Video upload component
+│   ├── ui/                     # Componentes shadcn/ui
+│   ├── ChapterList.tsx         # Navegación de capítulos
+│   ├── CourseCard.tsx          # Tarjeta de visualización de curso
+│   ├── Navbar.tsx              # Navegación global (Cognitio)
+│   ├── ProgressCard.tsx        # Visualización de estadísticas
+│   ├── StickyInstructorCard.tsx # Tarjeta de instructor con efecto sticky
+│   ├── TeacherSidebar.tsx      # Navegación de instructor
+│   ├── VideoPlayer.tsx         # Wrapper de reproductor Mux
+│   └── VideoUpload.tsx         # Componente de carga de video
 ├── pages/
-│   ├── Index.tsx           # Landing page
-│   ├── AuthPage.tsx        # Login/signup
-│   ├── CoursePage.tsx      # Course detail/player
-│   ├── CoursesPage.tsx     # Course catalog
-│   ├── Dashboard.tsx       # Student dashboard
-│   ├── CreateCourse.tsx    # Course creation
+│   ├── Index.tsx               # Página de inicio
+│   ├── AuthPage.tsx            # Login/signup
+│   ├── CoursePage.tsx          # Detalle/reproductor de curso
+│   ├── CoursesPage.tsx         # Catálogo de cursos
+│   ├── Dashboard.tsx           # Dashboard del estudiante
+│   ├── CreateCourse.tsx        # Creación de cursos
+│   ├── AboutPage.tsx           # Página Sobre Nosotros
 │   ├── TeacherDashboard.tsx
 │   ├── TeacherCourses.tsx
 │   ├── TeacherAnalytics.tsx
 │   └── TeacherSettings.tsx
 ├── contexts/
-│   └── AuthContext.tsx     # Auth state management
+│   └── AuthContext.tsx         # Gestión de estado de auth
 ├── hooks/
-│   └── useUserRole.ts      # Role-based access
+│   └── useUserRole.ts          # Acceso basado en roles
+├── locales/
+│   ├── es.json                 # Traducciones español
+│   └── en.json                 # Traducciones inglés (futuro)
 └── integrations/
-    └── supabase/           # Supabase client & types
+    └── supabase/               # Cliente y tipos Supabase
 ```

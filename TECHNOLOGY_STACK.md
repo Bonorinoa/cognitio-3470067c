@@ -1,211 +1,226 @@
-# Technology Stack
+# Stack Tecnológico
 
-## Overview
-Dark Bloom Learning is a modern educational platform built with cutting-edge web technologies, providing a scalable and maintainable architecture for online learning.
+## Resumen
 
-## Core Technologies
+Cognitio es una plataforma educativa moderna construida con tecnologías web de vanguardia, proporcionando una arquitectura escalable y mantenible para aprendizaje en línea.
 
-### Frontend Framework
-- **React 18.3.1** - Modern JavaScript library for building user interfaces
-  - Hooks-based architecture
-  - Concurrent rendering features
-  - Component-based development
+## Tecnologías Core
 
-### Build Tools & Development
-- **Vite 5.4.19** - Next-generation frontend build tool
-  - Lightning-fast HMR (Hot Module Replacement)
-  - Optimized production builds
-  - ES modules-based development
-- **TypeScript 5.8.3** - Strongly-typed JavaScript superset
-  - Type safety throughout the codebase
-  - Enhanced IDE support and autocompletion
-  - Better code maintainability
+### Framework Frontend
+- **React 18.3.1** - Biblioteca JavaScript moderna para construir interfaces de usuario
+  - Arquitectura basada en hooks
+  - Características de renderizado concurrente
+  - Desarrollo basado en componentes
 
-### UI Framework & Styling
-- **Tailwind CSS 3.4.17** - Utility-first CSS framework
-  - Responsive design utilities
-  - Custom theme configuration
-  - JIT (Just-In-Time) compiler
-- **shadcn/ui** - High-quality, accessible React components
-  - Built on Radix UI primitives
-  - Customizable component library
-  - 40+ pre-built components including:
+### Herramientas de Build y Desarrollo
+- **Vite 5.4.19** - Herramienta de build frontend de próxima generación
+  - HMR (Hot Module Replacement) ultrarrápido
+  - Builds de producción optimizados
+  - Desarrollo basado en ES modules
+- **TypeScript 5.8.3** - Superset de JavaScript fuertemente tipado
+  - Type safety en todo el codebase
+  - Soporte mejorado de IDE y autocompletado
+  - Mejor mantenibilidad del código
+
+### Framework UI y Estilos
+- **Tailwind CSS 3.4.17** - Framework CSS utility-first
+  - Utilidades de diseño responsive
+  - Configuración de tema personalizado
+  - Compilador JIT (Just-In-Time)
+- **shadcn/ui** - Componentes React de alta calidad y accesibles
+  - Construido sobre primitivas Radix UI
+  - Biblioteca de componentes personalizable
+  - 40+ componentes pre-construidos incluyendo:
     - Dialogs, Dropdowns, Modals
     - Forms, Inputs, Selects
-    - Navigation components
-    - Data display components
-- **Radix UI** - Unstyled, accessible component primitives
-  - WAI-ARIA compliant
-  - Keyboard navigation support
-  - Focus management
-- **Lucide React 0.462.0** - Beautiful, consistent icon library
-- **next-themes 0.3.0** - Theme management for dark/light modes
+    - Componentes de navegación
+    - Componentes de visualización de datos
+- **Radix UI** - Primitivas de componentes no estilizados y accesibles
+  - Cumple con WAI-ARIA
+  - Soporte de navegación por teclado
+  - Gestión de focus
+- **Lucide React 0.462.0** - Biblioteca de iconos bella y consistente
+- **next-themes 0.3.0** - Gestión de temas para modos dark/light
 
-### Backend & Database
-- **Supabase 2.89.0** - Open-source Firebase alternative
-  - PostgreSQL database
-  - Real-time subscriptions
+### Animaciones
+- **Framer Motion 12.x** - Biblioteca de animaciones para React
+  - Animaciones de entrada/salida suaves
+  - Animaciones basadas en scroll
+  - Gestos y transiciones
+
+### Internacionalización
+- **i18next 25.x** - Framework de internacionalización
+  - Soporte multi-idioma
+  - Español como idioma por defecto
+- **react-i18next 16.x** - Bindings de React para i18next
+  - Hooks para traducciones
+  - Componentes de traducción
+
+### Backend y Base de Datos
+- **Supabase 2.89.0** - Alternativa open-source a Firebase
+  - Base de datos PostgreSQL
+  - Suscripciones en tiempo real
   - Row-level security
-  - Built-in authentication
-  - RESTful API & GraphQL support
+  - Autenticación integrada
+  - Soporte para API RESTful y GraphQL
 
-#### Database Schema
-The platform uses the following main tables:
-- **profiles** - User profile information (role, avatar, full name)
-- **courses** - Course metadata (title, description, price, category)
-- **chapters** - Course content structure (videos, order, duration)
-- **purchases** - Course enrollment tracking
-- **user_progress** - Chapter completion tracking
+#### Esquema de Base de Datos
+La plataforma usa las siguientes tablas principales:
+- **profiles** - Información de perfil de usuario (rol, avatar, nombre completo)
+- **courses** - Metadatos de cursos (título, descripción, precio, categoría)
+- **chapters** - Estructura de contenido del curso (videos, orden, duración)
+- **purchases** - Seguimiento de inscripciones en cursos
+- **user_progress** - Seguimiento de completación de capítulos
 
-### State Management & Data Fetching
-- **TanStack Query (React Query) 5.83.0** - Powerful data synchronization
-  - Server state management
-  - Automatic caching and refetching
-  - Optimistic updates
-  - Request deduplication
+### Gestión de Estado y Fetching de Datos
+- **TanStack Query (React Query) 5.83.0** - Sincronización de datos potente
+  - Gestión de estado del servidor
+  - Caching y refetching automático
+  - Actualizaciones optimistas
+  - Deduplicación de peticiones
 
 ### Routing
-- **React Router DOM 6.30.1** - Declarative routing for React
-  - Nested routing support
-  - Dynamic route matching
-  - Navigation guards
-  - URL parameter handling
+- **React Router DOM 6.30.1** - Routing declarativo para React
+  - Soporte de routing anidado
+  - Matching de rutas dinámico
+  - Guards de navegación
+  - Manejo de parámetros URL
 
-### Form Management
-- **React Hook Form 7.61.1** - Performant form library
-  - Minimal re-renders
-  - Built-in validation
-  - Easy integration with UI libraries
-- **Zod 3.25.76** - TypeScript-first schema validation
-  - Runtime type checking
-  - Schema composition
-  - Error message customization
-- **@hookform/resolvers 3.10.0** - Validation resolvers for React Hook Form
+### Gestión de Formularios
+- **React Hook Form 7.61.1** - Biblioteca de formularios performante
+  - Re-renders mínimos
+  - Validación integrada
+  - Fácil integración con bibliotecas UI
+- **Zod 3.25.76** - Validación de esquemas TypeScript-first
+  - Type checking en runtime
+  - Composición de esquemas
+  - Personalización de mensajes de error
+- **@hookform/resolvers 3.10.0** - Resolvers de validación para React Hook Form
 
-### Data Visualization
-- **Recharts 2.15.4** - Composable charting library
-  - Responsive charts
-  - Multiple chart types
-  - Customizable styling
-  - Animation support
+### Visualización de Datos
+- **Recharts 2.15.4** - Biblioteca de gráficos composable
+  - Gráficos responsive
+  - Múltiples tipos de gráficos
+  - Estilos personalizables
+  - Soporte de animaciones
 
-### Media Handling
-- **Embla Carousel React 8.6.0** - Lightweight carousel library
-  - Touch/swipe support
-  - Keyboard navigation
-  - Customizable transitions
+### Manejo de Medios
+- **Embla Carousel React 8.6.0** - Biblioteca de carrusel ligera
+  - Soporte touch/swipe
+  - Navegación por teclado
+  - Transiciones personalizables
 
-### Additional UI Libraries
-- **date-fns 3.6.0** - Modern JavaScript date utility library
-- **react-day-picker 8.10.1** - Date picker component
-- **cmdk 1.1.1** - Command menu component (⌘K interface)
-- **sonner 1.7.4** - Toast notification system
-- **vaul 0.9.9** - Drawer component for mobile
-- **input-otp 1.4.2** - OTP input component
-- **class-variance-authority 0.7.1** - Variant-based styling utility
-- **clsx 2.1.1** - Utility for constructing className strings
-- **tailwind-merge 2.6.0** - Merge Tailwind CSS classes
+### Bibliotecas UI Adicionales
+- **date-fns 3.6.0** - Biblioteca de utilidades de fecha JavaScript moderna
+- **react-day-picker 8.10.1** - Componente de selector de fecha
+- **cmdk 1.1.1** - Componente de menú de comandos (interfaz ⌘K)
+- **sonner 1.7.4** - Sistema de notificaciones toast
+- **vaul 0.9.9** - Componente drawer para móvil
+- **input-otp 1.4.2** - Componente de input OTP
+- **class-variance-authority 0.7.1** - Utilidad de estilos basados en variantes
+- **clsx 2.1.1** - Utilidad para construir strings className
+- **tailwind-merge 2.6.0** - Merge de clases Tailwind CSS
 
-## Testing Infrastructure
+## Infraestructura de Testing
 
-### Testing Framework
-- **Vitest 4.0.16** - Fast, Vite-native unit test framework
-  - Compatible with Jest APIs
-  - Lightning-fast execution
-  - Native ES modules support
-  - Built-in code coverage
+### Framework de Testing
+- **Vitest 4.0.16** - Framework de unit testing rápido y nativo de Vite
+  - Compatible con APIs de Jest
+  - Ejecución ultrarrápida
+  - Soporte nativo de ES modules
+  - Code coverage integrado
 
-### Testing Utilities
-- **@testing-library/react 16.3.1** - React testing utilities
-  - Component testing best practices
-  - User-centric queries
-  - Async utilities
-- **@testing-library/dom 10.4.1** - DOM testing utilities
-- **@testing-library/jest-dom 6.9.1** - Custom Jest matchers
-- **@testing-library/user-event 14.6.1** - User interaction simulation
-- **jsdom 27.3.0** - JavaScript implementation of web standards
-- **MSW (Mock Service Worker) 2.12.4** - API mocking library
-  - Network-level request interception
-  - Reusable mock definitions
-  - Works in both Node.js and browsers
+### Utilidades de Testing
+- **@testing-library/react 16.3.1** - Utilidades de testing React
+  - Mejores prácticas de testing de componentes
+  - Queries centradas en el usuario
+  - Utilidades async
+- **@testing-library/dom 10.4.1** - Utilidades de testing DOM
+- **@testing-library/jest-dom 6.9.1** - Matchers Jest personalizados
+- **@testing-library/user-event 14.6.1** - Simulación de interacción de usuario
+- **jsdom 27.3.0** - Implementación JavaScript de estándares web
+- **MSW (Mock Service Worker) 2.12.4** - Biblioteca de mocking de API
+  - Intercepción de peticiones a nivel de red
+  - Definiciones de mock reutilizables
+  - Funciona en Node.js y navegadores
 
-## Code Quality & Development Tools
+## Calidad de Código y Herramientas de Desarrollo
 
-### Linting & Formatting
-- **ESLint 9.32.0** - JavaScript/TypeScript linting
-  - Custom configuration
-  - React-specific rules
-  - TypeScript integration
-- **@typescript-eslint** - TypeScript ESLint parser and rules
-- **eslint-plugin-react-hooks 5.2.0** - React Hooks linting rules
-- **eslint-plugin-react-refresh 0.4.20** - React Fast Refresh linting
+### Linting y Formateo
+- **ESLint 9.32.0** - Linting JavaScript/TypeScript
+  - Configuración personalizada
+  - Reglas específicas de React
+  - Integración con TypeScript
+- **@typescript-eslint** - Parser y reglas ESLint para TypeScript
+- **eslint-plugin-react-hooks 5.2.0** - Reglas de linting para React Hooks
+- **eslint-plugin-react-refresh 0.4.20** - Linting para React Fast Refresh
 
-### CSS Processing
-- **PostCSS 8.5.6** - CSS transformation tool
-- **Autoprefixer 10.4.21** - Automatic vendor prefix addition
-- **@tailwindcss/typography 0.5.16** - Beautiful typographic defaults
+### Procesamiento CSS
+- **PostCSS 8.5.6** - Herramienta de transformación CSS
+- **Autoprefixer 10.4.21** - Adición automática de prefijos de vendor
+- **@tailwindcss/typography 0.5.16** - Defaults tipográficos bellos
 
-### Build Configuration
-- **@vitejs/plugin-react-swc 3.11.0** - React plugin using SWC
-  - Faster compilation than Babel
-  - Optimized for React Fast Refresh
+### Configuración de Build
+- **@vitejs/plugin-react-swc 3.11.0** - Plugin React usando SWC
+  - Compilación más rápida que Babel
+  - Optimizado para React Fast Refresh
 
-## Development Workflow
+## Flujo de Trabajo de Desarrollo
 
-### Package Management
-- **npm** - Primary package manager
-  - package-lock.json for reproducible builds
-- **bun.lockb** - Alternative Bun runtime lockfile (optional)
+### Gestión de Paquetes
+- **npm** - Gestor de paquetes principal
+  - package-lock.json para builds reproducibles
+- **bun.lockb** - Lockfile alternativo de Bun runtime (opcional)
 
-### Available Scripts
+### Scripts Disponibles
 ```bash
-npm run dev        # Start development server
-npm run build      # Production build
-npm run build:dev  # Development build
-npm run lint       # Run ESLint
-npm run preview    # Preview production build
-npx vitest run     # Run test suite
+npm run dev        # Iniciar servidor de desarrollo
+npm run build      # Build de producción
+npm run build:dev  # Build de desarrollo
+npm run lint       # Ejecutar ESLint
+npm run preview    # Vista previa del build de producción
+npx vitest run     # Ejecutar suite de tests
 ```
 
-## Browser Support
-The application targets modern browsers with ES2020+ support:
-- Chrome/Edge (latest)
-- Firefox (latest)
-- Safari (latest)
-- Mobile browsers (iOS Safari, Chrome Mobile)
+## Soporte de Navegadores
+La aplicación apunta a navegadores modernos con soporte ES2020+:
+- Chrome/Edge (últimas versiones)
+- Firefox (últimas versiones)
+- Safari (últimas versiones)
+- Navegadores móviles (iOS Safari, Chrome Mobile)
 
-## Performance Optimizations
-- Code splitting via dynamic imports
-- Tree shaking for minimal bundle size
-- Image optimization
-- Lazy loading of routes and components
-- React concurrent features
-- Optimistic UI updates with React Query
+## Optimizaciones de Rendimiento
+- Code splitting vía imports dinámicos
+- Tree shaking para tamaño de bundle mínimo
+- Optimización de imágenes
+- Lazy loading de rutas y componentes
+- Características concurrentes de React
+- Actualizaciones optimistas con React Query
 
-## Security Features
-- Row-level security in Supabase
-- Environment variable protection
-- Secure authentication flow
-- CORS protection
-- XSS prevention through React's built-in escaping
+## Características de Seguridad
+- Row-level security en Supabase
+- Protección de variables de entorno
+- Flujo de autenticación seguro
+- Protección CORS
+- Prevención XSS a través del escape integrado de React
 
-## Accessibility
-- WCAG 2.1 Level AA compliance (via Radix UI)
-- Keyboard navigation support
-- Screen reader compatibility
-- ARIA labels and roles
-- Focus management
-- Semantic HTML
+## Accesibilidad
+- Cumplimiento WCAG 2.1 Level AA (vía Radix UI)
+- Soporte de navegación por teclado
+- Compatibilidad con lectores de pantalla
+- Labels y roles ARIA
+- Gestión de focus
+- HTML semántico
 
-## Deployment
-The application is configured for deployment to:
-- Lovable platform (primary)
-- Static hosting services (Vercel, Netlify, etc.)
-- CDN-based distribution
+## Despliegue
+La aplicación está configurada para despliegue en:
+- Plataforma Lovable (principal)
+- Servicios de hosting estático (Vercel, Netlify, etc.)
+- Distribución basada en CDN
 
-## Environment Configuration
-Required environment variables:
-- `VITE_SUPABASE_URL` - Supabase project URL
-- `VITE_SUPABASE_ANON_KEY` - Supabase anonymous key
+## Configuración de Entorno
+Variables de entorno requeridas:
+- `VITE_SUPABASE_URL` - URL del proyecto Supabase
+- `VITE_SUPABASE_ANON_KEY` - Clave anónima de Supabase
 
-See `.env` file for configuration details.
+Ver archivo `.env` para detalles de configuración.
