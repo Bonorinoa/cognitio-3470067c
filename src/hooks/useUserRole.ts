@@ -6,11 +6,13 @@ export type AppRole = "admin" | "teacher" | "student";
 
 interface UseUserRoleResult {
   roles: AppRole[];
-  isTeacher: boolean;
+  isInstructor: boolean;
   isAdmin: boolean;
   isStudent: boolean;
   isLoading: boolean;
   hasRole: (role: AppRole) => boolean;
+  /** @deprecated Use isInstructor instead */
+  isTeacher: boolean;
 }
 
 export const useUserRole = (): UseUserRoleResult => {
@@ -51,9 +53,12 @@ export const useUserRole = (): UseUserRoleResult => {
 
   const hasRole = (role: AppRole): boolean => roles.includes(role);
 
+  const isInstructor = hasRole("teacher") || hasRole("admin");
+
   return {
     roles,
-    isTeacher: hasRole("teacher") || hasRole("admin"),
+    isInstructor,
+    isTeacher: isInstructor, // Deprecated alias for backward compatibility
     isAdmin: hasRole("admin"),
     isStudent: hasRole("student") || roles.length === 0, // Default to student if no roles
     isLoading,

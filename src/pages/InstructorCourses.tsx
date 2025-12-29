@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import TeacherSidebar from "@/components/TeacherSidebar";
+import InstructorSidebar from "@/components/InstructorSidebar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -26,7 +26,7 @@ interface Course {
   student_count: number;
 }
 
-const TeacherCourses = () => {
+const InstructorCourses = () => {
   const { user } = useAuth();
   const { isAdmin } = useUserRole();
   const [courses, setCourses] = useState<Course[]>([]);
@@ -141,7 +141,7 @@ const TeacherCourses = () => {
 
   return (
     <div className="flex min-h-screen bg-background">
-      <TeacherSidebar />
+      <InstructorSidebar />
       <main className="flex-1 p-8">
         <div className="mb-8 flex items-center justify-between">
           <div>
@@ -151,7 +151,7 @@ const TeacherCourses = () => {
             </p>
           </div>
           <Button asChild>
-            <Link to="/teacher/create">
+            <Link to="/instructor/create">
               <PlusCircle className="mr-2 h-4 w-4" />
               Create Course
             </Link>
@@ -182,7 +182,7 @@ const TeacherCourses = () => {
               Get started by creating your first course
             </p>
             <Button asChild>
-              <Link to="/teacher/create">
+              <Link to="/instructor/create">
                 <PlusCircle className="mr-2 h-4 w-4" />
                 Create Course
               </Link>
@@ -254,7 +254,7 @@ const TeacherCourses = () => {
                     </Link>
                   </Button>
                   <Button variant="outline" size="sm" className="flex-1" asChild>
-                    <Link to={`/teacher/edit/${course.id}`}>
+                    <Link to={`/instructor/edit/${course.id}`}>
                       <Edit className="mr-1.5 h-3.5 w-3.5" />
                       Edit
                     </Link>
@@ -277,4 +277,4 @@ const TeacherCourses = () => {
   );
 };
 
-export default TeacherCourses;
+export default InstructorCourses;

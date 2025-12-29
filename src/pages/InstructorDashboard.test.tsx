@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@/test/utils';
-import TeacherDashboard from './TeacherDashboard';
+import InstructorDashboard from './InstructorDashboard';
 import { User, Session } from '@supabase/supabase-js';
 import * as AuthContext from '@/contexts/AuthContext';
 
@@ -30,7 +30,7 @@ const mockSession: Partial<Session> = {
   user: mockUser as User,
 };
 
-describe('TeacherDashboard', () => {
+describe('InstructorDashboard', () => {
   beforeEach(() => {
     vi.resetAllMocks();
     vi.mocked(AuthContext.useAuth).mockReturnValue({
@@ -41,15 +41,15 @@ describe('TeacherDashboard', () => {
     });
   });
 
-  it('renders the teacher dashboard', () => {
-    render(<TeacherDashboard />);
+  it('renders the instructor dashboard', () => {
+    render(<InstructorDashboard />);
 
-    expect(screen.getByText('Teacher Dashboard')).toBeInTheDocument();
+    expect(screen.getByText('Instructor Dashboard')).toBeInTheDocument();
     expect(screen.getByText('Manage your courses and track performance')).toBeInTheDocument();
   });
 
   it('shows Create Course button', async () => {
-    render(<TeacherDashboard />);
+    render(<InstructorDashboard />);
 
     // Button should be visible immediately (it's not dependent on loading)
     // Use getByRole to be more specific (button vs link)
@@ -59,7 +59,7 @@ describe('TeacherDashboard', () => {
   });
 
   it('shows stats cards', async () => {
-    render(<TeacherDashboard />);
+    render(<InstructorDashboard />);
 
     await waitFor(() => {
       expect(screen.getByText('Total Students')).toBeInTheDocument();
@@ -70,19 +70,19 @@ describe('TeacherDashboard', () => {
   });
 
   it('shows Your Courses section', () => {
-    render(<TeacherDashboard />);
+    render(<InstructorDashboard />);
 
     expect(screen.getByText('Your Courses')).toBeInTheDocument();
   });
 
   it('shows Recent Enrollments section', () => {
-    render(<TeacherDashboard />);
+    render(<InstructorDashboard />);
 
     expect(screen.getByText('Recent Enrollments')).toBeInTheDocument();
   });
 
   it('shows loading state initially', async () => {
-    render(<TeacherDashboard />);
+    render(<InstructorDashboard />);
 
     // Stats should show "..." while loading
     const loadingIndicators = screen.queryAllByText('...');
@@ -94,8 +94,8 @@ describe('TeacherDashboard', () => {
     });
   });
 
-  it('renders courses when teacher has courses', async () => {
-    render(<TeacherDashboard />);
+  it('renders courses when instructor has courses', async () => {
+    render(<InstructorDashboard />);
 
     // The mock handlers return course data for the test user
     await waitFor(() => {
@@ -104,7 +104,7 @@ describe('TeacherDashboard', () => {
   });
 
   it('renders enrollments when available', async () => {
-    render(<TeacherDashboard />);
+    render(<InstructorDashboard />);
 
     // The mock handlers may or may not return enrollment data
     // Just verify the section renders
@@ -114,7 +114,7 @@ describe('TeacherDashboard', () => {
   });
 
   it('has View All link for courses', () => {
-    render(<TeacherDashboard />);
+    render(<InstructorDashboard />);
 
     expect(screen.getByText('View All')).toBeInTheDocument();
   });

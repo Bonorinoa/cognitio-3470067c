@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import TeacherSidebar from "@/components/TeacherSidebar";
+import InstructorSidebar from "@/components/InstructorSidebar";
 import ProgressCard from "@/components/ProgressCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -40,7 +40,7 @@ interface RecentEnrollment {
   date: string;
 }
 
-const TeacherDashboard = () => {
+const InstructorDashboard = () => {
   const { user } = useAuth();
   const [courses, setCourses] = useState<CourseWithStats[]>([]);
   const [recentEnrollments, setRecentEnrollments] = useState<RecentEnrollment[]>([]);
@@ -48,11 +48,11 @@ const TeacherDashboard = () => {
 
   useEffect(() => {
     if (user) {
-      fetchTeacherData();
+      fetchInstructorData();
     }
   }, [user]);
 
-  const fetchTeacherData = async () => {
+  const fetchInstructorData = async () => {
     if (!user) return;
 
     try {
@@ -148,7 +148,7 @@ const TeacherDashboard = () => {
 
       setCourses(coursesWithStats);
     } catch (error) {
-      console.error("Error fetching teacher data:", error);
+      console.error("Error fetching instructor data:", error);
     } finally {
       setIsLoading(false);
     }
@@ -172,20 +172,20 @@ const TeacherDashboard = () => {
 
   return (
     <div className="flex min-h-screen bg-background">
-      <TeacherSidebar />
+      <InstructorSidebar />
 
       <main className="flex-1 p-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl font-bold text-foreground mb-2">
-              Teacher Dashboard
+              Instructor Dashboard
             </h1>
             <p className="text-muted-foreground">
               Manage your courses and track performance
             </p>
           </div>
-          <Link to="/teacher/create">
+          <Link to="/instructor/create">
             <Button>
               <PlusCircle className="mr-2 h-5 w-5" />
               Create Course
@@ -223,7 +223,7 @@ const TeacherDashboard = () => {
           <Card className="lg:col-span-2 border-border bg-card">
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="text-foreground">Your Courses</CardTitle>
-              <Link to="/teacher/courses">
+              <Link to="/instructor/courses">
                 <Button variant="ghost" size="sm">
                   View All
                 </Button>
@@ -239,7 +239,7 @@ const TeacherDashboard = () => {
               ) : courses.length === 0 ? (
                 <div className="text-center py-8">
                   <p className="text-muted-foreground mb-4">No courses yet</p>
-                  <Link to="/teacher/create">
+                  <Link to="/instructor/create">
                     <Button>
                       <PlusCircle className="mr-2 h-4 w-4" />
                       Create Your First Course
@@ -364,4 +364,4 @@ const TeacherDashboard = () => {
   );
 };
 
-export default TeacherDashboard;
+export default InstructorDashboard;
