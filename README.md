@@ -1,224 +1,249 @@
-# LearnHub - Course Management System
+# Cognitio - Plataforma de Cursos en Línea
 
-A modern, full-featured educational platform enabling teachers to create and sell online courses while providing students with an engaging learning experience.
+Una plataforma educativa moderna que permite a instructores crear y vender cursos en línea, proporcionando a los estudiantes una experiencia de aprendizaje atractiva e interactiva.
 
-## 🎯 Project Status: Pre-MVP
+## 🎯 Estado del Proyecto: MVP
 
-**Current Version:** 0.9.0 (Development)  
-**Last Updated:** December 2024
+**Versión Actual:** 1.0.0  
+**Última Actualización:** Diciembre 2024
 
-### What's Working
-- ✅ User authentication (signup/login)
-- ✅ Course creation with Mux video upload
-- ✅ Video playback on course pages
-- ✅ Stripe checkout integration
-- ✅ Course browsing and filtering
-- ✅ Student & teacher dashboards
+### Funcionalidades Completas
+- ✅ Autenticación de usuarios (registro/inicio de sesión)
+- ✅ Creación de cursos con carga de video Mux
+- ✅ Reproducción de video en páginas de cursos
+- ✅ Integración de pagos con Stripe
+- ✅ Navegación y filtrado de cursos
+- ✅ Dashboards de estudiantes e instructores
+- ✅ Carga de imágenes de cursos
+- ✅ Seguimiento de progreso (marcar como completado)
+- ✅ Página "Sobre Nosotros" con perfiles de instructores
+- ✅ Animaciones con Framer Motion
 
-### In Progress
-- 🔄 Course image upload
-- 🔄 Progress tracking (mark complete)
-- 🔄 Course editing
+### En Progreso
+- 🔄 Edición de cursos
+- 🔄 Analytics del instructor con datos reales
 
-See **[DEVELOPMENT_PLAN.md](./DEVELOPMENT_PLAN.md)** for the complete MVP roadmap.
+Consulta **[DEVELOPMENT_PLAN.md](./DEVELOPMENT_PLAN.md)** para el roadmap completo del MVP.
 
-## 📚 Documentation
+## 📚 Documentación
 
-- **[DEVELOPMENT_PLAN.md](./DEVELOPMENT_PLAN.md)** - MVP roadmap and development strategy
-- **[TECHNOLOGY_STACK.md](./TECHNOLOGY_STACK.md)** - Comprehensive technology stack
-- **[FEATURES.md](./FEATURES.md)** - Detailed feature documentation
-- **[TESTING.md](./TESTING.md)** - Testing infrastructure and guidelines
+- **[DEVELOPMENT_PLAN.md](./DEVELOPMENT_PLAN.md)** - Roadmap del MVP y estrategia de desarrollo
+- **[TECHNOLOGY_STACK.md](./TECHNOLOGY_STACK.md)** - Stack tecnológico completo
+- **[FEATURES.md](./FEATURES.md)** - Documentación detallada de funcionalidades
+- **[TESTING.md](./TESTING.md)** - Infraestructura y guías de testing
 
-## 🛠️ Tech Stack
+## 🛠️ Stack Tecnológico
 
-### Core Technologies
-- **React 18.3.1** - UI library
-- **TypeScript 5.8.3** - Type-safe development
-- **Vite 5.4.19** - Build tool and dev server
-- **Tailwind CSS 3.4.17** - Utility-first CSS framework
-- **shadcn/ui** - High-quality React components
+### Tecnologías Core
+- **React 18.3.1** - Biblioteca de UI
+- **TypeScript 5.8.3** - Desarrollo type-safe
+- **Vite 5.4.19** - Herramienta de build y servidor de desarrollo
+- **Tailwind CSS 3.4.17** - Framework CSS utility-first
+- **shadcn/ui** - Componentes React de alta calidad
 
-### Backend & Database
-- **Supabase** - PostgreSQL database, authentication, and real-time subscriptions
-- **TanStack Query** - Server state management and caching
+### Backend y Base de Datos
+- **Supabase** - Base de datos PostgreSQL, autenticación y suscripciones en tiempo real
+- **TanStack Query** - Gestión de estado del servidor y caché
 
-### Key Libraries
-- React Router DOM - Client-side routing
-- React Hook Form + Zod - Form handling and validation
-- Recharts - Data visualization
-- MSW - API mocking for tests
-- Vitest - Testing framework
+### Bibliotecas Clave
+- React Router DOM - Enrutamiento del lado del cliente
+- React Hook Form + Zod - Manejo de formularios y validación
+- Recharts - Visualización de datos
+- Framer Motion - Animaciones fluidas
+- i18next - Internacionalización (español por defecto)
+- MSW - Mocking de API para tests
+- Vitest - Framework de testing
 
-For the complete technology stack, see [TECHNOLOGY_STACK.md](./TECHNOLOGY_STACK.md).
+Para el stack tecnológico completo, consulta [TECHNOLOGY_STACK.md](./TECHNOLOGY_STACK.md).
 
-## 🏁 Getting Started
+## 🏁 Comenzar
 
-### Prerequisites
-- Node.js 18+ and npm installed ([install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating))
-- Supabase account and project (for backend services)
+### Prerrequisitos
+- Node.js 18+ y npm instalados ([instalar con nvm](https://github.com/nvm-sh/nvm#installing-and-updating))
+- Cuenta y proyecto de Supabase (para servicios backend)
 
-### Installation
+### Instalación
 
-1. **Clone the repository**
+1. **Clonar el repositorio**
    ```bash
    git clone https://github.com/Bonorinoa/dark-bloom-learning.git
    cd dark-bloom-learning
    ```
 
-2. **Install dependencies**
+2. **Instalar dependencias**
    ```bash
    npm install
    ```
 
-3. **Set up environment variables**
+3. **Configurar variables de entorno**
    
-   Create a `.env` file in the root directory:
+   Crear un archivo `.env` en el directorio raíz:
    ```env
-   VITE_SUPABASE_URL=your_supabase_project_url
-   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+   VITE_SUPABASE_URL=tu_url_de_proyecto_supabase
+   VITE_SUPABASE_ANON_KEY=tu_clave_anonima_supabase
    ```
 
-4. **Start the development server**
+4. **Iniciar el servidor de desarrollo**
    ```bash
    npm run dev
    ```
    
-   The application will be available at `http://localhost:5173`
+   La aplicación estará disponible en `http://localhost:5173`
 
-## 📜 Available Scripts
+## 📜 Scripts Disponibles
 
 ```bash
-npm run dev          # Start development server
-npm run build        # Build for production
-npm run build:dev    # Build in development mode
-npm run lint         # Run ESLint
-npm run preview      # Preview production build
-npx vitest run       # Run test suite
-npx vitest           # Run tests in watch mode
+npm run dev          # Iniciar servidor de desarrollo
+npm run build        # Build para producción
+npm run build:dev    # Build en modo desarrollo
+npm run lint         # Ejecutar ESLint
+npm run preview      # Vista previa del build de producción
+npx vitest run       # Ejecutar suite de tests
+npx vitest           # Ejecutar tests en modo watch
 ```
 
 ## 🧪 Testing
 
-The project uses Vitest with React Testing Library for comprehensive testing.
+El proyecto usa Vitest con React Testing Library para testing comprehensivo.
 
-### Run Tests
+### Ejecutar Tests
 ```bash
-# Run all tests
+# Ejecutar todos los tests
 npx vitest run
 
-# Run tests in watch mode
+# Ejecutar tests en modo watch
 npx vitest
 
-# Run tests with coverage
+# Ejecutar tests con cobertura
 npx vitest run --coverage
 ```
 
-For detailed testing documentation, see [TESTING.md](./TESTING.md).
+Para documentación detallada de testing, consulta [TESTING.md](./TESTING.md).
 
-## 📁 Project Structure
+## 📁 Estructura del Proyecto
 
 ```
-dark-bloom-learning/
+cognitio/
 ├── src/
-│   ├── components/        # Reusable UI components
-│   ├── pages/            # Page components (routes)
-│   ├── contexts/         # React contexts (Auth)
-│   ├── hooks/            # Custom React hooks
-│   ├── integrations/     # External service integrations
-│   ├── lib/              # Utility functions
-│   ├── test/             # Test utilities and mocks
-│   └── assets/           # Static assets
-├── public/               # Public static files
-├── supabase/            # Supabase configuration
-├── TECHNOLOGY_STACK.md  # Tech stack documentation
-├── FEATURES.md          # Feature documentation
-├── TESTING.md           # Testing documentation
-└── package.json         # Dependencies and scripts
+│   ├── components/        # Componentes de UI reutilizables
+│   │   ├── ui/            # Componentes shadcn/ui
+│   │   ├── StickyInstructorCard.tsx  # Tarjetas de instructor con efecto sticky
+│   │   └── ...
+│   ├── pages/             # Componentes de página (rutas)
+│   │   ├── AboutPage.tsx  # Página Sobre Nosotros
+│   │   └── ...
+│   ├── contexts/          # Contextos de React (Auth)
+│   ├── hooks/             # Hooks personalizados de React
+│   ├── integrations/      # Integraciones con servicios externos
+│   ├── lib/               # Funciones de utilidad
+│   ├── locales/           # Archivos de traducción (es.json, en.json)
+│   ├── test/              # Utilidades y mocks de test
+│   └── assets/            # Assets estáticos
+├── public/                # Archivos estáticos públicos
+├── supabase/              # Configuración de Supabase
+│   └── functions/         # Edge functions
+├── TECHNOLOGY_STACK.md    # Documentación del stack tecnológico
+├── FEATURES.md            # Documentación de funcionalidades
+├── TESTING.md             # Documentación de testing
+└── package.json           # Dependencias y scripts
 ```
 
-## 🔐 Environment Variables
+## 🔐 Variables de Entorno
 
-Required environment variables:
-- `VITE_SUPABASE_URL` - Your Supabase project URL
-- `VITE_SUPABASE_ANON_KEY` - Your Supabase anonymous key
+Variables de entorno requeridas:
+- `VITE_SUPABASE_URL` - URL de tu proyecto Supabase
+- `VITE_SUPABASE_ANON_KEY` - Clave anónima de Supabase
 
-Optional variables for payment processing:
-- Stripe keys (configured in Supabase)
+Variables opcionales para procesamiento de pagos:
+- Claves de Stripe (configuradas en Supabase)
 
-## 🌐 Deployment
+## 🌐 Rutas de la Aplicación
 
-### Deploy with Lovable
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click Share → Publish.
+| Ruta | Descripción |
+|------|-------------|
+| `/` | Página de inicio |
+| `/auth` | Página de autenticación |
+| `/dashboard` | Dashboard del estudiante |
+| `/courses` | Catálogo de cursos |
+| `/course/:id` | Detalle/reproductor de curso |
+| `/about` | Página Sobre Nosotros |
+| `/teacher` | Dashboard del instructor |
+| `/teacher/courses` | Lista de cursos del instructor |
+| `/teacher/create` | Crear nuevo curso |
+| `/teacher/analytics` | Dashboard de analytics |
+| `/teacher/settings` | Configuración del instructor |
 
-### Deploy to Other Platforms
-The application can be deployed to any static hosting service:
+## 🌍 Despliegue
+
+### Desplegar con Lovable
+Simplemente abre [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) y haz clic en Share → Publish.
+
+### Desplegar en Otras Plataformas
+La aplicación puede desplegarse en cualquier servicio de hosting estático:
 - Vercel
 - Netlify
 - GitHub Pages
 - Cloudflare Pages
 
-Build the production bundle:
+Construir el bundle de producción:
 ```bash
 npm run build
 ```
 
-The built files will be in the `dist/` directory.
+Los archivos construidos estarán en el directorio `dist/`.
 
-## 👥 User Roles
+## 👥 Roles de Usuario
 
-### Students
-- Browse and search courses
-- Purchase and enroll in courses
-- Watch video lessons
-- Track learning progress
-- View personalized dashboard
+### Estudiantes
+- Navegar y buscar cursos
+- Comprar e inscribirse en cursos
+- Ver lecciones en video
+- Seguir progreso de aprendizaje
+- Ver dashboard personalizado
 
-### Teachers
-- Create and publish courses
-- Add chapters and video content
-- Set pricing
-- View analytics and revenue
-- Track student enrollments
+### Instructores
+- Crear y publicar cursos
+- Agregar capítulos y contenido de video
+- Establecer precios
+- Ver analytics e ingresos
+- Seguir inscripciones de estudiantes
 
-## 🤝 Contributing
+## 👨‍🏫 Fundadores
 
-### Development Workflow
-1. Create a feature branch
-2. Make your changes
-3. Write/update tests
-4. Run tests and linting
-5. Submit a pull request
+- **Gustavo González Bonorino** - Co-fundador e Instructor
+- **Augusto González Bonorino** - Co-fundador e Instructor
 
-### Code Quality
-- TypeScript for type safety
-- ESLint for code quality
-- Prettier for code formatting
-- Vitest for testing
+*"Nos dedicamos a aprender enseñando"*
 
-## 🔗 Links
+## 🤝 Contribuir
 
-- **Live Demo**: [Deploy to see live demo]
-- **Documentation**: See the docs folder for detailed documentation
+### Flujo de Desarrollo
+1. Crear una rama de feature
+2. Hacer tus cambios
+3. Escribir/actualizar tests
+4. Ejecutar tests y linting
+5. Enviar un pull request
+
+### Calidad de Código
+- TypeScript para type safety
+- ESLint para calidad de código
+- Prettier para formato de código
+- Vitest para testing
+
+## 🔗 Enlaces
+
+- **Demo en Vivo**: [Desplegar para ver demo en vivo]
+- **Documentación**: Ver archivos de documentación para información detallada
 - **Supabase**: [supabase.com](https://supabase.com)
-- **Lovable Platform**: [lovable.dev](https://lovable.dev)
+- **Plataforma Lovable**: [lovable.dev](https://lovable.dev)
 
-## 📄 License
+## 📄 Licencia
 
-This project is part of the Lovable ecosystem and follows its licensing terms.
+Este proyecto es parte del ecosistema Lovable y sigue sus términos de licencia.
 
-## 🆘 Support
+## 🆘 Soporte
 
-For issues and questions:
-1. Check the documentation files (TECHNOLOGY_STACK.md, FEATURES.md, TESTING.md)
-2. Review existing GitHub issues
-3. Open a new issue with detailed information
-
-## 🎯 Development Roadmap
-
-See [FEATURES.md](./FEATURES.md) for a list of potential future enhancements including:
-- Live classes
-- Assignments and quizzes
-- Course certificates
-- Discussion forums
-- Mobile applications
-- And more...
+Para problemas y preguntas:
+1. Consultar los archivos de documentación (TECHNOLOGY_STACK.md, FEATURES.md, TESTING.md)
+2. Revisar issues existentes en GitHub
+3. Abrir un nuevo issue con información detallada
