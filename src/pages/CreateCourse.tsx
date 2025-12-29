@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import TeacherSidebar from "@/components/TeacherSidebar";
+import InstructorSidebar from "@/components/InstructorSidebar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -200,7 +200,7 @@ const CreateCourse = () => {
       if (chaptersError) throw chaptersError;
 
       toast.success(publish ? "Course published successfully!" : "Course saved as draft!");
-      navigate("/teacher");
+      navigate("/instructor");
     } catch (error: any) {
       console.error("Error saving course:", error);
       toast.error(error.message || "Failed to save course");
@@ -215,7 +215,7 @@ const CreateCourse = () => {
 
   return (
     <div className="flex min-h-screen bg-background">
-      <TeacherSidebar />
+      <InstructorSidebar />
 
       <main className="flex-1 p-8">
         {/* Header */}
@@ -224,7 +224,7 @@ const CreateCourse = () => {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => navigate("/teacher")}
+              onClick={() => navigate("/instructor")}
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import TeacherSidebar from "@/components/TeacherSidebar";
+import InstructorSidebar from "@/components/InstructorSidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { BarChart3, DollarSign, Users, TrendingUp } from "lucide-react";
@@ -17,7 +17,7 @@ interface AnalyticsData {
   }[];
 }
 
-const TeacherAnalytics = () => {
+const InstructorAnalytics = () => {
   const { user } = useAuth();
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -30,7 +30,7 @@ const TeacherAnalytics = () => {
 
   const fetchAnalytics = async () => {
     try {
-      // Fetch courses for this teacher
+      // Fetch courses for this instructor
       const { data: courses } = await supabase
         .from("courses")
         .select("id, title")
@@ -81,7 +81,7 @@ const TeacherAnalytics = () => {
 
   return (
     <div className="flex min-h-screen bg-background">
-      <TeacherSidebar />
+      <InstructorSidebar />
       <main className="flex-1 p-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground">Analytics</h1>
@@ -202,4 +202,4 @@ const TeacherAnalytics = () => {
   );
 };
 
-export default TeacherAnalytics;
+export default InstructorAnalytics;

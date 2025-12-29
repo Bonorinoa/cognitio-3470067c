@@ -16,7 +16,7 @@ import { useUserRole } from "@/hooks/useUserRole";
 const Navbar = () => {
   const { t } = useTranslation();
   const { user, signOut, isLoading } = useAuth();
-  const { isTeacher } = useUserRole();
+  const { isInstructor } = useUserRole();
 
   const handleSignOut = async () => {
     await signOut();
@@ -85,9 +85,9 @@ const Navbar = () => {
                     {t('nav.myLearning')}
                   </Link>
                 </DropdownMenuItem>
-                {isTeacher && (
+                {isInstructor && (
                   <DropdownMenuItem asChild>
-                    <Link to="/teacher" className="cursor-pointer">
+                    <Link to="/instructor" className="cursor-pointer">
                       <BookOpen className="mr-2 h-4 w-4" />
                       {t('nav.instructorPanel')}
                     </Link>

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import TeacherSidebar from "@/components/TeacherSidebar";
+import InstructorSidebar from "@/components/InstructorSidebar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
-const TeacherSettings = () => {
+const InstructorSettings = () => {
   const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [fullName, setFullName] = useState(user?.user_metadata?.full_name || "");
@@ -42,7 +42,7 @@ const TeacherSettings = () => {
 
   return (
     <div className="flex min-h-screen bg-background">
-      <TeacherSidebar />
+      <InstructorSidebar />
       <main className="flex-1 p-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground">Settings</h1>
@@ -111,9 +111,9 @@ const TeacherSettings = () => {
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="font-medium">Teacher Account</p>
+                  <p className="font-medium">Instructor Account</p>
                   <p className="text-sm text-muted-foreground">
-                    You have teacher privileges on this platform
+                    You have instructor privileges on this platform
                   </p>
                 </div>
                 <span className="rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
@@ -128,4 +128,4 @@ const TeacherSettings = () => {
   );
 };
 
-export default TeacherSettings;
+export default InstructorSettings;
