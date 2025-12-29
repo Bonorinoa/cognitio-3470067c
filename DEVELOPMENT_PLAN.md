@@ -1,188 +1,526 @@
-# Plan de Desarrollo MVP de Cognitio
+# Plan de Desarrollo Cognitio v1.1 - v2.0
 
-## Resumen Ejecutivo
+## Visión del Producto
 
-Cognitio es un sistema de gestión de cursos que permite a instructores crear y vender cursos de video mientras proporciona a los estudiantes una experiencia de aprendizaje atractiva. Este documento describe la estrategia para alcanzar una versión MVP completa.
+**Cognitio** es un ecosistema académico **exclusivo por invitación** y **centrado en el instructor**. No es un marketplace abierto como Udemy.
 
----
+### Filosofía Core
+- Maximizar **autonomía del instructor y retención de ingresos**
+- Mantener la arquitectura **simple de mantener** para un equipo pequeño
+- Instructores son **curados manualmente** por Admins (no hay signup público de instructor)
+- Cualquier usuario puede registrarse como estudiante
 
-## Evaluación del Estado Actual
-
-### ✅ Funcionalidades Completadas
-
-| Categoría | Funcionalidad | Estado |
-|----------|---------|--------|
-| **Autenticación** | Auth email/contraseña vía Supabase | ✅ Completo |
-| | Acceso basado en roles (estudiante/instructor) | ✅ Completo |
-| | Rutas protegidas | ✅ Completo |
-| **Gestión de Cursos** | Creación de cursos (título, descripción, precio, categoría) | ✅ Completo |
-| | Gestión de capítulos con ordenamiento | ✅ Completo |
-| | Flujo de borrador/publicación | ✅ Completo |
-| | Carga de imágenes de cursos | ✅ Completo |
-| **Integración de Video** | Carga de video Mux | ✅ Completo |
-| | Reproducción de video Mux | ✅ Completo |
-| | Seguimiento de duración de video | ✅ Completo |
-| **Pagos** | Integración de checkout Stripe | ✅ Completo |
-| | Registro de compras | ✅ Completo |
-| | Acceso a curso después de compra | ✅ Completo |
-| **Experiencia del Estudiante** | Navegación de cursos con filtros | ✅ Completo |
-| | Inscripción a cursos | ✅ Completo |
-| | Dashboard del estudiante | ✅ Completo |
-| | Seguimiento de progreso | ✅ Completo |
-| **Experiencia del Instructor** | Dashboard del instructor | ✅ Completo |
-| | Sidebar de gestión de cursos | ✅ Completo |
-| **UI/UX** | Página Sobre Nosotros con tarjetas apiladas | ✅ Completo |
-| | Animaciones con Framer Motion | ✅ Completo |
-| | Navbar rebrandeado a "Cognitio" | ✅ Completo |
-
-### ⚠️ Parcialmente Completo
-
-| Funcionalidad | Estado Actual | Trabajo Restante |
-|---------|---------------|----------------|
-| Analytics del instructor | UI básica existe | Conectar a datos reales |
-
-### ✅ Completado Recientemente (Diciembre 2024)
-
-| Funcionalidad | Estado | Notas |
-|---------|--------|-------|
-| Carga de imagen de curso | ✅ Completo | Carga a storage Supabase con validación |
-| Lógica de acceso a capítulos | ✅ Completo | Instructores pueden acceder a sus propios cursos |
-| Seguimiento de progreso | ✅ Completo | Botón marcar como completado y persistencia |
-| Limpieza de UI | ✅ Completo | Removido botón "Watch Demo" sin usar |
-| Página Sobre Nosotros | ✅ Completo | Tarjetas apiladas con efecto sticky |
-| Animaciones Framer Motion | ✅ Completo | Animaciones de entrada en viewport |
-| Rebranding a Cognitio | ✅ Completo | Navbar y navegación actualizados |
-
-### ❌ No Iniciado (Requerido para MVP)
-
-| Funcionalidad | Prioridad | Esfuerzo |
-|---------|----------|--------|
-| Edición de cursos | Alta | Medio |
-| Gestión de perfil | Media | Pequeño |
-| Flujo de reseteo de contraseña | Media | Pequeño |
+### Propuesta de Valor
+> Cognitio es un "Instructor Studio" exclusivo: LMS ligero + storefront + asistente de publicación con IA para instructores curados.
 
 ---
 
-## Definición del MVP
+## Personas de Usuario
 
-### Funcionalidades Core del MVP (Must Have)
+### 1. Instructor Curado (Cliente Principal)
+- Académicos, investigadores, consultores; frecuentemente no técnicos, 40-70+ años
+- **Necesita:**
+  - Vender **cursos públicos** (para ingresos generales)
+  - Ofrecer **cursos privados** (para cohortes específicas, ej: estudiantes universitarios)
+  - Una "base" simple para su identidad digital
+  - Ayuda con IA para generar blogs/newsletters/podcasts desde su material
+- **Dolor:** Odia la autopromoción y las UIs complejas
 
-1. **Los estudiantes pueden:**
-   - Navegar y buscar cursos
-   - Ver detalles del curso y contenido de vista previa
-   - Comprar cursos vía Stripe
-   - Ver lecciones de video
-   - Seguir su progreso (marcar capítulos como completados)
-   - Ver sus cursos inscritos
+### 2. Estudiante de por Vida
+- Profesionales o estudiantes buscando expertise **nicho y de alta calidad**
+- **Necesita:**
+  - Experiencia de lectura limpia
+  - Reproductor de video sin distracciones con capítulos
+  - Seguimiento de progreso
+  - Enlaces claros a otras ofertas del instructor
 
-2. **Los instructores pueden:**
-   - Crear cursos con capítulos
-   - Cargar videos vía Mux
-   - Cargar imágenes thumbnail de cursos
-   - Establecer precios y categorías
-   - Publicar/despublicar cursos
-   - Editar cursos existentes
-   - Ver analytics básicos
-
-3. **La plataforma proporciona:**
-   - Autenticación segura
-   - Procesamiento de pagos
-   - Hosting y reproducción de video
-   - Persistencia de progreso
+### 3. Admin de Plataforma
+- Equipo interno pequeño (Augusto, Gustavo)
+- **Necesita:**
+  - Gestionar roles (quién es instructor/admin)
+  - Manejar tareas de soporte (reembolsos, inscripciones manuales)
 
 ---
 
-## Fases de Desarrollo
+## Estado Actual (v1.0.0)
 
-### Fase 1: Correcciones Core (Semana 1) ✅ COMPLETADA
-**Objetivo:** Corregir gaps de funcionalidad existentes
+### ✅ Completado
+| Categoría | Funcionalidad |
+|-----------|---------------|
+| **Auth** | Email/contraseña, roles (admin/teacher/student), rutas protegidas |
+| **Cursos** | Creación, capítulos, borrador/publicación, imágenes, Mux video |
+| **Pagos** | Stripe checkout, registro de compras |
+| **Estudiante** | Catálogo, inscripción, progreso, dashboard |
+| **Instructor** | Dashboard, sidebar, lista de cursos |
+| **UI** | Página About con sticky cards, Framer Motion, branding Cognitio |
 
-| Tarea | Prioridad | Complejidad | Estado | Notas |
-|------|----------|------------|--------|-------|
-| Corregir acceso de instructores a sus propios cursos | Alta | Pequeña | ✅ Completo | Instructores ahora pueden acceder a sus propios videos |
-| Implementar carga de imagen de curso | Alta | Media | ✅ Completo | Storage Supabase con validación de archivo |
-| Remover elementos UI sin usar | Baja | Pequeña | ✅ Completo | Removido botón "Watch Demo" |
+### ⚠️ Gaps vs Visión
+| Área | Estado Actual | Visión |
+|------|---------------|--------|
+| Terminología | `teacher` en código/DB | `instructor` |
+| Rutas | `/teacher/*` | `/instructor/*` + `/admin/*` |
+| Visibilidad | `is_published` boolean | `visibility` enum (public/private/unlisted) |
+| Cursos Privados | No existe | `course_memberships` para inscripción manual |
+| Panel Admin | No existe | Gestión de roles, soporte |
+| Perfil Instructor | Básico | Bio, afiliación, servicios, página pública |
+| AI Content Studio | No existe | Generación de blogs/newsletters desde cursos |
 
-**Entregables:**
-- ✅ Dueños de cursos siempre pueden reproducir sus videos
-- ✅ Instructores pueden cargar thumbnails de cursos
-- ✅ UI/UX mejorado con remoción de botones placeholder
+---
 
-### Fase 2: Seguimiento de Progreso (Semana 2) ✅ COMPLETADA
-**Objetivo:** Completar funcionalidades de progreso del estudiante
+## Roadmap de Versiones
 
-| Tarea | Prioridad | Complejidad | Estado | Notas |
-|------|----------|------------|--------|-------|
-| Botón marcar capítulo completado | Alta | Pequeña | ✅ Completo | Botón mostrado para cursos comprados |
-| Persistencia de progreso | Alta | Pequeña | ✅ Completo | Guarda en tabla user_progress |
-| Visualización de completación de capítulos | Alta | Pequeña | ✅ Completo | Checkmarks mostrados en lista de capítulos |
+### Control de Versiones y Estrategia de Release
 
-**Entregables:**
-- ✅ Estudiantes pueden marcar manualmente capítulos como completados
-- ✅ Progreso persiste entre sesiones
-- ✅ Lista de capítulos muestra estado de completación
+| Versión | Enfoque | Riesgo | Breaking Changes |
+|---------|---------|--------|------------------|
+| v1.1 | Refactor terminología frontend | Bajo | Rutas cambian |
+| v1.2 | Migración terminología DB | Medio | Schema cambia |
+| v1.3 | Sistema de visibilidad de cursos | Medio | Nuevas reglas de acceso |
+| v1.4 | Panel Admin | Bajo | Ninguno |
+| v1.5 | Perfiles de instructor mejorados | Bajo | Ninguno |
+| v1.6 | Edición de cursos | Medio | Ninguno |
+| v1.7 | Gestión de usuarios y seguridad | Medio | Ninguno |
+| v1.8 | Analytics reales | Bajo | Ninguno |
+| v1.9 | Servicios de instructor | Medio | Ninguno |
+| v2.0 | AI Content Studio | Medio | Ninguno |
 
-### Fase 3: Edición de Cursos (Semana 2-3)
+---
+
+## v1.1 - Alineación de Fundamentos (Frontend)
+
+**Objetivo:** Alinear terminología y rutas del frontend con la visión sin cambios de base de datos.
+
+**Riesgo:** Bajo - cambios puramente frontend
+
+### Tareas
+| Tarea | Archivos Afectados | Complejidad |
+|-------|-------------------|-------------|
+| Renombrar rutas `/teacher/*` a `/instructor/*` | App.tsx | Pequeña |
+| Renombrar `TeacherDashboard` → `InstructorDashboard` | pages/, components/ | Media |
+| Renombrar `TeacherSidebar` → `InstructorSidebar` | components/ | Pequeña |
+| Renombrar `TeacherCourses` → `InstructorCourses` | pages/ | Pequeña |
+| Renombrar `TeacherAnalytics` → `InstructorAnalytics` | pages/ | Pequeña |
+| Renombrar `TeacherSettings` → `InstructorSettings` | pages/ | Pequeña |
+| Actualizar `RequireTeacher` → `RequireInstructor` | components/ | Pequeña |
+| Actualizar hook: `isTeacher` → `isInstructor` | hooks/useUserRole.ts | Pequeña |
+| Actualizar links en Navbar | components/Navbar.tsx | Pequeña |
+| Actualizar traducciones | locales/*.json | Pequeña |
+
+### Checkpoint de Decisión
+- [ ] Confirmar estructura de rutas antes de proceder
+- [ ] Revisar impacto en tests existentes
+
+### Cambios de Schema
+Ninguno - la base de datos mantiene `teacher_id` por ahora
+
+### Entregables
+- [ ] Todas las rutas usan `/instructor/*`
+- [ ] Todos los componentes usan terminología "Instructor"
+- [ ] Tests actualizados y pasando
+
+---
+
+## v1.2 - Migración de Terminología en DB
+
+**Objetivo:** Alinear schema de base de datos con terminología "instructor"
+
+**Riesgo:** Medio - requiere migración cuidadosa y testing
+
+### Tareas
+| Tarea | Complejidad |
+|-------|-------------|
+| Agregar columna `instructor_id` a courses (paralela a `teacher_id`) | Pequeña |
+| Migrar datos: `UPDATE courses SET instructor_id = teacher_id` | Pequeña |
+| Actualizar políticas RLS para usar `instructor_id` | Media |
+| Agregar valor `'instructor'` al enum `app_role` | Pequeña |
+| Migrar roles existentes de `teacher` a `instructor` | Media |
+| Actualizar función `has_role()` | Pequeña |
+| Actualizar frontend para usar nueva columna | Media |
+| Deprecar `teacher_id` (mantener para compatibilidad) | Pequeña |
+
+### Checkpoint de Decisión
+- [ ] Estrategia de migración aprobada
+- [ ] Plan de rollback definido
+- [ ] Testing en ambiente de staging
+
+### Cambios de Schema Requeridos
+```sql
+-- Agregar columna instructor_id
+ALTER TABLE courses ADD COLUMN instructor_id uuid;
+
+-- Migrar datos existentes
+UPDATE courses SET instructor_id = teacher_id;
+
+-- Agregar valor al enum (PostgreSQL no permite modificación directa)
+ALTER TYPE app_role ADD VALUE 'instructor';
+
+-- Migrar roles existentes
+UPDATE user_roles SET role = 'instructor' WHERE role = 'teacher';
+```
+
+### Entregables
+- [ ] Schema de DB usa terminología "instructor"
+- [ ] Políticas RLS actualizadas
+- [ ] Frontend usa nuevas columnas
+- [ ] Compatibilidad hacia atrás mantenida
+
+---
+
+## v1.3 - Sistema de Visibilidad de Cursos
+
+**Objetivo:** Implementar visibilidad public/private/unlisted para cursos
+
+**Riesgo:** Medio - nueva lógica de control de acceso
+
+### Tareas
+| Tarea | Complejidad |
+|-------|-------------|
+| Crear tipo enum `course_visibility` | Pequeña |
+| Agregar columna `visibility` a courses (default: `public`) | Pequeña |
+| Crear tabla `course_memberships` para cursos privados | Media |
+| Actualizar políticas RLS para acceso basado en visibilidad | Media |
+| Actualizar CoursesPage para filtrar por visibilidad | Pequeña |
+| UI para que instructor configure visibilidad del curso | Media |
+| UI para inscripción manual de estudiantes (cursos privados) | Media |
+
+### Checkpoint de Decisión
+- [ ] Workflow de inscripción para cursos privados (manual vs link de invitación)
+- [ ] ¿Los cursos privados pueden tener precio o solo gratuitos?
+
+### Cambios de Schema Requeridos
+```sql
+-- Enum de visibilidad
+CREATE TYPE course_visibility AS ENUM ('public', 'private', 'unlisted');
+
+-- Agregar a courses
+ALTER TABLE courses ADD COLUMN visibility course_visibility DEFAULT 'public';
+
+-- Tabla de membresías para cursos privados
+CREATE TABLE course_memberships (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  course_id uuid REFERENCES courses(id) ON DELETE CASCADE NOT NULL,
+  user_id uuid NOT NULL,
+  enrolled_at timestamptz DEFAULT now(),
+  enrolled_by uuid, -- instructor que inscribió
+  UNIQUE(course_id, user_id)
+);
+
+-- Habilitar RLS
+ALTER TABLE course_memberships ENABLE ROW LEVEL SECURITY;
+
+-- Políticas RLS
+CREATE POLICY "Instructors can manage memberships"
+ON course_memberships FOR ALL
+USING (EXISTS (
+  SELECT 1 FROM courses 
+  WHERE courses.id = course_memberships.course_id 
+  AND courses.teacher_id = auth.uid()
+));
+
+CREATE POLICY "Students can view their memberships"
+ON course_memberships FOR SELECT
+USING (user_id = auth.uid());
+```
+
+### Entregables
+- [ ] Cursos tienen campo de visibilidad
+- [ ] Cursos privados solo accesibles por miembros
+- [ ] UI de instructor para gestionar visibilidad
+- [ ] UI de instructor para inscribir estudiantes
+
+---
+
+## v1.4 - Panel de Administración
+
+**Objetivo:** Funcionalidad básica de admin para gestión de roles
+
+**Riesgo:** Bajo - UI solamente, usa sistema de roles existente
+
+### Tareas
+| Tarea | Complejidad |
+|-------|-------------|
+| Crear ruta `/admin` (protegida por rol admin) | Pequeña |
+| Crear componente `RequireAdmin` | Pequeña |
+| Construir dashboard admin con lista de usuarios | Media |
+| Implementar asignar/remover rol instructor | Media |
+| Ver todos los cursos (publicados y no publicados) | Pequeña |
+| Agregar navegación admin en sidebar/dropdown | Pequeña |
+
+### Checkpoint de Decisión
+- [ ] Alcance de capacidades admin (¿incluir reembolsos?)
+- [ ] ¿Logs de auditoría para acciones admin?
+
+### Cambios de Schema
+Ninguno - el rol admin ya existe en `user_roles`
+
+### Entregables
+- [ ] Ruta `/admin` accesible solo para admins
+- [ ] Admins pueden asignar/remover rol instructor
+- [ ] Admins pueden ver todos los cursos
+
+---
+
+## v1.5 - Perfiles de Instructor Mejorados
+
+**Objetivo:** Páginas públicas de instructor y datos de perfil más ricos
+
+**Riesgo:** Bajo - cambios aditivos
+
+### Tareas
+| Tarea | Complejidad |
+|-------|-------------|
+| Extender tabla `profiles` con campos de instructor | Pequeña |
+| Crear página pública de instructor: `/instructors/:id` | Media |
+| Agregar edición de perfil de instructor en settings | Media |
+| Vincular cursos a perfil público del instructor | Pequeña |
+| Mostrar info del instructor en páginas de curso | Pequeña |
+
+### Checkpoint de Decisión
+- [ ] ¿Qué campos son requeridos vs opcionales?
+- [ ] ¿Mostrar cursos del instructor en su perfil público?
+
+### Cambios de Schema Requeridos
+```sql
+-- Campos adicionales para perfiles de instructor
+ALTER TABLE profiles ADD COLUMN bio text;
+ALTER TABLE profiles ADD COLUMN affiliation text;
+ALTER TABLE profiles ADD COLUMN website_url text;
+ALTER TABLE profiles ADD COLUMN is_public boolean DEFAULT false;
+```
+
+### Entregables
+- [ ] Instructores pueden completar su perfil
+- [ ] Páginas públicas de instructor disponibles
+- [ ] Cursos muestran info del instructor
+
+---
+
+## v1.6 - Edición de Cursos
+
 **Objetivo:** Permitir a instructores editar cursos publicados
 
-| Tarea | Prioridad | Complejidad | Descripción |
-|------|----------|------------|-------------|
-| Página de edición de curso | Alta | Media | Ruta /teacher/courses/:id/edit |
-| Actualizar detalles del curso | Alta | Pequeña | Título, descripción, precio, categoría |
-| Editar capítulos | Alta | Media | Agregar, remover, reordenar capítulos |
-| Reemplazar videos de capítulos | Media | Media | Cargar nuevo video para capítulo existente |
-| Eliminar curso | Media | Pequeña | Con diálogo de confirmación |
+**Riesgo:** Medio - debe preservar progreso de estudiantes
 
-**Entregables:**
-- Instructores pueden editar completamente sus cursos
-- Cambios se reflejan inmediatamente para estudiantes
-- Eliminación segura con confirmación
+### Tareas
+| Tarea | Complejidad |
+|-------|-------------|
+| Crear ruta `/instructor/courses/:id/edit` | Pequeña |
+| Formulario de edición de curso (título, descripción, precio, categoría, visibilidad) | Media |
+| Edición de capítulos (agregar, remover, reordenar) | Media |
+| Reemplazo de video para capítulos existentes | Media |
+| Eliminación de curso con confirmación | Pequeña |
+| Funcionalidad "despublicar" | Pequeña |
 
-### Fase 4: Gestión de Usuarios (Semana 3)
-**Objetivo:** Completar funcionalidades de perfil de usuario
+### Checkpoint de Decisión
+- [ ] ¿Pueden los instructores editar cursos con estudiantes inscritos?
+- [ ] ¿Qué pasa con el progreso si se eliminan capítulos?
 
-| Tarea | Prioridad | Complejidad | Descripción |
-|------|----------|------------|-------------|
-| Página de configuración de perfil | Media | Pequeña | Ver/editar info de perfil |
-| Carga de avatar | Baja | Pequeña | Cargar foto de perfil |
-| Cambio de contraseña | Media | Pequeña | Formulario de cambio de contraseña |
-| Reseteo de contraseña | Media | Media | Flujo de reseteo basado en email |
+### Cambios de Schema
+Ninguno
 
-**Entregables:**
-- Usuarios pueden actualizar su perfil
-- Gestión de contraseña completa
+### Entregables
+- [ ] Instructores pueden editar completamente sus cursos
+- [ ] Cambios se reflejan inmediatamente
+- [ ] Eliminación segura con confirmación
 
-### Fase 5: Analytics y Pulido (Semana 4)
-**Objetivo:** Insights para instructores y mejoras de UX
+---
 
-| Tarea | Prioridad | Complejidad | Descripción |
-|------|----------|------------|-------------|
-| Datos de analytics reales | Media | Media | Conectar dashboard a datos reales de DB |
-| Desglose de ingresos | Media | Pequeña | Visualización de ingresos por curso |
-| Métricas de inscripción | Media | Pequeña | Conteo de estudiantes por curso |
-| Notificaciones por email | Baja | Media | Email de bienvenida, confirmación de compra |
-| Estados de carga/error | Baja | Pequeña | Mejorar manejo de edge cases |
+## v1.7 - Gestión de Usuarios y Seguridad
 
-**Entregables:**
-- Instructores ven analytics reales
-- Plataforma se siente pulida y completa
+**Objetivo:** Gestión completa de cuenta de usuario
+
+**Riesgo:** Medio - sensible a seguridad
+
+### Tareas
+| Tarea | Complejidad |
+|-------|-------------|
+| Página de configuración de perfil (nombre, avatar) | Pequeña |
+| Funcionalidad de cambio de contraseña | Pequeña |
+| Flujo de reseteo de contraseña (email) | Media |
+| Flujo de eliminación de cuenta (con anonimización) | Media |
+| Gestión de preferencias de email | Pequeña |
+
+### Checkpoint de Decisión
+- [ ] Política de retención de datos para cuentas eliminadas
+- [ ] ¿Qué datos se anonimizan vs eliminan?
+
+### Cambios de Schema
+Ninguno - usa Supabase Auth
+
+### Entregables
+- [ ] Usuarios pueden actualizar su perfil
+- [ ] Gestión de contraseña completa
+- [ ] Flujo de eliminación de cuenta funcional
+
+---
+
+## v1.8 - Analytics Reales
+
+**Objetivo:** Conectar dashboard de instructor a datos reales
+
+**Riesgo:** Bajo
+
+### Tareas
+| Tarea | Complejidad |
+|-------|-------------|
+| Query de purchases para datos de ingresos | Pequeña |
+| Query de inscripciones para conteo de estudiantes | Pequeña |
+| Query de user_progress para tasas de completación | Media |
+| Construir vistas de series temporales (semanal/mensual) | Media |
+| Agregar funcionalidad de exportación (CSV) | Pequeña |
+
+### Checkpoint de Decisión
+- [ ] Granularidad de analytics (diario/semanal/mensual)
+- [ ] ¿Qué métricas son más importantes?
+
+### Cambios de Schema
+Puede necesitar vistas o materialized views para rendimiento
+
+### Entregables
+- [ ] Dashboard muestra ingresos reales
+- [ ] Métricas de estudiantes y progreso
+- [ ] Exportación de datos disponible
+
+---
+
+## v1.9 - Servicios de Instructor (Futuro)
+
+**Objetivo:** Permitir a instructores ofrecer consultoría/servicios
+
+**Riesgo:** Medio - área de funcionalidad nueva
+
+### Tareas
+| Tarea | Complejidad |
+|-------|-------------|
+| Crear tabla `instructor_services` | Pequeña |
+| Construir UI de gestión de servicios | Media |
+| Mostrar servicios en perfil del instructor | Pequeña |
+| Sistema básico de reserva/consulta (email inicialmente) | Media |
+
+### Checkpoint de Decisión
+- [ ] Complejidad del sistema de reservas (email vs integración calendario)
+- [ ] ¿Pagos para servicios a través de la plataforma?
+
+### Cambios de Schema Requeridos
+```sql
+CREATE TABLE instructor_services (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  instructor_id uuid REFERENCES profiles(id) ON DELETE CASCADE,
+  title text NOT NULL,
+  description text,
+  price numeric,
+  is_active boolean DEFAULT true,
+  created_at timestamptz DEFAULT now(),
+  updated_at timestamptz DEFAULT now()
+);
+
+ALTER TABLE instructor_services ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Public can view active services"
+ON instructor_services FOR SELECT
+USING (is_active = true);
+
+CREATE POLICY "Instructors can manage own services"
+ON instructor_services FOR ALL
+USING (instructor_id = auth.uid());
+```
+
+### Entregables
+- [ ] Instructores pueden listar servicios
+- [ ] Servicios visibles en perfil público
+- [ ] Sistema básico de contacto/reserva
+
+---
+
+## v2.0 - AI Content Studio (Fase Final)
+
+**Objetivo:** Creación de contenido asistida por IA para instructores
+
+**Riesgo:** Medio - nueva integración de IA
+
+### Tareas
+| Tarea | Complejidad |
+|-------|-------------|
+| Crear ruta `/instructor/content` | Pequeña |
+| Construir UI del AI Content Studio | Media |
+| Crear edge function para llamadas a LLM (Lovable AI) | Media |
+| Crear tabla `instructor_contents` para borradores | Pequeña |
+| Implementar generación de contenido (blog, newsletter, podcast, landing) | Alta |
+| Gestión de borradores (guardar, editar, publicar/exportar) | Media |
+| Etiquetas de transparencia de IA | Pequeña |
+
+### Checkpoint de Decisión
+- [ ] ¿Qué modelo de Lovable AI usar? (gemini-2.5-flash recomendado)
+- [ ] ¿Límites de generación por instructor?
+
+### Cambios de Schema Requeridos
+```sql
+CREATE TABLE instructor_contents (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  instructor_id uuid REFERENCES profiles(id) ON DELETE CASCADE,
+  content_type text NOT NULL, -- 'blog', 'newsletter', 'podcast', 'landing'
+  title text,
+  body text,
+  source_course_id uuid REFERENCES courses(id),
+  is_ai_generated boolean DEFAULT true,
+  status text DEFAULT 'draft', -- 'draft', 'published', 'archived'
+  created_at timestamptz DEFAULT now(),
+  updated_at timestamptz DEFAULT now()
+);
+
+ALTER TABLE instructor_contents ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Instructors can manage own content"
+ON instructor_contents FOR ALL
+USING (instructor_id = auth.uid());
+```
+
+### Entregables
+- [ ] AI Content Studio funcional
+- [ ] Generación de múltiples tipos de contenido
+- [ ] Sistema de borradores con edición
+- [ ] Transparencia sobre contenido generado por IA
+
+---
+
+## Non-Goals (Fuera de Alcance)
+
+Per la visión de Cognitio, lo siguiente está **FUERA DE ALCANCE**:
+
+### ❌ Funcionalidades LMS Complejas
+- Assignments y quizzes
+- Motor de exámenes / proctoring
+- Gradebooks
+- Importación SCORM/xAPI
+
+### ❌ Funcionalidades Enterprise
+- SAML SSO
+- Integraciones HR/ERP
+- Jerarquías organizacionales complejas
+
+### ❌ Otros
+- Foros de discusión pesados y sistemas de moderación
+- Calificación basada en IA o evaluación automática de estudiantes
+- Precios de suscripción/bundles (solo pagos únicos por ahora)
+- Signup abierto de instructores (política de solo invitación)
 
 ---
 
 ## Arquitectura Técnica
 
-### Stack Actual
+### Stack Actual (No Cambiar)
 ```
 Frontend: React 18 + TypeScript + Vite + Tailwind CSS
 UI: shadcn/ui + Radix UI + Framer Motion
-Backend: Supabase (PostgreSQL + Auth + Edge Functions)
+Backend: Supabase (PostgreSQL + Auth + Edge Functions + Storage)
 Video: Mux
 Pagos: Stripe
 Estado: TanStack Query
-i18n: i18next (español por defecto)
+i18n: i18next
+Testing: Vitest + React Testing Library + MSW
 ```
 
-### Esquema de Base de Datos (Existente)
+### Esquema de Base de Datos Actual
 ```
 ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
 │   profiles  │     │   courses   │     │  chapters   │
@@ -194,26 +532,32 @@ i18n: i18next (español por defecto)
 │ avatar_url  │     │ price       │     │ mux_playback│
 └─────────────┘     │ category    │     │ duration    │
                     │ is_published│     │ is_preview  │
-                    │ image_url   │     └─────────────┘
+                    │ is_featured │     └─────────────┘
+                    │ image_url   │
                     └─────────────┘
                           │
-                          ▼
-┌─────────────┐     ┌─────────────┐
-│  purchases  │     │user_progress│
-├─────────────┤     ├─────────────┤
-│ id (PK)     │     │ id (PK)     │
-│ user_id     │     │ user_id     │
-│ course_id   │     │ chapter_id  │
-│ amount      │     │ is_completed│
-│ stripe_id   │     │ completed_at│
+      ┌───────────────────┼───────────────────┐
+      ▼                   ▼                   ▼
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│  purchases  │     │user_progress│     │ user_roles  │
+├─────────────┤     ├─────────────┤     ├─────────────┤
+│ id (PK)     │     │ id (PK)     │     │ id (PK)     │
+│ user_id     │     │ user_id     │     │ user_id     │
+│ course_id   │     │ chapter_id  │     │ role        │
+│ amount      │     │ is_completed│     │ created_at  │
+│ stripe_id   │     │ completed_at│     └─────────────┘
 └─────────────┘     └─────────────┘
 ```
 
-### Bucket de Storage Requerido
-```sql
--- Bucket de thumbnails de cursos (ya creado)
-INSERT INTO storage.buckets (id, name, public) 
-VALUES ('course-images', 'course-images', true);
+### Schema Futuro (Post v1.3)
+```
+Nuevas tablas/columnas:
+- courses.visibility (enum: public/private/unlisted)
+- courses.instructor_id (reemplazo de teacher_id)
+- course_memberships (curso_id, user_id, enrolled_by)
+- profiles.bio, affiliation, website_url, is_public
+- instructor_services (id, instructor_id, title, price, is_active)
+- instructor_contents (id, instructor_id, content_type, body, status)
 ```
 
 ---
@@ -221,126 +565,44 @@ VALUES ('course-images', 'course-images', true);
 ## Evaluación de Riesgos
 
 | Riesgo | Probabilidad | Impacto | Mitigación |
-|------|-------------|--------|------------|
-| Rate limits de API Mux | Baja | Media | Implementar lógica de retry, encolar cargas |
-| Fallos de webhook Stripe | Media | Alta | Agregar verificación manual de compras |
-| Cargas de video grandes | Media | Media | Mostrar progreso, manejar timeouts |
-| Rendimiento de base de datos | Baja | Alta | Agregar índices, optimizar queries |
+|--------|--------------|---------|------------|
+| Migración de terminología rompe funcionalidad | Media | Alto | Testing exhaustivo, feature flags |
+| Rate limits de API Mux | Baja | Media | Lógica de retry, cola de cargas |
+| Fallos de webhook Stripe | Media | Alta | Verificación manual de compras |
+| Rendimiento de DB con nuevas tablas | Baja | Media | Índices, optimización de queries |
+| Complejidad de AI Content Studio | Media | Media | MVP simple, iterar |
 
 ---
 
 ## Métricas de Éxito
 
-### Criterios de Lanzamiento del MVP
-- [x] Instructores pueden crear cursos con videos end-to-end
-- [x] Estudiantes pueden comprar y ver cursos
-- [x] Seguimiento de progreso funciona confiablemente
-- [ ] Sin bugs críticos o errores de consola
-- [ ] Mobile responsive en todas las páginas
-- [ ] Tiempos de carga de página < 3 segundos
+### Criterios por Versión
+- **v1.1-v1.2**: Terminología consistente, tests pasando
+- **v1.3**: Cursos privados funcionando, inscripción manual exitosa
+- **v1.4**: Admins pueden gestionar roles
+- **v1.5**: Páginas públicas de instructor visibles
+- **v1.6**: Edición de cursos sin perder progreso de estudiantes
+- **v1.7**: Flujo de eliminación de cuenta funcional
+- **v1.8**: Dashboard con datos reales
+- **v1.9**: Servicios visibles y contactables
+- **v2.0**: AI genera contenido útil desde material de cursos
 
-### KPIs Post-MVP
-- Tasa de completación de creación de cursos > 80%
-- Tasa de éxito de reproducción de video > 99%
-- Tasa de conversión de checkout > 60%
-- Tasa de completación de cursos por estudiantes > 30%
-
----
-
-## Resumen de Timeline
-
-| Fase | Duración | Enfoque |
-|-------|----------|-------|
-| Fase 1 | Semana 1 | Correcciones core ✅ |
-| Fase 2 | Semana 2 | Seguimiento de progreso ✅ |
-| Fase 3 | Semana 2-3 | Edición de cursos |
-| Fase 4 | Semana 3 | Gestión de usuarios |
-| Fase 5 | Semana 4 | Analytics y pulido |
-
-**Estimado Total: 4 semanas hasta MVP completo**
+### KPIs Post-v2.0
+- Tasa de completación de cursos > 30%
+- Instructores usando AI Content Studio > 50%
+- Tiempo de configuración de instructor < 30 minutos
+- Satisfacción de instructor (NPS) > 50
 
 ---
 
-## Próximos Pasos
+## Próximos Pasos Inmediatos
 
-### Completado (Diciembre 2024)
-1. ✅ Corregida lógica de acceso a capítulos para dueños de cursos
-2. ✅ Implementada carga de imagen de curso con storage Supabase
-3. ✅ Completadas funcionalidades de seguimiento de progreso
-4. ✅ Removidos elementos UI sin usar
-5. ✅ Creada página Sobre Nosotros con tarjetas apiladas
-6. ✅ Agregadas animaciones Framer Motion
-7. ✅ Rebrandeado de "LearnHub" a "Cognitio"
-
-### Prioridades Inmediatas
-1. **Edición de Cursos**: Permitir a instructores editar cursos publicados
-2. **Testing y Validación**: Testing comprehensivo de todas las funcionalidades implementadas
-3. **Gestión de Usuarios**: Configuración de perfil y reseteo de contraseña
-4. **Analytics**: Conectar dashboard de instructor a datos reales
+1. **Confirmar prioridad de v1.1** - ¿Empezar con refactor de terminología?
+2. **Definir alcance de v1.4** - ¿Qué capacidades admin son esenciales?
+3. **Diseñar workflow de cursos privados** - ¿Manual o link de invitación?
+4. **Revisar modelo de datos** - ¿Cambios adicionales necesarios?
 
 ---
 
-## Cambios Recientes (Diciembre 29, 2024)
-
-### 1. Página Sobre Nosotros
-- **Implementado efecto de tarjetas apiladas (sticky stack)** para perfiles de instructores
-  - 8 tarjetas en total (4 por fundador)
-  - Gustavo González Bonorino y Augusto González Bonorino
-  - Posiciones sticky con offsets dinámicos
-  - Z-index incremental para efecto de apilamiento
-  - Layout 60% bio / 40% foto
-
-### 2. Animaciones con Framer Motion
-- **Agregadas animaciones de entrada** a tarjetas de instructor
-  - Fade in desde abajo (y: 60 → 0)
-  - Scale in (0.95 → 1)
-  - Duración suave de 0.5s
-  - Delay de 0.1s entre tarjetas
-
-### 3. Mejoras de UI
-- **Tarjetas más angostas** (max-w-3xl) para mejor legibilidad
-- **Navbar actualizado** con links: Inicio | Cursos | Sobre Nosotros
-- **Footer de página** con lema: "Nos dedicamos a aprender enseñando"
-
-### 4. Limpieza de Código
-- **Removido InstructorCardDeck.tsx** (reemplazado por StickyInstructorCard)
-- **Actualizada estructura de archivos** en documentación
-
----
-
-## Apéndice: Estructura de Archivos
-
-```
-src/
-├── components/
-│   ├── ui/                     # Componentes shadcn/ui
-│   ├── ChapterList.tsx         # Navegación de capítulos
-│   ├── CourseCard.tsx          # Tarjeta de visualización de curso
-│   ├── Navbar.tsx              # Navegación global (Cognitio)
-│   ├── ProgressCard.tsx        # Visualización de estadísticas
-│   ├── StickyInstructorCard.tsx # Tarjeta de instructor con efecto sticky
-│   ├── TeacherSidebar.tsx      # Navegación de instructor
-│   ├── VideoPlayer.tsx         # Wrapper de reproductor Mux
-│   └── VideoUpload.tsx         # Componente de carga de video
-├── pages/
-│   ├── Index.tsx               # Página de inicio
-│   ├── AuthPage.tsx            # Login/signup
-│   ├── CoursePage.tsx          # Detalle/reproductor de curso
-│   ├── CoursesPage.tsx         # Catálogo de cursos
-│   ├── Dashboard.tsx           # Dashboard del estudiante
-│   ├── CreateCourse.tsx        # Creación de cursos
-│   ├── AboutPage.tsx           # Página Sobre Nosotros
-│   ├── TeacherDashboard.tsx
-│   ├── TeacherCourses.tsx
-│   ├── TeacherAnalytics.tsx
-│   └── TeacherSettings.tsx
-├── contexts/
-│   └── AuthContext.tsx         # Gestión de estado de auth
-├── hooks/
-│   └── useUserRole.ts          # Acceso basado en roles
-├── locales/
-│   ├── es.json                 # Traducciones español
-│   └── en.json                 # Traducciones inglés (futuro)
-└── integrations/
-    └── supabase/               # Cliente y tipos Supabase
-```
+*Última actualización: Diciembre 2024*
+*Versión del documento: 2.0*
