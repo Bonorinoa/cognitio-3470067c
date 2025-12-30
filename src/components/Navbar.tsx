@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
-import { LayoutDashboard, LogOut, BookOpen } from "lucide-react";
+import { LayoutDashboard, LogOut, BookOpen, Shield } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -16,7 +16,7 @@ import { useUserRole } from "@/hooks/useUserRole";
 const Navbar = () => {
   const { t } = useTranslation();
   const { user, signOut, isLoading } = useAuth();
-  const { isInstructor } = useUserRole();
+  const { isInstructor, isAdmin } = useUserRole();
 
   const handleSignOut = async () => {
     await signOut();
@@ -90,6 +90,14 @@ const Navbar = () => {
                     <Link to="/instructor" className="cursor-pointer">
                       <BookOpen className="mr-2 h-4 w-4" />
                       {t('nav.instructorPanel')}
+                    </Link>
+                  </DropdownMenuItem>
+                )}
+                {isAdmin && (
+                  <DropdownMenuItem asChild>
+                    <Link to="/admin" className="cursor-pointer">
+                      <Shield className="mr-2 h-4 w-4" />
+                      {t('nav.adminPanel')}
                     </Link>
                   </DropdownMenuItem>
                 )}
