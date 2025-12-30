@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams, Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import VideoPlayer from "@/components/VideoPlayer";
 import ChapterList from "@/components/ChapterList";
@@ -395,7 +395,12 @@ const CoursePage = () => {
                     {course.category && (
                       <Badge variant="secondary">{course.category}</Badge>
                     )}
-                    <span>by {course.instructor?.full_name || course.instructor?.email || "Instructor"}</span>
+                    <Link 
+                      to={`/instructor/profile/${course.instructor_id}`}
+                      className="hover:text-primary transition-colors underline-offset-2 hover:underline"
+                    >
+                      by {course.instructor?.full_name || course.instructor?.email || "Instructor"}
+                    </Link>
                   </div>
                 </div>
               </div>
