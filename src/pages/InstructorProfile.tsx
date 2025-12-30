@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import CourseCard from "@/components/CourseCard";
 import InstructorContactForm from "@/components/InstructorContactForm";
+import InstructorServicesDisplay from "@/components/InstructorServicesDisplay";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -262,6 +263,13 @@ const InstructorProfile = () => {
             </div>
           </motion.section>
         )}
+
+        {/* Services Section */}
+        <section className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <InstructorServicesDisplay instructorId={instructor.id} />
+          </div>
+        </section>
 
         {/* Courses Section */}
         <motion.section
