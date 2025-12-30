@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import FoundersStorySection from "@/components/FoundersStorySection";
+import HeroBackground from "@/components/HeroBackground";
 import heroImage from "@/assets/hero-bg.jpg";
 import { ArrowRight, GraduationCap, Users, Lightbulb, Target } from "lucide-react";
 
@@ -63,6 +64,7 @@ const Index = () => {
             className="h-full w-full object-cover opacity-30"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/70 to-background" />
+          <HeroBackground />
         </div>
 
         <div className="container relative z-10 mx-auto px-4 py-20 text-center">
