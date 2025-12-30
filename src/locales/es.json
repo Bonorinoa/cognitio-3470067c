@@ -374,5 +374,26 @@
     "successDraft": "¡Curso guardado como borrador!",
     "successUpdate": "¡Curso actualizado exitosamente!",
     "errorSave": "Error al guardar el curso"
+  },
+  "studentDashboard": {
+    "welcomeBack": "Bienvenido de nuevo",
+    "continueJourney": "Continúa tu viaje de aprendizaje",
+    "coursesEnrolled": "Cursos Inscritos",
+    "coursesCompleted": "Cursos Completados",
+    "chaptersCompleted": "Capítulos Completados",
+    "overallProgress": "Progreso General",
+    "activeCourses": "Cursos activos",
+    "greatProgress": "¡Gran progreso!",
+    "totalCompleted": "Total completados",
+    "keepGoing": "¡Sigue adelante!",
+    "searchPlaceholder": "Buscar tus cursos...",
+    "allCourses": "Todos los Cursos",
+    "inProgress": "En Progreso",
+    "completed": "Completados",
+    "noCoursesYet": "Aún no tienes cursos",
+    "startLearning": "Comienza tu viaje de aprendizaje inscribiéndote en un curso.",
+    "browseCourses": "Explorar Cursos",
+    "noCoursesFound": "No se encontraron cursos",
+    "tryDifferentSearch": "Intenta con otro término de búsqueda."
   }
 }
