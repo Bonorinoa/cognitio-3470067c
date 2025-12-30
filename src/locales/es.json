@@ -309,6 +309,21 @@
     "errorDelete": "Error al eliminar el curso",
     "errorFeatured": "Error al actualizar el estado destacado"
   },
+  "membership": {
+    "title": "Estudiantes Inscritos",
+    "description": "Gestiona quién tiene acceso a este curso",
+    "emailPlaceholder": "Ingresa el email del estudiante...",
+    "noStudents": "Aún no hay estudiantes inscritos",
+    "enrolledCount": "{{count}} inscrito(s)",
+    "unknownUser": "Usuario desconocido",
+    "studentAdded": "{{name}} ha sido inscrito",
+    "studentRemoved": "Estudiante removido del curso",
+    "studentNotFound": "No se encontró un usuario con ese email",
+    "studentAlreadyEnrolled": "Este estudiante ya está inscrito",
+    "cannotEnrollSelf": "No puedes inscribirte a ti mismo",
+    "errorAdding": "Error al agregar estudiante",
+    "errorRemoving": "Error al remover estudiante"
+  },
   "createCourse": {
     "title": "Crear Nuevo Curso",
     "subtitle": "Completa los detalles para crear tu curso",
