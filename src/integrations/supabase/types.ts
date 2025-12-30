@@ -77,6 +77,7 @@ export type Database = {
           description: string | null
           id: string
           image_url: string | null
+          instructor_id: string
           is_featured: boolean | null
           is_published: boolean | null
           price: number
@@ -92,6 +93,7 @@ export type Database = {
           description?: string | null
           id?: string
           image_url?: string | null
+          instructor_id: string
           is_featured?: boolean | null
           is_published?: boolean | null
           price?: number
@@ -107,6 +109,7 @@ export type Database = {
           description?: string | null
           id?: string
           image_url?: string | null
+          instructor_id?: string
           is_featured?: boolean | null
           is_published?: boolean | null
           price?: number

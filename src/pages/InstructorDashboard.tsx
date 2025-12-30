@@ -65,7 +65,7 @@ const InstructorDashboard = () => {
           is_published,
           updated_at
         `)
-        .eq("teacher_id", user.id)
+        .eq("instructor_id", user.id)
         .order("updated_at", { ascending: false });
 
       if (coursesError) throw coursesError;

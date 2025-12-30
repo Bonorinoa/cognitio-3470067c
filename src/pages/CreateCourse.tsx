@@ -172,7 +172,8 @@ const CreateCourse = () => {
           description: description.trim() || null,
           price: parseFloat(price) || 0,
           category: category || "Development",
-          teacher_id: user.id,
+          instructor_id: user.id,
+          teacher_id: user.id, // Keep for backward compatibility during migration
           is_published: publish,
           image_url: imageUrl,
         })

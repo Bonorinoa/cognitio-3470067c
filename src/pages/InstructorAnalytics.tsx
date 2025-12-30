@@ -34,7 +34,7 @@ const InstructorAnalytics = () => {
       const { data: courses } = await supabase
         .from("courses")
         .select("id, title")
-        .eq("teacher_id", user?.id);
+        .eq("instructor_id", user?.id);
 
       const courseIds = courses?.map((c) => c.id) || [];
 
