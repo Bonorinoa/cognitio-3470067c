@@ -1,5 +1,4 @@
 import { useInstructorAnalytics, exportAnalyticsCSV } from "@/hooks/useInstructorAnalytics";
-import InstructorSidebar from "@/components/InstructorSidebar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -48,21 +47,14 @@ const InstructorAnalytics = () => {
 
   if (error) {
     return (
-      <div className="flex min-h-screen bg-background">
-        <InstructorSidebar />
-        <main className="flex-1 p-8">
-          <div className="text-center py-12">
-            <p className="text-destructive">Error al cargar analytics</p>
-          </div>
-        </main>
+      <div className="text-center py-12">
+        <p className="text-destructive">Error al cargar analytics</p>
       </div>
     );
   }
 
   return (
-    <div className="flex min-h-screen bg-background">
-      <InstructorSidebar />
-      <main className="flex-1 p-8">
+    <>
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
@@ -314,12 +306,11 @@ const InstructorAnalytics = () => {
                     </div>
                   )}
                 </CardContent>
-              </Card>
-            </div>
-          </>
-        ) : null}
-      </main>
-    </div>
+            </Card>
+          </div>
+        </>
+      ) : null}
+    </>
   );
 };
 

@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/AuthContext";
-import InstructorSidebar from "@/components/InstructorSidebar";
 import AvatarUpload from "@/components/AvatarUpload";
 import CredentialsTags from "@/components/CredentialsTags";
 import PasswordChangeForm from "@/components/PasswordChangeForm";
@@ -133,19 +132,14 @@ const InstructorSettings = () => {
 
   if (profileLoading) {
     return (
-      <div className="flex min-h-screen bg-background">
-        <InstructorSidebar />
-        <main className="flex-1 p-8 flex items-center justify-center">
-          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-        </main>
+      <div className="flex items-center justify-center py-12">
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
       </div>
     );
   }
 
   return (
-    <div className="flex min-h-screen bg-background">
-      <InstructorSidebar />
-      <main className="flex-1 p-8">
+    <>
         <div className="mb-8 flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-foreground">{t("instructorSettings.title")}</h1>
@@ -379,8 +373,7 @@ const InstructorSettings = () => {
             </Button>
           </div>
         </div>
-      </main>
-    </div>
+    </>
   );
 };
 

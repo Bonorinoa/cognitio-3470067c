@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import InstructorSidebar from "@/components/InstructorSidebar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -294,58 +293,40 @@ const EditCourse = () => {
 
   if (courseLoading || chaptersLoading) {
     return (
-      <div className="flex min-h-screen bg-background">
-        <InstructorSidebar />
-        <main className="flex-1 p-8">
-          <div className="space-y-6">
-            <Skeleton className="h-10 w-64" />
-            <Skeleton className="h-[400px] w-full" />
-          </div>
-        </main>
+      <div className="space-y-6">
+        <Skeleton className="h-10 w-64" />
+        <Skeleton className="h-[400px] w-full" />
       </div>
     );
   }
 
   if (!course) {
     return (
-      <div className="flex min-h-screen bg-background">
-        <InstructorSidebar />
-        <main className="flex-1 p-8">
-          <div className="text-center py-12">
-            <h2 className="text-2xl font-bold text-foreground mb-2">Course not found</h2>
-            <p className="text-muted-foreground mb-4">This course may have been deleted or you don't have access.</p>
-            <Button onClick={() => navigate("/instructor/courses")}>
-              Back to Courses
-            </Button>
-          </div>
-        </main>
+      <div className="text-center py-12">
+        <h2 className="text-2xl font-bold text-foreground mb-2">Course not found</h2>
+        <p className="text-muted-foreground mb-4">This course may have been deleted or you don't have access.</p>
+        <Button onClick={() => navigate("/instructor/courses")}>
+          Back to Courses
+        </Button>
       </div>
     );
   }
 
   if (!isOwner) {
     return (
-      <div className="flex min-h-screen bg-background">
-        <InstructorSidebar />
-        <main className="flex-1 p-8">
-          <div className="text-center py-12">
-            <h2 className="text-2xl font-bold text-foreground mb-2">Access Denied</h2>
-            <p className="text-muted-foreground mb-4">You don't have permission to edit this course.</p>
-            <Button onClick={() => navigate("/instructor/courses")}>
-              Back to Courses
-            </Button>
-          </div>
-        </main>
+      <div className="text-center py-12">
+        <h2 className="text-2xl font-bold text-foreground mb-2">Access Denied</h2>
+        <p className="text-muted-foreground mb-4">You don't have permission to edit this course.</p>
+        <Button onClick={() => navigate("/instructor/courses")}>
+          Back to Courses
+        </Button>
       </div>
     );
   }
 
   return (
-    <div className="flex min-h-screen bg-background">
-      <InstructorSidebar />
-
-      <main className="flex-1 p-8">
-        {/* Header */}
+    <>
+      {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-4">
             <Button
@@ -596,8 +577,7 @@ const EditCourse = () => {
             </Card>
           </div>
         </div>
-      </main>
-    </div>
+    </>
   );
 };
 

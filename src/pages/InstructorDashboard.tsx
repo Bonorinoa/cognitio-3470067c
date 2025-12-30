@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import InstructorSidebar from "@/components/InstructorSidebar";
 import ProgressCard from "@/components/ProgressCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -173,11 +172,8 @@ const InstructorDashboard = () => {
   const publishedCourses = courses.filter((c) => c.is_published).length;
 
   return (
-    <div className="flex min-h-screen bg-background">
-      <InstructorSidebar />
-
-      <main className="flex-1 p-8">
-        {/* Header */}
+    <>
+      {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl font-bold text-foreground mb-2">
@@ -363,8 +359,7 @@ const InstructorDashboard = () => {
             </CardContent>
           </Card>
         </div>
-      </main>
-    </div>
+    </>
   );
 };
 

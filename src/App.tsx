@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import RequireInstructor from "@/components/RequireInstructor";
 import RequireAdmin from "@/components/RequireAdmin";
+import InstructorLayout from "@/components/InstructorLayout";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import CoursesPage from "./pages/CoursesPage";
@@ -42,13 +43,20 @@ const App = () => (
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/courses" element={<CoursesPage />} />
             <Route path="/course/:id" element={<CoursePage />} />
-            <Route path="/instructor" element={<RequireInstructor><InstructorDashboard /></RequireInstructor>} />
-            <Route path="/instructor/courses" element={<RequireInstructor><InstructorCourses /></RequireInstructor>} />
-            <Route path="/instructor/create" element={<RequireInstructor><CreateCourse /></RequireInstructor>} />
-            <Route path="/instructor/analytics" element={<RequireInstructor><InstructorAnalytics /></RequireInstructor>} />
-            <Route path="/instructor/settings" element={<RequireInstructor><InstructorSettings /></RequireInstructor>} />
-            <Route path="/instructor/edit/:id" element={<RequireInstructor><EditCourse /></RequireInstructor>} />
+            
+            {/* Instructor routes with shared layout */}
+            <Route path="/instructor" element={<RequireInstructor><InstructorLayout /></RequireInstructor>}>
+              <Route index element={<InstructorDashboard />} />
+              <Route path="courses" element={<InstructorCourses />} />
+              <Route path="create" element={<CreateCourse />} />
+              <Route path="analytics" element={<InstructorAnalytics />} />
+              <Route path="settings" element={<InstructorSettings />} />
+              <Route path="edit/:id" element={<EditCourse />} />
+            </Route>
+            
+            {/* Public instructor profile - not part of layout */}
             <Route path="/instructor/profile/:id" element={<InstructorProfile />} />
+            
             <Route path="/auth" element={<AuthPage />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
             <Route path="/reset-password" element={<ResetPasswordPage />} />

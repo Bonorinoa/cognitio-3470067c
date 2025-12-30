@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import InstructorSidebar from "@/components/InstructorSidebar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -146,10 +145,8 @@ const InstructorCourses = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-background">
-      <InstructorSidebar />
-      <main className="flex-1 p-8">
-        <div className="mb-8 flex items-center justify-between">
+    <>
+      <div className="mb-8 flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-foreground">{t("instructorCourses.title")}</h1>
             <p className="text-muted-foreground">
@@ -292,8 +289,7 @@ const InstructorCourses = () => {
             ))}
           </div>
         )}
-      </main>
-    </div>
+    </>
   );
 };
 
