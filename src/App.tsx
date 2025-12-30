@@ -22,6 +22,9 @@ import EditCourse from "./pages/EditCourse";
 import AuthPage from "./pages/AuthPage";
 import AdminPanel from "./pages/AdminPanel";
 import NotFound from "./pages/NotFound";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
+import UserSettings from "./pages/UserSettings";
 
 const queryClient = new QueryClient();
 
@@ -47,6 +50,9 @@ const App = () => (
             <Route path="/instructor/edit/:id" element={<RequireInstructor><EditCourse /></RequireInstructor>} />
             <Route path="/instructor/profile/:id" element={<InstructorProfile />} />
             <Route path="/auth" element={<AuthPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/reset-password" element={<ResetPasswordPage />} />
+            <Route path="/settings" element={<UserSettings />} />
             <Route path="/admin" element={<RequireAdmin><AdminPanel /></RequireAdmin>} />
             {/* Legacy route redirects for backward compatibility */}
             <Route path="/teacher" element={<Navigate to="/instructor" replace />} />
