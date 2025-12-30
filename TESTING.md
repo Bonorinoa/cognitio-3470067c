@@ -1,17 +1,22 @@
 # Testing Documentation
 
 ## Overview
-This document provides comprehensive information about the testing infrastructure, practices, and guidelines for the Dark Bloom Learning platform.
+This document provides comprehensive information about the testing infrastructure, practices, and guidelines for the Cognitio Learning platform.
 
-## Testing Framework
+## Testing Frameworks
 
-### Primary Testing Tools
+### Unit & Integration Testing
 - **Vitest 4.0.16** - Fast, Vite-native test runner
 - **@testing-library/react 16.3.1** - React component testing utilities
 - **@testing-library/user-event 14.6.1** - User interaction simulation
 - **@testing-library/jest-dom 6.9.1** - Custom DOM matchers
 - **MSW (Mock Service Worker) 2.12.4** - API request mocking
 - **jsdom 27.3.0** - DOM implementation for Node.js
+
+### End-to-End Testing
+- **Playwright** - Browser automation for E2E tests
+- **Chromium** - Primary browser for E2E testing
+- See [E2E_TESTING.md](./E2E_TESTING.md) for complete E2E documentation
 
 ## Test Configuration
 
@@ -48,9 +53,10 @@ The `src/test/setup.ts` file configures:
 
 ## Running Tests
 
-### Available Commands
+### Unit & Integration Tests
+
 ```bash
-# Run all tests once
+# Run all unit tests once
 npx vitest run
 
 # Run tests in watch mode
@@ -65,6 +71,27 @@ npx vitest run src/components/CourseCard.test.tsx
 # Run tests matching a pattern
 npx vitest run -t "renders course title"
 ```
+
+### End-to-End Tests
+
+```bash
+# Run all E2E tests
+npm run test:e2e
+
+# Run E2E tests in UI mode (interactive)
+npm run test:e2e:ui
+
+# Run E2E tests with visible browser
+npm run test:e2e:headed
+
+# View E2E test report
+npm run test:e2e:report
+
+# Run all tests (unit + E2E)
+npm run test:all
+```
+
+For detailed E2E testing documentation, see [E2E_TESTING.md](./E2E_TESTING.md).
 
 ## Test Structure
 
