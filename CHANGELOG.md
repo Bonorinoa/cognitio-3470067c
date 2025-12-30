@@ -5,6 +5,41 @@ All notable changes to Cognitio will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.9.2] - 2025-12-30
+
+### Added
+- **CourseMembershipManager**: Instructors can now enroll students in private/unlisted courses
+  - Add students by email address
+  - Remove enrolled students
+  - View all enrolled students with avatars
+- **Dashboard Course Access**: Student dashboard now shows courses from BOTH purchases AND memberships
+  - Private/unlisted courses accessible via membership now appear in student dashboard
+  - Combined and deduplicated course list
+- **studentDashboard i18n**: Full Spanish translation for student dashboard
+  - All UI strings now properly internationalized
+  - Consistent with platform's Spanish-first approach
+- **AvatarUpload Improvements**:
+  - 10MB file size limit
+  - Automatic client-side compression (images >2MB resized to max 1200px, JPEG 80%)
+  - Explicit "Remove Photo" functionality with storage cleanup
+
+### Deprecated
+- **InstructorContactForm**: Removed in favor of direct email links on instructor profiles
+- **send-instructor-inquiry Edge Function**: Deleted (no longer needed)
+- **RESEND_API_KEY Secret**: Removed from project secrets
+
+### Removed
+- `src/components/ui/chart.tsx` - Unused shadcn wrapper (InstructorAnalytics imports directly from recharts)
+- `WORK_SUMMARY.md` - Outdated session log from December 2024
+- `CLEANUP_ANALYSIS.md` - Cleanup actions completed, contained outdated info
+
+### Fixed
+- Dashboard now correctly displays private/unlisted courses that users are enrolled in via memberships
+
+### Documentation
+- Updated README.md, FEATURES.md, DEVELOPMENT_PLAN.md to reflect v2.9.2 changes
+- Cleaned up outdated documentation files
+
 ## [2.9.1] - 2025-12-30
 
 ### Fixed

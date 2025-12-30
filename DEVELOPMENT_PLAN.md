@@ -42,7 +42,7 @@
 
 ---
 
-## Estado Actual (v2.9.1)
+## Estado Actual (v2.9.2)
 
 ### ✅ Completado
 | Versión | Categoría | Funcionalidad |
@@ -60,7 +60,8 @@
 | v1.6 | **Cursos** | Edición completa de cursos y capítulos |
 | v1.7 | **Seguridad** | Cambio/reset de contraseña, eliminación de cuenta, gestión de usuario |
 | v1.8 | **Analytics** | Métricas reales de ingresos, estudiantes, completación, exportación CSV |
-| v1.9 | **Servicios** | Servicios de consultoría de instructor, sistema de contacto por email |
+| v1.9 | **Servicios** | Servicios de consultoría de instructor |
+| v1.9.1 | **Mejoras** | Avatar upload mejorado (10MB, compresión, eliminación), CourseMembershipManager |
 | v2.4 | **Diseño** | Sistema de diseño con tema claro cálido, tokens HSL semánticos |
 | v2.5 | **UI** | Paleta de colores coral/salmon, fondos cálidos, charcoal text |
 | v2.6 | **Animaciones** | Animaciones base con Framer Motion, transiciones suaves |
@@ -69,6 +70,8 @@
 | v2.9 | **Responsive** | Menú hamburguesa móvil en Navbar, layouts responsive pulidos |
 | v2.9.1 | **Bug Fixes** | InstructorSidebar alignment, FoundersStorySection animations, card hover standardization |
 | v2.9.1 | **Seguridad** | Audit completo, RLS verificado, secrets secured, CodeQL: 0 vulnerabilities |
+| v2.9.2 | **Membresías** | Dashboard muestra cursos de purchases + memberships, i18n student dashboard |
+| v2.9.2 | **Cleanup** | Deprecated: contact form, send-instructor-inquiry; Removed: chart.tsx, outdated docs |
 
 ### 🚧 Próximo: v3.0 - AI Content Studio
 
@@ -664,7 +667,6 @@ Nuevas tablas/columnas:
 #### Documentation Deliverables
 - ✅ `E2E_TESTING.md` - Comprehensive E2E testing guide
 - ✅ `e2e/README.md` - Quick reference for E2E tests
-- ✅ `CLEANUP_ANALYSIS.md` - Codebase cleanup analysis
 - ✅ Updated `TESTING.md` with E2E information
 - ✅ Updated `TEST_COVERAGE_SUMMARY.md`
 
@@ -802,5 +804,135 @@ The current architecture supports AI features without major refactoring:
 
 ---
 
+## 🚀 Roadmap v3.0 - v4.0
+
+### v3.0 - AI Content Studio MVP
+
+**Objetivo:** Creación de contenido asistida por IA para instructores
+
+**Riesgo:** Medio - nueva integración de IA
+
+#### Tareas
+| Tarea | Complejidad |
+|-------|-------------|
+| Habilitar Lovable AI Gateway | Pequeña |
+| Crear edge function `generate-content` | Media |
+| Crear tabla `instructor_contents` | Pequeña |
+| Crear ruta `/instructor/content` | Pequeña |
+| UI para seleccionar tipo de contenido (blog, newsletter) | Media |
+| Generación de blogs desde datos del curso | Media |
+| Generación de newsletters desde datos del curso | Media |
+| Sistema de borradores (guardar, editar) | Media |
+| Etiquetas de transparencia de IA | Pequeña |
+
+#### Schema Requerido
+```sql
+CREATE TABLE instructor_contents (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  instructor_id uuid REFERENCES profiles(id) ON DELETE CASCADE,
+  content_type text NOT NULL, -- 'blog', 'newsletter', 'podcast', 'landing'
+  title text,
+  body text,
+  source_course_id uuid REFERENCES courses(id),
+  is_ai_generated boolean DEFAULT true,
+  status text DEFAULT 'draft', -- 'draft', 'published', 'archived'
+  created_at timestamptz DEFAULT now(),
+  updated_at timestamptz DEFAULT now()
+);
+
+ALTER TABLE instructor_contents ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Instructors can manage own content"
+ON instructor_contents FOR ALL
+USING (instructor_id = auth.uid());
+```
+
+#### Entregables
+- [ ] AI Content Studio accesible en `/instructor/content`
+- [ ] Generación de blogs y newsletters
+- [ ] Sistema de borradores funcional
+- [ ] Transparencia sobre contenido IA
+
+---
+
+### v3.1 - Content Publishing
+
+**Objetivo:** Ampliar tipos de contenido y flujo de publicación
+
+**Riesgo:** Bajo - extensión de v3.0
+
+#### Tareas
+| Tarea | Complejidad |
+|-------|-------------|
+| Generador de scripts para podcasts | Media |
+| Generador de copy para landing pages | Media |
+| Workflow de exportación (Markdown, HTML) | Media |
+| Vista previa de contenido generado | Pequeña |
+| Historial de versiones de borradores | Pequeña |
+
+#### Entregables
+- [ ] 4 tipos de contenido: blog, newsletter, podcast script, landing copy
+- [ ] Exportación en múltiples formatos
+- [ ] Historial de borradores
+
+---
+
+### v3.2 - AI Enhancements
+
+**Objetivo:** Mejorar calidad y contexto de contenido IA
+
+**Riesgo:** Bajo
+
+#### Tareas
+| Tarea | Complejidad |
+|-------|-------------|
+| Usar contexto completo del curso (títulos, descripciones, capítulos) | Media |
+| Analytics de uso de AI Content Studio | Pequeña |
+| Límites de generación por instructor | Pequeña |
+| Templates personalizables por instructor | Media |
+
+#### Entregables
+- [ ] Contenido IA más contextualizado
+- [ ] Métricas de uso de IA
+- [ ] Límites configurables
+
+---
+
+### v4.0 - Platform Maturity
+
+**Objetivo:** Funcionalidades de madurez de plataforma
+
+**Riesgo:** Medio
+
+#### Tareas
+| Tarea | Complejidad |
+|-------|-------------|
+| Sistema de links de invitación para cursos privados | Media |
+| Bulk CSV enrollment (inscripción masiva) | Media |
+| Notificaciones por email (nuevos cursos, actualizaciones) | Media |
+| Analytics avanzados (engagement, retención) | Alta |
+| Mejoras de rendimiento y optimización | Media |
+
+#### Entregables
+- [ ] Links de invitación únicos para cursos privados
+- [ ] Inscripción masiva vía CSV
+- [ ] Sistema de notificaciones email
+- [ ] Dashboard de analytics avanzado
+
+---
+
+## 📋 Pre-v3.0 Checklist
+
+Antes de iniciar v3.0, confirmar:
+- [x] ✅ UI/UX foundation estable (v2.9.2)
+- [x] ✅ Security audit completo
+- [x] ✅ Documentación actualizada
+- [x] ✅ Codebase limpio (deprecated files removed)
+- [ ] 🔄 GitHub Copilot review (pendiente)
+- [ ] 📝 Decisión: modelo Lovable AI a usar (recomendado: google/gemini-2.5-flash)
+- [ ] 📝 Decisión: límites de generación por instructor
+
+---
+
 *Última actualización: Diciembre 30, 2025*
-*Versión del documento: 2.9.1*
+*Versión del documento: 2.9.2*
