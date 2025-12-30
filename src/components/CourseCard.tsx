@@ -41,7 +41,7 @@ const CourseCard = ({
   const durationDisplay = formatTotalDuration(totalDurationSeconds);
   return (
     <Link to={`/course/${id}`}>
-      <Card className="group overflow-hidden border-border bg-card transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10">
+      <Card className="group overflow-hidden rounded-xl border-border bg-card transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
         <div className="relative aspect-video overflow-hidden">
           <img
             src={image}

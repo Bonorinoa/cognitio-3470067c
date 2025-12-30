@@ -43,7 +43,7 @@ const InstructorCatalogCard = ({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: index * 0.1 }}
     >
-      <Card className="group relative overflow-hidden border-border bg-card hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+      <Card className="group relative overflow-hidden rounded-xl border-border bg-card hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
         {isFounder && (
           <Badge 
             className="absolute top-3 right-3 z-10 bg-primary text-primary-foreground"
