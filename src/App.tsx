@@ -15,6 +15,7 @@ import InstructorDashboard from "./pages/InstructorDashboard";
 import InstructorCourses from "./pages/InstructorCourses";
 import InstructorAnalytics from "./pages/InstructorAnalytics";
 import InstructorSettings from "./pages/InstructorSettings";
+import InstructorProfile from "./pages/InstructorProfile";
 import CreateCourse from "./pages/CreateCourse";
 import EditCourse from "./pages/EditCourse";
 import AuthPage from "./pages/AuthPage";
@@ -42,6 +43,7 @@ const App = () => (
             <Route path="/instructor/analytics" element={<RequireInstructor><InstructorAnalytics /></RequireInstructor>} />
             <Route path="/instructor/settings" element={<RequireInstructor><InstructorSettings /></RequireInstructor>} />
             <Route path="/instructor/edit/:id" element={<RequireInstructor><EditCourse /></RequireInstructor>} />
+            <Route path="/instructor/profile/:id" element={<InstructorProfile />} />
             <Route path="/auth" element={<AuthPage />} />
             <Route path="/admin" element={<RequireAdmin><AdminPanel /></RequireAdmin>} />
             {/* Legacy route redirects for backward compatibility */}
