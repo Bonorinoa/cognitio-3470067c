@@ -17,7 +17,8 @@
     "about": "About",
     "credentials": "Credentials",
     "coursesBy": "Courses by {{name}}",
-    "noCourses": "No courses published yet. Check back soon!"
+    "noCourses": "No courses published yet. Check back soon!",
+    "servicesOffered": "Services Offered"
   },
   "instructorContact": {
     "title": "Get in Touch",
@@ -73,7 +74,41 @@
     "instructorPrivileges": "You have instructor privileges on this platform",
     "active": "Active",
     "saveChanges": "Save Changes",
-    "saving": "Saving..."
+    "saving": "Saving...",
+    "services": {
+      "title": "Consulting Services",
+      "subtitle": "Offer consulting, coaching, or other services to your students",
+      "addService": "Add Service",
+      "noServices": "No services yet. Add your first consulting service.",
+      "inactive": "Inactive",
+      "editService": "Edit Service",
+      "addNewService": "Add New Service",
+      "editDescription": "Update the details of your service.",
+      "addDescription": "Create a new consulting service to offer to students.",
+      "serviceTitle": "Service Title",
+      "serviceTitlePlaceholder": "e.g., 1-on-1 Consulting Session",
+      "description": "Description",
+      "descriptionPlaceholder": "Describe what this service includes...",
+      "price": "Price ($)",
+      "duration": "Duration (minutes)",
+      "activeLabel": "Active",
+      "activeDescription": "Show this service on your public profile",
+      "cancel": "Cancel",
+      "updateService": "Update Service",
+      "createService": "Create Service",
+      "deleteTitle": "Delete Service",
+      "deleteDescription": "Are you sure you want to delete this service? This action cannot be undone.",
+      "delete": "Delete",
+      "successCreated": "Service created",
+      "successCreatedDesc": "Your new service has been created.",
+      "successUpdated": "Service updated",
+      "successUpdatedDesc": "Your service has been updated successfully.",
+      "successDeleted": "Service deleted",
+      "successDeletedDesc": "The service has been removed.",
+      "errorSave": "Failed to save service. Please try again.",
+      "errorDelete": "Failed to delete service. Please try again.",
+      "validationTitle": "Please enter a service title."
+    }
   },
   "instructors": {
     "title": "Our Instructors",

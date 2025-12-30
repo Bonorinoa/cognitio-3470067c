@@ -17,7 +17,8 @@
     "about": "Acerca de",
     "credentials": "Credenciales",
     "coursesBy": "Cursos de {{name}}",
-    "noCourses": "Aún no hay cursos publicados. ¡Vuelve pronto!"
+    "noCourses": "Aún no hay cursos publicados. ¡Vuelve pronto!",
+    "servicesOffered": "Servicios Ofrecidos"
   },
   "instructorContact": {
     "title": "Ponte en Contacto",
@@ -73,7 +74,41 @@
     "instructorPrivileges": "Tienes privilegios de instructor en esta plataforma",
     "active": "Activo",
     "saveChanges": "Guardar Cambios",
-    "saving": "Guardando..."
+    "saving": "Guardando...",
+    "services": {
+      "title": "Servicios de Consultoría",
+      "subtitle": "Ofrece consultoría, coaching u otros servicios a tus estudiantes",
+      "addService": "Agregar Servicio",
+      "noServices": "Aún no hay servicios. Agrega tu primer servicio de consultoría.",
+      "inactive": "Inactivo",
+      "editService": "Editar Servicio",
+      "addNewService": "Agregar Nuevo Servicio",
+      "editDescription": "Actualiza los detalles de tu servicio.",
+      "addDescription": "Crea un nuevo servicio de consultoría para ofrecer a los estudiantes.",
+      "serviceTitle": "Título del Servicio",
+      "serviceTitlePlaceholder": "ej., Sesión de Consultoría 1 a 1",
+      "description": "Descripción",
+      "descriptionPlaceholder": "Describe qué incluye este servicio...",
+      "price": "Precio ($)",
+      "duration": "Duración (minutos)",
+      "activeLabel": "Activo",
+      "activeDescription": "Mostrar este servicio en tu perfil público",
+      "cancel": "Cancelar",
+      "updateService": "Actualizar Servicio",
+      "createService": "Crear Servicio",
+      "deleteTitle": "Eliminar Servicio",
+      "deleteDescription": "¿Estás seguro de que deseas eliminar este servicio? Esta acción no se puede deshacer.",
+      "delete": "Eliminar",
+      "successCreated": "Servicio creado",
+      "successCreatedDesc": "Tu nuevo servicio ha sido creado.",
+      "successUpdated": "Servicio actualizado",
+      "successUpdatedDesc": "Tu servicio ha sido actualizado exitosamente.",
+      "successDeleted": "Servicio eliminado",
+      "successDeletedDesc": "El servicio ha sido eliminado.",
+      "errorSave": "Error al guardar el servicio. Por favor, inténtalo de nuevo.",
+      "errorDelete": "Error al eliminar el servicio. Por favor, inténtalo de nuevo.",
+      "validationTitle": "Por favor, ingresa un título para el servicio."
+    }
   },
   "instructors": {
     "title": "Nuestros Instructores",
