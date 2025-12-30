@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import CourseCard from "@/components/CourseCard";
 import heroImage from "@/assets/hero-bg.jpg";
 import { ArrowRight, GraduationCap, Users, Lightbulb, Target } from "lucide-react";
@@ -184,12 +185,7 @@ const Index = () => {
         </section>
       )}
 
-      {/* Footer */}
-      <footer className="border-t border-border py-8">
-        <div className="container mx-auto px-4 text-center text-muted-foreground">
-          <p>&copy; 2024 Cognitio. Todos los derechos reservados.</p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };

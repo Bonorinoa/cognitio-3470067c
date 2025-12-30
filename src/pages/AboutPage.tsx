@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import StickyInstructorCard from "@/components/StickyInstructorCard";
 import { Button } from "@/components/ui/button";
 
@@ -103,17 +104,7 @@ const AboutPage = () => {
         </motion.section>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-border py-12">
-        <div className="container mx-auto px-4 text-center">
-          <p className="text-lg text-foreground font-medium mb-2">
-            Nos dedicamos a aprender enseñando
-          </p>
-          <p className="text-muted-foreground">
-            &copy; {new Date().getFullYear()} Cognitio. {t('footer.rights')}
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };

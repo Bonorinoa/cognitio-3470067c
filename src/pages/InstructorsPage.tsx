@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import InstructorCatalogCard from "@/components/InstructorCatalogCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/integrations/supabase/client";
@@ -132,13 +133,7 @@ const InstructorsPage = () => {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-border py-12">
-        <div className="container mx-auto px-4 text-center">
-          <p className="text-muted-foreground">
-            &copy; {new Date().getFullYear()} Cognitio. {t("footer.rights")}
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };
