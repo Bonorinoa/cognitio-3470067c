@@ -21,7 +21,7 @@ const ProgressCard = ({ title, value, subtitle, icon, progress }: ProgressCardPr
   const Icon = iconMap[icon];
 
   return (
-    <Card className="rounded-xl border-border bg-card shadow-sm hover:shadow-md transition-shadow duration-300">
+    <Card className="rounded-xl border-border bg-card shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle className="text-sm font-medium text-muted-foreground">
           {title}
