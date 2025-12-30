@@ -19,6 +19,27 @@
     "coursesBy": "Courses by {{name}}",
     "noCourses": "No courses published yet. Check back soon!"
   },
+  "instructorContact": {
+    "title": "Get in Touch",
+    "subtitle": "Interested in private courses or consulting? Send a message.",
+    "name": "Your Name",
+    "email": "Your Email",
+    "subject": "Subject",
+    "subjectOptions": {
+      "privateCourse": "Private Course Inquiry",
+      "consulting": "Consulting Request",
+      "general": "General Question",
+      "other": "Other"
+    },
+    "message": "Your Message",
+    "messagePlaceholder": "Tell me about your learning goals or how I can help...",
+    "submit": "Send Message",
+    "sending": "Sending...",
+    "successTitle": "Message Sent!",
+    "successMessage": "The instructor will receive your inquiry shortly.",
+    "errorTitle": "Failed to Send",
+    "errorMessage": "Please try again later."
+  },
   "instructorSettings": {
     "title": "Settings",
     "subtitle": "Manage your profile and account preferences",
