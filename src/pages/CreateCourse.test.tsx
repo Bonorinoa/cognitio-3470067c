@@ -110,7 +110,7 @@ describe('CreateCourse', () => {
     const backButton = screen.getByText('Back');
     fireEvent.click(backButton);
 
-    expect(mockNavigate).toHaveBeenCalledWith('/teacher');
+    expect(mockNavigate).toHaveBeenCalledWith('/instructor');
   });
 
   it('has category selector', () => {

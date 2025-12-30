@@ -14,11 +14,11 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 
 const menuItems = [
-  { icon: LayoutDashboard, label: "Dashboard", href: "/teacher" },
-  { icon: BookOpen, label: "Courses", href: "/teacher/courses" },
-  { icon: PlusCircle, label: "Create Course", href: "/teacher/create" },
-  { icon: BarChart3, label: "Analytics", href: "/teacher/analytics" },
-  { icon: Settings, label: "Settings", href: "/teacher/settings" },
+  { icon: LayoutDashboard, label: "Dashboard", href: "/instructor" },
+  { icon: BookOpen, label: "Courses", href: "/instructor/courses" },
+  { icon: PlusCircle, label: "Create Course", href: "/instructor/create" },
+  { icon: BarChart3, label: "Analytics", href: "/instructor/analytics" },
+  { icon: Settings, label: "Settings", href: "/instructor/settings" },
 ];
 
 const TeacherSidebar = () => {
@@ -42,8 +42,8 @@ const TeacherSidebar = () => {
           <GraduationCap className="h-5 w-5 text-primary-foreground" />
         </div>
         <div>
-          <span className="text-lg font-bold text-foreground">LearnHub</span>
-          <span className="block text-xs text-muted-foreground">Teacher Portal</span>
+          <span className="text-lg font-bold text-foreground">Cognitio</span>
+          <span className="block text-xs text-muted-foreground">Instructor Portal</span>
         </div>
       </div>
 
