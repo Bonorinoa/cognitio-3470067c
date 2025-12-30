@@ -73,9 +73,9 @@ const Index = () => {
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
-            <Link to="/about">
+            <Link to="/instructors">
               <Button size="lg" variant="outline" className="min-w-[180px]">
-                Conocer al Equipo
+                Conocer Instructores
               </Button>
             </Link>
           </div>

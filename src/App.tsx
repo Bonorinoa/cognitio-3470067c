@@ -11,7 +11,7 @@ import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import CoursesPage from "./pages/CoursesPage";
 import CoursePage from "./pages/CoursePage";
-import AboutPage from "./pages/AboutPage";
+
 import InstructorsPage from "./pages/InstructorsPage";
 import ServicesPage from "./pages/ServicesPage";
 import InstructorDashboard from "./pages/InstructorDashboard";
@@ -39,7 +39,7 @@ const App = () => (
         <AuthProvider>
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/about" element={<AboutPage />} />
+            <Route path="/about" element={<Navigate to="/instructors" replace />} />
             <Route path="/instructors" element={<InstructorsPage />} />
             <Route path="/services" element={<ServicesPage />} />
             <Route path="/dashboard" element={<Dashboard />} />
