@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -55,6 +56,7 @@ const emptyForm: ServiceFormData = {
 };
 
 const InstructorServicesManager = () => {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -113,17 +115,19 @@ const InstructorServicesManager = () => {
       setEditingService(null);
       setFormData(emptyForm);
       toast({
-        title: editingService ? "Service updated" : "Service created",
+        title: editingService 
+          ? t("instructorSettings.services.successUpdated")
+          : t("instructorSettings.services.successCreated"),
         description: editingService 
-          ? "Your service has been updated successfully."
-          : "Your new service has been created.",
+          ? t("instructorSettings.services.successUpdatedDesc")
+          : t("instructorSettings.services.successCreatedDesc"),
       });
     },
     onError: (error) => {
       console.error("Error saving service:", error);
       toast({
         title: "Error",
-        description: "Failed to save service. Please try again.",
+        description: t("instructorSettings.services.errorSave"),
         variant: "destructive",
       });
     },
@@ -142,15 +146,15 @@ const InstructorServicesManager = () => {
       queryClient.invalidateQueries({ queryKey: ["instructor-services"] });
       setDeleteServiceId(null);
       toast({
-        title: "Service deleted",
-        description: "The service has been removed.",
+        title: t("instructorSettings.services.successDeleted"),
+        description: t("instructorSettings.services.successDeletedDesc"),
       });
     },
     onError: (error) => {
       console.error("Error deleting service:", error);
       toast({
         title: "Error",
-        description: "Failed to delete service. Please try again.",
+        description: t("instructorSettings.services.errorDelete"),
         variant: "destructive",
       });
     },
@@ -178,8 +182,8 @@ const InstructorServicesManager = () => {
     e.preventDefault();
     if (!formData.title.trim()) {
       toast({
-        title: "Validation Error",
-        description: "Please enter a service title.",
+        title: "Error",
+        description: t("instructorSettings.services.validationTitle"),
         variant: "destructive",
       });
       return;
@@ -200,14 +204,14 @@ const InstructorServicesManager = () => {
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle>Consulting Services</CardTitle>
+            <CardTitle>{t("instructorSettings.services.title")}</CardTitle>
             <CardDescription>
-              Offer consulting, coaching, or other services to your students
+              {t("instructorSettings.services.subtitle")}
             </CardDescription>
           </div>
           <Button onClick={openCreateDialog} size="sm" className="gap-2">
             <Plus className="h-4 w-4" />
-            Add Service
+            {t("instructorSettings.services.addService")}
           </Button>
         </div>
       </CardHeader>
@@ -228,7 +232,7 @@ const InstructorServicesManager = () => {
                     <h4 className="font-medium text-foreground">{service.title}</h4>
                     {!service.is_active && (
                       <span className="text-xs px-2 py-0.5 rounded-full bg-muted text-muted-foreground">
-                        Inactive
+                        {t("instructorSettings.services.inactive")}
                       </span>
                     )}
                   </div>
@@ -275,7 +279,7 @@ const InstructorServicesManager = () => {
           </div>
         ) : (
           <div className="text-center py-8 text-muted-foreground">
-            <p>No services yet. Add your first consulting service.</p>
+            <p>{t("instructorSettings.services.noServices")}</p>
           </div>
         )}
       </CardContent>
@@ -285,39 +289,41 @@ const InstructorServicesManager = () => {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              {editingService ? "Edit Service" : "Add New Service"}
+              {editingService 
+                ? t("instructorSettings.services.editService")
+                : t("instructorSettings.services.addNewService")}
             </DialogTitle>
             <DialogDescription>
               {editingService
-                ? "Update the details of your service."
-                : "Create a new consulting service to offer to students."}
+                ? t("instructorSettings.services.editDescription")
+                : t("instructorSettings.services.addDescription")}
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="title">Service Title *</Label>
+              <Label htmlFor="title">{t("instructorSettings.services.serviceTitle")} *</Label>
               <Input
                 id="title"
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                placeholder="e.g., 1-on-1 Consulting Session"
+                placeholder={t("instructorSettings.services.serviceTitlePlaceholder")}
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="description">Description</Label>
+              <Label htmlFor="description">{t("instructorSettings.services.description")}</Label>
               <Textarea
                 id="description"
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                placeholder="Describe what this service includes..."
+                placeholder={t("instructorSettings.services.descriptionPlaceholder")}
                 rows={3}
               />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="price">Price ($)</Label>
+                <Label htmlFor="price">{t("instructorSettings.services.price")}</Label>
                 <Input
                   id="price"
                   type="number"
@@ -330,7 +336,7 @@ const InstructorServicesManager = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="duration">Duration (minutes)</Label>
+                <Label htmlFor="duration">{t("instructorSettings.services.duration")}</Label>
                 <Input
                   id="duration"
                   type="number"
@@ -344,9 +350,9 @@ const InstructorServicesManager = () => {
 
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <Label htmlFor="is_active">Active</Label>
+                <Label htmlFor="is_active">{t("instructorSettings.services.activeLabel")}</Label>
                 <p className="text-xs text-muted-foreground">
-                  Show this service on your public profile
+                  {t("instructorSettings.services.activeDescription")}
                 </p>
               </div>
               <Switch
@@ -358,18 +364,18 @@ const InstructorServicesManager = () => {
 
             <DialogFooter>
               <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
-                Cancel
+                {t("instructorSettings.services.cancel")}
               </Button>
               <Button type="submit" disabled={saveMutation.isPending}>
                 {saveMutation.isPending ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Saving...
+                    {t("instructorSettings.saving")}
                   </>
                 ) : editingService ? (
-                  "Update Service"
+                  t("instructorSettings.services.updateService")
                 ) : (
-                  "Create Service"
+                  t("instructorSettings.services.createService")
                 )}
               </Button>
             </DialogFooter>
@@ -381,13 +387,13 @@ const InstructorServicesManager = () => {
       <AlertDialog open={!!deleteServiceId} onOpenChange={() => setDeleteServiceId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Service</AlertDialogTitle>
+            <AlertDialogTitle>{t("instructorSettings.services.deleteTitle")}</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this service? This action cannot be undone.
+              {t("instructorSettings.services.deleteDescription")}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{t("instructorSettings.services.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => deleteServiceId && deleteMutation.mutate(deleteServiceId)}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
@@ -395,7 +401,7 @@ const InstructorServicesManager = () => {
               {deleteMutation.isPending ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
-                "Delete"
+                t("instructorSettings.services.delete")
               )}
             </AlertDialogAction>
           </AlertDialogFooter>

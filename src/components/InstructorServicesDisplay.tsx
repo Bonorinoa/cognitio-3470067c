@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
@@ -19,6 +20,8 @@ interface InstructorServicesDisplayProps {
 }
 
 const InstructorServicesDisplay = ({ instructorId }: InstructorServicesDisplayProps) => {
+  const { t } = useTranslation();
+
   const { data: services, isLoading } = useQuery({
     queryKey: ["instructor-public-services", instructorId],
     queryFn: async () => {
@@ -69,7 +72,7 @@ const InstructorServicesDisplay = ({ instructorId }: InstructorServicesDisplayPr
     >
       <h2 className="text-xl font-semibold text-foreground mb-4 flex items-center gap-2">
         <Briefcase className="h-5 w-5 text-primary" />
-        Services Offered
+        {t("instructorProfile.servicesOffered")}
       </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
