@@ -98,9 +98,10 @@ Los instructores pueden crear cursos, gestionar contenido y seguir el engagement
 ### 6. Dashboard del Estudiante
 - **Dashboard Personalizado**
   - Mensaje de bienvenida con nombre del usuario
-  - Acceso rápido a cursos inscritos
+  - Acceso rápido a cursos inscritos (comprados Y por membresía)
   - Funcionalidad de búsqueda de cursos
   - Filtro por estado (en progreso, completado)
+  - Internacionalización completa (Español)
   
 - **Estadísticas de Aprendizaje**
   - Conteo de cursos inscritos
@@ -109,7 +110,7 @@ Los instructores pueden crear cursos, gestionar contenido y seguir el engagement
   - Porcentaje de progreso general
   
 - **Gestión de Cursos**
-  - Ver todos los cursos inscritos
+  - Ver todos los cursos (compras + membresías combinadas)
   - Continuar aprendizaje desde última posición
   - Seguir estado de completación
   - Acceder a materiales del curso
@@ -400,7 +401,7 @@ Los instructores pueden crear cursos, gestionar contenido y seguir el engagement
 
 ---
 
-## 🎨 Design System (v2.4-v2.9.1)
+## 🎨 Design System (v2.4-v2.9.2)
 
 ### Color Palette
 - **Warm Theme**: Coral/salmon primary colors with charcoal text
@@ -481,4 +482,4 @@ Los instructores pueden crear cursos, gestionar contenido y seguir el engagement
 ---
 
 *Última actualización: Diciembre 30, 2025*
-*Versión: v2.9.1*
+*Versión: v2.9.2*
