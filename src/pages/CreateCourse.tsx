@@ -37,6 +37,7 @@ const CreateCourse = () => {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("");
+  const [visibility, setVisibility] = useState<"public" | "private" | "unlisted">("public");
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>("");
   const [isUploadingImage, setIsUploadingImage] = useState(false);
@@ -172,6 +173,7 @@ const CreateCourse = () => {
           description: description.trim() || null,
           price: parseFloat(price) || 0,
           category: category || "Development",
+          visibility: visibility,
           instructor_id: user.id,
           teacher_id: user.id, // Keep for backward compatibility during migration
           is_published: publish,
@@ -312,6 +314,39 @@ const CreateCourse = () => {
                       </SelectContent>
                     </Select>
                   </div>
+                </div>
+                <div className="space-y-2">
+                  <Label>Course Visibility</Label>
+                  <Select value={visibility} onValueChange={(value: "public" | "private" | "unlisted") => setVisibility(value)}>
+                    <SelectTrigger className="bg-background border-border">
+                      <SelectValue placeholder="Select visibility" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="public">
+                        <div className="flex flex-col">
+                          <span>Public</span>
+                          <span className="text-xs text-muted-foreground">Visible in catalog, anyone can purchase</span>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="unlisted">
+                        <div className="flex flex-col">
+                          <span>Unlisted</span>
+                          <span className="text-xs text-muted-foreground">Only accessible via direct link</span>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="private">
+                        <div className="flex flex-col">
+                          <span>Private</span>
+                          <span className="text-xs text-muted-foreground">Only enrolled students can access</span>
+                        </div>
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                  {visibility === "private" && (
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Private courses require manual student enrollment. You can manage enrollments after publishing.
+                    </p>
+                  )}
                 </div>
               </CardContent>
             </Card>

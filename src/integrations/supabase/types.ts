@@ -70,6 +70,41 @@ export type Database = {
           },
         ]
       }
+      course_memberships: {
+        Row: {
+          course_id: string
+          created_at: string | null
+          enrolled_at: string | null
+          enrolled_by: string | null
+          id: string
+          user_id: string
+        }
+        Insert: {
+          course_id: string
+          created_at?: string | null
+          enrolled_at?: string | null
+          enrolled_by?: string | null
+          id?: string
+          user_id: string
+        }
+        Update: {
+          course_id?: string
+          created_at?: string | null
+          enrolled_at?: string | null
+          enrolled_by?: string | null
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_memberships_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       courses: {
         Row: {
           category: string | null
@@ -86,6 +121,7 @@ export type Database = {
           teacher_id: string
           title: string
           updated_at: string
+          visibility: Database["public"]["Enums"]["course_visibility"] | null
         }
         Insert: {
           category?: string | null
@@ -102,6 +138,7 @@ export type Database = {
           teacher_id: string
           title: string
           updated_at?: string
+          visibility?: Database["public"]["Enums"]["course_visibility"] | null
         }
         Update: {
           category?: string | null
@@ -118,6 +155,7 @@ export type Database = {
           teacher_id?: string
           title?: string
           updated_at?: string
+          visibility?: Database["public"]["Enums"]["course_visibility"] | null
         }
         Relationships: []
       }
@@ -250,6 +288,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      has_course_access: {
+        Args: { _course_id: string; _user_id: string }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -260,6 +302,7 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "teacher" | "student" | "instructor"
+      course_visibility: "public" | "private" | "unlisted"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -388,6 +431,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "teacher", "student", "instructor"],
+      course_visibility: ["public", "private", "unlisted"],
     },
   },
 } as const

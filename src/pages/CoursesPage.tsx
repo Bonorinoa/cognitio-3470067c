@@ -35,9 +35,11 @@ const CoursesPage = () => {
           image_url,
           price,
           category,
+          visibility,
           chapters (id, duration_seconds)
         `)
-        .eq("is_published", true);
+        .eq("is_published", true)
+        .eq("visibility", "public"); // Only show public courses in catalog
 
       if (error) throw error;
 

@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/componen
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
-import { PlusCircle, Edit, Eye, Trash2, Star } from "lucide-react";
+import { PlusCircle, Edit, Eye, Trash2, Star, Globe, Link as LinkIcon, Lock } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { useUserRole } from "@/hooks/useUserRole";
@@ -20,6 +20,7 @@ interface Course {
   price: number;
   is_published: boolean;
   is_featured: boolean;
+  visibility: "public" | "private" | "unlisted";
   category: string | null;
   updated_at: string;
   chapter_count: number;
@@ -65,6 +66,7 @@ const InstructorCourses = () => {
           return {
             ...course,
             is_featured: course.is_featured || false,
+            visibility: course.visibility || "public",
             chapter_count: chapterCount || 0,
             student_count: studentCount || 0,
           };
@@ -206,9 +208,23 @@ const InstructorCourses = () => {
                         <Star className="h-4 w-4 shrink-0 text-primary fill-primary" />
                       )}
                     </div>
-                    <Badge variant={course.is_published ? "default" : "secondary"} className="shrink-0">
-                      {course.is_published ? "Published" : "Draft"}
-                    </Badge>
+                    <div className="flex items-center gap-2 shrink-0">
+                      {course.visibility === "private" && (
+                        <Badge variant="outline" className="text-xs">
+                          <Lock className="mr-1 h-3 w-3" />
+                          Private
+                        </Badge>
+                      )}
+                      {course.visibility === "unlisted" && (
+                        <Badge variant="outline" className="text-xs">
+                          <LinkIcon className="mr-1 h-3 w-3" />
+                          Unlisted
+                        </Badge>
+                      )}
+                      <Badge variant={course.is_published ? "default" : "secondary"}>
+                        {course.is_published ? "Published" : "Draft"}
+                      </Badge>
+                    </div>
                   </div>
                 </CardHeader>
                 <CardContent className="flex-1">
