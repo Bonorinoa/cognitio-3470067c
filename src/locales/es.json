@@ -3,12 +3,19 @@
     "home": "Inicio",
     "courses": "Cursos",
     "instructors": "Instructores",
+    "services": "Servicios",
     "about": "Sobre Nosotros",
     "login": "Iniciar Sesión",
     "myLearning": "Mi Aprendizaje",
     "instructorPanel": "Panel de Instructor",
     "adminPanel": "Panel de Admin",
     "logout": "Cerrar Sesión"
+  },
+  "services": {
+    "title": "Servicios de Consultoría",
+    "subtitle": "Conecta directamente con nuestros instructores para consultoría personalizada, coaching y mentoría",
+    "noServices": "Aún no hay servicios disponibles.",
+    "unknownInstructor": "Instructor"
   },
   "instructorProfile": {
     "notFound": "Instructor no encontrado",
