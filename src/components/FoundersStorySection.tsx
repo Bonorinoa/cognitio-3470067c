@@ -59,8 +59,8 @@ const FoundersStorySection = ({ cards }: FoundersStorySectionProps) => {
 
   // Desktop: Accordion-style reveal based on scroll position
   return (
-    <div ref={containerRef} className="max-w-3xl mx-auto">
-      <div className="space-y-4">
+    <div ref={containerRef} className="max-w-3xl mx-auto min-h-[200vh]">
+      <div className="relative space-y-4">
         {cards.map((card, index) => (
           <AccordionCard
             key={index}
@@ -85,40 +85,40 @@ interface AccordionCardProps {
 const AccordionCard = ({ card, index, totalCards, scrollYProgress }: AccordionCardProps) => {
   // Each card reveals at a specific scroll threshold
   const cardStart = index / totalCards;
-  const cardPeak = (index + 0.5) / totalCards;
+  const cardMid = (index + 0.5) / totalCards;
   const cardEnd = (index + 1) / totalCards;
 
-  // Opacity: fade in as we approach, stay visible, fade out as we pass
+  // Opacity: fade in as we approach, stay fully visible, no fade out
   const opacity = useTransform(
     scrollYProgress,
     [
-      Math.max(0, cardStart - 0.1),
+      Math.max(0, cardStart - 0.15),
       cardStart,
-      cardPeak,
-      cardEnd,
-      Math.min(1, cardEnd + 0.1),
+      cardMid,
     ],
-    [0, 1, 1, 1, 0.3]
+    [0, 1, 1]
   );
 
-  // Scale: slightly smaller when not in focus
+  // Scale: start small, grow to full size, stay at full size
   const scale = useTransform(
     scrollYProgress,
-    [cardStart, cardPeak, cardEnd],
-    [0.95, 1, 0.98]
+    [Math.max(0, cardStart - 0.1), cardStart, cardMid],
+    [0.9, 1, 1]
   );
 
-  // Y position: slide up into view, then slightly up as next card comes
+  // Y position: slide up into view, then stay in place (sticky stack effect)
+  // Cards stack on top of each other as they appear
+  const baseY = index * 20; // Stagger cards vertically
   const y = useTransform(
     scrollYProgress,
-    [Math.max(0, cardStart - 0.1), cardStart, cardEnd],
-    [40, 0, -10]
+    [Math.max(0, cardStart - 0.15), cardStart, cardMid],
+    [100 + baseY, baseY, baseY]
   );
 
   return (
     <motion.div
-      style={{ opacity, scale, y }}
-      className="bg-primary rounded-2xl shadow-xl overflow-hidden"
+      style={{ opacity, scale, y, zIndex: totalCards - index }}
+      className="bg-primary rounded-2xl shadow-xl overflow-hidden relative"
     >
       <div className="flex flex-row min-h-[260px]">
         {/* Left side - Bio (60%) */}
