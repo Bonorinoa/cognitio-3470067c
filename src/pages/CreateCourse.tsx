@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import InstructorSidebar from "@/components/InstructorSidebar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -219,11 +218,8 @@ const CreateCourse = () => {
   const handlePublish = () => saveCourse(true);
 
   return (
-    <div className="flex min-h-screen bg-background">
-      <InstructorSidebar />
-
-      <main className="flex-1 p-8">
-        {/* Header */}
+    <>
+      {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-4">
             <Button
@@ -492,8 +488,7 @@ const CreateCourse = () => {
             </Card>
           </div>
         </div>
-      </main>
-    </div>
+    </>
   );
 };
 
