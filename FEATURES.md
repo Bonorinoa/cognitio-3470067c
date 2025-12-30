@@ -192,7 +192,7 @@ Los instructores pueden crear cursos, gestionar contenido y seguir el engagement
 - **Enfoque Mobile-First**
   - Layouts completamente responsive
   - Interfaces touch-friendly
-  - Drawer de navegación móvil
+  - Menú hamburguesa móvil en Navbar
   - Reproducción de medios optimizada
   
 - **UI Adaptativa**
@@ -201,12 +201,18 @@ Los instructores pueden crear cursos, gestionar contenido y seguir el engagement
   - Sidebars colapsables
   - Tipografía flexible
 
-### 12. Soporte de Temas
-- **Modo Oscuro/Claro**
-  - Detección de preferencia del sistema
-  - Toggle manual de tema
-  - Selección de tema persistente
-  - Transiciones de tema suaves
+### 12. Sistema de Diseño (v2.4-v2.9)
+- **Tema Claro Cálido**
+  - Acento primario: Coral/Salmon (hsl 14, 90%, 67%)
+  - Fondos: Blanco y off-white cálidos
+  - Texto: Charcoal oscuro para alto contraste
+  - Tokens semánticos HSL en todo el codebase
+  
+- **Animaciones y Efectos**
+  - Blobs animados en hero background (respeta prefers-reduced-motion)
+  - Tarjetas estandarizadas con hover lift effect
+  - Transiciones suaves en toda la UI
+  - Framer Motion para animaciones de entrada
 
 ### 13. Notificaciones y Feedback
 - **Notificaciones Toast**
@@ -325,6 +331,8 @@ Los instructores pueden crear cursos, gestionar contenido y seguir el engagement
 - Animaciones de entrada en viewport
 - Transiciones suaves entre estados
 - Efecto de tarjetas apiladas con scroll
+- Blobs animados en hero (keyframes CSS personalizados)
+- Hover effects estandarizados en tarjetas (shadow-lg, translate-y)
 
 ### Seguridad
 - Row-level security en base de datos
