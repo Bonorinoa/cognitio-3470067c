@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import StickyInstructorCard from "@/components/StickyInstructorCard";
+import FoundersStorySection from "@/components/FoundersStorySection";
 import { Button } from "@/components/ui/button";
 
 const instructorCards = [
@@ -68,18 +68,8 @@ const AboutPage = () => {
           </p>
         </div>
 
-        {/* Sticky Stack Cards */}
-        <section className="pb-[50vh]">
-          {instructorCards.map((card, index) => (
-            <StickyInstructorCard
-              key={index}
-              name={card.name}
-              bio={card.bio}
-              image={card.image}
-              index={index}
-            />
-          ))}
-        </section>
+        {/* Scroll-Controlled Sticky Stack Cards */}
+        <FoundersStorySection cards={instructorCards} />
 
         {/* CTA Section */}
         <motion.section
