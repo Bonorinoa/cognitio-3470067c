@@ -1,7 +1,5 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "https://esm.sh/resend@2.0.0";
-
-const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -25,6 +23,20 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
+    // Initialize Resend inside handler to ensure env var is available
+    const apiKey = Deno.env.get("RESEND_API_KEY");
+    if (!apiKey) {
+      console.error("RESEND_API_KEY is not configured");
+      return new Response(
+        JSON.stringify({ error: "Email service not configured" }),
+        {
+          status: 500,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
+    }
+    const resend = new Resend(apiKey);
+
     const { 
       instructorEmail, 
       instructorName,
