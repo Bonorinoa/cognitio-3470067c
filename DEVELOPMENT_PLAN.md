@@ -42,7 +42,7 @@
 
 ---
 
-## Estado Actual (v1.9.0)
+## Estado Actual (v2.9.0)
 
 ### ✅ Completado
 | Versión | Categoría | Funcionalidad |
@@ -61,6 +61,12 @@
 | v1.7 | **Seguridad** | Cambio/reset de contraseña, eliminación de cuenta, gestión de usuario |
 | v1.8 | **Analytics** | Métricas reales de ingresos, estudiantes, completación, exportación CSV |
 | v1.9 | **Servicios** | Servicios de consultoría de instructor, sistema de contacto por email |
+| v2.4 | **Diseño** | Sistema de diseño con tema claro cálido, tokens HSL semánticos |
+| v2.5 | **UI** | Paleta de colores coral/salmon, fondos cálidos, charcoal text |
+| v2.6 | **Animaciones** | Animaciones base con Framer Motion, transiciones suaves |
+| v2.7 | **Hero** | HeroBackground con blobs animados (respeta prefers-reduced-motion) |
+| v2.8 | **Cards** | Estilos de tarjetas estandarizados (rounded-xl, hover effects) |
+| v2.9 | **Responsive** | Menú hamburguesa móvil en Navbar, layouts responsive pulidos |
 
 ### 🚧 Próximo: v2.0 - AI Content Studio
 
@@ -81,6 +87,7 @@
 | v1.7 | Gestión de usuarios y seguridad | Medio | Ninguno |
 | v1.8 | Analytics reales | Bajo | Ninguno |
 | v1.9 | Servicios de instructor | Medio | Ninguno |
+| v2.4-v2.9 | Sistema de diseño y UI polish | Bajo | Ninguno |
 | v2.0 | AI Content Studio | Medio | Ninguno |
 
 ---

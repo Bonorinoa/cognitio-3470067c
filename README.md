@@ -29,11 +29,11 @@ Cognitio no es un marketplace abierto. Es un "Instructor Studio" curado: LMS lig
 
 ---
 
-## 📍 Estado Actual: v1.0.0
+## 📍 Estado Actual: v2.9.0
 
 **Última Actualización:** Diciembre 2024
 
-### ✅ Funcionalidades Completas (v1.0 - v1.9)
+### ✅ Funcionalidades Completas (v1.0 - v2.9)
 - Autenticación de usuarios (registro/inicio de sesión/recuperación de contraseña)
 - Sistema de roles (admin/instructor/student)
 - Creación y edición de cursos con carga de video Mux
@@ -53,6 +53,10 @@ Cognitio no es un marketplace abierto. Es un "Instructor Studio" curado: LMS lig
 - Sistema de contacto de instructor (email vía Resend)
 - Gestión de cuenta de usuario (cambio de contraseña, eliminación)
 - Internacionalización completa (Español)
+- **Sistema de diseño con tema claro cálido (v2.4-v2.9)**
+- **Hero background con blobs animados**
+- **Tarjetas estandarizadas con hover effects**
+- **Menú hamburguesa móvil responsive**
 
 ### 🚧 Próximo: v2.0
 - AI Content Studio (generación de blogs/newsletters desde cursos)
@@ -217,19 +221,22 @@ cognitio/
 
 ---
 
-## 🎨 Sistema de Diseño
+## 🎨 Sistema de Diseño (v2.4-v2.9)
 
 ### Identidad Visual
 - **Estilo**: "Elegancia académica sin pretensiones"
-- **Acento primario**: Salmon (#FA8072)
-- **Fondos**: Blanco y gris muy claro
-- **Texto**: Gris muy oscuro/negro para alto contraste
+- **Acento primario**: Coral/Salmon (hsl 14, 90%, 67%)
+- **Fondos**: Blanco cálido y off-white
+- **Texto**: Charcoal oscuro (hsl 0, 0%, 15%) para alto contraste
+- **Tokens**: 100% HSL semánticos, sin colores directos
 
 ### Directrices
 - Tipografía: `Roboto` o `Inter` para cuerpo, monospace para acentos
 - Glassmorphism sutil en navbars, cards, modales
 - Animaciones suaves con Framer Motion (sin parallax ni scroll-jacking)
-- Mobile responsive en todas las páginas
+- Mobile responsive con menú hamburguesa
+- Blobs animados en hero background (respeta prefers-reduced-motion)
+- Tarjetas estandarizadas: rounded-xl, hover:shadow-lg, hover:-translate-y-1
 
 ---
 
@@ -305,4 +312,4 @@ Parte del ecosistema Lovable. Ver términos de licencia de Lovable.
 
 ---
 
-*Última actualización: Diciembre 2024 | Versión: 1.9.0*
+*Última actualización: Diciembre 2024 | Versión: 2.9.0*
