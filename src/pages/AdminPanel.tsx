@@ -62,7 +62,7 @@ const AdminPanel = () => {
     mutationFn: async (userId: string) => {
       const { error } = await supabase
         .from("user_roles")
-        .insert({ user_id: userId, role: "teacher" as AppRole });
+        .insert({ user_id: userId, role: "instructor" as AppRole });
       if (error) throw error;
     },
     onSuccess: () => {
@@ -74,14 +74,15 @@ const AdminPanel = () => {
     },
   });
 
-  // Remove instructor role
+  // Remove instructor role (handles both "teacher" and "instructor" for migration)
   const removeInstructor = useMutation({
     mutationFn: async (userId: string) => {
+      // Remove both "teacher" and "instructor" roles to handle legacy data
       const { error } = await supabase
         .from("user_roles")
         .delete()
         .eq("user_id", userId)
-        .eq("role", "teacher");
+        .in("role", ["teacher", "instructor"]);
       if (error) throw error;
     },
     onSuccess: () => {
@@ -99,7 +100,9 @@ const AdminPanel = () => {
       user.full_name?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const isInstructor = (user: UserWithRoles) => user.roles.includes("teacher");
+  // Check for both "teacher" and "instructor" roles for backward compatibility
+  const isInstructor = (user: UserWithRoles) => 
+    user.roles.includes("teacher") || user.roles.includes("instructor");
   const isAdmin = (user: UserWithRoles) => user.roles.includes("admin");
 
   return (

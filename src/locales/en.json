@@ -6,6 +6,7 @@
     "login": "Sign In",
     "myLearning": "My Learning",
     "instructorPanel": "Instructor Panel",
+    "adminPanel": "Admin Panel",
     "logout": "Sign Out"
   },
   "home": {

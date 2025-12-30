@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 
-export type AppRole = "admin" | "teacher" | "student";
+export type AppRole = "admin" | "teacher" | "student" | "instructor";
 
 interface UseUserRoleResult {
   roles: AppRole[];
@@ -16,16 +16,30 @@ interface UseUserRoleResult {
 }
 
 export const useUserRole = (): UseUserRoleResult => {
-  const { user } = useAuth();
+  const { user, isLoading: authLoading } = useAuth();
   const [roles, setRoles] = useState<AppRole[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const previousUserId = useRef<string | null>(null);
 
   useEffect(() => {
     const fetchRoles = async () => {
+      // If auth is still loading, wait
+      if (authLoading) {
+        return;
+      }
+
+      // If no user, clear roles and stop loading
       if (!user) {
         setRoles([]);
         setIsLoading(false);
+        previousUserId.current = null;
         return;
+      }
+
+      // If user changed, reset loading state
+      if (previousUserId.current !== user.id) {
+        setIsLoading(true);
+        previousUserId.current = user.id;
       }
 
       try {
@@ -49,11 +63,11 @@ export const useUserRole = (): UseUserRoleResult => {
     };
 
     fetchRoles();
-  }, [user]);
+  }, [user, authLoading]);
 
   const hasRole = (role: AppRole): boolean => roles.includes(role);
 
-  const isInstructor = hasRole("teacher") || hasRole("admin");
+  const isInstructor = hasRole("teacher") || hasRole("instructor") || hasRole("admin");
 
   return {
     roles,
