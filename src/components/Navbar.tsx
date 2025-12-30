@@ -50,6 +50,12 @@ const Navbar = () => {
             {t('nav.courses')}
           </Link>
           <Link 
+            to="/instructors" 
+            className="text-muted-foreground hover:text-foreground transition-colors font-medium"
+          >
+            {t('nav.instructors')}
+          </Link>
+          <Link 
             to="/about" 
             className="text-muted-foreground hover:text-foreground transition-colors font-medium"
           >

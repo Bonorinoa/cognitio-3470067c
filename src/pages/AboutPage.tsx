@@ -1,5 +1,10 @@
+import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import StickyInstructorCard from "@/components/StickyInstructorCard";
+import { Button } from "@/components/ui/button";
 
 const instructorCards = [
   {
@@ -45,6 +50,8 @@ const instructorCards = [
 ];
 
 const AboutPage = () => {
+  const { t } = useTranslation();
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -53,11 +60,10 @@ const AboutPage = () => {
         {/* Header */}
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Las Personas Detrás de Nuestros Cursos
+            {t('about.title')}
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Conoce a los expertos que hacen posible tu aprendizaje. Cada curso está diseñado 
-            con pasión y experiencia para ayudarte a alcanzar tus metas.
+            {t('about.subtitle')}
           </p>
         </div>
 
@@ -73,6 +79,28 @@ const AboutPage = () => {
             />
           ))}
         </section>
+
+        {/* CTA Section */}
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          viewport={{ once: true }}
+          className="text-center py-16 max-w-2xl mx-auto"
+        >
+          <h2 className="text-3xl font-bold text-foreground mb-4">
+            {t('about.ctaTitle')}
+          </h2>
+          <p className="text-muted-foreground mb-8">
+            {t('about.ctaDescription')}
+          </p>
+          <Button asChild size="lg" className="gap-2">
+            <Link to="/instructors">
+              {t('about.ctaButton')}
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </Button>
+        </motion.section>
       </main>
 
       {/* Footer */}
@@ -82,7 +110,7 @@ const AboutPage = () => {
             Nos dedicamos a aprender enseñando
           </p>
           <p className="text-muted-foreground">
-            &copy; 2024 Cognitio. Todos los derechos reservados.
+            &copy; {new Date().getFullYear()} Cognitio. {t('footer.rights')}
           </p>
         </div>
       </footer>

@@ -2,6 +2,7 @@
   "nav": {
     "home": "Home",
     "courses": "Courses",
+    "instructors": "Instructors",
     "about": "About Us",
     "login": "Sign In",
     "myLearning": "My Learning",
@@ -53,6 +54,13 @@
     "saveChanges": "Save Changes",
     "saving": "Saving..."
   },
+  "instructors": {
+    "title": "Our Instructors",
+    "subtitle": "Experts dedicated to your professional growth",
+    "viewProfile": "View Profile",
+    "founderBadge": "Founder",
+    "noInstructors": "No instructors available yet."
+  },
   "home": {
     "heroTitle": "Welcome to Cognitio",
     "heroSubtitle": "A learning platform where experts share their knowledge through courses designed to transform your professional career.",
@@ -73,7 +81,10 @@
     "subtitle": "Meet the founders and experts who make Cognitio possible",
     "foundersTitle": "Our Founders",
     "futureInstructorsTitle": "Future Instructors",
-    "futureInstructorsText": "We are constantly looking for passionate experts who want to share their knowledge. If you are a professional with experience and want to be part of our instructor community, we would love to meet you."
+    "futureInstructorsText": "We are constantly looking for passionate experts who want to share their knowledge. If you are a professional with experience and want to be part of our instructor community, we would love to meet you.",
+    "ctaTitle": "Meet Our Instructors",
+    "ctaDescription": "Discover all the experts behind our courses",
+    "ctaButton": "View All Instructors"
   },
   "courses": {
     "title": "Explore Courses",
