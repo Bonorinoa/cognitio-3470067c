@@ -3,14 +3,13 @@ import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import CourseCard from "@/components/CourseCard";
-import InstructorContactForm from "@/components/InstructorContactForm";
 import InstructorServicesDisplay from "@/components/InstructorServicesDisplay";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Globe, Linkedin, Twitter, Building2, GraduationCap } from "lucide-react";
+import { Globe, Linkedin, Twitter, Building2, GraduationCap, Mail } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 interface InstructorProfile {
@@ -321,15 +320,35 @@ const InstructorProfile = () => {
         </motion.section>
 
         {/* Contact Section */}
-        <section className="container mx-auto px-4 mt-12">
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="container mx-auto px-4 mt-12"
+        >
           <div className="max-w-4xl mx-auto">
-            <InstructorContactForm
-              instructorId={instructor.id}
-              instructorName={instructor.full_name}
-              instructorEmail={instructor.email}
-            />
+            <Card className="border-border/50 bg-card/80 backdrop-blur-sm">
+              <CardContent className="p-6 md:p-8">
+                <div className="flex items-center gap-3 mb-4">
+                  <Mail className="h-5 w-5 text-primary" />
+                  <h2 className="text-xl font-semibold text-foreground">Contacto</h2>
+                </div>
+                {instructor.email ? (
+                  <a
+                    href={`mailto:${instructor.email}`}
+                    className="inline-flex items-center gap-2 text-primary hover:text-primary/80 transition-colors font-medium"
+                  >
+                    <span>{instructor.email}</span>
+                  </a>
+                ) : (
+                  <p className="text-muted-foreground">
+                    Información de contacto no disponible.
+                  </p>
+                )}
+              </CardContent>
+            </Card>
           </div>
-        </section>
+        </motion.section>
       </main>
     </div>
   );

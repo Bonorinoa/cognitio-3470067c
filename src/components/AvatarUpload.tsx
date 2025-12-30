@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Camera, Loader2, User } from "lucide-react";
+import { Camera, Loader2, Trash2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 
@@ -10,12 +10,65 @@ interface AvatarUploadProps {
   userId: string;
   currentAvatarUrl?: string | null;
   fullName?: string | null;
-  onAvatarChange: (url: string) => void;
+  onAvatarChange: (url: string | null) => void;
 }
+
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+const COMPRESSION_THRESHOLD = 2 * 1024 * 1024; // 2MB
+const MAX_DIMENSION = 1200;
+const COMPRESSION_QUALITY = 0.8;
+
+// Compress image using Canvas API
+const compressImage = async (file: File): Promise<Blob> => {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      let { width, height } = img;
+      
+      // Calculate new dimensions maintaining aspect ratio
+      if (width > MAX_DIMENSION || height > MAX_DIMENSION) {
+        if (width > height) {
+          height = Math.round((height * MAX_DIMENSION) / width);
+          width = MAX_DIMENSION;
+        } else {
+          width = Math.round((width * MAX_DIMENSION) / height);
+          height = MAX_DIMENSION;
+        }
+      }
+      
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      
+      const ctx = canvas.getContext("2d");
+      if (!ctx) {
+        reject(new Error("Could not get canvas context"));
+        return;
+      }
+      
+      ctx.drawImage(img, 0, 0, width, height);
+      
+      canvas.toBlob(
+        (blob) => {
+          if (blob) {
+            resolve(blob);
+          } else {
+            reject(new Error("Failed to compress image"));
+          }
+        },
+        "image/jpeg",
+        COMPRESSION_QUALITY
+      );
+    };
+    img.onerror = () => reject(new Error("Failed to load image"));
+    img.src = URL.createObjectURL(file);
+  });
+};
 
 const AvatarUpload = ({ userId, currentAvatarUrl, fullName, onAvatarChange }: AvatarUploadProps) => {
   const { t } = useTranslation();
   const [isUploading, setIsUploading] = useState(false);
+  const [isRemoving, setIsRemoving] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const getInitials = (name: string | null | undefined) => {
@@ -42,8 +95,8 @@ const AvatarUpload = ({ userId, currentAvatarUrl, fullName, onAvatarChange }: Av
       return;
     }
 
-    // Validate file size (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
+    // Validate file size (max 10MB)
+    if (file.size > MAX_FILE_SIZE) {
       toast({
         title: t("instructorSettings.fileTooLarge"),
         description: t("instructorSettings.fileTooLargeDesc"),
@@ -55,13 +108,21 @@ const AvatarUpload = ({ userId, currentAvatarUrl, fullName, onAvatarChange }: Av
     setIsUploading(true);
 
     try {
-      const fileExt = file.name.split(".").pop();
+      let fileToUpload: Blob | File = file;
+      let fileExt = file.name.split(".").pop();
+      
+      // Compress if larger than threshold
+      if (file.size > COMPRESSION_THRESHOLD) {
+        fileToUpload = await compressImage(file);
+        fileExt = "jpg"; // Compressed images are always JPEG
+      }
+      
       const fileName = `${userId}/avatar.${fileExt}`;
 
       // Upload to Supabase Storage
       const { error: uploadError } = await supabase.storage
         .from("avatars")
-        .upload(fileName, file, { upsert: true });
+        .upload(fileName, fileToUpload, { upsert: true });
 
       if (uploadError) throw uploadError;
 
@@ -96,6 +157,57 @@ const AvatarUpload = ({ userId, currentAvatarUrl, fullName, onAvatarChange }: Av
       });
     } finally {
       setIsUploading(false);
+      // Reset file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }
+  };
+
+  const handleRemoveAvatar = async () => {
+    setIsRemoving(true);
+
+    try {
+      // List files in user's avatar folder
+      const { data: files, error: listError } = await supabase.storage
+        .from("avatars")
+        .list(userId);
+
+      if (listError) throw listError;
+
+      // Delete all files in the folder
+      if (files && files.length > 0) {
+        const filePaths = files.map((file) => `${userId}/${file.name}`);
+        const { error: deleteError } = await supabase.storage
+          .from("avatars")
+          .remove(filePaths);
+
+        if (deleteError) throw deleteError;
+      }
+
+      // Update profile to remove avatar URL
+      const { error: updateError } = await supabase
+        .from("profiles")
+        .update({ avatar_url: null })
+        .eq("id", userId);
+
+      if (updateError) throw updateError;
+
+      onAvatarChange(null);
+      
+      toast({
+        title: t("instructorSettings.avatarRemoved"),
+        description: t("instructorSettings.avatarRemovedDesc"),
+      });
+    } catch (error) {
+      console.error("Error removing avatar:", error);
+      toast({
+        title: t("instructorSettings.avatarError"),
+        description: t("instructorSettings.avatarRemoveErrorDesc"),
+        variant: "destructive",
+      });
+    } finally {
+      setIsRemoving(false);
     }
   };
 
@@ -113,7 +225,7 @@ const AvatarUpload = ({ userId, currentAvatarUrl, fullName, onAvatarChange }: Av
           variant="secondary"
           className="absolute bottom-0 right-0 h-8 w-8 rounded-full shadow-md"
           onClick={() => fileInputRef.current?.click()}
-          disabled={isUploading}
+          disabled={isUploading || isRemoving}
         >
           {isUploading ? (
             <Loader2 className="h-4 w-4 animate-spin" />
@@ -129,9 +241,27 @@ const AvatarUpload = ({ userId, currentAvatarUrl, fullName, onAvatarChange }: Av
         onChange={handleFileChange}
         className="hidden"
       />
-      <p className="text-xs text-muted-foreground">
-        {t("instructorSettings.avatarUploadHint")}
-      </p>
+      <div className="flex flex-col items-center gap-2">
+        <p className="text-xs text-muted-foreground">
+          {t("instructorSettings.avatarUploadHint")}
+        </p>
+        {currentAvatarUrl && (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleRemoveAvatar}
+            disabled={isRemoving || isUploading}
+            className="text-destructive hover:text-destructive hover:bg-destructive/10"
+          >
+            {isRemoving ? (
+              <Loader2 className="h-4 w-4 animate-spin mr-2" />
+            ) : (
+              <Trash2 className="h-4 w-4 mr-2" />
+            )}
+            {t("instructorSettings.removePhoto")}
+          </Button>
+        )}
+      </div>
     </div>
   );
 };
