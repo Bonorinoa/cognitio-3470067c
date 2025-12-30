@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import CourseCard from "@/components/CourseCard";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -177,6 +178,8 @@ const CoursesPage = () => {
           </div>
         )}
       </main>
+
+      <Footer />
     </div>
   );
 };
