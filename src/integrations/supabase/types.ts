@@ -407,6 +407,22 @@ export type Database = {
       }
     }
     Functions: {
+      get_public_profile: {
+        Args: { profile_id: string }
+        Returns: {
+          affiliation: string
+          avatar_url: string
+          bio: string
+          credentials: string[]
+          full_name: string
+          headline: string
+          id: string
+          linkedin_url: string
+          role: string
+          twitter_url: string
+          website_url: string
+        }[]
+      }
       has_course_access: {
         Args: { _course_id: string; _user_id: string }
         Returns: boolean
