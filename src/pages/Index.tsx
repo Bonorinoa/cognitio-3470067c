@@ -1,47 +1,45 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import CourseCard from "@/components/CourseCard";
+import FoundersStorySection from "@/components/FoundersStorySection";
 import heroImage from "@/assets/hero-bg.jpg";
 import { ArrowRight, GraduationCap, Users, Lightbulb, Target } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+
+const founderCards = [
+  {
+    name: "Gustavo Gonzalez Bonorino",
+    bio: "Mi formación profesional es en las Ciencias de la Tierra y Ambientales (M.Sc. y Ph.D., Canadá). De este amplio campo me enfoqué en la evaluación y mitigación de los riesgos derivados de fenómenos naturales (inundaciones, terremotos, deslizamientos).",
+    image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=600&h=600&fit=crop",
+  },
+  {
+    name: "Gustavo Gonzalez Bonorino",
+    bio: "Debido al impacto significativo de estos eventos en personas y bienes materiales, es esencial evaluar su potencial de daño y probabilidad de ocurrencia de manera cuantitativa y rigurosa para que los resultados sean útiles en la formulación de políticas públicas confiables.",
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=600&fit=crop",
+  },
+  {
+    name: "Gustavo Gonzalez Bonorino",
+    bio: "Cognitio es el lugar donde confluyen mi experiencia, conocimientos y pasión, ofrecidos a ustedes a través de los Cursos. Cada Curso los desafiará a incorporar nuevas habilidades para extender y fortalecer sus aspiraciones en un mercado laboral cada día más competitivo.",
+    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=600&h=600&fit=crop",
+  },
+  {
+    name: "Augusto Gonzalez Bonorino",
+    bio: "Mi educación superior se concentra en Econometría y Ciencias de Datos Aplicados. Logré el M.Sc en Economía Cuantitativa de Claremont Graduate University, California, donde lidero el laboratorio de investigación EconLLM.",
+    image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=600&h=600&fit=crop",
+  },
+  {
+    name: "Augusto Gonzalez Bonorino",
+    bio: "Desde 2020, mi investigación y experiencia laboral se enfocan en la intersección entre Procesamiento de Lenguaje Natural (NLP) y economía del comportamiento. Actualmente, soy profesor adjunto de estadística y macroeconomía en Pomona College, CA.",
+    image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=600&h=600&fit=crop",
+  },
+  {
+    name: "Augusto Gonzalez Bonorino",
+    bio: "Cognitio es el lugar donde mis experiencias convergen con las de mi padre, donde combinamos métodos clásicos y modernos. El poder enseñar junto a mi padre es un privilegio y juntos les ofrecemos educación relevante, de alta calidad, y a un costo razonable.",
+    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=600&h=600&fit=crop",
+  },
+];
 
 const Index = () => {
-  const { data: featuredCourses, isLoading } = useQuery({
-    queryKey: ["featured-courses"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("courses")
-        .select(`
-          id,
-          title,
-          description,
-          image_url,
-          price,
-          category,
-          chapters (id)
-        `)
-        .eq("is_featured", true)
-        .eq("is_published", true)
-        .limit(3);
-
-      if (error) throw error;
-
-      return (data || []).map(course => ({
-        id: course.id,
-        title: course.title,
-        description: course.description || "",
-        image: course.image_url || "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600",
-        price: course.price,
-        chaptersCount: course.chapters?.length || 0,
-        category: course.category || "General",
-      }));
-    },
-  });
-
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -73,9 +71,9 @@ const Index = () => {
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
-            <Link to="/instructors">
+            <Link to="/services">
               <Button size="lg" variant="outline" className="min-w-[180px]">
-                Conocer Instructores
+                Ver Servicios
               </Button>
             </Link>
           </div>
@@ -151,39 +149,45 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Featured Courses */}
-      {featuredCourses && featuredCourses.length > 0 && (
-        <section className="py-20 bg-secondary/30">
-          <div className="container mx-auto px-4">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-12">
-              <div>
-                <h2 className="text-3xl font-bold text-foreground mb-2">Cursos Destacados</h2>
-                <p className="text-muted-foreground">Comienza tu aprendizaje con nuestros cursos más populares</p>
-              </div>
-              <Link to="/courses">
-                <Button variant="ghost" className="mt-4 sm:mt-0">
-                  Ver Todos los Cursos
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
-            </div>
-
-            {isLoading ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {[1, 2, 3].map((i) => (
-                  <Skeleton key={i} className="h-80 w-full rounded-lg" />
-                ))}
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {featuredCourses.map((course) => (
-                  <CourseCard key={course.id} {...course} />
-                ))}
-              </div>
-            )}
+      {/* Founders Story Section */}
+      <section className="py-20 bg-secondary/30">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-foreground mb-4">
+              Conoce a Nuestros Fundadores
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Padre e hijo unidos por la pasión de enseñar
+            </p>
           </div>
-        </section>
-      )}
+          <FoundersStorySection cards={founderCards} />
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-3xl font-bold text-foreground mb-4">
+            ¿Listo para Aprender?
+          </h2>
+          <p className="text-lg text-muted-foreground mb-8 max-w-xl mx-auto">
+            Explora nuestro catálogo de cursos y servicios de consultoría
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Link to="/courses">
+              <Button size="lg">
+                Ver Cursos
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
+            <Link to="/instructors">
+              <Button size="lg" variant="outline">
+                Conocer Instructores
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
 
       <Footer />
     </div>
