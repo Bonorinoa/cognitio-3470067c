@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,6 +12,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 
 const AuthPage = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { user, isLoading: authLoading } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
@@ -37,17 +39,17 @@ const AuthPage = () => {
 
       if (error) {
         if (error.message.includes("Invalid login credentials")) {
-          toast.error("Invalid email or password");
+          toast.error(t("auth.invalidCredentials"));
         } else {
           toast.error(error.message);
         }
         return;
       }
 
-      toast.success("Welcome back!");
+      toast.success(t("auth.welcomeBack"));
       navigate("/dashboard");
     } catch (error: any) {
-      toast.error("An unexpected error occurred");
+      toast.error(t("auth.unexpectedError"));
     } finally {
       setIsLoading(false);
     }
@@ -73,17 +75,17 @@ const AuthPage = () => {
 
       if (error) {
         if (error.message.includes("already registered")) {
-          toast.error("This email is already registered. Please sign in instead.");
+          toast.error(t("auth.alreadyRegistered"));
         } else {
           toast.error(error.message);
         }
         return;
       }
 
-      toast.success("Account created successfully!");
+      toast.success(t("auth.accountCreated"));
       navigate("/dashboard");
     } catch (error: any) {
-      toast.error("An unexpected error occurred");
+      toast.error(t("auth.unexpectedError"));
     } finally {
       setIsLoading(false);
     }
@@ -109,7 +111,7 @@ const AuthPage = () => {
           className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground mb-6 transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
-          Back to home
+          {t("auth.backToHome")}
         </Link>
 
         <Card className="border-border bg-card/80 backdrop-blur-sm">
@@ -117,27 +119,27 @@ const AuthPage = () => {
             <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-primary">
               <GraduationCap className="h-6 w-6 text-primary-foreground" />
             </div>
-            <CardTitle className="text-2xl text-foreground">Welcome to LearnHub</CardTitle>
-            <CardDescription>Sign in to continue your learning journey</CardDescription>
+            <CardTitle className="text-2xl text-foreground">{t("auth.welcome")}</CardTitle>
+            <CardDescription>{t("auth.subtitle")}</CardDescription>
           </CardHeader>
 
           <Tabs defaultValue="login" className="w-full">
             <TabsList className="grid w-full grid-cols-2 mx-6 mb-4" style={{ width: "calc(100% - 48px)" }}>
-              <TabsTrigger value="login">Sign In</TabsTrigger>
-              <TabsTrigger value="signup">Sign Up</TabsTrigger>
+              <TabsTrigger value="login">{t("auth.signIn")}</TabsTrigger>
+              <TabsTrigger value="signup">{t("auth.signUp")}</TabsTrigger>
             </TabsList>
 
             <TabsContent value="login">
               <form onSubmit={handleLogin}>
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
+                    <Label htmlFor="email">{t("auth.email")}</Label>
                     <div className="relative">
                       <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                       <Input
                         id="email"
                         type="email"
-                        placeholder="you@example.com"
+                        placeholder={t("auth.emailPlaceholder")}
                         className="pl-10 bg-background border-border"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
@@ -146,7 +148,7 @@ const AuthPage = () => {
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="password">Password</Label>
+                    <Label htmlFor="password">{t("auth.password")}</Label>
                     <div className="relative">
                       <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                       <Input
@@ -163,14 +165,14 @@ const AuthPage = () => {
                   <div className="flex items-center justify-end">
                     <Link to="/forgot-password">
                       <Button variant="link" className="p-0 h-auto text-primary">
-                        ¿Olvidaste tu contraseña?
+                        {t("auth.forgotPassword")}
                       </Button>
                     </Link>
                   </div>
                 </CardContent>
                 <CardFooter>
                   <Button type="submit" className="w-full" disabled={isLoading}>
-                    {isLoading ? "Signing in..." : "Sign In"}
+                    {isLoading ? t("auth.signingIn") : t("auth.signInButton")}
                   </Button>
                 </CardFooter>
               </form>
@@ -180,12 +182,12 @@ const AuthPage = () => {
               <form onSubmit={handleSignup}>
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="name">Full Name</Label>
+                    <Label htmlFor="name">{t("auth.fullName")}</Label>
                     <div className="relative">
                       <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                       <Input
                         id="name"
-                        placeholder="John Doe"
+                        placeholder={t("auth.fullNamePlaceholder")}
                         className="pl-10 bg-background border-border"
                         value={fullName}
                         onChange={(e) => setFullName(e.target.value)}
@@ -194,13 +196,13 @@ const AuthPage = () => {
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="signup-email">Email</Label>
+                    <Label htmlFor="signup-email">{t("auth.email")}</Label>
                     <div className="relative">
                       <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                       <Input
                         id="signup-email"
                         type="email"
-                        placeholder="you@example.com"
+                        placeholder={t("auth.emailPlaceholder")}
                         className="pl-10 bg-background border-border"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
@@ -209,7 +211,7 @@ const AuthPage = () => {
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="signup-password">Password</Label>
+                    <Label htmlFor="signup-password">{t("auth.password")}</Label>
                     <div className="relative">
                       <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                       <Input
@@ -227,7 +229,7 @@ const AuthPage = () => {
                 </CardContent>
                 <CardFooter>
                   <Button type="submit" className="w-full" disabled={isLoading}>
-                    {isLoading ? "Creating account..." : "Create Account"}
+                    {isLoading ? t("auth.creatingAccount") : t("auth.createAccount")}
                   </Button>
                 </CardFooter>
               </form>
@@ -236,13 +238,13 @@ const AuthPage = () => {
         </Card>
 
         <p className="text-center text-sm text-muted-foreground mt-6">
-          By continuing, you agree to our{" "}
+          {t("auth.termsText")}{" "}
           <Button variant="link" className="p-0 h-auto text-primary">
-            Terms of Service
+            {t("auth.termsOfService")}
           </Button>{" "}
-          and{" "}
+          {t("auth.and")}{" "}
           <Button variant="link" className="p-0 h-auto text-primary">
-            Privacy Policy
+            {t("auth.privacyPolicy")}
           </Button>
         </p>
       </div>

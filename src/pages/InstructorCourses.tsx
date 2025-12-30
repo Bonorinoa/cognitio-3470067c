@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import InstructorSidebar from "@/components/InstructorSidebar";
@@ -8,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/componen
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
-import { PlusCircle, Edit, Eye, Trash2, Star, Globe, Link as LinkIcon, Lock } from "lucide-react";
+import { PlusCircle, Edit, Eye, Trash2, Star, Link as LinkIcon, Lock } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { useUserRole } from "@/hooks/useUserRole";
@@ -28,6 +29,7 @@ interface Course {
 }
 
 const InstructorCourses = () => {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const { isAdmin } = useUserRole();
   const [courses, setCourses] = useState<Course[]>([]);
@@ -78,7 +80,7 @@ const InstructorCourses = () => {
       console.error("Error fetching courses:", error);
       toast({
         title: "Error",
-        description: "Failed to load courses",
+        description: t("instructorCourses.errorLoad"),
         variant: "destructive",
       });
     } finally {
@@ -87,7 +89,7 @@ const InstructorCourses = () => {
   };
 
   const handleDelete = async (courseId: string) => {
-    if (!confirm("Are you sure you want to delete this course?")) return;
+    if (!confirm(t("instructorCourses.deleteConfirm"))) return;
 
     try {
       const { error } = await supabase
@@ -99,14 +101,14 @@ const InstructorCourses = () => {
 
       setCourses(courses.filter((c) => c.id !== courseId));
       toast({
-        title: "Course deleted",
-        description: "The course has been deleted successfully.",
+        title: t("instructorCourses.courseDeleted"),
+        description: t("instructorCourses.courseDeletedDesc"),
       });
     } catch (error) {
       console.error("Error deleting course:", error);
       toast({
         title: "Error",
-        description: "Failed to delete course",
+        description: t("instructorCourses.errorDelete"),
         variant: "destructive",
       });
     }
@@ -126,16 +128,18 @@ const InstructorCourses = () => {
       ));
       
       toast({
-        title: !currentFeatured ? "Course featured" : "Course unfeatured",
+        title: !currentFeatured 
+          ? t("instructorCourses.courseFeatured")
+          : t("instructorCourses.courseUnfeatured"),
         description: !currentFeatured 
-          ? "The course will now appear on the homepage." 
-          : "The course has been removed from featured.",
+          ? t("instructorCourses.featuredDesc")
+          : t("instructorCourses.unfeaturedDesc"),
       });
     } catch (error) {
       console.error("Error toggling featured:", error);
       toast({
         title: "Error",
-        description: "Failed to update featured status",
+        description: t("instructorCourses.errorFeatured"),
         variant: "destructive",
       });
     }
@@ -147,15 +151,15 @@ const InstructorCourses = () => {
       <main className="flex-1 p-8">
         <div className="mb-8 flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Your Courses</h1>
+            <h1 className="text-3xl font-bold text-foreground">{t("instructorCourses.title")}</h1>
             <p className="text-muted-foreground">
-              Manage and organize your course content
+              {t("instructorCourses.subtitle")}
             </p>
           </div>
           <Button asChild>
             <Link to="/instructor/create">
               <PlusCircle className="mr-2 h-4 w-4" />
-              Create Course
+              {t("instructorCourses.createCourse")}
             </Link>
           </Button>
         </div>
@@ -179,14 +183,14 @@ const InstructorCourses = () => {
           </div>
         ) : courses.length === 0 ? (
           <Card className="p-12 text-center">
-            <h3 className="mb-2 text-lg font-medium">No courses yet</h3>
+            <h3 className="mb-2 text-lg font-medium">{t("instructorCourses.noCourses")}</h3>
             <p className="mb-4 text-muted-foreground">
-              Get started by creating your first course
+              {t("instructorCourses.noCoursesHint")}
             </p>
             <Button asChild>
               <Link to="/instructor/create">
                 <PlusCircle className="mr-2 h-4 w-4" />
-                Create Course
+                {t("instructorCourses.createCourse")}
               </Link>
             </Button>
           </Card>
@@ -212,39 +216,39 @@ const InstructorCourses = () => {
                       {course.visibility === "private" && (
                         <Badge variant="outline" className="text-xs">
                           <Lock className="mr-1 h-3 w-3" />
-                          Private
+                          {t("instructorCourses.private")}
                         </Badge>
                       )}
                       {course.visibility === "unlisted" && (
                         <Badge variant="outline" className="text-xs">
                           <LinkIcon className="mr-1 h-3 w-3" />
-                          Unlisted
+                          {t("instructorCourses.unlisted")}
                         </Badge>
                       )}
                       <Badge variant={course.is_published ? "default" : "secondary"}>
-                        {course.is_published ? "Published" : "Draft"}
+                        {course.is_published ? t("instructorCourses.published") : t("instructorCourses.draft")}
                       </Badge>
                     </div>
                   </div>
                 </CardHeader>
                 <CardContent className="flex-1">
                   <p className="mb-4 line-clamp-2 text-sm text-muted-foreground leading-relaxed">
-                    {course.description || "No description"}
+                    {course.description || t("instructorCourses.noDescription")}
                   </p>
                   
                   {/* Stats Grid */}
                   <div className="mb-4 grid grid-cols-3 gap-2 rounded-lg bg-muted/30 p-3 text-center">
                     <div>
                       <div className="font-medium text-foreground">{course.chapter_count}</div>
-                      <div className="text-xs text-muted-foreground">chapters</div>
+                      <div className="text-xs text-muted-foreground">{t("instructorCourses.chapters")}</div>
                     </div>
                     <div>
                       <div className="font-medium text-foreground">{course.student_count}</div>
-                      <div className="text-xs text-muted-foreground">students</div>
+                      <div className="text-xs text-muted-foreground">{t("instructorCourses.students")}</div>
                     </div>
                     <div>
                       <div className="font-medium text-foreground">${course.price}</div>
-                      <div className="text-xs text-muted-foreground">price</div>
+                      <div className="text-xs text-muted-foreground">{t("instructorCourses.price")}</div>
                     </div>
                   </div>
                   
@@ -253,7 +257,7 @@ const InstructorCourses = () => {
                     <div className="flex items-center justify-between rounded-lg bg-muted/20 p-3">
                       <div className="flex items-center gap-2 text-sm">
                         <Star className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-muted-foreground">Featured</span>
+                        <span className="text-muted-foreground">{t("instructorCourses.featured")}</span>
                       </div>
                       <Switch
                         checked={course.is_featured}
@@ -266,13 +270,13 @@ const InstructorCourses = () => {
                   <Button variant="outline" size="sm" className="flex-1" asChild>
                     <Link to={`/course/${course.id}`}>
                       <Eye className="mr-1.5 h-3.5 w-3.5" />
-                      View
+                      {t("instructorCourses.view")}
                     </Link>
                   </Button>
                   <Button variant="outline" size="sm" className="flex-1" asChild>
                     <Link to={`/instructor/edit/${course.id}`}>
                       <Edit className="mr-1.5 h-3.5 w-3.5" />
-                      Edit
+                      {t("instructorCourses.edit")}
                     </Link>
                   </Button>
                   <Button

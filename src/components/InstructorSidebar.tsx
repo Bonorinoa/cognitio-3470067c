@@ -1,4 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import {
   LayoutDashboard,
@@ -13,18 +14,19 @@ import {
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 
-const menuItems = [
-  { icon: LayoutDashboard, label: "Dashboard", href: "/instructor" },
-  { icon: BookOpen, label: "Courses", href: "/instructor/courses" },
-  { icon: PlusCircle, label: "Create Course", href: "/instructor/create" },
-  { icon: BarChart3, label: "Analytics", href: "/instructor/analytics" },
-  { icon: Settings, label: "Settings", href: "/instructor/settings" },
-];
-
 const TeacherSidebar = () => {
+  const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
+
+  const menuItems = [
+    { icon: LayoutDashboard, label: t("instructorSidebar.dashboard"), href: "/instructor" },
+    { icon: BookOpen, label: t("instructorSidebar.courses"), href: "/instructor/courses" },
+    { icon: PlusCircle, label: t("instructorSidebar.createCourse"), href: "/instructor/create" },
+    { icon: BarChart3, label: t("instructorSidebar.analytics"), href: "/instructor/analytics" },
+    { icon: Settings, label: t("instructorSidebar.settings"), href: "/instructor/settings" },
+  ];
 
   const fullName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'User';
   const email = user?.email || '';
@@ -34,6 +36,7 @@ const TeacherSidebar = () => {
     await signOut();
     navigate('/');
   };
+
   return (
     <div className="flex h-full w-64 flex-col border-r border-border bg-sidebar">
       {/* Logo */}
@@ -43,7 +46,7 @@ const TeacherSidebar = () => {
         </div>
         <div>
           <span className="text-lg font-bold text-foreground">Cognitio</span>
-          <span className="block text-xs text-muted-foreground">Instructor Portal</span>
+          <span className="block text-xs text-muted-foreground">{t("instructorSidebar.portal")}</span>
         </div>
       </div>
 
@@ -54,7 +57,7 @@ const TeacherSidebar = () => {
           className="mb-4 flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
         >
           <Home className="h-5 w-5" />
-          Back to Main Site
+          {t("instructorSidebar.backToSite")}
         </Link>
         <div className="my-3 border-t border-border" />
         {menuItems.map((item) => {
@@ -90,7 +93,7 @@ const TeacherSidebar = () => {
         </div>
         <Button variant="ghost" size="sm" className="w-full justify-start text-muted-foreground" onClick={handleSignOut}>
           <LogOut className="mr-2 h-4 w-4" />
-          Sign Out
+          {t("instructorSidebar.signOut")}
         </Button>
       </div>
     </div>

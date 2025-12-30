@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import InstructorSidebar from "@/components/InstructorSidebar";
 import ProgressCard from "@/components/ProgressCard";
 import { Button } from "@/components/ui/button";
@@ -13,7 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { PlusCircle, MoreHorizontal, Eye, Edit, TrendingUp, Loader2 } from "lucide-react";
+import { PlusCircle, MoreHorizontal, Eye, Edit, TrendingUp } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -41,6 +42,7 @@ interface RecentEnrollment {
 }
 
 const InstructorDashboard = () => {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const [courses, setCourses] = useState<CourseWithStats[]>([]);
   const [recentEnrollments, setRecentEnrollments] = useState<RecentEnrollment[]>([]);
@@ -161,9 +163,9 @@ const InstructorDashboard = () => {
     const diffHours = Math.floor(diffMs / 3600000);
     const diffDays = Math.floor(diffMs / 86400000);
 
-    if (diffMins < 60) return `${diffMins} minutes ago`;
-    if (diffHours < 24) return `${diffHours} hours ago`;
-    return `${diffDays} days ago`;
+    if (diffMins < 60) return t("instructorDashboard.minutesAgo", { count: diffMins });
+    if (diffHours < 24) return t("instructorDashboard.hoursAgo", { count: diffHours });
+    return t("instructorDashboard.daysAgo", { count: diffDays });
   };
 
   const totalStudents = courses.reduce((acc, c) => acc + c.students, 0);
@@ -179,16 +181,16 @@ const InstructorDashboard = () => {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl font-bold text-foreground mb-2">
-              Instructor Dashboard
+              {t("instructorDashboard.title")}
             </h1>
             <p className="text-muted-foreground">
-              Manage your courses and track performance
+              {t("instructorDashboard.subtitle")}
             </p>
           </div>
           <Link to="/instructor/create">
             <Button>
               <PlusCircle className="mr-2 h-5 w-5" />
-              Create Course
+              {t("instructorDashboard.createCourse")}
             </Button>
           </Link>
         </div>
@@ -196,23 +198,23 @@ const InstructorDashboard = () => {
         {/* Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           <ProgressCard
-            title="Total Students"
+            title={t("instructorDashboard.totalStudents")}
             value={isLoading ? "..." : totalStudents.toLocaleString()}
             icon="courses"
-            subtitle={courses.length > 0 ? `Across ${courses.length} courses` : undefined}
+            subtitle={courses.length > 0 ? t("instructorDashboard.acrossCourses", { count: courses.length }) : undefined}
           />
           <ProgressCard
-            title="Total Revenue"
+            title={t("instructorDashboard.totalRevenue")}
             value={isLoading ? "..." : `$${totalRevenue.toLocaleString()}`}
             icon="trending"
           />
           <ProgressCard
-            title="Published Courses"
+            title={t("instructorDashboard.publishedCourses")}
             value={isLoading ? "..." : publishedCourses}
             icon="award"
           />
           <ProgressCard
-            title="Draft Courses"
+            title={t("instructorDashboard.draftCourses")}
             value={isLoading ? "..." : courses.length - publishedCourses}
             icon="trending"
           />
@@ -222,10 +224,10 @@ const InstructorDashboard = () => {
           {/* Courses Table */}
           <Card className="lg:col-span-2 border-border bg-card">
             <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="text-foreground">Your Courses</CardTitle>
+              <CardTitle className="text-foreground">{t("instructorDashboard.yourCourses")}</CardTitle>
               <Link to="/instructor/courses">
                 <Button variant="ghost" size="sm">
-                  View All
+                  {t("instructorDashboard.viewAll")}
                 </Button>
               </Link>
             </CardHeader>
@@ -238,11 +240,11 @@ const InstructorDashboard = () => {
                 </div>
               ) : courses.length === 0 ? (
                 <div className="text-center py-8">
-                  <p className="text-muted-foreground mb-4">No courses yet</p>
+                  <p className="text-muted-foreground mb-4">{t("instructorDashboard.noCourses")}</p>
                   <Link to="/instructor/create">
                     <Button>
                       <PlusCircle className="mr-2 h-4 w-4" />
-                      Create Your First Course
+                      {t("instructorDashboard.createFirst")}
                     </Button>
                   </Link>
                 </div>
@@ -250,10 +252,10 @@ const InstructorDashboard = () => {
                 <Table>
                   <TableHeader>
                     <TableRow className="border-border">
-                      <TableHead className="text-muted-foreground">Course</TableHead>
-                      <TableHead className="text-muted-foreground">Status</TableHead>
-                      <TableHead className="text-muted-foreground">Students</TableHead>
-                      <TableHead className="text-muted-foreground">Revenue</TableHead>
+                      <TableHead className="text-muted-foreground">{t("instructorDashboard.course")}</TableHead>
+                      <TableHead className="text-muted-foreground">{t("instructorDashboard.status")}</TableHead>
+                      <TableHead className="text-muted-foreground">{t("instructorDashboard.students")}</TableHead>
+                      <TableHead className="text-muted-foreground">{t("instructorDashboard.revenue")}</TableHead>
                       <TableHead className="text-muted-foreground w-[50px]"></TableHead>
                     </TableRow>
                   </TableHeader>
@@ -272,7 +274,7 @@ const InstructorDashboard = () => {
                                 : "border-border text-muted-foreground"
                             }
                           >
-                            {course.is_published ? "published" : "draft"}
+                            {course.is_published ? t("instructorDashboard.published") : t("instructorDashboard.draft")}
                           </Badge>
                         </TableCell>
                         <TableCell className="text-muted-foreground">
@@ -292,12 +294,14 @@ const InstructorDashboard = () => {
                               <DropdownMenuItem asChild>
                                 <Link to={`/course/${course.id}`}>
                                   <Eye className="mr-2 h-4 w-4" />
-                                  View
+                                  {t("instructorDashboard.view")}
                                 </Link>
                               </DropdownMenuItem>
-                              <DropdownMenuItem>
-                                <Edit className="mr-2 h-4 w-4" />
-                                Edit
+                              <DropdownMenuItem asChild>
+                                <Link to={`/instructor/edit/${course.id}`}>
+                                  <Edit className="mr-2 h-4 w-4" />
+                                  {t("instructorDashboard.edit")}
+                                </Link>
                               </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
@@ -315,7 +319,7 @@ const InstructorDashboard = () => {
             <CardHeader>
               <CardTitle className="text-foreground flex items-center gap-2">
                 <TrendingUp className="h-5 w-5 text-primary" />
-                Recent Enrollments
+                {t("instructorDashboard.recentEnrollments")}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -327,7 +331,7 @@ const InstructorDashboard = () => {
                 </div>
               ) : recentEnrollments.length === 0 ? (
                 <p className="text-muted-foreground text-sm text-center py-4">
-                  No enrollments yet
+                  {t("instructorDashboard.noEnrollments")}
                 </p>
               ) : (
                 <div className="space-y-4">
