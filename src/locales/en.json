@@ -27,27 +27,6 @@
     "noCourses": "No courses published yet. Check back soon!",
     "servicesOffered": "Services Offered"
   },
-  "instructorContact": {
-    "title": "Get in Touch",
-    "subtitle": "Interested in private courses or consulting? Send a message.",
-    "name": "Your Name",
-    "email": "Your Email",
-    "subject": "Subject",
-    "subjectOptions": {
-      "privateCourse": "Private Course Inquiry",
-      "consulting": "Consulting Request",
-      "general": "General Question",
-      "other": "Other"
-    },
-    "message": "Your Message",
-    "messagePlaceholder": "Tell me about your learning goals or how I can help...",
-    "submit": "Send Message",
-    "sending": "Sending...",
-    "successTitle": "Message Sent!",
-    "successMessage": "The instructor will receive your inquiry shortly.",
-    "errorTitle": "Failed to Send",
-    "errorMessage": "Please try again later."
-  },
   "instructorSettings": {
     "title": "Settings",
     "subtitle": "Manage your profile and account preferences",
@@ -91,7 +70,11 @@
     "invalidFileType": "Invalid file type",
     "invalidFileTypeDesc": "Please upload an image file",
     "fileTooLarge": "File too large",
-    "fileTooLargeDesc": "Please upload an image smaller than 5MB",
+    "fileTooLargeDesc": "Please upload an image smaller than 10MB",
+    "removePhoto": "Remove Photo",
+    "avatarRemoved": "Photo removed",
+    "avatarRemovedDesc": "Your profile photo has been removed.",
+    "avatarRemoveErrorDesc": "Failed to remove photo. Please try again.",
     "services": {
       "title": "Consulting Services",
       "subtitle": "Offer consulting, coaching, or other services to your students",

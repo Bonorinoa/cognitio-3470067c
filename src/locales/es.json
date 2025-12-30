@@ -33,27 +33,6 @@
     "noCourses": "Aún no hay cursos publicados. ¡Vuelve pronto!",
     "servicesOffered": "Servicios Ofrecidos"
   },
-  "instructorContact": {
-    "title": "Ponte en Contacto",
-    "subtitle": "¿Interesado en cursos privados o consultoría? Envía un mensaje.",
-    "name": "Tu Nombre",
-    "email": "Tu Correo Electrónico",
-    "subject": "Asunto",
-    "subjectOptions": {
-      "privateCourse": "Consulta sobre Curso Privado",
-      "consulting": "Solicitud de Consultoría",
-      "general": "Pregunta General",
-      "other": "Otro"
-    },
-    "message": "Tu Mensaje",
-    "messagePlaceholder": "Cuéntame sobre tus objetivos de aprendizaje o cómo puedo ayudarte...",
-    "submit": "Enviar Mensaje",
-    "sending": "Enviando...",
-    "successTitle": "¡Mensaje Enviado!",
-    "successMessage": "El instructor recibirá tu consulta en breve.",
-    "errorTitle": "Error al Enviar",
-    "errorMessage": "Por favor, inténtalo de nuevo más tarde."
-  },
   "instructorSettings": {
     "title": "Configuración",
     "subtitle": "Gestiona tu perfil y preferencias de cuenta",
@@ -97,7 +76,11 @@
     "invalidFileType": "Tipo de archivo inválido",
     "invalidFileTypeDesc": "Por favor sube un archivo de imagen",
     "fileTooLarge": "Archivo muy grande",
-    "fileTooLargeDesc": "Por favor sube una imagen menor a 5MB",
+    "fileTooLargeDesc": "Por favor sube una imagen menor a 10MB",
+    "removePhoto": "Eliminar Foto",
+    "avatarRemoved": "Foto eliminada",
+    "avatarRemovedDesc": "Tu foto de perfil ha sido eliminada.",
+    "avatarRemoveErrorDesc": "Error al eliminar la foto. Por favor, inténtalo de nuevo.",
     "services": {
       "title": "Servicios de Consultoría",
       "subtitle": "Ofrece consultoría, coaching u otros servicios a tus estudiantes",

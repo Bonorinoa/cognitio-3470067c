@@ -172,7 +172,7 @@ const InstructorSettings = () => {
                   userId={user.id}
                   currentAvatarUrl={profile.avatar_url}
                   fullName={profile.full_name}
-                  onAvatarChange={(url) => handleInputChange("avatar_url", url)}
+                  onAvatarChange={(url) => handleInputChange("avatar_url", url || "")}
                 />
               )}
             </CardContent>
