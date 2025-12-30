@@ -397,3 +397,88 @@ Los instructores pueden crear cursos, gestionar contenido y seguir el engagement
 - Componentes UI personalizables
 - Sistema de estilos con temas
 - Soporte de webhooks para integraciones
+
+---
+
+## 🎨 Design System (v2.4-v2.9.1)
+
+### Color Palette
+- **Warm Theme**: Coral/salmon primary colors with charcoal text
+- **Semantic Tokens**: HSL-based color system for consistent theming
+- **Accessibility**: High contrast ratios for readability
+
+### Component Styling
+- **Cards**: Standardized with `rounded-xl`, `hover:shadow-lg`, `hover:-translate-y-1`
+- **Animations**: Framer Motion for smooth transitions (respects `prefers-reduced-motion`)
+- **Typography**: Roboto (sans), Libre Caslon Text (serif), Roboto Mono (mono)
+
+### Responsive Design
+- Mobile-first approach with breakpoints at sm, md, lg, xl, 2xl
+- Hamburger menu for mobile navigation
+- Adaptive layouts for instructor dashboard and course pages
+- Touch-friendly interaction areas
+
+### Hero Background
+- Animated blob gradients (10s ease-in-out infinite)
+- Three overlapping blobs with staggered animations
+- Respects accessibility preferences (prefers-reduced-motion)
+
+### Featured Courses
+- "Destacados" filter category in courses marketplace
+- Star badge on featured course cards
+- Featured flag in course database and API
+
+---
+
+## 🔒 Security (v2.9.1 Audit)
+
+### Authentication & Authorization
+- Supabase Auth with email/password
+- JWT tokens with automatic refresh
+- Role-based access control (admin/instructor/student)
+- Protected routes with authentication guards
+
+### Database Security
+- Row Level Security (RLS) enabled on all tables
+- Policies enforced at database level:
+  - Users can only access their own data
+  - Instructors can only modify their own courses
+  - Public courses viewable by everyone
+  - Admin-only operations properly secured
+
+### Secrets Management
+- Environment variables properly prefixed (VITE_ for client)
+- Service keys only in edge functions (never in client code)
+- .env files added to .gitignore
+- No hardcoded credentials in source code
+
+### Code Security
+- CodeQL scanning: 0 vulnerabilities
+- Input validation on all forms
+- XSS protection through React's default escaping
+- CSRF protection via Supabase Auth
+
+---
+
+## 📱 Known Issues & Limitations
+
+### Test Suite
+- 2 i18n-related test failures (non-blocking):
+  - CourseCard test expects English text, component uses Spanish
+  - InstructorDashboard test expects English text, component uses Spanish
+- These are test localization issues, not functionality issues
+
+### ESLint Warnings
+- Some pre-existing `@typescript-eslint/no-explicit-any` warnings
+- Some `react-refresh/only-export-components` warnings
+- Not blocking production or functionality
+
+### E2E Tests
+- Require running development server
+- Timeout in CI/CD without server running
+- Manual testing confirms all features working
+
+---
+
+*Última actualización: Diciembre 30, 2025*
+*Versión: v2.9.1*

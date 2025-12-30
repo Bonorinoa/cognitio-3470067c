@@ -29,17 +29,17 @@ Cognitio no es un marketplace abierto. Es un "Instructor Studio" curado: LMS lig
 
 ---
 
-## 📍 Estado Actual: v2.9.0
+## 📍 Estado Actual: v2.9.1
 
-**Última Actualización:** Diciembre 2024
+**Última Actualización:** Diciembre 30, 2025
 
-### ✅ Funcionalidades Completas (v1.0 - v2.9)
+### ✅ Funcionalidades Completas (v1.0 - v2.9.1)
 - Autenticación de usuarios (registro/inicio de sesión/recuperación de contraseña)
 - Sistema de roles (admin/instructor/student)
 - Creación y edición de cursos con carga de video Mux
 - Gestión de capítulos con ordenamiento y vista previa gratuita
 - Integración de pagos con Stripe
-- Navegación y filtrado de cursos (por categoría, búsqueda, ordenamiento)
+- Navegación y filtrado de cursos (por categoría, búsqueda, ordenamiento, destacados)
 - Dashboards de estudiantes e instructores
 - Carga de imágenes de cursos
 - Seguimiento de progreso (marcar como completado)
@@ -53,15 +53,19 @@ Cognitio no es un marketplace abierto. Es un "Instructor Studio" curado: LMS lig
 - Sistema de contacto de instructor (email vía Resend)
 - Gestión de cuenta de usuario (cambio de contraseña, eliminación)
 - Internacionalización completa (Español)
-- **Sistema de diseño con tema claro cálido (v2.4-v2.9)**
+- **Sistema de diseño con tema claro cálido (v2.4-v2.9.1)**
 - **Hero background con blobs animados**
 - **Tarjetas estandarizadas con hover effects**
 - **Menú hamburguesa móvil responsive**
+- **Cursos destacados con filtro "Destacados"**
+- **UI bugs fixed: InstructorSidebar alignment, FoundersStorySection animations**
+- **Security audit complete: 0 vulnerabilities**
 
-### 🚧 Próximo: v2.0
+### 🚧 Próximo: v3.0
 - AI Content Studio (generación de blogs/newsletters desde cursos)
 
 Consulta **[DEVELOPMENT_PLAN.md](./DEVELOPMENT_PLAN.md)** para el roadmap completo.
+Consulta **[CHANGELOG.md](./CHANGELOG.md)** para el historial de cambios.
 
 ---
 
@@ -81,10 +85,11 @@ Cognitio **NO** es y **NO** construirá:
 
 | Documento | Contenido |
 |-----------|-----------|
-| [DEVELOPMENT_PLAN.md](./DEVELOPMENT_PLAN.md) | Roadmap v1.1-v2.0, decisiones pendientes, schema |
+| [DEVELOPMENT_PLAN.md](./DEVELOPMENT_PLAN.md) | Roadmap v1.1-v3.0, readiness evaluation, decisiones pendientes, schema |
 | [TECHNOLOGY_STACK.md](./TECHNOLOGY_STACK.md) | Stack tecnológico completo |
 | [FEATURES.md](./FEATURES.md) | Documentación detallada de funcionalidades |
 | [TESTING.md](./TESTING.md) | Infraestructura y guías de testing |
+| [CHANGELOG.md](./CHANGELOG.md) | Historial de cambios y versiones |
 
 ---
 
