@@ -42,28 +42,27 @@
 
 ---
 
-## Estado Actual (v1.0.0)
+## Estado Actual (v1.9.0)
 
 ### ✅ Completado
-| Categoría | Funcionalidad |
-|-----------|---------------|
-| **Auth** | Email/contraseña, roles (admin/teacher/student), rutas protegidas |
-| **Cursos** | Creación, capítulos, borrador/publicación, imágenes, Mux video |
-| **Pagos** | Stripe checkout, registro de compras |
-| **Estudiante** | Catálogo, inscripción, progreso, dashboard |
-| **Instructor** | Dashboard, sidebar, lista de cursos |
-| **UI** | Página About con sticky cards, Framer Motion, branding Cognitio |
+| Versión | Categoría | Funcionalidad |
+|---------|-----------|---------------|
+| v1.0 | **Auth** | Email/contraseña, roles (admin/instructor/student), rutas protegidas |
+| v1.0 | **Cursos** | Creación, capítulos, borrador/publicación, imágenes, Mux video |
+| v1.0 | **Pagos** | Stripe checkout, registro de compras |
+| v1.0 | **Estudiante** | Catálogo, inscripción, progreso, dashboard |
+| v1.0 | **UI** | Página About con sticky cards, Framer Motion, branding Cognitio |
+| v1.1 | **Frontend** | Terminología refactorizada (teacher → instructor), rutas actualizadas |
+| v1.2 | **DB** | Columna `instructor_id` agregada, enum `instructor` en roles |
+| v1.3 | **Visibilidad** | Cursos public/private/unlisted, tabla `course_memberships` |
+| v1.4 | **Admin** | Panel de administración, gestión de roles |
+| v1.5 | **Perfiles** | Perfiles públicos de instructor, bio, credenciales, redes sociales, avatares |
+| v1.6 | **Cursos** | Edición completa de cursos y capítulos |
+| v1.7 | **Seguridad** | Cambio/reset de contraseña, eliminación de cuenta, gestión de usuario |
+| v1.8 | **Analytics** | Métricas reales de ingresos, estudiantes, completación, exportación CSV |
+| v1.9 | **Servicios** | Servicios de consultoría de instructor, sistema de contacto por email |
 
-### ⚠️ Gaps vs Visión
-| Área | Estado Actual | Visión |
-|------|---------------|--------|
-| Terminología | `teacher` en código/DB | `instructor` |
-| Rutas | `/teacher/*` | `/instructor/*` + `/admin/*` |
-| Visibilidad | `is_published` boolean | `visibility` enum (public/private/unlisted) |
-| Cursos Privados | No existe | `course_memberships` para inscripción manual |
-| Panel Admin | No existe | Gestión de roles, soporte |
-| Perfil Instructor | Básico | Bio, afiliación, servicios, página pública |
-| AI Content Studio | No existe | Generación de blogs/newsletters desde cursos |
+### 🚧 Próximo: v2.0 - AI Content Studio
 
 ---
 

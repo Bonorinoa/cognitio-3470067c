@@ -33,26 +33,29 @@ Cognitio no es un marketplace abierto. Es un "Instructor Studio" curado: LMS lig
 
 **Última Actualización:** Diciembre 2024
 
-### ✅ Funcionalidades Completas
-- Autenticación de usuarios (registro/inicio de sesión)
+### ✅ Funcionalidades Completas (v1.0 - v1.9)
+- Autenticación de usuarios (registro/inicio de sesión/recuperación de contraseña)
 - Sistema de roles (admin/instructor/student)
-- Creación de cursos con carga de video Mux
-- Gestión de capítulos con ordenamiento
+- Creación y edición de cursos con carga de video Mux
+- Gestión de capítulos con ordenamiento y vista previa gratuita
 - Integración de pagos con Stripe
-- Navegación y filtrado de cursos
+- Navegación y filtrado de cursos (por categoría, búsqueda, ordenamiento)
 - Dashboards de estudiantes e instructores
 - Carga de imágenes de cursos
 - Seguimiento de progreso (marcar como completado)
 - Página "Sobre Nosotros" con perfiles de instructores
 - Animaciones con Framer Motion
+- Sistema de visibilidad de cursos (public/private/unlisted)
+- Panel de Administración (gestión de roles)
+- Perfiles públicos de instructor con bio, credenciales, redes sociales
+- Analytics de instructor con métricas reales
+- Servicios de consultoría de instructor
+- Sistema de contacto de instructor (email vía Resend)
+- Gestión de cuenta de usuario (cambio de contraseña, eliminación)
+- Internacionalización completa (Español)
 
-### 🚧 En Desarrollo (Roadmap v1.1 - v2.0)
-- v1.1: Refactor terminología (teacher → instructor)
-- v1.3: Sistema de visibilidad de cursos (public/private/unlisted)
-- v1.4: Panel de Administración
-- v1.5: Perfiles públicos de instructor
-- v1.6: Edición de cursos
-- v2.0: AI Content Studio
+### 🚧 Próximo: v2.0
+- AI Content Studio (generación de blogs/newsletters desde cursos)
 
 Consulta **[DEVELOPMENT_PLAN.md](./DEVELOPMENT_PLAN.md)** para el roadmap completo.
 
@@ -171,15 +174,15 @@ npx vitest           # Tests en modo watch
 ### Instructor (Rol requerido)
 | Ruta | Descripción |
 |------|-------------|
-| `/teacher` | Dashboard del instructor |
-| `/teacher/courses` | Lista de cursos propios |
-| `/teacher/create` | Crear nuevo curso |
-| `/teacher/analytics` | Analytics |
-| `/teacher/settings` | Configuración |
+| `/instructor` | Dashboard del instructor |
+| `/instructor/courses` | Lista de cursos propios |
+| `/instructor/create` | Crear nuevo curso |
+| `/instructor/edit/:id` | Editar curso |
+| `/instructor/analytics` | Analytics |
+| `/instructor/settings` | Configuración y perfil |
+| `/instructor/profile/:id` | Perfil público del instructor |
 
-*Nota: Las rutas `/teacher/*` serán renombradas a `/instructor/*` en v1.1*
-
-### Admin (Rol requerido) - Futuro v1.4
+### Admin (Rol requerido)
 | Ruta | Descripción |
 |------|-------------|
 | `/admin` | Panel de administración |
@@ -302,4 +305,4 @@ Parte del ecosistema Lovable. Ver términos de licencia de Lovable.
 
 ---
 
-*Última actualización: Diciembre 2024 | Versión: 1.0.0*
+*Última actualización: Diciembre 2024 | Versión: 1.9.0*
