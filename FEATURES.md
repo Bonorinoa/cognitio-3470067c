@@ -225,15 +225,22 @@ Los instructores pueden crear cursos, gestionar contenido y seguir el engagement
 - **Rutas de Páginas**
   - `/` - Página de inicio
   - `/auth` - Página de autenticación
+  - `/forgot-password` - Recuperación de contraseña
+  - `/reset-password` - Restablecer contraseña
   - `/dashboard` - Dashboard del estudiante
+  - `/settings` - Configuración de usuario
   - `/courses` - Catálogo de cursos
   - `/course/:id` - Detalle/reproductor de curso
   - `/about` - Página Sobre Nosotros
-  - `/teacher` - Dashboard del instructor
-  - `/teacher/courses` - Lista de cursos del instructor
-  - `/teacher/create` - Crear nuevo curso
-  - `/teacher/analytics` - Dashboard de analytics
-  - `/teacher/settings` - Configuración del instructor
+  - `/instructors` - Catálogo de instructores
+  - `/instructor` - Dashboard del instructor
+  - `/instructor/courses` - Lista de cursos del instructor
+  - `/instructor/create` - Crear nuevo curso
+  - `/instructor/edit/:id` - Editar curso
+  - `/instructor/analytics` - Dashboard de analytics
+  - `/instructor/settings` - Configuración del instructor
+  - `/instructor/profile/:id` - Perfil público del instructor
+  - `/admin` - Panel de Administración
   - `*` - Página 404 Not Found
   
 - **Componentes de Navegación**
