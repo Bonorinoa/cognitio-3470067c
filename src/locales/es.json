@@ -15,7 +15,13 @@
     "title": "Servicios de Consultoría",
     "subtitle": "Conecta directamente con nuestros instructores para consultoría personalizada, coaching y mentoría",
     "noServices": "Aún no hay servicios disponibles.",
-    "unknownInstructor": "Instructor"
+    "unknownInstructor": "Instructor",
+    "contactCTA": "Consultar",
+    "searchPlaceholder": "Buscar servicios...",
+    "sortNewest": "Más Reciente",
+    "sortPriceLow": "Precio: Menor a Mayor",
+    "sortPriceHigh": "Precio: Mayor a Menor",
+    "sortDuration": "Duración"
   },
   "instructorProfile": {
     "notFound": "Instructor no encontrado",

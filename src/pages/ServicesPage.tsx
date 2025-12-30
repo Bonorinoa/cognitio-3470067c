@@ -1,15 +1,21 @@
+import { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
+import ServiceCard from "@/components/ServiceCard";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Link } from "react-router-dom";
-import { Clock, DollarSign } from "lucide-react";
-import { motion } from "framer-motion";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Search } from "lucide-react";
 
 interface ServiceWithInstructor {
   id: string;
@@ -18,6 +24,7 @@ interface ServiceWithInstructor {
   price: number | null;
   duration_minutes: number | null;
   instructor_id: string;
+  created_at: string;
   instructor: {
     id: string;
     full_name: string | null;
@@ -26,8 +33,12 @@ interface ServiceWithInstructor {
   } | null;
 }
 
+type SortOption = "newest" | "price_low" | "price_high" | "duration";
+
 const ServicesPage = () => {
   const { t } = useTranslation();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState<SortOption>("newest");
 
   const { data: services, isLoading } = useQuery({
     queryKey: ["all-services"],
@@ -40,7 +51,8 @@ const ServicesPage = () => {
           description,
           price,
           duration_minutes,
-          instructor_id
+          instructor_id,
+          created_at
         `)
         .eq("is_active", true)
         .order("created_at", { ascending: false });
@@ -63,24 +75,41 @@ const ServicesPage = () => {
     },
   });
 
-  const formatDuration = (minutes: number | null) => {
-    if (!minutes) return null;
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
-    if (hours > 0 && mins > 0) return `${hours}h ${mins}min`;
-    if (hours > 0) return `${hours}h`;
-    return `${mins}min`;
-  };
+  const filteredAndSortedServices = useMemo(() => {
+    if (!services) return [];
 
-  const getInitials = (name: string | null) => {
-    if (!name) return "?";
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase()
-      .slice(0, 2);
-  };
+    let result = [...services];
+
+    // Filter by search query
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      result = result.filter(
+        (s) =>
+          s.title.toLowerCase().includes(query) ||
+          s.description?.toLowerCase().includes(query) ||
+          s.instructor?.full_name?.toLowerCase().includes(query)
+      );
+    }
+
+    // Sort
+    switch (sortBy) {
+      case "price_low":
+        result.sort((a, b) => (a.price ?? 0) - (b.price ?? 0));
+        break;
+      case "price_high":
+        result.sort((a, b) => (b.price ?? 0) - (a.price ?? 0));
+        break;
+      case "duration":
+        result.sort((a, b) => (a.duration_minutes ?? 0) - (b.duration_minutes ?? 0));
+        break;
+      case "newest":
+      default:
+        // Already sorted by created_at desc from query
+        break;
+    }
+
+    return result;
+  }, [services, searchQuery, sortBy]);
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -89,13 +118,38 @@ const ServicesPage = () => {
       <main className="flex-1 pt-24 pb-16">
         <div className="container mx-auto px-4">
           {/* Header */}
-          <div className="text-center mb-12">
+          <div className="text-center mb-8">
             <h1 className="text-4xl font-bold text-foreground mb-4">
               {t("services.title")}
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               {t("services.subtitle")}
             </p>
+          </div>
+
+          {/* Search and Sort Controls */}
+          <div className="flex flex-col sm:flex-row gap-4 mb-8 max-w-2xl mx-auto">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                type="text"
+                placeholder={t("services.searchPlaceholder")}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            <Select value={sortBy} onValueChange={(v) => setSortBy(v as SortOption)}>
+              <SelectTrigger className="w-full sm:w-48">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="newest">{t("services.sortNewest")}</SelectItem>
+                <SelectItem value="price_low">{t("services.sortPriceLow")}</SelectItem>
+                <SelectItem value="price_high">{t("services.sortPriceHigh")}</SelectItem>
+                <SelectItem value="duration">{t("services.sortDuration")}</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Services Grid */}
@@ -120,69 +174,28 @@ const ServicesPage = () => {
                 </Card>
               ))}
             </div>
-          ) : services && services.length > 0 ? (
+          ) : filteredAndSortedServices.length > 0 ? (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {services.map((service, index) => (
-                <motion.div
+              {filteredAndSortedServices.map((service, index) => (
+                <ServiceCard
                   key={service.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  <Card className="h-full flex flex-col hover:shadow-lg transition-shadow">
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-lg">{service.title}</CardTitle>
-                    </CardHeader>
-                    <CardContent className="flex-1 flex flex-col">
-                      {service.description && (
-                        <p className="text-muted-foreground text-sm mb-4 line-clamp-3">
-                          {service.description}
-                        </p>
-                      )}
-
-                      {/* Price and Duration */}
-                      <div className="flex items-center gap-4 mb-4">
-                        {service.price !== null && (
-                          <Badge variant="secondary" className="flex items-center gap-1">
-                            <DollarSign className="h-3 w-3" />
-                            ${service.price}
-                          </Badge>
-                        )}
-                        {service.duration_minutes && (
-                          <Badge variant="outline" className="flex items-center gap-1">
-                            <Clock className="h-3 w-3" />
-                            {formatDuration(service.duration_minutes)}
-                          </Badge>
-                        )}
-                      </div>
-
-                      {/* Instructor */}
-                      {service.instructor && (
-                        <Link
-                          to={`/instructor/profile/${service.instructor.id}`}
-                          className="mt-auto pt-4 border-t border-border flex items-center gap-3 hover:bg-muted/50 -mx-4 px-4 py-2 rounded-b-lg transition-colors"
-                        >
-                          <Avatar className="h-10 w-10">
-                            <AvatarImage src={service.instructor.avatar_url || undefined} />
-                            <AvatarFallback className="bg-primary text-primary-foreground text-sm">
-                              {getInitials(service.instructor.full_name)}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div className="min-w-0">
-                            <p className="font-medium text-sm text-foreground truncate">
-                              {service.instructor.full_name || t("services.unknownInstructor")}
-                            </p>
-                            {service.instructor.headline && (
-                              <p className="text-xs text-muted-foreground truncate">
-                                {service.instructor.headline}
-                              </p>
-                            )}
-                          </div>
-                        </Link>
-                      )}
-                    </CardContent>
-                  </Card>
-                </motion.div>
+                  id={service.id}
+                  title={service.title}
+                  description={service.description}
+                  price={service.price}
+                  durationMinutes={service.duration_minutes}
+                  instructor={
+                    service.instructor
+                      ? {
+                          id: service.instructor.id,
+                          fullName: service.instructor.full_name,
+                          avatarUrl: service.instructor.avatar_url,
+                          headline: service.instructor.headline,
+                        }
+                      : null
+                  }
+                  index={index}
+                />
               ))}
             </div>
           ) : (
