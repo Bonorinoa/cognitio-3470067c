@@ -368,5 +368,26 @@
     "successDraft": "Course saved as draft!",
     "successUpdate": "Course updated successfully!",
     "errorSave": "Failed to save course"
+  },
+  "studentDashboard": {
+    "welcomeBack": "Welcome back",
+    "continueJourney": "Continue your learning journey",
+    "coursesEnrolled": "Courses Enrolled",
+    "coursesCompleted": "Courses Completed",
+    "chaptersCompleted": "Chapters Done",
+    "overallProgress": "Overall Progress",
+    "activeCourses": "Active courses",
+    "greatProgress": "Great progress!",
+    "totalCompleted": "Total completed",
+    "keepGoing": "Keep going!",
+    "searchPlaceholder": "Search your courses...",
+    "allCourses": "All Courses",
+    "inProgress": "In Progress",
+    "completed": "Completed",
+    "noCoursesYet": "No courses yet",
+    "startLearning": "Start your learning journey by enrolling in a course.",
+    "browseCourses": "Browse Courses",
+    "noCoursesFound": "No courses found",
+    "tryDifferentSearch": "Try a different search term."
   }
 }

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, Navigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import Navbar from "@/components/Navbar";
 import CourseCard from "@/components/CourseCard";
 import ProgressCard from "@/components/ProgressCard";
@@ -25,10 +26,11 @@ interface EnrolledCourse {
 }
 
 const StudentDashboard = () => {
+  const { t } = useTranslation();
   const { user, isLoading: authLoading } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Fetch purchased courses with progress
+  // Fetch enrolled courses (purchases + memberships) with progress
   const { data: enrolledCourses = [], isLoading } = useQuery({
     queryKey: ["enrolled-courses", user?.id],
     queryFn: async () => {
@@ -41,9 +43,21 @@ const StudentDashboard = () => {
         .eq("user_id", user.id);
 
       if (purchasesError) throw purchasesError;
-      if (!purchases || purchases.length === 0) return [];
 
-      const courseIds = purchases.map((p) => p.course_id);
+      // Get all memberships for this user (private/unlisted courses)
+      const { data: memberships, error: membershipsError } = await supabase
+        .from("course_memberships")
+        .select("course_id")
+        .eq("user_id", user.id);
+
+      if (membershipsError) throw membershipsError;
+
+      // Combine and deduplicate course IDs
+      const purchaseIds = (purchases || []).map((p) => p.course_id);
+      const membershipIds = (memberships || []).map((m) => m.course_id);
+      const courseIds = [...new Set([...purchaseIds, ...membershipIds])];
+
+      if (courseIds.length === 0) return [];
 
       // Get course details with chapters
       const { data: courses, error: coursesError } = await supabase
@@ -123,9 +137,9 @@ const StudentDashboard = () => {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-2">
-            Welcome back{user?.user_metadata?.full_name ? `, ${user.user_metadata.full_name}` : ""}!
+            {t("studentDashboard.welcomeBack")}{user?.user_metadata?.full_name ? `, ${user.user_metadata.full_name}` : ""}!
           </h1>
-          <p className="text-muted-foreground">Continue your learning journey</p>
+          <p className="text-muted-foreground">{t("studentDashboard.continueJourney")}</p>
         </div>
 
         {/* Stats */}
@@ -140,29 +154,29 @@ const StudentDashboard = () => {
           ) : (
             <>
               <ProgressCard
-                title="Courses Enrolled"
+                title={t("studentDashboard.coursesEnrolled")}
                 value={enrolledCourses.length}
                 icon="courses"
-                subtitle="Active courses"
+                subtitle={t("studentDashboard.activeCourses")}
               />
               <ProgressCard
-                title="Courses Completed"
+                title={t("studentDashboard.coursesCompleted")}
                 value={completedCourses.length}
                 icon="award"
-                subtitle="Great progress!"
+                subtitle={t("studentDashboard.greatProgress")}
               />
               <ProgressCard
-                title="Chapters Done"
+                title={t("studentDashboard.chaptersCompleted")}
                 value={enrolledCourses.reduce((sum, c) => sum + c.completedChapters, 0)}
                 icon="time"
-                subtitle="Total completed"
+                subtitle={t("studentDashboard.totalCompleted")}
               />
               <ProgressCard
-                title="Overall Progress"
+                title={t("studentDashboard.overallProgress")}
                 value={`${overallProgress}%`}
                 icon="trending"
                 progress={overallProgress}
-                subtitle="Keep going!"
+                subtitle={t("studentDashboard.keepGoing")}
               />
             </>
           )}
@@ -172,7 +186,7 @@ const StudentDashboard = () => {
         <div className="relative mb-6">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Search your courses..."
+            placeholder={t("studentDashboard.searchPlaceholder")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10 bg-card border-border"
@@ -197,13 +211,13 @@ const StudentDashboard = () => {
           <Tabs defaultValue="all" className="space-y-6">
             <TabsList className="bg-card border border-border">
               <TabsTrigger value="all" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-                All Courses ({enrolledCourses.length})
+                {t("studentDashboard.allCourses")} ({enrolledCourses.length})
               </TabsTrigger>
               <TabsTrigger value="in-progress" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-                In Progress ({inProgressCourses.length})
+                {t("studentDashboard.inProgress")} ({inProgressCourses.length})
               </TabsTrigger>
               <TabsTrigger value="completed" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-                Completed ({completedCourses.length})
+                {t("studentDashboard.completed")} ({completedCourses.length})
               </TabsTrigger>
             </TabsList>
 
@@ -237,16 +251,16 @@ const StudentDashboard = () => {
           </Tabs>
         )}
 
-        {/* Empty state - no courses purchased */}
+        {/* Empty state - no courses */}
         {!isLoading && enrolledCourses.length === 0 && (
           <div className="text-center py-12">
             <BookOpen className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-medium text-foreground mb-2">No courses yet</h3>
+            <h3 className="text-lg font-medium text-foreground mb-2">{t("studentDashboard.noCoursesYet")}</h3>
             <p className="text-muted-foreground mb-4">
-              Start your learning journey by enrolling in a course.
+              {t("studentDashboard.startLearning")}
             </p>
             <Link to="/courses" className="text-primary hover:underline">
-              Browse Courses
+              {t("studentDashboard.browseCourses")}
             </Link>
           </div>
         )}
@@ -255,8 +269,8 @@ const StudentDashboard = () => {
         {!isLoading && enrolledCourses.length > 0 && filteredCourses.length === 0 && (
           <div className="text-center py-12">
             <Search className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-medium text-foreground mb-2">No courses found</h3>
-            <p className="text-muted-foreground">Try a different search term.</p>
+            <h3 className="text-lg font-medium text-foreground mb-2">{t("studentDashboard.noCoursesFound")}</h3>
+            <p className="text-muted-foreground">{t("studentDashboard.tryDifferentSearch")}</p>
           </div>
         )}
       </main>
