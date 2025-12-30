@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import RequireInstructor from "@/components/RequireInstructor";
 import Index from "./pages/Index";
@@ -39,6 +39,9 @@ const App = () => (
             <Route path="/instructor/analytics" element={<RequireInstructor><InstructorAnalytics /></RequireInstructor>} />
             <Route path="/instructor/settings" element={<RequireInstructor><InstructorSettings /></RequireInstructor>} />
             <Route path="/auth" element={<AuthPage />} />
+            {/* Legacy route redirects for backward compatibility */}
+            <Route path="/teacher" element={<Navigate to="/instructor" replace />} />
+            <Route path="/teacher/*" element={<Navigate to="/instructor" replace />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
