@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import RequireInstructor from "@/components/RequireInstructor";
+import RequireAdmin from "@/components/RequireAdmin";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import CoursesPage from "./pages/CoursesPage";
@@ -17,6 +18,7 @@ import InstructorSettings from "./pages/InstructorSettings";
 import CreateCourse from "./pages/CreateCourse";
 import EditCourse from "./pages/EditCourse";
 import AuthPage from "./pages/AuthPage";
+import AdminPanel from "./pages/AdminPanel";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -41,6 +43,7 @@ const App = () => (
             <Route path="/instructor/settings" element={<RequireInstructor><InstructorSettings /></RequireInstructor>} />
             <Route path="/instructor/edit/:id" element={<RequireInstructor><EditCourse /></RequireInstructor>} />
             <Route path="/auth" element={<AuthPage />} />
+            <Route path="/admin" element={<RequireAdmin><AdminPanel /></RequireAdmin>} />
             {/* Legacy route redirects for backward compatibility */}
             <Route path="/teacher" element={<Navigate to="/instructor" replace />} />
             <Route path="/teacher/*" element={<Navigate to="/instructor" replace />} />
