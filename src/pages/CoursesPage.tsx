@@ -16,7 +16,7 @@ import { Search, Filter } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
-const categories = ["Todos", "Desarrollo", "IA & ML", "Diseño", "Ciencia de Datos", "Móvil", "Negocios"];
+const categories = ["Todos", "Destacados", "Desarrollo", "IA & ML", "Diseño", "Ciencia de Datos", "Móvil", "Negocios"];
 
 const CoursesPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -37,6 +37,7 @@ const CoursesPage = () => {
           price,
           category,
           visibility,
+          is_featured,
           chapters (id, duration_seconds)
         `)
         .eq("is_published", true)
@@ -55,6 +56,7 @@ const CoursesPage = () => {
           chaptersCount: course.chapters?.length || 0,
           category: course.category || "Development",
           totalDurationSeconds: totalDuration,
+          isFeatured: course.is_featured || false,
         };
       });
     },
@@ -63,7 +65,8 @@ const CoursesPage = () => {
   const filteredCourses = courses.filter((course) => {
     const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory =
-      selectedCategory === "Todos" || course.category === selectedCategory;
+      selectedCategory === "Todos" || 
+      (selectedCategory === "Destacados" ? course.isFeatured : course.category === selectedCategory);
     return matchesSearch && matchesCategory;
   });
 
