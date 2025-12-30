@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { BookOpen, Clock, PlayCircle } from "lucide-react";
+import { BookOpen, Clock, PlayCircle, Star } from "lucide-react";
 
 interface CourseCardProps {
   id: string;
@@ -13,6 +13,7 @@ interface CourseCardProps {
   progress?: number;
   category?: string;
   totalDurationSeconds?: number;
+  isFeatured?: boolean;
 }
 
 const CourseCard = ({
@@ -25,6 +26,7 @@ const CourseCard = ({
   progress,
   category = "Development",
   totalDurationSeconds = 0,
+  isFeatured = false,
 }: CourseCardProps) => {
   const formatTotalDuration = (seconds: number) => {
     if (seconds === 0) return null;
@@ -58,6 +60,12 @@ const CourseCard = ({
           <Badge className="absolute top-3 left-3 bg-primary/90 text-primary-foreground">
             {category}
           </Badge>
+          {isFeatured && (
+            <Badge className="absolute top-3 right-3 bg-accent text-accent-foreground flex items-center gap-1">
+              <Star className="h-3 w-3 fill-current" />
+              Destacado
+            </Badge>
+          )}
         </div>
         <CardContent className="p-4">
           <h3 className="mb-2 line-clamp-2 text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
