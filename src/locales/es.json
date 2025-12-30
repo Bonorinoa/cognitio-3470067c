@@ -19,6 +19,27 @@
     "coursesBy": "Cursos de {{name}}",
     "noCourses": "Aún no hay cursos publicados. ¡Vuelve pronto!"
   },
+  "instructorContact": {
+    "title": "Ponte en Contacto",
+    "subtitle": "¿Interesado en cursos privados o consultoría? Envía un mensaje.",
+    "name": "Tu Nombre",
+    "email": "Tu Correo Electrónico",
+    "subject": "Asunto",
+    "subjectOptions": {
+      "privateCourse": "Consulta sobre Curso Privado",
+      "consulting": "Solicitud de Consultoría",
+      "general": "Pregunta General",
+      "other": "Otro"
+    },
+    "message": "Tu Mensaje",
+    "messagePlaceholder": "Cuéntame sobre tus objetivos de aprendizaje o cómo puedo ayudarte...",
+    "submit": "Enviar Mensaje",
+    "sending": "Enviando...",
+    "successTitle": "¡Mensaje Enviado!",
+    "successMessage": "El instructor recibirá tu consulta en breve.",
+    "errorTitle": "Error al Enviar",
+    "errorMessage": "Por favor, inténtalo de nuevo más tarde."
+  },
   "instructorSettings": {
     "title": "Configuración",
     "subtitle": "Gestiona tu perfil y preferencias de cuenta",

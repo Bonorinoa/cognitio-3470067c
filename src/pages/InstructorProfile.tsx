@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import CourseCard from "@/components/CourseCard";
+import InstructorContactForm from "@/components/InstructorContactForm";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -310,6 +311,17 @@ const InstructorProfile = () => {
             )}
           </div>
         </motion.section>
+
+        {/* Contact Section */}
+        <section className="container mx-auto px-4 mt-12">
+          <div className="max-w-4xl mx-auto">
+            <InstructorContactForm
+              instructorId={instructor.id}
+              instructorName={instructor.full_name}
+              instructorEmail={instructor.email}
+            />
+          </div>
+        </section>
       </main>
     </div>
   );
