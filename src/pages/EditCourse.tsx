@@ -32,6 +32,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import VideoUpload from "@/components/VideoUpload";
+import CourseMembershipManager from "@/components/CourseMembershipManager";
 
 interface Chapter {
   id: string;
@@ -541,6 +542,11 @@ const EditCourse = () => {
 
           {/* Sidebar */}
           <div className="space-y-6">
+            {/* Student Enrollment - only for private/unlisted courses */}
+            {(visibility === "private" || visibility === "unlisted") && id && (
+              <CourseMembershipManager courseId={id} />
+            )}
+
             {/* Danger Zone */}
             <Card className="border-destructive/50 bg-card">
               <CardHeader>

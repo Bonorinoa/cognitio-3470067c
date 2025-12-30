@@ -303,6 +303,21 @@
     "errorDelete": "Failed to delete course",
     "errorFeatured": "Failed to update featured status"
   },
+  "membership": {
+    "title": "Enrolled Students",
+    "description": "Manage who has access to this course",
+    "emailPlaceholder": "Enter student's email...",
+    "noStudents": "No students enrolled yet",
+    "enrolledCount": "{{count}} enrolled",
+    "unknownUser": "Unknown user",
+    "studentAdded": "{{name}} has been enrolled",
+    "studentRemoved": "Student removed from course",
+    "studentNotFound": "No user found with that email",
+    "studentAlreadyEnrolled": "This student is already enrolled",
+    "cannotEnrollSelf": "You cannot enroll yourself",
+    "errorAdding": "Failed to add student",
+    "errorRemoving": "Failed to remove student"
+  },
   "createCourse": {
     "title": "Create New Course",
     "subtitle": "Fill in the details to create your course",
