@@ -74,7 +74,7 @@ const InstructorDashboard = () => {
       // Fetch chapter counts for each course
       const courseIds = coursesData?.map(c => c.id) || [];
       
-      let chapterCounts: Record<string, number> = {};
+      const chapterCounts: Record<string, number> = {};
       if (courseIds.length > 0) {
         const { data: chaptersData } = await supabase
           .from("chapters")
@@ -87,7 +87,7 @@ const InstructorDashboard = () => {
       }
 
       // Fetch purchases for revenue and student counts
-      let purchaseStats: Record<string, { students: number; revenue: number }> = {};
+      const purchaseStats: Record<string, { students: number; revenue: number }> = {};
       if (courseIds.length > 0) {
         const { data: purchasesData } = await supabase
           .from("purchases")
@@ -109,7 +109,7 @@ const InstructorDashboard = () => {
 
         // Fetch user profiles for recent enrollments
         const userIds = [...new Set(recentPurchases.map(p => p.user_id))];
-        let profileMap: Record<string, string> = {};
+        const profileMap: Record<string, string> = {};
         
         if (userIds.length > 0) {
           const { data: profiles } = await supabase

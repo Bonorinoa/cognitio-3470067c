@@ -218,7 +218,7 @@ export const useInstructorAnalytics = () => {
       const recentPurchaseData = purchases?.slice(0, 10) || [];
       const studentIds = [...new Set(recentPurchaseData.map((p) => p.user_id))];
       
-      let profileMap = new Map<string, string>();
+      const profileMap = new Map<string, string>();
       if (studentIds.length > 0) {
         const { data: profiles } = await supabase
           .from("profiles")
