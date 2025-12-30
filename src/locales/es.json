@@ -2,6 +2,7 @@
   "nav": {
     "home": "Inicio",
     "courses": "Cursos",
+    "instructors": "Instructores",
     "about": "Sobre Nosotros",
     "login": "Iniciar Sesión",
     "myLearning": "Mi Aprendizaje",
@@ -53,6 +54,13 @@
     "saveChanges": "Guardar Cambios",
     "saving": "Guardando..."
   },
+  "instructors": {
+    "title": "Nuestros Instructores",
+    "subtitle": "Expertos dedicados a tu crecimiento profesional",
+    "viewProfile": "Ver Perfil",
+    "founderBadge": "Fundador",
+    "noInstructors": "Aún no hay instructores disponibles."
+  },
   "home": {
     "heroTitle": "Bienvenido a Cognitio",
     "heroSubtitle": "Una plataforma de aprendizaje donde expertos comparten su conocimiento a través de cursos diseñados para transformar tu carrera profesional.",
@@ -73,7 +81,10 @@
     "subtitle": "Conoce a los fundadores y expertos que hacen posible Cognitio",
     "foundersTitle": "Nuestros Fundadores",
     "futureInstructorsTitle": "Próximos Instructores",
-    "futureInstructorsText": "Estamos en constante búsqueda de expertos apasionados que quieran compartir su conocimiento. Si eres un profesional con experiencia y deseas formar parte de nuestra comunidad de instructores, nos encantaría conocerte."
+    "futureInstructorsText": "Estamos en constante búsqueda de expertos apasionados que quieran compartir su conocimiento. Si eres un profesional con experiencia y deseas formar parte de nuestra comunidad de instructores, nos encantaría conocerte.",
+    "ctaTitle": "Conoce a Nuestros Instructores",
+    "ctaDescription": "Descubre a todos los expertos detrás de nuestros cursos",
+    "ctaButton": "Ver Todos los Instructores"
   },
   "courses": {
     "title": "Explorar Cursos",
