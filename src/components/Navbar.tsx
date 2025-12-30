@@ -56,10 +56,10 @@ const Navbar = () => {
             {t('nav.instructors')}
           </Link>
           <Link 
-            to="/about" 
+            to="/services" 
             className="text-muted-foreground hover:text-foreground transition-colors font-medium"
           >
-            {t('nav.about')}
+            {t('nav.services')}
           </Link>
         </div>
 

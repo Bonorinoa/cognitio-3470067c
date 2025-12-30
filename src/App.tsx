@@ -13,6 +13,7 @@ import CoursesPage from "./pages/CoursesPage";
 import CoursePage from "./pages/CoursePage";
 import AboutPage from "./pages/AboutPage";
 import InstructorsPage from "./pages/InstructorsPage";
+import ServicesPage from "./pages/ServicesPage";
 import InstructorDashboard from "./pages/InstructorDashboard";
 import InstructorCourses from "./pages/InstructorCourses";
 import InstructorAnalytics from "./pages/InstructorAnalytics";
@@ -40,6 +41,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/instructors" element={<InstructorsPage />} />
+            <Route path="/services" element={<ServicesPage />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/courses" element={<CoursesPage />} />
             <Route path="/course/:id" element={<CoursePage />} />

@@ -3,12 +3,19 @@
     "home": "Home",
     "courses": "Courses",
     "instructors": "Instructors",
+    "services": "Services",
     "about": "About Us",
     "login": "Sign In",
     "myLearning": "My Learning",
     "instructorPanel": "Instructor Panel",
     "adminPanel": "Admin Panel",
     "logout": "Sign Out"
+  },
+  "services": {
+    "title": "Consulting Services",
+    "subtitle": "Connect directly with our instructors for personalized consulting, coaching, and mentorship",
+    "noServices": "No services available yet.",
+    "unknownInstructor": "Instructor"
   },
   "instructorProfile": {
     "notFound": "Instructor not found",
