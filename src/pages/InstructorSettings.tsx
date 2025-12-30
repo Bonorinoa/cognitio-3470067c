@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/AuthContext";
 import InstructorSidebar from "@/components/InstructorSidebar";
 import AvatarUpload from "@/components/AvatarUpload";
@@ -32,6 +33,7 @@ interface ProfileData {
 
 const InstructorSettings = () => {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [profile, setProfile] = useState<ProfileData>({
     full_name: "",
@@ -114,8 +116,8 @@ const InstructorSettings = () => {
       if (authError) throw authError;
 
       toast({
-        title: "Settings saved",
-        description: "Your profile has been updated successfully.",
+        title: t("instructorSettings.saveChanges"),
+        description: t("instructorSettings.successMessage") || "Your profile has been updated successfully.",
       });
     } catch (error) {
       console.error("Error saving settings:", error);
@@ -146,16 +148,16 @@ const InstructorSettings = () => {
       <main className="flex-1 p-8">
         <div className="mb-8 flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Settings</h1>
+            <h1 className="text-3xl font-bold text-foreground">{t("instructorSettings.title")}</h1>
             <p className="text-muted-foreground">
-              Manage your profile and account preferences
+              {t("instructorSettings.subtitle")}
             </p>
           </div>
           {user && (
             <Link to={`/instructor/profile/${user.id}`}>
               <Button variant="outline" className="gap-2">
                 <ExternalLink className="h-4 w-4" />
-                View Public Profile
+                {t("instructorSettings.viewProfile")}
               </Button>
             </Link>
           )}
@@ -165,9 +167,9 @@ const InstructorSettings = () => {
           {/* Avatar Section */}
           <Card>
             <CardHeader>
-              <CardTitle>Profile Photo</CardTitle>
+              <CardTitle>{t("instructorSettings.profilePhoto")}</CardTitle>
               <CardDescription>
-                Your profile photo will be displayed on your public profile and courses
+                {t("instructorSettings.profilePhotoDesc")}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -185,14 +187,14 @@ const InstructorSettings = () => {
           {/* Basic Info */}
           <Card>
             <CardHeader>
-              <CardTitle>Basic Information</CardTitle>
+              <CardTitle>{t("instructorSettings.basicInfo")}</CardTitle>
               <CardDescription>
-                Your name and professional headline
+                {t("instructorSettings.basicInfoDesc")}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">{t("instructorSettings.email")}</Label>
                 <Input
                   id="email"
                   type="email"
@@ -201,40 +203,40 @@ const InstructorSettings = () => {
                   className="bg-muted"
                 />
                 <p className="text-xs text-muted-foreground">
-                  Email cannot be changed
+                  {t("instructorSettings.emailCantChange")}
                 </p>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="fullName">Full Name</Label>
+                <Label htmlFor="fullName">{t("instructorSettings.fullName")}</Label>
                 <Input
                   id="fullName"
                   value={profile.full_name}
                   onChange={(e) => handleInputChange("full_name", e.target.value)}
-                  placeholder="Enter your full name"
+                  placeholder={t("auth.fullNamePlaceholder")}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="headline">Professional Headline</Label>
+                <Label htmlFor="headline">{t("instructorSettings.headline")}</Label>
                 <Input
                   id="headline"
                   value={profile.headline}
                   onChange={(e) => handleInputChange("headline", e.target.value)}
-                  placeholder="e.g., Ph.D. in Economics | Risk Management Expert"
+                  placeholder={t("instructorSettings.headlinePlaceholder")}
                 />
                 <p className="text-xs text-muted-foreground">
-                  A short description that appears below your name
+                  {t("instructorSettings.headlineDesc")}
                 </p>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="affiliation">Affiliation</Label>
+                <Label htmlFor="affiliation">{t("instructorSettings.affiliation")}</Label>
                 <Input
                   id="affiliation"
                   value={profile.affiliation}
                   onChange={(e) => handleInputChange("affiliation", e.target.value)}
-                  placeholder="e.g., Universidad Nacional del Sur"
+                  placeholder={t("instructorSettings.affiliationPlaceholder")}
                 />
               </div>
             </CardContent>
@@ -243,9 +245,9 @@ const InstructorSettings = () => {
           {/* Bio */}
           <Card>
             <CardHeader>
-              <CardTitle>Biography</CardTitle>
+              <CardTitle>{t("instructorSettings.biography")}</CardTitle>
               <CardDescription>
-                Tell students about your background and expertise
+                {t("instructorSettings.biographyDesc")}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -253,12 +255,12 @@ const InstructorSettings = () => {
                 id="bio"
                 value={profile.bio}
                 onChange={(e) => handleInputChange("bio", e.target.value)}
-                placeholder="Share your professional background, research interests, and teaching philosophy..."
+                placeholder={t("instructorSettings.bioPlaceholder")}
                 rows={8}
                 className="resize-none"
               />
               <p className="text-xs text-muted-foreground mt-2">
-                This will be displayed on your public profile page
+                {t("instructorSettings.bioNote")}
               </p>
             </CardContent>
           </Card>
@@ -266,9 +268,9 @@ const InstructorSettings = () => {
           {/* Credentials */}
           <Card>
             <CardHeader>
-              <CardTitle>Credentials & Degrees</CardTitle>
+              <CardTitle>{t("instructorSettings.credentials")}</CardTitle>
               <CardDescription>
-                Add your academic degrees and professional certifications
+                {t("instructorSettings.credentialsDesc")}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -282,14 +284,14 @@ const InstructorSettings = () => {
           {/* Social Links */}
           <Card>
             <CardHeader>
-              <CardTitle>Social Links</CardTitle>
+              <CardTitle>{t("instructorSettings.socialLinks")}</CardTitle>
               <CardDescription>
-                Connect your professional profiles
+                {t("instructorSettings.socialLinksDesc")}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="website">Website</Label>
+                <Label htmlFor="website">{t("instructorSettings.website")}</Label>
                 <Input
                   id="website"
                   type="url"
@@ -300,7 +302,7 @@ const InstructorSettings = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="linkedin">LinkedIn</Label>
+                <Label htmlFor="linkedin">{t("instructorSettings.linkedin")}</Label>
                 <Input
                   id="linkedin"
                   type="url"
@@ -311,7 +313,7 @@ const InstructorSettings = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="twitter">Twitter / X</Label>
+                <Label htmlFor="twitter">{t("instructorSettings.twitter")}</Label>
                 <Input
                   id="twitter"
                   type="url"
@@ -331,21 +333,21 @@ const InstructorSettings = () => {
           {/* Account Status */}
           <Card>
             <CardHeader>
-              <CardTitle>Account</CardTitle>
+              <CardTitle>{t("instructorSettings.account")}</CardTitle>
               <CardDescription>
-                Your account status and privileges
+                {t("instructorSettings.accountDesc")}
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="font-medium">Instructor Account</p>
+                  <p className="font-medium">{t("instructorSettings.instructorAccount")}</p>
                   <p className="text-sm text-muted-foreground">
-                    You have instructor privileges on this platform
+                    {t("instructorSettings.instructorPrivileges")}
                   </p>
                 </div>
                 <span className="rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
-                  Active
+                  {t("instructorSettings.active")}
                 </span>
               </div>
             </CardContent>
@@ -369,10 +371,10 @@ const InstructorSettings = () => {
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Saving...
+                  {t("instructorSettings.saving")}
                 </>
               ) : (
-                "Save Changes"
+                t("instructorSettings.saveChanges")
               )}
             </Button>
           </div>

@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Camera, Loader2, User } from "lucide-react";
@@ -13,6 +14,7 @@ interface AvatarUploadProps {
 }
 
 const AvatarUpload = ({ userId, currentAvatarUrl, fullName, onAvatarChange }: AvatarUploadProps) => {
+  const { t } = useTranslation();
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -33,8 +35,8 @@ const AvatarUpload = ({ userId, currentAvatarUrl, fullName, onAvatarChange }: Av
     // Validate file type
     if (!file.type.startsWith("image/")) {
       toast({
-        title: "Invalid file type",
-        description: "Please upload an image file",
+        title: t("instructorSettings.invalidFileType"),
+        description: t("instructorSettings.invalidFileTypeDesc"),
         variant: "destructive",
       });
       return;
@@ -43,8 +45,8 @@ const AvatarUpload = ({ userId, currentAvatarUrl, fullName, onAvatarChange }: Av
     // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
       toast({
-        title: "File too large",
-        description: "Please upload an image smaller than 5MB",
+        title: t("instructorSettings.fileTooLarge"),
+        description: t("instructorSettings.fileTooLargeDesc"),
         variant: "destructive",
       });
       return;
@@ -82,14 +84,14 @@ const AvatarUpload = ({ userId, currentAvatarUrl, fullName, onAvatarChange }: Av
       onAvatarChange(urlWithCacheBuster);
       
       toast({
-        title: "Avatar updated",
-        description: "Your profile picture has been updated successfully.",
+        title: t("instructorSettings.avatarUpdated"),
+        description: t("instructorSettings.avatarUpdatedDesc"),
       });
     } catch (error) {
       console.error("Error uploading avatar:", error);
       toast({
-        title: "Upload failed",
-        description: "Failed to upload avatar. Please try again.",
+        title: t("instructorSettings.avatarError"),
+        description: t("instructorSettings.avatarErrorDesc"),
         variant: "destructive",
       });
     } finally {
@@ -128,7 +130,7 @@ const AvatarUpload = ({ userId, currentAvatarUrl, fullName, onAvatarChange }: Av
         className="hidden"
       />
       <p className="text-xs text-muted-foreground">
-        Click the camera icon to upload a new photo
+        {t("instructorSettings.avatarUploadHint")}
       </p>
     </div>
   );

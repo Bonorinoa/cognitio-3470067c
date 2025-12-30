@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import InstructorSidebar from "@/components/InstructorSidebar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -33,6 +34,7 @@ interface Chapter {
 const CreateCourse = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { t } = useTranslation();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -137,18 +139,18 @@ const CreateCourse = () => {
 
   const saveCourse = async (publish: boolean) => {
     if (!user) {
-      toast.error("You must be logged in to create a course");
+      toast.error(t("createCourse.errorMustLogin"));
       return;
     }
 
     if (!title.trim()) {
-      toast.error("Please enter a course title");
+      toast.error(t("createCourse.errorTitle"));
       return;
     }
 
     const validChapters = chapters.filter(c => c.title.trim());
     if (validChapters.length === 0) {
-      toast.error("Please add at least one chapter with a title");
+      toast.error(t("createCourse.errorChapter"));
       return;
     }
 
@@ -202,11 +204,11 @@ const CreateCourse = () => {
 
       if (chaptersError) throw chaptersError;
 
-      toast.success(publish ? "Course published successfully!" : "Course saved as draft!");
+      toast.success(publish ? t("createCourse.successPublish") : t("createCourse.successDraft"));
       navigate("/instructor");
     } catch (error: any) {
       console.error("Error saving course:", error);
-      toast.error(error.message || "Failed to save course");
+      toast.error(error.message || t("createCourse.errorSave"));
     } finally {
       setIsSaving(false);
       setIsPublishing(false);
@@ -230,12 +232,12 @@ const CreateCourse = () => {
               onClick={() => navigate("/instructor")}
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Back
+              {t("createCourse.back")}
             </Button>
             <div>
-              <h1 className="text-2xl font-bold text-foreground">Create New Course</h1>
+              <h1 className="text-2xl font-bold text-foreground">{t("createCourse.title")}</h1>
               <p className="text-muted-foreground">
-                Fill in the details to create your course
+                {t("createCourse.subtitle")}
               </p>
             </div>
           </div>
@@ -246,11 +248,11 @@ const CreateCourse = () => {
               ) : (
                 <Save className="mr-2 h-4 w-4" />
               )}
-              Save Draft
+              {t("createCourse.saveDraft")}
             </Button>
             <Button onClick={handlePublish} disabled={isSaving || isPublishing || isUploadingImage}>
               {isPublishing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Publish Course
+              {t("createCourse.publish")}
             </Button>
           </div>
         </div>
@@ -261,27 +263,27 @@ const CreateCourse = () => {
             {/* Basic Info */}
             <Card className="border-border bg-card">
               <CardHeader>
-                <CardTitle className="text-foreground">Basic Information</CardTitle>
+                <CardTitle className="text-foreground">{t("createCourse.basicInfo")}</CardTitle>
                 <CardDescription>
-                  Provide the main details about your course
+                  {t("createCourse.basicInfoDesc")}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="title">Course Title</Label>
+                  <Label htmlFor="title">{t("createCourse.courseTitle")}</Label>
                   <Input
                     id="title"
-                    placeholder="e.g., Complete Web Development Bootcamp"
+                    placeholder={t("createCourse.courseTitlePlaceholder")}
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     className="bg-background border-border"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="description">Description</Label>
+                  <Label htmlFor="description">{t("createCourse.description")}</Label>
                   <Textarea
                     id="description"
-                    placeholder="Describe what students will learn..."
+                    placeholder={t("createCourse.descriptionPlaceholder")}
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     className="min-h-[120px] bg-background border-border"
@@ -289,7 +291,7 @@ const CreateCourse = () => {
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="price">Price ($)</Label>
+                    <Label htmlFor="price">{t("createCourse.price")}</Label>
                     <Input
                       id="price"
                       type="number"
@@ -300,51 +302,51 @@ const CreateCourse = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Category</Label>
+                    <Label>{t("createCourse.category")}</Label>
                     <Select value={category} onValueChange={setCategory}>
                       <SelectTrigger className="bg-background border-border">
-                        <SelectValue placeholder="Select category" />
+                        <SelectValue placeholder={t("createCourse.selectCategory")} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Development">Development</SelectItem>
-                        <SelectItem value="Design">Design</SelectItem>
-                        <SelectItem value="AI & ML">AI & ML</SelectItem>
-                        <SelectItem value="Data Science">Data Science</SelectItem>
-                        <SelectItem value="Mobile">Mobile</SelectItem>
+                        <SelectItem value="Development">Desarrollo</SelectItem>
+                        <SelectItem value="Design">Diseño</SelectItem>
+                        <SelectItem value="AI & ML">IA & ML</SelectItem>
+                        <SelectItem value="Data Science">Ciencia de Datos</SelectItem>
+                        <SelectItem value="Mobile">Móvil</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label>Course Visibility</Label>
+                  <Label>{t("createCourse.visibility")}</Label>
                   <Select value={visibility} onValueChange={(value: "public" | "private" | "unlisted") => setVisibility(value)}>
                     <SelectTrigger className="bg-background border-border">
-                      <SelectValue placeholder="Select visibility" />
+                      <SelectValue placeholder={t("createCourse.selectVisibility")} />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="public">
                         <div className="flex flex-col">
-                          <span>Public</span>
-                          <span className="text-xs text-muted-foreground">Visible in catalog, anyone can purchase</span>
+                          <span>{t("createCourse.public")}</span>
+                          <span className="text-xs text-muted-foreground">{t("createCourse.publicDesc")}</span>
                         </div>
                       </SelectItem>
                       <SelectItem value="unlisted">
                         <div className="flex flex-col">
-                          <span>Unlisted</span>
-                          <span className="text-xs text-muted-foreground">Only accessible via direct link</span>
+                          <span>{t("createCourse.unlisted")}</span>
+                          <span className="text-xs text-muted-foreground">{t("createCourse.unlistedDesc")}</span>
                         </div>
                       </SelectItem>
                       <SelectItem value="private">
                         <div className="flex flex-col">
-                          <span>Private</span>
-                          <span className="text-xs text-muted-foreground">Only enrolled students can access</span>
+                          <span>{t("createCourse.private")}</span>
+                          <span className="text-xs text-muted-foreground">{t("createCourse.privateDesc")}</span>
                         </div>
                       </SelectItem>
                     </SelectContent>
                   </Select>
                   {visibility === "private" && (
                     <p className="text-xs text-muted-foreground mt-1">
-                      Private courses require manual student enrollment. You can manage enrollments after publishing.
+                      {t("createCourse.privateNote")}
                     </p>
                   )}
                 </div>
@@ -356,14 +358,14 @@ const CreateCourse = () => {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div>
-                    <CardTitle className="text-foreground">Course Chapters</CardTitle>
+                    <CardTitle className="text-foreground">{t("createCourse.chapters")}</CardTitle>
                     <CardDescription>
-                      Add and organize your course content
+                      {t("createCourse.chaptersDesc")}
                     </CardDescription>
                   </div>
                   <Button variant="outline" size="sm" onClick={addChapter}>
                     <Plus className="mr-2 h-4 w-4" />
-                    Add Chapter
+                    {t("createCourse.addChapter")}
                   </Button>
                 </div>
               </CardHeader>
@@ -379,14 +381,14 @@ const CreateCourse = () => {
                     <div className="flex-1 space-y-3">
                       <div className="flex items-center gap-3">
                         <span className="text-sm font-medium text-muted-foreground">
-                          Chapter {index + 1}
+                          {t("createCourse.chapter")} {index + 1}
                         </span>
                         <div className="flex items-center gap-2 ml-auto">
                           <Label
                             htmlFor={`preview-${chapter.id}`}
                             className="text-sm text-muted-foreground"
                           >
-                            Free Preview
+                            {t("createCourse.freePreview")}
                           </Label>
                           <Switch
                             id={`preview-${chapter.id}`}
@@ -398,7 +400,7 @@ const CreateCourse = () => {
                         </div>
                       </div>
                       <Input
-                        placeholder="Chapter title"
+                        placeholder={t("createCourse.chapterTitlePlaceholder")}
                         value={chapter.title}
                         onChange={(e) =>
                           updateChapter(chapter.id, "title", e.target.value)
@@ -433,9 +435,9 @@ const CreateCourse = () => {
             {/* Course Image */}
             <Card className="border-border bg-card">
               <CardHeader>
-                <CardTitle className="text-foreground">Course Image</CardTitle>
+                <CardTitle className="text-foreground">{t("createCourse.courseImage")}</CardTitle>
                 <CardDescription>
-                  Upload a thumbnail for your course
+                  {t("createCourse.courseImageDesc")}
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -458,17 +460,17 @@ const CreateCourse = () => {
                         className="mx-auto h-32 w-auto rounded-lg object-cover"
                       />
                       <p className="text-sm text-muted-foreground">
-                        Click to change image
+                        {t("createCourse.clickToChange")}
                       </p>
                     </div>
                   ) : (
                     <>
                       <Upload className="mx-auto h-10 w-10 text-muted-foreground mb-3" />
                       <p className="text-sm text-muted-foreground mb-1">
-                        Click to upload or drag and drop
+                        {t("createCourse.uploadImage")}
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        PNG, JPG up to 2MB
+                        {t("createCourse.uploadImageHint")}
                       </p>
                     </>
                   )}
@@ -479,18 +481,13 @@ const CreateCourse = () => {
             {/* Publishing Status */}
             <Card className="border-border bg-card">
               <CardHeader>
-                <CardTitle className="text-foreground">Publishing</CardTitle>
+                <CardTitle className="text-foreground">{t("createCourse.publishingTips")}</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Status</span>
-                  <span className="text-sm font-medium text-foreground">Draft</span>
-                </div>
-                <Separator />
-                <p className="text-xs text-muted-foreground">
-                  Your course will be reviewed before it goes live. Make sure all
-                  chapters have valid video URLs.
-                </p>
+              <CardContent className="space-y-2">
+                <p className="text-sm text-muted-foreground">• {t("createCourse.tip1")}</p>
+                <p className="text-sm text-muted-foreground">• {t("createCourse.tip2")}</p>
+                <p className="text-sm text-muted-foreground">• {t("createCourse.tip3")}</p>
+                <p className="text-sm text-muted-foreground">• {t("createCourse.tip4")}</p>
               </CardContent>
             </Card>
           </div>
