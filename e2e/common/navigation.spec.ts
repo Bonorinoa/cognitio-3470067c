@@ -3,7 +3,7 @@ import { takeScreenshot, waitForLoading } from '../common/helpers';
 
 test.describe('Main Navigation', () => {
   test('should display navbar on all pages', async ({ page }) => {
-    const pages = ['/', '/courses', '/about', '/instructors'];
+    const pages = ['/', '/courses', '/services', '/instructors'];
     
     for (const pagePath of pages) {
       await page.goto(pagePath);
@@ -25,7 +25,7 @@ test.describe('Main Navigation', () => {
     await page.goto('/');
     
     // Expected links for non-authenticated users:
-    const expectedLinks = ['Inicio', 'Home', 'Cursos', 'Courses', 'Sobre', 'About'];
+    const expectedLinks = ['Inicio', 'Home', 'Cursos', 'Courses', 'Servicios', 'Services', 'Instructores', 'Instructors'];
     
     for (const linkText of expectedLinks) {
       const link = page.locator(`a:has-text("${linkText}")`);
@@ -79,11 +79,11 @@ test.describe('Navigation Behavior', () => {
       await expect(page).toHaveURL('/courses');
     }
     
-    // Navigate to about
-    const aboutLink = page.locator('a[href="/about"], a:has-text("Sobre"), a:has-text("About")').first();
-    if (await aboutLink.isVisible()) {
-      await aboutLink.click();
-      await expect(page).toHaveURL('/about');
+    // Navigate to services
+    const servicesLink = page.locator('a[href="/services"], a:has-text("Servicios"), a:has-text("Services")').first();
+    if (await servicesLink.isVisible()) {
+      await servicesLink.click();
+      await expect(page).toHaveURL('/services');
     }
     
     // Navigate back to home
@@ -97,7 +97,7 @@ test.describe('Navigation Behavior', () => {
   test('should handle back button navigation', async ({ page }) => {
     await page.goto('/');
     await page.goto('/courses');
-    await page.goto('/about');
+    await page.goto('/services');
     
     // Go back
     await page.goBack();
@@ -267,8 +267,9 @@ test.describe('Route Protection', () => {
     const publicRoutes = [
       '/',
       '/courses',
-      '/about',
+      '/services',
       '/instructors',
+      '/about',
       '/auth'
     ];
     
