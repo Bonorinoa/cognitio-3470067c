@@ -482,4 +482,4 @@ Los instructores pueden crear cursos, gestionar contenido y seguir el engagement
 ---
 
 *Última actualización: Diciembre 30, 2025*
-*Versión: v2.9.2*
+*Versión: v2.9.3*
