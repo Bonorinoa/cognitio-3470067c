@@ -30,10 +30,10 @@ interface Course {
   image_url: string | null;
   price: number;
   category: string | null;
-  teacher_id: string;
+  instructor_id: string;
   stripe_price_id: string | null;
   chapters: Chapter[];
-  teacher?: {
+  instructor?: {
     full_name: string | null;
     email: string | null;
   };
@@ -85,17 +85,17 @@ const CoursePage = () => {
       if (courseError) throw courseError;
       if (!courseData) throw new Error("Course not found");
 
-      // Fetch teacher info
-      const { data: teacherData } = await supabase
+      // Fetch instructor info
+      const { data: instructorData } = await supabase
         .from("profiles")
         .select("full_name, email")
-        .eq("id", courseData.teacher_id)
+        .eq("id", courseData.instructor_id)
         .maybeSingle();
 
       return {
         ...courseData,
         chapters: (courseData.chapters || []).sort((a: Chapter, b: Chapter) => a.position - b.position),
-        teacher: teacherData,
+        instructor: instructorData,
       } as Course;
     },
     enabled: !!id,
@@ -186,8 +186,8 @@ const CoursePage = () => {
 
   const currentChapter = course?.chapters?.find((c) => c.id === currentChapterId);
   
-  // Check if user is the course owner (teacher)
-  const isOwner = user?.id === course?.teacher_id;
+  // Check if user is the course owner (instructor)
+  const isOwner = user?.id === course?.instructor_id;
   
   // Check if current chapter is completed
   const isCurrentChapterCompleted = userProgress?.some(
@@ -395,7 +395,7 @@ const CoursePage = () => {
                     {course.category && (
                       <Badge variant="secondary">{course.category}</Badge>
                     )}
-                    <span>by {course.teacher?.full_name || course.teacher?.email || "Instructor"}</span>
+                    <span>by {course.instructor?.full_name || course.instructor?.email || "Instructor"}</span>
                   </div>
                 </div>
               </div>

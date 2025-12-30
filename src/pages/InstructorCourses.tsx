@@ -44,7 +44,7 @@ const InstructorCourses = () => {
       const { data: coursesData, error: coursesError } = await supabase
         .from("courses")
         .select("*")
-        .eq("teacher_id", user?.id)
+        .eq("instructor_id", user?.id)
         .order("updated_at", { ascending: false });
 
       if (coursesError) throw coursesError;
