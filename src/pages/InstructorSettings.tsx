@@ -5,6 +5,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import InstructorSidebar from "@/components/InstructorSidebar";
 import AvatarUpload from "@/components/AvatarUpload";
 import CredentialsTags from "@/components/CredentialsTags";
+import PasswordChangeForm from "@/components/PasswordChangeForm";
+import AccountDeletionSection from "@/components/AccountDeletionSection";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -342,6 +344,16 @@ const InstructorSettings = () => {
               </div>
             </CardContent>
           </Card>
+
+          <Separator />
+
+          {/* Password Change */}
+          <PasswordChangeForm />
+
+          <Separator />
+
+          {/* Account Deletion */}
+          <AccountDeletionSection />
 
           <Separator />
 

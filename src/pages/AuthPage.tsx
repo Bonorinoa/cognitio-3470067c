@@ -161,9 +161,11 @@ const AuthPage = () => {
                     </div>
                   </div>
                   <div className="flex items-center justify-end">
-                    <Button variant="link" className="p-0 h-auto text-primary">
-                      Forgot password?
-                    </Button>
+                    <Link to="/forgot-password">
+                      <Button variant="link" className="p-0 h-auto text-primary">
+                        ¿Olvidaste tu contraseña?
+                      </Button>
+                    </Link>
                   </div>
                 </CardContent>
                 <CardFooter>
