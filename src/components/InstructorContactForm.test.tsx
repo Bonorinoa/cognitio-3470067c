@@ -12,20 +12,24 @@ vi.mock('@/integrations/supabase/client', () => ({
 }));
 
 describe('InstructorContactForm', () => {
-  const mockInstructorId = 'instructor-1';
+  const mockProps = {
+    instructorId: 'instructor-1',
+    instructorName: 'Dr. Test Instructor',
+    instructorEmail: 'test@example.com',
+  };
 
   beforeEach(() => {
     vi.resetAllMocks();
   });
 
   it('renders the contact form', () => {
-    render(<InstructorContactForm instructorId={mockInstructorId} />);
+    render(<InstructorContactForm {...mockProps} />);
     
     expect(screen.getByText(/ponte en contacto/i)).toBeInTheDocument();
   });
 
   it('shows all form fields', () => {
-    render(<InstructorContactForm instructorId={mockInstructorId} />);
+    render(<InstructorContactForm {...mockProps} />);
     
     expect(screen.getByLabelText(/tu nombre/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/tu correo electrónico/i)).toBeInTheDocument();
@@ -34,13 +38,13 @@ describe('InstructorContactForm', () => {
   });
 
   it('has submit button', () => {
-    render(<InstructorContactForm instructorId={mockInstructorId} />);
+    render(<InstructorContactForm {...mockProps} />);
     
     expect(screen.getByRole('button', { name: /enviar mensaje/i })).toBeInTheDocument();
   });
 
   it('shows subject options', () => {
-    render(<InstructorContactForm instructorId={mockInstructorId} />);
+    render(<InstructorContactForm {...mockProps} />);
     
     // Open select dropdown
     const selectTrigger = screen.getByRole('combobox');
