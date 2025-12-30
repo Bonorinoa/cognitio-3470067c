@@ -14,7 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 
-const TeacherSidebar = () => {
+const InstructorSidebar = () => {
   const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
@@ -100,4 +100,4 @@ const TeacherSidebar = () => {
   );
 };
 
-export default TeacherSidebar;
+export default InstructorSidebar;

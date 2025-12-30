@@ -3,13 +3,13 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useUserRole } from "@/hooks/useUserRole";
 import { Loader2 } from "lucide-react";
 
-interface RequireTeacherProps {
+interface RequireInstructorProps {
   children: React.ReactNode;
 }
 
-const RequireTeacher = ({ children }: RequireTeacherProps) => {
+const RequireInstructor = ({ children }: RequireInstructorProps) => {
   const { user, isLoading: authLoading } = useAuth();
-  const { isTeacher, isLoading: roleLoading } = useUserRole();
+  const { isInstructor, isLoading: roleLoading } = useUserRole();
 
   // Show loading while checking auth and roles
   if (authLoading || roleLoading) {
@@ -28,12 +28,12 @@ const RequireTeacher = ({ children }: RequireTeacherProps) => {
     return <Navigate to="/auth" replace />;
   }
 
-  // Redirect to dashboard if not a teacher
-  if (!isTeacher) {
+  // Redirect to dashboard if not an instructor
+  if (!isInstructor) {
     return <Navigate to="/dashboard" replace />;
   }
 
   return <>{children}</>;
 };
 
-export default RequireTeacher;
+export default RequireInstructor;
