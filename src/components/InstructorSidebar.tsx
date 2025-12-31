@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
+import { SlidingPillIndicator } from "@/components/ui/sliding-pill-indicator";
 
 const InstructorSidebar = () => {
   const { t } = useTranslation();
@@ -67,14 +68,20 @@ const InstructorSidebar = () => {
               key={item.href}
               to={item.href}
               className={cn(
-                "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                "relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
                 isActive
-                  ? "bg-primary text-primary-foreground"
+                  ? "text-foreground"
                   : "text-muted-foreground hover:bg-muted hover:text-foreground"
               )}
             >
-              <item.icon className="h-5 w-5" />
-              {item.label}
+              {isActive && (
+                <SlidingPillIndicator
+                  layoutId="sidebar-active-indicator"
+                  borderRadius="rounded-lg"
+                />
+              )}
+              <item.icon className="h-5 w-5 relative" />
+              <span className="relative">{item.label}</span>
             </Link>
           );
         })}

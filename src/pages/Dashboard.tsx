@@ -4,13 +4,74 @@ import { useTranslation } from "react-i18next";
 import Navbar from "@/components/Navbar";
 import CourseCard from "@/components/CourseCard";
 import ProgressCard from "@/components/ProgressCard";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList } from "@/components/ui/tabs";
+import { SlidingPillIndicator } from "@/components/ui/sliding-pill-indicator";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Search, BookOpen } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import * as TabsPrimitive from "@radix-ui/react-tabs";
+import { cn } from "@/lib/utils";
+import * as React from "react";
+
+// Custom AnimatedTabsTrigger component with sliding pill indicator
+// This wraps the TabsTrigger and conditionally renders the sliding pill based on data-state
+const AnimatedTabsTrigger = React.forwardRef<
+  React.ElementRef<typeof TabsPrimitive.Trigger>,
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
+>(({ className, children, ...props }, ref) => {
+  const triggerRef = React.useRef<HTMLButtonElement | null>(null);
+  const [isActive, setIsActive] = React.useState(false);
+
+  React.useEffect(() => {
+    const trigger = triggerRef.current;
+    if (!trigger) return;
+
+    // Check initial state
+    setIsActive(trigger.getAttribute("data-state") === "active");
+
+    // Use MutationObserver to watch for data-state changes
+    const observer = new MutationObserver(() => {
+      setIsActive(trigger.getAttribute("data-state") === "active");
+    });
+
+    observer.observe(trigger, {
+      attributes: true,
+      attributeFilter: ["data-state"],
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <TabsPrimitive.Trigger
+      ref={(node) => {
+        triggerRef.current = node;
+        if (typeof ref === "function") {
+          ref(node);
+        } else if (ref) {
+          ref.current = node;
+        }
+      }}
+      className={cn(
+        "relative inline-flex items-center justify-center whitespace-nowrap rounded-full px-3 py-1.5 text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-muted-foreground data-[state=active]:text-foreground",
+        className
+      )}
+      {...props}
+    >
+      {isActive && (
+        <SlidingPillIndicator
+          layoutId="dashboard-tabs-indicator"
+          borderRadius="rounded-full"
+        />
+      )}
+      <span className="relative">{children}</span>
+    </TabsPrimitive.Trigger>
+  );
+});
+AnimatedTabsTrigger.displayName = "AnimatedTabsTrigger";
 
 interface EnrolledCourse {
   id: string;
@@ -210,15 +271,15 @@ const StudentDashboard = () => {
         {!isLoading && enrolledCourses.length > 0 && (
           <Tabs defaultValue="all" className="space-y-6">
             <TabsList className="bg-card border border-border">
-              <TabsTrigger value="all" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+              <AnimatedTabsTrigger value="all">
                 {t("studentDashboard.allCourses")} ({enrolledCourses.length})
-              </TabsTrigger>
-              <TabsTrigger value="in-progress" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+              </AnimatedTabsTrigger>
+              <AnimatedTabsTrigger value="in-progress">
                 {t("studentDashboard.inProgress")} ({inProgressCourses.length})
-              </TabsTrigger>
-              <TabsTrigger value="completed" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+              </AnimatedTabsTrigger>
+              <AnimatedTabsTrigger value="completed">
                 {t("studentDashboard.completed")} ({completedCourses.length})
-              </TabsTrigger>
+              </AnimatedTabsTrigger>
             </TabsList>
 
             <TabsContent value="all">
