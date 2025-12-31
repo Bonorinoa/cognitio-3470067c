@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { useParams, useSearchParams, Link } from "react-router-dom";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { useParams, useSearchParams, Link, useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import VideoPlayer from "@/components/VideoPlayer";
 import ChapterList from "@/components/ChapterList";
@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
-import { BookOpen, Clock, Users, Star, Check, ShoppingCart, Loader2 } from "lucide-react";
+import { BookOpen, Clock, Users, Star, Check, ShoppingCart, Loader2, LogIn } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
@@ -41,27 +41,66 @@ interface Course {
 
 const CoursePage = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const { user, session, isLoading: authLoading } = useAuth();
   const [currentChapterId, setCurrentChapterId] = useState<string | null>(null);
   const [isCheckoutLoading, setIsCheckoutLoading] = useState(false);
   const [isMarkingComplete, setIsMarkingComplete] = useState(false);
+  const [isVerifyingAccess, setIsVerifyingAccess] = useState(false);
+  const verifyAttemptRef = useRef(0);
 
-  // Handle payment status from URL and refetch purchase status
+  // Verify access with exponential backoff polling
+  const verifyAccessWithRetry = useCallback(async () => {
+    const maxAttempts = 5;
+    const baseDelay = 2000; // Start with 2 seconds
+    
+    setIsVerifyingAccess(true);
+    verifyAttemptRef.current = 0;
+
+    const poll = async (): Promise<boolean> => {
+      verifyAttemptRef.current += 1;
+      const { data } = await refetchPurchase();
+      
+      if (data) {
+        return true; // Access confirmed
+      }
+      
+      if (verifyAttemptRef.current >= maxAttempts) {
+        return false; // Max attempts reached
+      }
+      
+      // Exponential backoff: 2s, 4s, 8s, 16s
+      const delay = baseDelay * Math.pow(2, verifyAttemptRef.current - 1);
+      await new Promise(resolve => setTimeout(resolve, delay));
+      return poll();
+    };
+
+    const accessConfirmed = await poll();
+    setIsVerifyingAccess(false);
+    
+    if (accessConfirmed) {
+      toast.success("Access activated! Enjoy your course.");
+    } else {
+      toast.warning(
+        "We're still processing your payment. Please refresh in a moment or contact support if access isn't granted.",
+        { duration: 8000 }
+      );
+    }
+  }, []);
+
+  // Handle payment status from URL
   useEffect(() => {
     const paymentStatus = searchParams.get("payment");
     if (paymentStatus === "success") {
-      toast.success("Payment successful! Your access is being activated...");
+      toast.info("Checkout complete. Verifying your access...");
       setSearchParams({}, { replace: true });
-      // Refetch purchase status after a short delay to allow webhook to process
-      setTimeout(() => {
-        refetchPurchase();
-      }, 2000);
+      verifyAccessWithRetry();
     } else if (paymentStatus === "canceled") {
       toast.error("Payment was canceled");
       setSearchParams({}, { replace: true });
     }
-  }, [searchParams, setSearchParams]);
+  }, [searchParams, setSearchParams, verifyAccessWithRetry]);
 
   // Fetch course data
   const { data: course, isLoading: courseLoading } = useQuery({
@@ -384,27 +423,50 @@ const CoursePage = () => {
                             ${course.price}
                           </span>
                         </div>
-                        <Button
-                          size="lg"
-                          className="w-full mb-4"
-                          onClick={handlePurchase}
-                          disabled={isCheckoutLoading}
-                        >
-                          {isCheckoutLoading ? (
-                            <>
-                              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                              Processing...
-                            </>
-                          ) : (
-                            <>
-                              <ShoppingCart className="mr-2 h-5 w-5" />
-                              Purchase Course
-                            </>
-                          )}
-                        </Button>
-                        <p className="text-sm text-muted-foreground text-center mb-6">
-                          30-day money-back guarantee
-                        </p>
+                        {isVerifyingAccess ? (
+                          <Button size="lg" className="w-full mb-4" disabled>
+                            <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                            Verifying access...
+                          </Button>
+                        ) : !user && !authLoading ? (
+                          <>
+                            <Button
+                              size="lg"
+                              className="w-full mb-4"
+                              onClick={() => navigate(`/auth?redirect=/course/${id}`)}
+                            >
+                              <LogIn className="mr-2 h-5 w-5" />
+                              Sign in to purchase
+                            </Button>
+                            <p className="text-sm text-muted-foreground text-center mb-6">
+                              Sign in or create an account to purchase
+                            </p>
+                          </>
+                        ) : (
+                          <>
+                            <Button
+                              size="lg"
+                              className="w-full mb-4"
+                              onClick={handlePurchase}
+                              disabled={isCheckoutLoading}
+                            >
+                              {isCheckoutLoading ? (
+                                <>
+                                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                                  Processing...
+                                </>
+                              ) : (
+                                <>
+                                  <ShoppingCart className="mr-2 h-5 w-5" />
+                                  Purchase Course
+                                </>
+                              )}
+                            </Button>
+                            <p className="text-sm text-muted-foreground text-center mb-6">
+                              30-day money-back guarantee
+                            </p>
+                          </>
+                        )}
                         <Separator className="mb-6" />
                       </>
                     ) : (
