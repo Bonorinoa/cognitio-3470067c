@@ -1,18 +1,23 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
 
-// Allowed origins for CORS - prevents CSRF attacks
-const allowedOrigins = [
-  "https://preview--hlnvfkturjctxbiikfoe.lovable.app",
-  "https://hlnvfkturjctxbiikfoe.lovable.app",
-  "http://localhost:5173",
-  "http://localhost:8080",
+// Project-specific origin patterns for CORS - prevents CSRF attacks
+// Only allows this project's subdomains, not arbitrary lovable.app domains
+const allowedOriginPatterns = [
+  /^https:\/\/[a-z0-9-]+--hlnvfkturjctxbiikfoe\.lovable\.app$/,
+  /^https:\/\/hlnvfkturjctxbiikfoe\.lovable\.app$/,
+  /^http:\/\/localhost:(5173|8080)$/,
 ];
 
+const isOriginAllowed = (origin: string | null): boolean => {
+  if (!origin) return false;
+  return allowedOriginPatterns.some(pattern => pattern.test(origin));
+};
+
 const getCorsHeaders = (origin: string | null) => {
-  const isAllowed = origin && allowedOrigins.some(allowed => origin === allowed || origin.endsWith('.lovable.app'));
+  const isAllowed = isOriginAllowed(origin);
   return {
-    "Access-Control-Allow-Origin": isAllowed ? origin : allowedOrigins[0],
+    "Access-Control-Allow-Origin": isAllowed ? origin! : "",
     "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
     "Access-Control-Allow-Credentials": "true",
   };
@@ -28,8 +33,7 @@ serve(async (req) => {
   const corsHeaders = getCorsHeaders(origin);
   
   // Validate origin for non-OPTIONS requests
-  const isAllowedOrigin = origin && allowedOrigins.some(allowed => origin === allowed || origin.endsWith('.lovable.app'));
-  if (req.method !== "OPTIONS" && origin && !isAllowedOrigin) {
+  if (req.method !== "OPTIONS" && origin && !isOriginAllowed(origin)) {
     logStep("BLOCKED - Origin not allowed", { origin });
     return new Response(JSON.stringify({ error: "Origin not allowed" }), {
       status: 403,
