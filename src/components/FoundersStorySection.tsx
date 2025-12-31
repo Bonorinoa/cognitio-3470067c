@@ -106,9 +106,6 @@ const StickyCard = ({ card, index, totalCards, scrollYProgress }: StickyCardProp
   // Image zoom: starts zoomed in, zooms out as card enters viewport
   const imageScale = useTransform(cardScrollProgress, [0, 1], [1.4, 1]);
 
-  // Slight top offset for stacked appearance
-  const topOffset = -5 + index * 3; // vh units approximation
-
   return (
     <div
       ref={cardRef}
@@ -117,25 +114,22 @@ const StickyCard = ({ card, index, totalCards, scrollYProgress }: StickyCardProp
     >
       <motion.div
         style={{ scale, transformOrigin: "top" }}
-        className="bg-primary/85 backdrop-blur-sm border border-primary-foreground/20 rounded-2xl shadow-2xl overflow-hidden max-w-4xl w-full mx-4"
+        className="bg-primary/85 backdrop-blur-sm border border-primary-foreground/20 rounded-2xl shadow-2xl overflow-hidden max-w-3xl w-full mx-4"
       >
-        <div
-          className="flex flex-row h-[500px]"
-          style={{ marginTop: `${topOffset}vh` }}
-        >
+        <div className="flex flex-row h-[380px]">
           {/* Left side - Bio (60%) */}
-          <div className="w-3/5 p-12 flex flex-col justify-between overflow-y-auto">
-            <p className="text-primary-foreground/90 leading-relaxed text-lg">
+          <div className="w-3/5 p-8 flex flex-col justify-between overflow-y-auto">
+            <p className="text-primary-foreground/90 leading-relaxed text-base">
               {card.bio}
             </p>
-            <h3 className="text-sm font-bold text-primary-foreground mt-6">
+            <h3 className="text-sm font-bold text-primary-foreground mt-4">
               {card.name}
             </h3>
           </div>
 
           {/* Right side - Photo (40%) with zoom effect */}
-          <div className="w-2/5 p-6 flex items-center justify-center overflow-hidden">
-            <div className="w-full h-full max-h-[420px] rounded-xl overflow-hidden">
+          <div className="w-2/5 p-5 flex items-center justify-center overflow-hidden">
+            <div className="w-full h-full max-h-[320px] rounded-xl overflow-hidden">
               <motion.img
                 src={card.image}
                 alt={`Foto de ${card.name}`}
