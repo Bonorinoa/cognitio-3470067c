@@ -6,6 +6,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 const allowedOriginPatterns = [
   /^https:\/\/[a-z0-9-]+--hlnvfkturjctxbiikfoe\.lovable\.app$/,
   /^https:\/\/hlnvfkturjctxbiikfoe\.lovable\.app$/,
+  /^https:\/\/[a-z0-9-]+\.lovableproject\.com$/,
   /^http:\/\/localhost:(5173|8080)$/,
 ];
 
