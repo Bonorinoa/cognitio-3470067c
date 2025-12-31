@@ -33,10 +33,10 @@ serve(async (req) => {
       return new Response("No signature", { status: 400 });
     }
 
-    // Verify webhook signature
+    // Verify webhook signature (must use async version in Deno runtime)
     let event: Stripe.Event;
     try {
-      event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
+      event = await stripe.webhooks.constructEventAsync(body, signature, webhookSecret);
       logStep("Signature verified", { type: event.type });
     } catch (err) {
       const message = err instanceof Error ? err.message : "Unknown error";
