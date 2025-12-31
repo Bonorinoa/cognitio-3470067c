@@ -31,6 +31,9 @@ export const SlidingPillIndicator = ({
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
   useEffect(() => {
+    // Check if we're in a browser environment
+    if (typeof window === "undefined") return;
+
     const mediaQuery = window.matchMedia?.("(prefers-reduced-motion: reduce)");
     if (mediaQuery) {
       setPrefersReducedMotion(mediaQuery.matches);

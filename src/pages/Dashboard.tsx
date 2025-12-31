@@ -22,11 +22,24 @@ const AnimatedTabsTrigger = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
 >(({ className, children, ...props }, ref) => {
-  const triggerRef = React.useRef<HTMLButtonElement | null>(null);
+  const internalRef = React.useRef<HTMLButtonElement | null>(null);
   const [isActive, setIsActive] = React.useState(false);
 
+  // Merge refs - set both internal ref and forwarded ref
+  const mergedRef = React.useCallback(
+    (node: HTMLButtonElement | null) => {
+      internalRef.current = node;
+      if (typeof ref === "function") {
+        ref(node);
+      } else if (ref) {
+        ref.current = node;
+      }
+    },
+    [ref]
+  );
+
   React.useEffect(() => {
-    const trigger = triggerRef.current;
+    const trigger = internalRef.current;
     if (!trigger) return;
 
     // Check initial state
@@ -47,14 +60,7 @@ const AnimatedTabsTrigger = React.forwardRef<
 
   return (
     <TabsPrimitive.Trigger
-      ref={(node) => {
-        triggerRef.current = node;
-        if (typeof ref === "function") {
-          ref(node);
-        } else if (ref) {
-          ref.current = node;
-        }
-      }}
+      ref={mergedRef}
       className={cn(
         "relative inline-flex items-center justify-center whitespace-nowrap rounded-full px-3 py-1.5 text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-muted-foreground data-[state=active]:text-foreground",
         className
