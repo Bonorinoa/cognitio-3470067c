@@ -96,6 +96,7 @@ const StudentDashboard = () => {
   const { t } = useTranslation();
   const { user, isLoading: authLoading } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
+  const [activeTab, setActiveTab] = useState("all");
 
   // Fetch enrolled courses (purchases + memberships) with progress
   const { data: enrolledCourses = [], isLoading } = useQuery({

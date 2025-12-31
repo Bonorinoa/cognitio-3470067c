@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
+import { LayoutGroup } from "framer-motion";
 import { SlidingPillIndicator } from "@/components/ui/sliding-pill-indicator";
 
 const InstructorSidebar = () => {
@@ -69,33 +70,34 @@ const InstructorSidebar = () => {
           <div className="h-px flex-1 bg-border" />
         </div>
 
-        {/* Main menu items */}
-        <div className="space-y-0.5 pt-1">
-          {menuItems.map((item) => {
-            const isActive = location.pathname === item.href;
-            return (
-              <Link
-                key={item.href}
-                to={item.href}
-                className={cn(
-                  "relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
-                  isActive
-                    ? "text-foreground"
-                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                )}
-              >
-                {isActive && (
-                  <SlidingPillIndicator
-                    layoutId="sidebar-active-indicator"
-                    borderRadius="rounded-lg"
-                  />
-                )}
-                <item.icon className="h-5 w-5 relative" />
-                <span className="relative">{item.label}</span>
-              </Link>
-            );
-          })}
-        </div>
+        <LayoutGroup id="instructor-sidebar-nav">
+          <div className="space-y-0.5 pt-1">
+            {menuItems.map((item) => {
+              const isActive = location.pathname === item.href;
+              return (
+                <Link
+                  key={item.href}
+                  to={item.href}
+                  className={cn(
+                    "relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                    isActive
+                      ? "text-foreground"
+                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  )}
+                >
+                  {isActive && (
+                    <SlidingPillIndicator
+                      layoutId="instructor-sidebar-indicator"
+                      borderRadius="rounded-lg"
+                    />
+                  )}
+                  <item.icon className="h-5 w-5 relative" />
+                  <span className="relative">{item.label}</span>
+                </Link>
+              );
+            })}
+          </div>
+        </LayoutGroup>
       </nav>
 
       {/* User section */}
