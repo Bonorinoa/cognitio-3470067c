@@ -18,6 +18,16 @@ import { supabase } from "@/integrations/supabase/client";
 
 const categories = ["Todos", "Destacados", "Desarrollo", "IA & ML", "Diseño", "Ciencia de Datos", "Móvil", "Negocios"];
 
+// Map Spanish UI labels to English database values
+const categoryMapping: Record<string, string> = {
+  "Desarrollo": "Development",
+  "IA & ML": "AI & ML",
+  "Diseño": "Design",
+  "Ciencia de Datos": "Data Science",
+  "Móvil": "Mobile",
+  "Negocios": "Business"
+};
+
 const CoursesPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Todos");
@@ -64,9 +74,10 @@ const CoursesPage = () => {
 
   const filteredCourses = courses.filter((course) => {
     const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase());
+    const dbCategory = categoryMapping[selectedCategory];
     const matchesCategory =
       selectedCategory === "Todos" || 
-      (selectedCategory === "Destacados" ? course.isFeatured : course.category === selectedCategory);
+      (selectedCategory === "Destacados" ? course.isFeatured : course.category === dbCategory);
     return matchesSearch && matchesCategory;
   });
 
