@@ -414,6 +414,7 @@ export type Database = {
           avatar_url: string
           bio: string
           credentials: string[]
+          email: string
           full_name: string
           headline: string
           id: string
