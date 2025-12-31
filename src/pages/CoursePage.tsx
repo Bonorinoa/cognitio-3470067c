@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useSearchParams, Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import VideoPlayer from "@/components/VideoPlayer";
@@ -46,16 +46,17 @@ const CoursePage = () => {
   const [currentChapterId, setCurrentChapterId] = useState<string | null>(null);
   const [isCheckoutLoading, setIsCheckoutLoading] = useState(false);
   const [isMarkingComplete, setIsMarkingComplete] = useState(false);
-  const [pendingPaymentSuccess, setPendingPaymentSuccess] = useState(false);
-  const purchaseRecordedRef = useRef(false);
 
-  // Capture payment status from URL (runs once on mount or URL change)
+  // Handle payment status from URL and refetch purchase status
   useEffect(() => {
     const paymentStatus = searchParams.get("payment");
     if (paymentStatus === "success") {
-      setPendingPaymentSuccess(true);
-      // Clear URL params to prevent re-triggering
+      toast.success("Payment successful! Your access is being activated...");
       setSearchParams({}, { replace: true });
+      // Refetch purchase status after a short delay to allow webhook to process
+      setTimeout(() => {
+        refetchPurchase();
+      }, 2000);
     } else if (paymentStatus === "canceled") {
       toast.error("Payment was canceled");
       setSearchParams({}, { replace: true });
@@ -139,44 +140,6 @@ const CoursePage = () => {
     },
     enabled: !!id && !!user && !!course,
   });
-
-  // Record purchase function
-  const recordPurchase = async () => {
-    if (!session || !id || !course) return;
-    
-    try {
-      const { error } = await supabase.functions.invoke("record-purchase", {
-        body: { courseId: id, amount: course.price },
-      });
-      
-      if (error) {
-        console.error("Error recording purchase:", error);
-      } else {
-        refetchPurchase();
-      }
-    } catch (error) {
-      console.error("Error recording purchase:", error);
-    }
-  };
-
-  // Record purchase once all data is ready
-  useEffect(() => {
-    if (
-      pendingPaymentSuccess &&
-      !purchaseRecordedRef.current &&
-      !authLoading &&
-      user &&
-      session &&
-      id &&
-      course &&
-      !courseLoading
-    ) {
-      purchaseRecordedRef.current = true;
-      toast.success("Payment successful! Recording your purchase...");
-      recordPurchase();
-      setPendingPaymentSuccess(false);
-    }
-  }, [pendingPaymentSuccess, authLoading, user, session, id, course, courseLoading]);
 
   useEffect(() => {
     if (course?.chapters?.length && !currentChapterId) {
