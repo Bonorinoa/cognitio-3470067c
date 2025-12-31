@@ -24,14 +24,16 @@ describe('CourseCard', () => {
     render(<CourseCard {...defaultProps} />);
     
     expect(screen.getByText('$99.99')).toBeInTheDocument();
-    expect(screen.getByText('Enroll Now')).toBeInTheDocument();
+    // Component uses Spanish: "Inscribirse"
+    expect(screen.getByText('Inscribirse')).toBeInTheDocument();
   });
 
   it('renders progress percentage when progress is provided', () => {
     render(<CourseCard {...defaultProps} progress={75} />);
     
     expect(screen.getByText('75% complete')).toBeInTheDocument();
-    expect(screen.getByText('Continue')).toBeInTheDocument();
+    // Component uses Spanish: "Continuar"
+    expect(screen.getByText('Continuar')).toBeInTheDocument();
     expect(screen.queryByText('$99.99')).not.toBeInTheDocument();
   });
 
