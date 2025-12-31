@@ -29,11 +29,11 @@ Cognitio no es un marketplace abierto. Es un "Instructor Studio" curado: LMS lig
 
 ---
 
-## 📍 Estado Actual: v2.9.2
+## 📍 Estado Actual: v2.9.3
 
 **Última Actualización:** Diciembre 30, 2025
 
-### ✅ Funcionalidades Completas (v1.0 - v2.9.2)
+### ✅ Funcionalidades Completas (v1.0 - v2.9.3)
 - Autenticación de usuarios (registro/inicio de sesión/recuperación de contraseña)
 - Sistema de roles (admin/instructor/student)
 - Creación y edición de cursos con carga de video Mux
@@ -61,6 +61,8 @@ Cognitio no es un marketplace abierto. Es un "Instructor Studio" curado: LMS lig
 - **Dashboard muestra cursos de compras Y membresías**
 - **Gestión de avatar mejorada (10MB, compresión, eliminación)**
 - **Security audit complete: 0 vulnerabilities**
+- **Code quality improvements: ESLint errors fixed**
+- **Comprehensive codebase review completed (v2.9.3)**
 
 ### 🚧 Próximo: v3.0
 - AI Content Studio (generación de blogs/newsletters desde cursos)
@@ -318,4 +320,4 @@ Parte del ecosistema Lovable. Ver términos de licencia de Lovable.
 
 ---
 
-*Última actualización: Diciembre 2025 | Versión: 2.9.2*
+*Última actualización: Diciembre 2025 | Versión: 2.9.3*
