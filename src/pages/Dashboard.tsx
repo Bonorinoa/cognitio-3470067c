@@ -15,6 +15,7 @@ import { supabase } from "@/integrations/supabase/client";
 import * as TabsPrimitive from "@radix-ui/react-tabs";
 import { cn } from "@/lib/utils";
 import * as React from "react";
+import { LayoutGroup } from "framer-motion";
 
 // Custom AnimatedTabsTrigger component with sliding pill indicator
 // This wraps the TabsTrigger and conditionally renders the sliding pill based on data-state
@@ -73,7 +74,7 @@ const AnimatedTabsTrigger = React.forwardRef<
           borderRadius="rounded-full"
         />
       )}
-      <span className="relative">{children}</span>
+      <span className="relative z-10">{children}</span>
     </TabsPrimitive.Trigger>
   );
 });
@@ -277,17 +278,19 @@ const StudentDashboard = () => {
         {/* Tabs */}
         {!isLoading && enrolledCourses.length > 0 && (
           <Tabs defaultValue="all" className="space-y-6">
-            <TabsList className="bg-card border border-border">
-              <AnimatedTabsTrigger value="all">
-                {t("studentDashboard.allCourses")} ({enrolledCourses.length})
-              </AnimatedTabsTrigger>
-              <AnimatedTabsTrigger value="in-progress">
-                {t("studentDashboard.inProgress")} ({inProgressCourses.length})
-              </AnimatedTabsTrigger>
-              <AnimatedTabsTrigger value="completed">
-                {t("studentDashboard.completed")} ({completedCourses.length})
-              </AnimatedTabsTrigger>
-            </TabsList>
+            <LayoutGroup id="dashboard-tabs">
+              <TabsList className="bg-card border border-border">
+                <AnimatedTabsTrigger value="all">
+                  {t("studentDashboard.allCourses")} ({enrolledCourses.length})
+                </AnimatedTabsTrigger>
+                <AnimatedTabsTrigger value="in-progress">
+                  {t("studentDashboard.inProgress")} ({inProgressCourses.length})
+                </AnimatedTabsTrigger>
+                <AnimatedTabsTrigger value="completed">
+                  {t("studentDashboard.completed")} ({completedCourses.length})
+                </AnimatedTabsTrigger>
+              </TabsList>
+            </LayoutGroup>
 
             <TabsContent value="all">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

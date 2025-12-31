@@ -51,7 +51,7 @@ export const SlidingPillIndicator = ({
     <motion.div
       layoutId={layoutId}
       className={cn(
-        "absolute inset-0 bg-primary/15 backdrop-blur-md border border-primary/20 shadow-lg -z-10",
+        "absolute inset-0 bg-primary/15 backdrop-blur-md border border-primary/20 shadow-lg z-0",
         borderRadius,
         className
       )}

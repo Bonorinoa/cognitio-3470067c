@@ -91,8 +91,8 @@ const InstructorSidebar = () => {
                       borderRadius="rounded-lg"
                     />
                   )}
-                  <item.icon className="h-5 w-5 relative" />
-                  <span className="relative">{item.label}</span>
+                <item.icon className="h-5 w-5 relative z-10" />
+                <span className="relative z-10">{item.label}</span>
                 </Link>
               );
             })}
