@@ -59,14 +59,19 @@ const ServicesPage = () => {
 
       if (error) throw error;
 
-      // Fetch instructor profiles separately
+      // Fetch instructor profiles using secure RPC function
       const instructorIds = [...new Set(data.map((s) => s.instructor_id))];
-      const { data: profiles } = await supabase
-        .from("public_profiles")
-        .select("id, full_name, avatar_url, headline")
-        .in("id", instructorIds);
-
-      const profileMap = new Map(profiles?.map((p) => [p.id, p]) || []);
+      
+      // Fetch each instructor profile using the secure RPC function
+      const profilePromises = instructorIds.map(async (id) => {
+        const { data: profile } = await supabase.rpc("get_public_profile", { profile_id: id });
+        return profile?.[0] || null;
+      });
+      
+      const profiles = await Promise.all(profilePromises);
+      const profileMap = new Map(
+        profiles.filter(Boolean).map((p) => [p!.id, p])
+      );
 
       return data.map((service) => ({
         ...service,

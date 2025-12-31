@@ -201,13 +201,6 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "instructor_services_instructor_id_fkey"
-            columns: ["instructor_id"]
-            isOneToOne: false
-            referencedRelation: "public_profiles"
-            referencedColumns: ["id"]
-          },
         ]
       }
       profiles: {
@@ -357,56 +350,19 @@ export type Database = {
       }
     }
     Views: {
-      public_profiles: {
-        Row: {
-          affiliation: string | null
-          avatar_url: string | null
-          bio: string | null
-          created_at: string | null
-          credentials: string[] | null
-          full_name: string | null
-          headline: string | null
-          id: string | null
-          linkedin_url: string | null
-          role: string | null
-          twitter_url: string | null
-          updated_at: string | null
-          website_url: string | null
-        }
-        Insert: {
-          affiliation?: string | null
-          avatar_url?: string | null
-          bio?: string | null
-          created_at?: string | null
-          credentials?: string[] | null
-          full_name?: string | null
-          headline?: string | null
-          id?: string | null
-          linkedin_url?: string | null
-          role?: string | null
-          twitter_url?: string | null
-          updated_at?: string | null
-          website_url?: string | null
-        }
-        Update: {
-          affiliation?: string | null
-          avatar_url?: string | null
-          bio?: string | null
-          created_at?: string | null
-          credentials?: string[] | null
-          full_name?: string | null
-          headline?: string | null
-          id?: string | null
-          linkedin_url?: string | null
-          role?: string | null
-          twitter_url?: string | null
-          updated_at?: string | null
-          website_url?: string | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
+      get_instructor_catalog: {
+        Args: never
+        Returns: {
+          avatar_url: string
+          credentials: string[]
+          full_name: string
+          headline: string
+          id: string
+        }[]
+      }
       get_public_profile: {
         Args: { profile_id: string }
         Returns: {

@@ -27,27 +27,11 @@ const InstructorsPage = () => {
   const { data: instructors, isLoading } = useQuery({
     queryKey: ["instructors-catalog"],
     queryFn: async () => {
-      // Get all users with instructor role
-      const { data: instructorRoles, error: rolesError } = await supabase
-        .from("user_roles")
-        .select("user_id")
-        .eq("role", "instructor");
+      // Use secure RPC function to get instructor profiles
+      // This prevents bulk enumeration of all profiles
+      const { data: profiles, error } = await supabase.rpc("get_instructor_catalog");
 
-      if (rolesError) throw rolesError;
-
-      if (!instructorRoles || instructorRoles.length === 0) {
-        return [];
-      }
-
-      const instructorIds = instructorRoles.map((r) => r.user_id);
-
-      // Fetch profiles for instructors
-      const { data: profiles, error: profilesError } = await supabase
-        .from("profiles")
-        .select("id, full_name, headline, avatar_url, credentials")
-        .in("id", instructorIds);
-
-      if (profilesError) throw profilesError;
+      if (error) throw error;
 
       // Sort: founders first, then alphabetically
       const sorted = (profiles || []).sort((a, b) => {
