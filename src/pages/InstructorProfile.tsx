@@ -39,14 +39,14 @@ interface Course {
 const InstructorProfile = () => {
   const { id } = useParams();
 
-  // Fetch instructor profile
+  // Fetch instructor profile using the secure get_public_profile function
+  // This function returns public profile data including email for contact purposes
+  // while preventing bulk email querying through direct table access
   const { data: instructor, isLoading: profileLoading } = useQuery({
     queryKey: ["instructor-profile", id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("profiles")
-        .select("id, full_name, email, avatar_url, headline, bio, affiliation, website_url, linkedin_url, twitter_url, credentials")
-        .eq("id", id)
+        .rpc("get_public_profile", { profile_id: id })
         .maybeSingle();
 
       if (error) throw error;
