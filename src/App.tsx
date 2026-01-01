@@ -18,6 +18,7 @@ import InstructorDashboard from "./pages/InstructorDashboard";
 import InstructorCourses from "./pages/InstructorCourses";
 import InstructorAnalytics from "./pages/InstructorAnalytics";
 import InstructorSettings from "./pages/InstructorSettings";
+import InstructorKnowledge from "./pages/InstructorKnowledge";
 import InstructorProfile from "./pages/InstructorProfile";
 import CreateCourse from "./pages/CreateCourse";
 import EditCourse from "./pages/EditCourse";
@@ -52,6 +53,7 @@ const App = () => (
               <Route path="courses" element={<InstructorCourses />} />
               <Route path="create" element={<CreateCourse />} />
               <Route path="analytics" element={<InstructorAnalytics />} />
+              <Route path="knowledge" element={<InstructorKnowledge />} />
               <Route path="settings" element={<InstructorSettings />} />
               <Route path="edit/:id" element={<EditCourse />} />
             </Route>
