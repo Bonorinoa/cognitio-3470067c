@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Sparkles, FileText, Send, RefreshCw, Copy, Check, AlertCircle } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Sparkles, FileText, Send, RefreshCw, Copy, Check, AlertCircle, FileEdit } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,6 +12,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { useKnowledgeBase } from "@/hooks/useKnowledgeBase";
 import { useContentGeneration } from "@/hooks/useContentGeneration";
@@ -18,12 +20,12 @@ import { useStyleProfile } from "@/hooks/useStyleProfile";
 import type { ContentType } from "@/types/aiStudio";
 import { CONTENT_TYPE_OPTIONS } from "@/types/aiStudio";
 
-export default function InstructorAIStudio() {
+export default function AIStudioBlog() {
   const { t } = useTranslation();
   const { toast } = useToast();
   
   const { activeDocuments, isLoading: docsLoading } = useKnowledgeBase();
-  const { styleProfile, isLoading: styleLoading } = useStyleProfile();
+  const { styleProfile, isLoading: styleLoading, hasCompletedSetup } = useStyleProfile();
   const { generate, reset, isGenerating, generatedContent, error } = useContentGeneration();
 
   const [contentType, setContentType] = useState<ContentType>("blog");
@@ -85,30 +87,36 @@ export default function InstructorAIStudio() {
   };
 
   const isLoading = docsLoading || styleLoading;
-  const hasStyleProfile = styleProfile?.setup_completed;
 
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center gap-3">
         <div className="p-2 rounded-lg bg-primary/10">
-          <Sparkles className="h-6 w-6 text-primary" />
+          <FileEdit className="h-6 w-6 text-primary" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold">{t("aiStudio.title", "AI Studio")}</h1>
+          <h1 className="text-2xl font-bold">{t("aiStudio.blogTitle", "Blog Generator")}</h1>
           <p className="text-muted-foreground">
-            {t("aiStudio.subtitle", "Generate blog posts and newsletters from your knowledge base")}
+            {t("aiStudio.blogSubtitle", "Generate blog posts and articles from your knowledge base")}
           </p>
         </div>
       </div>
 
       {/* Setup Warning */}
-      {!isLoading && !hasStyleProfile && (
-        <Alert className="flex items-start gap-3">
-          <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" />
-          <AlertDescription>
-            {t("aiStudio.setupRequired", "Complete your Style Profile in Settings to get personalized content.")}
-          </AlertDescription>
+      {!isLoading && !hasCompletedSetup && (
+        <Alert className="flex items-start gap-3 border-primary/50 bg-primary/5">
+          <AlertCircle className="h-4 w-4 mt-0.5 shrink-0 text-primary" />
+          <div className="flex-1">
+            <AlertDescription>
+              {t("aiStudio.setupRequired", "Complete your Style Profile to get personalized content.")}
+            </AlertDescription>
+            <Link to="/ai-studio">
+              <Button variant="link" className="h-auto p-0 mt-1 text-primary">
+                {t("aiStudio.goToSetup", "Configure Style Profile →")}
+              </Button>
+            </Link>
+          </div>
         </Alert>
       )}
 
@@ -197,9 +205,16 @@ export default function InstructorAIStudio() {
             </CardHeader>
             <CardContent>
               {activeDocuments.length === 0 ? (
-                <p className="text-sm text-muted-foreground py-4 text-center">
-                  {t("aiStudio.noDocuments", "No documents in your knowledge base yet.")}
-                </p>
+                <div className="text-center py-4">
+                  <p className="text-sm text-muted-foreground mb-2">
+                    {t("aiStudio.noDocuments", "No documents in your knowledge base yet.")}
+                  </p>
+                  <Link to="/ai-studio">
+                    <Button variant="outline" size="sm">
+                      {t("aiStudio.addDocuments", "Add Documents")}
+                    </Button>
+                  </Link>
+                </div>
               ) : (
                 <ScrollArea className="h-[200px] pr-4">
                   <div className="space-y-2">
@@ -264,7 +279,15 @@ export default function InstructorAIStudio() {
         <Card className="lg:sticky lg:top-6 h-fit">
           <CardHeader className="flex-row items-center justify-between">
             <div>
-              <CardTitle className="text-lg">{t("aiStudio.output", "Generated Content")}</CardTitle>
+              <div className="flex items-center gap-2 mb-1">
+                <CardTitle className="text-lg">{t("aiStudio.output", "Generated Content")}</CardTitle>
+                {generatedContent && (
+                  <Badge variant="secondary" className="text-xs">
+                    <Sparkles className="h-3 w-3 mr-1" />
+                    {t("aiStudio.aiDraft", "AI Draft")}
+                  </Badge>
+                )}
+              </div>
               <CardDescription>
                 {generatedContent
                   ? t("aiStudio.outputReady", "Your content is ready to copy")

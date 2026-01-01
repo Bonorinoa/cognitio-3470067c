@@ -47,7 +47,11 @@ function profileToFormData(profile: InstructorStyleProfile): StyleProfileFormDat
   };
 }
 
-export default function StyleProfileForm() {
+interface StyleProfileFormProps {
+  embedded?: boolean;
+}
+
+export default function StyleProfileForm({ embedded = false }: StyleProfileFormProps) {
   const { t } = useTranslation();
   const { styleProfile, isLoading, saveStyleProfile, isSaving, hasCompletedSetup } = useStyleProfile();
   const [formData, setFormData] = useState<StyleProfileFormData>(DEFAULT_FORM_DATA);
@@ -96,24 +100,8 @@ export default function StyleProfileForm() {
     );
   }
 
-  return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center gap-2">
-          <Sparkles className="h-5 w-5 text-primary" />
-          <CardTitle>{t("styleProfile.title")}</CardTitle>
-        </div>
-        <CardDescription>
-          {t("styleProfile.subtitle")}
-        </CardDescription>
-        {hasCompletedSetup && (
-          <div className="flex items-center gap-1 text-sm text-primary">
-            <Check className="h-4 w-4" />
-            {t("styleProfile.setupComplete")}
-          </div>
-        )}
-      </CardHeader>
-      <CardContent className="space-y-6">
+  const content = (
+    <div className="space-y-6">
         {/* Writing Tone */}
         <div className="space-y-3">
           <Label className="text-base font-medium">{t("styleProfile.tone")}</Label>
@@ -267,7 +255,34 @@ export default function StyleProfileForm() {
               t("styleProfile.savePreferences")
             )}
           </Button>
+      </div>
+    </div>
+  );
+
+  // If embedded, just return the content without card wrapper
+  if (embedded) {
+    return content;
+  }
+
+  return (
+    <Card>
+      <CardHeader>
+        <div className="flex items-center gap-2">
+          <Sparkles className="h-5 w-5 text-primary" />
+          <CardTitle>{t("styleProfile.title")}</CardTitle>
         </div>
+        <CardDescription>
+          {t("styleProfile.subtitle")}
+        </CardDescription>
+        {hasCompletedSetup && (
+          <div className="flex items-center gap-1 text-sm text-primary">
+            <Check className="h-4 w-4" />
+            {t("styleProfile.setupComplete")}
+          </div>
+        )}
+      </CardHeader>
+      <CardContent>
+        {content}
       </CardContent>
     </Card>
   );

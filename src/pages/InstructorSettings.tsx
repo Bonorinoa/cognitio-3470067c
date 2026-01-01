@@ -8,7 +8,6 @@ import CredentialsTags from "@/components/CredentialsTags";
 import PasswordChangeForm from "@/components/PasswordChangeForm";
 import AccountDeletionSection from "@/components/AccountDeletionSection";
 import InstructorServicesManager from "@/components/InstructorServicesManager";
-import StyleProfileForm from "@/components/ai-studio/StyleProfileForm";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -322,11 +321,6 @@ const InstructorSettings = () => {
 
           {/* Consulting Services */}
           <InstructorServicesManager />
-
-          <Separator />
-
-          {/* AI Writing Style */}
-          <StyleProfileForm />
 
           <Separator />
 

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
-import { LayoutDashboard, LogOut, BookOpen, Shield, Menu, X } from "lucide-react";
+import { LayoutDashboard, LogOut, BookOpen, Shield, Menu, X, Sparkles } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -100,12 +100,20 @@ const Navbar = () => {
                   </Link>
                 </DropdownMenuItem>
                 {isInstructor && (
-                  <DropdownMenuItem asChild>
-                    <Link to="/instructor" className="cursor-pointer">
-                      <BookOpen className="mr-2 h-4 w-4" />
-                      {t("nav.instructorPanel")}
-                    </Link>
-                  </DropdownMenuItem>
+                  <>
+                    <DropdownMenuItem asChild>
+                      <Link to="/instructor" className="cursor-pointer">
+                        <BookOpen className="mr-2 h-4 w-4" />
+                        {t("nav.instructorPanel")}
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/ai-studio" className="cursor-pointer">
+                        <Sparkles className="mr-2 h-4 w-4" />
+                        {t("nav.aiStudio", "AI Studio")}
+                      </Link>
+                    </DropdownMenuItem>
+                  </>
                 )}
                 {isAdmin && (
                   <DropdownMenuItem asChild>

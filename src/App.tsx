@@ -7,6 +7,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import RequireInstructor from "@/components/RequireInstructor";
 import RequireAdmin from "@/components/RequireAdmin";
 import InstructorLayout from "@/components/InstructorLayout";
+import AIStudioLayout from "@/components/AIStudioLayout";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import CoursesPage from "./pages/CoursesPage";
@@ -18,8 +19,8 @@ import InstructorDashboard from "./pages/InstructorDashboard";
 import InstructorCourses from "./pages/InstructorCourses";
 import InstructorAnalytics from "./pages/InstructorAnalytics";
 import InstructorSettings from "./pages/InstructorSettings";
-import InstructorKnowledge from "./pages/InstructorKnowledge";
-import InstructorAIStudio from "./pages/InstructorAIStudio";
+import AIStudioKnowledge from "./pages/AIStudioKnowledge";
+import AIStudioBlog from "./pages/AIStudioBlog";
 import InstructorProfile from "./pages/InstructorProfile";
 import CreateCourse from "./pages/CreateCourse";
 import EditCourse from "./pages/EditCourse";
@@ -54,10 +55,14 @@ const App = () => (
               <Route path="courses" element={<InstructorCourses />} />
               <Route path="create" element={<CreateCourse />} />
               <Route path="analytics" element={<InstructorAnalytics />} />
-              <Route path="knowledge" element={<InstructorKnowledge />} />
-              <Route path="ai-studio" element={<InstructorAIStudio />} />
               <Route path="settings" element={<InstructorSettings />} />
               <Route path="edit/:id" element={<EditCourse />} />
+            </Route>
+            
+            {/* AI Studio routes with dedicated layout */}
+            <Route path="/ai-studio" element={<RequireInstructor><AIStudioLayout /></RequireInstructor>}>
+              <Route index element={<AIStudioKnowledge />} />
+              <Route path="blog" element={<AIStudioBlog />} />
             </Route>
             
             {/* Public instructor profile - not part of layout */}
