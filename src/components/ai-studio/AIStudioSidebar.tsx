@@ -98,13 +98,21 @@ export default function AIStudioSidebar() {
         </nav>
 
         {/* Generations Left */}
-        <div className="p-4 border-t border-border">
+        <div className="p-4 border-t border-border space-y-2">
           <div className="text-xs text-muted-foreground flex justify-between items-center">
             <span>{t("aiStudioNav.generationsLeft", "Generations Left")}</span>
             <span className="text-foreground font-medium">
               {isLoading ? "..." : `${remaining} / ${limit}`}
             </span>
           </div>
+          {!isLoading && (
+            <div className="h-1.5 bg-muted rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-primary rounded-full transition-all duration-300"
+                style={{ width: `${(remaining / limit) * 100}%` }}
+              />
+            </div>
+          )}
         </div>
 
         {/* Back to Instructor Panel */}
@@ -130,9 +138,19 @@ export default function AIStudioSidebar() {
             <span className="text-sm font-medium">AI Studio</span>
           </div>
           <div className="ml-auto flex items-center gap-3">
-            <span className="text-xs text-muted-foreground">
-              {isLoading ? "..." : `${remaining}/${limit}`} <span className="hidden sm:inline">{t("aiStudioNav.generationsLeft", "left")}</span>
-            </span>
+            <div className="flex items-center gap-2">
+              {!isLoading && (
+                <div className="w-12 h-1.5 bg-muted rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-primary rounded-full"
+                    style={{ width: `${(remaining / limit) * 100}%` }}
+                  />
+                </div>
+              )}
+              <span className="text-xs text-muted-foreground">
+                {isLoading ? "..." : `${remaining}/${limit}`}
+              </span>
+            </div>
             <Link to="/instructor">
               <Button variant="ghost" size="sm" className="gap-1.5 text-xs">
                 <ArrowLeft className="h-3.5 w-3.5" />
