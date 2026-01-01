@@ -1,9 +1,7 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/AuthContext";
-import { useKnowledgeBase } from "@/hooks/useKnowledgeBase";
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
 import { SlidingPillIndicator } from "@/components/ui/sliding-pill-indicator";
 import {
   Database,
@@ -13,16 +11,12 @@ import {
   ArrowLeft,
   Sparkles,
 } from "lucide-react";
-import { getBudgetDisplayInfo, formatTokenCount } from "@/lib/tokenUtils";
 
 export default function AIStudioSidebar() {
   const { t } = useTranslation();
   const { signOut, user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const { totalTokens } = useKnowledgeBase();
-
-  const budgetInfo = getBudgetDisplayInfo(totalTokens);
 
   const menuItems = [
     {
@@ -112,15 +106,12 @@ export default function AIStudioSidebar() {
           })}
         </nav>
 
-        {/* Token Budget */}
+        {/* Generations Left placeholder */}
         <div className="p-4 border-t border-border">
-          <div className="text-xs text-muted-foreground mb-2 flex justify-between">
-            <span>{t("aiStudioNav.tokenBudget", "Token Budget")}</span>
-            <span className={budgetInfo.statusColor}>
-              {formatTokenCount(totalTokens, true)}
-            </span>
+          <div className="text-xs text-muted-foreground flex justify-between items-center">
+            <span>{t("aiStudioNav.generationsLeft", "Generations Left")}</span>
+            <span className="text-foreground font-medium">∞</span>
           </div>
-          <Progress value={budgetInfo.percentUsed} className="h-1.5" />
         </div>
 
         {/* Back to Instructor Panel */}
