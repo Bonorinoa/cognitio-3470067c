@@ -10,6 +10,7 @@ import {
   LogOut,
   GraduationCap,
   Home,
+  Database,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
@@ -27,6 +28,7 @@ const InstructorSidebar = () => {
     { icon: BookOpen, label: t("instructorSidebar.courses"), href: "/instructor/courses" },
     { icon: PlusCircle, label: t("instructorSidebar.createCourse"), href: "/instructor/create" },
     { icon: BarChart3, label: t("instructorSidebar.analytics"), href: "/instructor/analytics" },
+    { icon: Database, label: t("instructorSidebar.knowledgeBase"), href: "/instructor/knowledge" },
     { icon: Settings, label: t("instructorSidebar.settings"), href: "/instructor/settings" },
   ];
 
