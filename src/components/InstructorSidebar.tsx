@@ -10,7 +10,6 @@ import {
   LogOut,
   GraduationCap,
   Home,
-  Database,
   Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -29,10 +28,11 @@ const InstructorSidebar = () => {
     { icon: BookOpen, label: t("instructorSidebar.courses"), href: "/instructor/courses" },
     { icon: PlusCircle, label: t("instructorSidebar.createCourse"), href: "/instructor/create" },
     { icon: BarChart3, label: t("instructorSidebar.analytics"), href: "/instructor/analytics" },
-    { icon: Database, label: t("instructorSidebar.knowledgeBase"), href: "/instructor/knowledge" },
-    { icon: Sparkles, label: t("instructorSidebar.aiStudio"), href: "/instructor/ai-studio" },
     { icon: Settings, label: t("instructorSidebar.settings"), href: "/instructor/settings" },
   ];
+
+  // Link to AI Studio (external to this layout)
+  const aiStudioLink = { icon: Sparkles, label: t("instructorSidebar.aiStudio"), href: "/ai-studio" };
 
   const fullName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'User';
   const email = user?.email || '';
@@ -102,6 +102,17 @@ const InstructorSidebar = () => {
             })}
           </div>
         </LayoutGroup>
+
+        {/* AI Studio Link - visually separated */}
+        <div className="pt-2 mt-2 border-t border-border">
+          <Link
+            to={aiStudioLink.href}
+            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors"
+          >
+            <aiStudioLink.icon className="h-5 w-5" />
+            <span className="font-medium">{aiStudioLink.label}</span>
+          </Link>
+        </div>
       </nav>
 
       {/* User section */}

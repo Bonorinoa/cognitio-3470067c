@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useKnowledgeBase } from "@/hooks/useKnowledgeBase";
+import { useStyleProfile } from "@/hooks/useStyleProfile";
 import DocumentEditor from "@/components/ai-studio/DocumentEditor";
+import StyleProfileForm from "@/components/ai-studio/StyleProfileForm";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -16,6 +18,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import { 
   Plus, 
   FileText, 
@@ -31,9 +38,12 @@ import {
   FileQuestion,
   ScrollText,
   FileUser,
+  ChevronDown,
+  Settings2,
+  CheckCircle2,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-import { formatTokenCount, getBudgetDisplayInfo, TOKEN_LIMITS } from "@/lib/tokenUtils";
+import { formatTokenCount, getBudgetDisplayInfo } from "@/lib/tokenUtils";
 import type { KnowledgeBaseDocument, DocumentFormData, DocumentType, ContextRole } from "@/types/aiStudio";
 
 // Icons for document types
@@ -53,7 +63,7 @@ const CONTEXT_ROLE_COLORS: Record<ContextRole, string> = {
   background_context: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300",
 };
 
-export default function InstructorKnowledge() {
+export default function AIStudioKnowledge() {
   const { t } = useTranslation();
   const {
     documents,
@@ -69,10 +79,13 @@ export default function InstructorKnowledge() {
     isDeleting,
   } = useKnowledgeBase();
 
+  const { hasCompletedSetup, isLoading: styleLoading } = useStyleProfile();
+
   const [editorOpen, setEditorOpen] = useState(false);
   const [editingDocument, setEditingDocument] = useState<KnowledgeBaseDocument | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [documentToDelete, setDocumentToDelete] = useState<KnowledgeBaseDocument | null>(null);
+  const [styleProfileOpen, setStyleProfileOpen] = useState(!hasCompletedSetup);
 
   const budgetInfo = getBudgetDisplayInfo(totalTokens);
 
@@ -126,7 +139,7 @@ export default function InstructorKnowledge() {
     setDocumentToDelete(null);
   };
 
-  if (isLoading) {
+  if (isLoading || styleLoading) {
     return (
       <div className="flex items-center justify-center py-12">
         <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
@@ -135,11 +148,12 @@ export default function InstructorKnowledge() {
   }
 
   return (
-    <>
-      <div className="mb-8 flex items-center justify-between">
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground flex items-center gap-3">
-            <Database className="h-8 w-8 text-primary" />
+          <h1 className="text-2xl font-bold text-foreground flex items-center gap-3">
+            <Database className="h-7 w-7 text-primary" />
             {t("knowledgeBase.title")}
           </h1>
           <p className="text-muted-foreground">{t("knowledgeBase.subtitle")}</p>
@@ -150,8 +164,44 @@ export default function InstructorKnowledge() {
         </Button>
       </div>
 
+      {/* Style Profile Section */}
+      <Collapsible open={styleProfileOpen} onOpenChange={setStyleProfileOpen}>
+        <Card className={!hasCompletedSetup ? "border-primary/50 bg-primary/5" : ""}>
+          <CollapsibleTrigger asChild>
+            <CardHeader className="cursor-pointer hover:bg-muted/50 transition-colors">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <Settings2 className="h-5 w-5 text-primary" />
+                  <div>
+                    <CardTitle className="text-base">
+                      {t("aiStudio.styleProfile", "AI Writing Style")}
+                    </CardTitle>
+                    <CardDescription>
+                      {hasCompletedSetup
+                        ? t("aiStudio.styleProfileComplete", "Your writing preferences are configured")
+                        : t("aiStudio.styleProfileSetup", "Configure your writing style for AI content")}
+                    </CardDescription>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  {hasCompletedSetup && (
+                    <CheckCircle2 className="h-5 w-5 text-green-600" />
+                  )}
+                  <ChevronDown className={`h-5 w-5 text-muted-foreground transition-transform ${styleProfileOpen ? "rotate-180" : ""}`} />
+                </div>
+              </div>
+            </CardHeader>
+          </CollapsibleTrigger>
+          <CollapsibleContent>
+            <CardContent className="pt-0">
+              <StyleProfileForm embedded />
+            </CardContent>
+          </CollapsibleContent>
+        </Card>
+      </Collapsible>
+
       {/* Token Budget Indicator */}
-      <Card className="mb-6">
+      <Card>
         <CardContent className="py-4">
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm font-medium">{t("knowledgeBase.tokenBudget")}</span>
@@ -289,6 +339,6 @@ export default function InstructorKnowledge() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </>
+    </div>
   );
 }
