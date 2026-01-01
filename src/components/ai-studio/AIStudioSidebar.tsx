@@ -146,27 +146,67 @@ export default function AIStudioSidebar() {
       </aside>
 
       {/* Mobile Header */}
-      <header className="lg:hidden fixed top-0 left-0 right-0 z-40 h-16 border-b border-border bg-card/95 backdrop-blur-sm flex items-center px-4 gap-4">
-        <Link to="/" className="font-bold text-lg">
-          Cognitio
-        </Link>
-        <div className="flex items-center gap-2 text-primary">
-          <Sparkles className="h-4 w-4" />
-          <span className="text-sm font-medium">AI Studio</span>
+      <header className="lg:hidden fixed top-0 left-0 right-0 z-40 border-b border-border bg-card/95 backdrop-blur-sm">
+        {/* Top row: Logo and user */}
+        <div className="h-14 flex items-center px-4 gap-3">
+          <Link to="/" className="font-bold text-lg">
+            Cognitio
+          </Link>
+          <div className="flex items-center gap-1.5 text-primary">
+            <Sparkles className="h-4 w-4" />
+            <span className="text-sm font-medium">AI Studio</span>
+          </div>
+          <div className="ml-auto flex items-center gap-2">
+            <Link to="/instructor">
+              <Button variant="ghost" size="sm" className="gap-1.5 text-xs">
+                <ArrowLeft className="h-3.5 w-3.5" />
+                <span className="hidden sm:inline">{t("aiStudioNav.backToInstructor", "Back")}</span>
+              </Button>
+            </Link>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleSignOut}
+              className="h-8 w-8"
+            >
+              <LogOut className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
-        <div className="ml-auto flex items-center gap-2">
-          {menuItems.filter(i => !i.disabled).map((item) => {
+
+        {/* Bottom row: Navigation tabs */}
+        <div className="h-12 flex items-center px-2 gap-1 overflow-x-auto">
+          {menuItems.map((item) => {
             const isActive = location.pathname === item.href;
             const Icon = item.icon;
-            return (
-              <Link key={item.href} to={item.href}>
-                <Button
-                  variant={isActive ? "secondary" : "ghost"}
-                  size="icon"
-                  className="h-9 w-9"
+
+            if (item.disabled) {
+              return (
+                <div
+                  key={item.href}
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-muted-foreground/50 whitespace-nowrap"
                 >
                   <Icon className="h-4 w-4" />
-                </Button>
+                  <span className="text-sm">{item.label}</span>
+                  <span className="text-[10px] bg-muted px-1.5 py-0.5 rounded">
+                    {t("common.soon", "Soon")}
+                  </span>
+                </div>
+              );
+            }
+
+            return (
+              <Link
+                key={item.href}
+                to={item.href}
+                className={`flex items-center gap-1.5 px-3 py-2 rounded-lg whitespace-nowrap transition-colors ${
+                  isActive
+                    ? "bg-primary/10 text-primary font-medium"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                }`}
+              >
+                <Icon className="h-4 w-4" />
+                <span className="text-sm">{item.label}</span>
               </Link>
             );
           })}
