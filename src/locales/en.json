@@ -389,5 +389,52 @@
     "browseCourses": "Browse Courses",
     "noCoursesFound": "No courses found",
     "tryDifferentSearch": "Try a different search term."
+  },
+  "styleProfile": {
+    "title": "AI Writing Style",
+    "subtitle": "Configure how AI generates content for you. These preferences shape your unique voice.",
+    "setupComplete": "Style preferences configured",
+    "tone": "Writing Tone",
+    "toneDesc": "Select the overall tone for your AI-generated content",
+    "tones": {
+      "formal": "Formal",
+      "conversational": "Conversational",
+      "academic": "Academic",
+      "journalistic": "Journalistic"
+    },
+    "audience": "Target Audience",
+    "audienceDesc": "Who are you primarily writing for?",
+    "audiencePlaceholder": "e.g., Graduate students, Business executives, General public",
+    "length": "Content Length",
+    "lengthDesc": "Preferred length for generated content",
+    "lengths": {
+      "concise": "Concise (~500 words)",
+      "moderate": "Moderate (~1000 words)",
+      "detailed": "Detailed (~2000 words)"
+    },
+    "language": "Language",
+    "languageDesc": "Primary language for content generation",
+    "languages": {
+      "en": "English",
+      "es": "Spanish",
+      "bilingual": "Bilingual"
+    },
+    "preferences": "Content Preferences",
+    "preferencesDesc": "Fine-tune how your content is structured",
+    "citations": "Include Citations",
+    "citationsDesc": "Add academic-style references and citations",
+    "examples": "Use Examples",
+    "examplesDesc": "Include practical examples and case studies",
+    "cta": "Call to Action",
+    "ctaDesc": "End content with a call to action",
+    "customInstructions": "Custom Instructions",
+    "customInstructionsDesc": "Any additional guidelines for the AI to follow when generating content",
+    "customInstructionsPlaceholder": "e.g., Always mention my research on behavioral economics, avoid jargon, use first-person voice...",
+    "savePreferences": "Save Preferences",
+    "saving": "Saving...",
+    "saved": "Style preferences saved",
+    "savedDesc": "Your AI writing preferences have been updated.",
+    "errorSave": "Error saving preferences",
+    "errorSaveDesc": "Failed to save style preferences. Please try again."
   }
 }

@@ -395,5 +395,52 @@
     "browseCourses": "Explorar Cursos",
     "noCoursesFound": "No se encontraron cursos",
     "tryDifferentSearch": "Intenta con otro término de búsqueda."
+  },
+  "styleProfile": {
+    "title": "Estilo de Escritura IA",
+    "subtitle": "Configura cómo la IA genera contenido para ti. Estas preferencias dan forma a tu voz única.",
+    "setupComplete": "Preferencias de estilo configuradas",
+    "tone": "Tono de Escritura",
+    "toneDesc": "Selecciona el tono general para tu contenido generado por IA",
+    "tones": {
+      "formal": "Formal",
+      "conversational": "Conversacional",
+      "academic": "Académico",
+      "journalistic": "Periodístico"
+    },
+    "audience": "Audiencia Objetivo",
+    "audienceDesc": "¿Para quién escribes principalmente?",
+    "audiencePlaceholder": "ej., Estudiantes de posgrado, Ejecutivos, Público general",
+    "length": "Extensión del Contenido",
+    "lengthDesc": "Extensión preferida para el contenido generado",
+    "lengths": {
+      "concise": "Conciso (~500 palabras)",
+      "moderate": "Moderado (~1000 palabras)",
+      "detailed": "Detallado (~2000 palabras)"
+    },
+    "language": "Idioma",
+    "languageDesc": "Idioma principal para la generación de contenido",
+    "languages": {
+      "en": "Inglés",
+      "es": "Español",
+      "bilingual": "Bilingüe"
+    },
+    "preferences": "Preferencias de Contenido",
+    "preferencesDesc": "Ajusta cómo se estructura tu contenido",
+    "citations": "Incluir Citas",
+    "citationsDesc": "Agregar referencias y citas de estilo académico",
+    "examples": "Usar Ejemplos",
+    "examplesDesc": "Incluir ejemplos prácticos y casos de estudio",
+    "cta": "Llamada a la Acción",
+    "ctaDesc": "Terminar el contenido con una llamada a la acción",
+    "customInstructions": "Instrucciones Personalizadas",
+    "customInstructionsDesc": "Cualquier guía adicional para que la IA siga al generar contenido",
+    "customInstructionsPlaceholder": "ej., Siempre mencionar mi investigación en economía conductual, evitar jerga, usar primera persona...",
+    "savePreferences": "Guardar Preferencias",
+    "saving": "Guardando...",
+    "saved": "Preferencias de estilo guardadas",
+    "savedDesc": "Tus preferencias de escritura IA han sido actualizadas.",
+    "errorSave": "Error al guardar preferencias",
+    "errorSaveDesc": "No se pudieron guardar las preferencias de estilo. Por favor, intenta de nuevo."
   }
 }
