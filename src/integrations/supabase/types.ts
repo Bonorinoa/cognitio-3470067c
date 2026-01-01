@@ -14,6 +14,68 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_generation_history: {
+        Row: {
+          additional_instructions: string | null
+          content_type: Database["public"]["Enums"]["content_type"]
+          created_at: string
+          error_message: string | null
+          generated_content: string | null
+          id: string
+          input_tokens: number | null
+          instructor_id: string
+          model_used: string | null
+          output_tokens: number | null
+          selected_document_ids: string[] | null
+          status: Database["public"]["Enums"]["generation_status"]
+          topic: string
+          total_tokens: number | null
+          updated_at: string
+        }
+        Insert: {
+          additional_instructions?: string | null
+          content_type: Database["public"]["Enums"]["content_type"]
+          created_at?: string
+          error_message?: string | null
+          generated_content?: string | null
+          id?: string
+          input_tokens?: number | null
+          instructor_id: string
+          model_used?: string | null
+          output_tokens?: number | null
+          selected_document_ids?: string[] | null
+          status?: Database["public"]["Enums"]["generation_status"]
+          topic: string
+          total_tokens?: number | null
+          updated_at?: string
+        }
+        Update: {
+          additional_instructions?: string | null
+          content_type?: Database["public"]["Enums"]["content_type"]
+          created_at?: string
+          error_message?: string | null
+          generated_content?: string | null
+          id?: string
+          input_tokens?: number | null
+          instructor_id?: string
+          model_used?: string | null
+          output_tokens?: number | null
+          selected_document_ids?: string[] | null
+          status?: Database["public"]["Enums"]["generation_status"]
+          topic?: string
+          total_tokens?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_generation_history_instructor_id_fkey"
+            columns: ["instructor_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       chapters: {
         Row: {
           course_id: string
@@ -159,6 +221,56 @@ export type Database = {
         }
         Relationships: []
       }
+      instructor_knowledge_base: {
+        Row: {
+          content: string
+          content_tokens: number
+          context_role: Database["public"]["Enums"]["context_role"]
+          created_at: string
+          document_type: Database["public"]["Enums"]["document_type"]
+          id: string
+          instructor_id: string
+          is_active: boolean | null
+          tags: string[] | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          content: string
+          content_tokens?: number
+          context_role?: Database["public"]["Enums"]["context_role"]
+          created_at?: string
+          document_type?: Database["public"]["Enums"]["document_type"]
+          id?: string
+          instructor_id: string
+          is_active?: boolean | null
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string
+          content_tokens?: number
+          context_role?: Database["public"]["Enums"]["context_role"]
+          created_at?: string
+          document_type?: Database["public"]["Enums"]["document_type"]
+          id?: string
+          instructor_id?: string
+          is_active?: boolean | null
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "instructor_knowledge_base_instructor_id_fkey"
+            columns: ["instructor_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       instructor_services: {
         Row: {
           created_at: string
@@ -198,6 +310,74 @@ export type Database = {
             foreignKeyName: "instructor_services_instructor_id_fkey"
             columns: ["instructor_id"]
             isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      instructor_style_profile: {
+        Row: {
+          created_at: string
+          custom_instructions: string | null
+          id: string
+          include_call_to_action: boolean | null
+          include_citations: boolean | null
+          instructor_id: string
+          language_preference:
+            | Database["public"]["Enums"]["language_preference"]
+            | null
+          preferred_length:
+            | Database["public"]["Enums"]["length_preference"]
+            | null
+          setup_completed: boolean | null
+          target_audience: string | null
+          tone: Database["public"]["Enums"]["writing_tone"] | null
+          updated_at: string
+          use_examples: boolean | null
+        }
+        Insert: {
+          created_at?: string
+          custom_instructions?: string | null
+          id?: string
+          include_call_to_action?: boolean | null
+          include_citations?: boolean | null
+          instructor_id: string
+          language_preference?:
+            | Database["public"]["Enums"]["language_preference"]
+            | null
+          preferred_length?:
+            | Database["public"]["Enums"]["length_preference"]
+            | null
+          setup_completed?: boolean | null
+          target_audience?: string | null
+          tone?: Database["public"]["Enums"]["writing_tone"] | null
+          updated_at?: string
+          use_examples?: boolean | null
+        }
+        Update: {
+          created_at?: string
+          custom_instructions?: string | null
+          id?: string
+          include_call_to_action?: boolean | null
+          include_citations?: boolean | null
+          instructor_id?: string
+          language_preference?:
+            | Database["public"]["Enums"]["language_preference"]
+            | null
+          preferred_length?:
+            | Database["public"]["Enums"]["length_preference"]
+            | null
+          setup_completed?: boolean | null
+          target_audience?: string | null
+          tone?: Database["public"]["Enums"]["writing_tone"] | null
+          updated_at?: string
+          use_examples?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "instructor_style_profile_instructor_id_fkey"
+            columns: ["instructor_id"]
+            isOneToOne: true
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
@@ -394,7 +574,20 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "teacher" | "student" | "instructor"
+      content_type: "blog" | "newsletter"
+      context_role: "style_reference" | "topic_source" | "background_context"
       course_visibility: "public" | "private" | "unlisted"
+      document_type:
+        | "academic_paper"
+        | "cv_bio"
+        | "methodology"
+        | "writing_sample"
+        | "syllabus"
+        | "other"
+      generation_status: "pending" | "completed" | "failed"
+      language_preference: "es" | "en" | "bilingual"
+      length_preference: "concise" | "moderate" | "detailed"
+      writing_tone: "formal" | "conversational" | "academic" | "journalistic"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -523,7 +716,21 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "teacher", "student", "instructor"],
+      content_type: ["blog", "newsletter"],
+      context_role: ["style_reference", "topic_source", "background_context"],
       course_visibility: ["public", "private", "unlisted"],
+      document_type: [
+        "academic_paper",
+        "cv_bio",
+        "methodology",
+        "writing_sample",
+        "syllabus",
+        "other",
+      ],
+      generation_status: ["pending", "completed", "failed"],
+      language_preference: ["es", "en", "bilingual"],
+      length_preference: ["concise", "moderate", "detailed"],
+      writing_tone: ["formal", "conversational", "academic", "journalistic"],
     },
   },
 } as const
