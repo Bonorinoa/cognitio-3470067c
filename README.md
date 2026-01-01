@@ -29,11 +29,13 @@ Cognitio no es un marketplace abierto. Es un "Instructor Studio" curado: LMS lig
 
 ---
 
-## 📍 Estado Actual: v2.9.3
+## 📍 Estado Actual: v3.5.0
 
-**Última Actualización:** Diciembre 30, 2025
+**Última Actualización:** Enero 1, 2026
 
-### ✅ Funcionalidades Completas (v1.0 - v2.9.3)
+### ✅ Funcionalidades Completas (v1.0 - v3.5)
+
+#### Core Platform (v1.0 - v2.9.4)
 - Autenticación de usuarios (registro/inicio de sesión/recuperación de contraseña)
 - Sistema de roles (admin/instructor/student)
 - Creación y edición de cursos con carga de video Mux
@@ -41,31 +43,28 @@ Cognitio no es un marketplace abierto. Es un "Instructor Studio" curado: LMS lig
 - Integración de pagos con Stripe
 - Navegación y filtrado de cursos (por categoría, búsqueda, ordenamiento, destacados)
 - Dashboards de estudiantes e instructores
-- Carga de imágenes de cursos
-- Seguimiento de progreso (marcar como completado)
-- Página "Sobre Nosotros" con perfiles de instructores
-- Animaciones con Framer Motion
 - Sistema de visibilidad de cursos (public/private/unlisted)
-- Panel de Administración (gestión de roles)
+- Gestión de inscripciones para cursos privados/unlisted
 - Perfiles públicos de instructor con bio, credenciales, redes sociales
 - Analytics de instructor con métricas reales
 - Servicios de consultoría de instructor
-- **Gestión de inscripciones para cursos privados/unlisted**
-- Gestión de cuenta de usuario (cambio de contraseña, eliminación)
-- Internacionalización completa (Español)
-- **Sistema de diseño con tema claro cálido (v2.4-v2.9.2)**
-- **Hero background con blobs animados**
-- **Tarjetas estandarizadas con hover effects**
-- **Menú hamburguesa móvil responsive**
-- **Cursos destacados con filtro "Destacados"**
-- **Dashboard muestra cursos de compras Y membresías**
-- **Gestión de avatar mejorada (10MB, compresión, eliminación)**
-- **Security audit complete: 0 vulnerabilities**
-- **Code quality improvements: ESLint errors fixed**
-- **Comprehensive codebase review completed (v2.9.3)**
+- Sistema de diseño con tema claro cálido
+- Internacionalización completa (Español/Inglés)
+- Security audit complete: 0 vulnerabilities
 
-### 🚧 Próximo: v3.0
-- AI Content Studio (generación de blogs/newsletters desde cursos)
+#### AI Content Studio (v3.0 - v3.5) 🆕
+- **Knowledge Base**: Gestión de documentos con tipos y roles de contexto
+- **Style Profiles**: Configuración de tono, longitud, audiencia objetivo
+- **Blog Generator**: Generación de contenido con streaming en tiempo real
+- **Usage Tracking**: Límite de 10 generaciones por día con barra de progreso
+- **Mobile Navigation**: Tab bar responsive para AI Studio
+- **Lovable AI Integration**: Gemini 2.5 Flash vía AI Gateway
+
+### 🚧 Próximo: v3.6 - v3.9
+- Newsletter Generator
+- Export/Publish Workflow
+- Generation History Persistence
+- Course Context Integration
 
 Consulta **[DEVELOPMENT_PLAN.md](./DEVELOPMENT_PLAN.md)** para el roadmap completo.
 Consulta **[CHANGELOG.md](./CHANGELOG.md)** para el historial de cambios.
@@ -88,11 +87,12 @@ Cognitio **NO** es y **NO** construirá:
 
 | Documento | Contenido |
 |-----------|-----------|
-| [DEVELOPMENT_PLAN.md](./DEVELOPMENT_PLAN.md) | Roadmap v1.1-v3.0, readiness evaluation, decisiones pendientes, schema |
-| [TECHNOLOGY_STACK.md](./TECHNOLOGY_STACK.md) | Stack tecnológico completo |
+| [DEVELOPMENT_PLAN.md](./DEVELOPMENT_PLAN.md) | Roadmap v1.x-v4.x, versiones completadas y planificadas |
+| [TECHNOLOGY_STACK.md](./TECHNOLOGY_STACK.md) | Stack tecnológico completo incluyendo AI |
 | [FEATURES.md](./FEATURES.md) | Documentación detallada de funcionalidades |
 | [TESTING.md](./TESTING.md) | Infraestructura y guías de testing |
 | [CHANGELOG.md](./CHANGELOG.md) | Historial de cambios y versiones |
+| [REVIEW_SUMMARY.md](./REVIEW_SUMMARY.md) | Análisis de calidad del código |
 
 ---
 
@@ -103,6 +103,7 @@ Cognitio **NO** es y **NO** construirá:
 Frontend: React 18 + TypeScript + Vite + Tailwind CSS
 UI: shadcn/ui + Radix UI + Framer Motion
 Backend: Supabase (PostgreSQL + Auth + Edge Functions + Storage)
+AI: Lovable AI Gateway (Gemini 2.5 Flash)
 Video: Mux
 Pagos: Stripe
 Estado: TanStack Query
@@ -160,7 +161,7 @@ npx vitest           # Tests en modo watch
 | Rol | Capacidades |
 |-----|-------------|
 | **Student** | Navegar cursos, comprar, ver videos, seguir progreso |
-| **Instructor** | Todo de Student + crear/editar cursos, ver analytics, gestionar capítulos |
+| **Instructor** | Todo de Student + crear/editar cursos, ver analytics, gestionar capítulos, AI Studio |
 | **Admin** | Todo de Instructor + asignar roles, ver todos los cursos, tareas de soporte |
 
 **Importante:** Solo Admins pueden otorgar el rol de Instructor. No hay signup público de instructor.
@@ -176,12 +177,14 @@ npx vitest           # Tests en modo watch
 | `/auth` | Autenticación |
 | `/courses` | Catálogo de cursos |
 | `/course/:id` | Detalle/reproductor de curso |
-| `/about` | Página Sobre Nosotros |
+| `/instructors` | Catálogo de instructores |
+| `/services` | Servicios de consultoría |
 
 ### Estudiante (Autenticado)
 | Ruta | Descripción |
 |------|-------------|
 | `/dashboard` | Dashboard del estudiante |
+| `/settings` | Configuración de cuenta |
 
 ### Instructor (Rol requerido)
 | Ruta | Descripción |
@@ -193,6 +196,13 @@ npx vitest           # Tests en modo watch
 | `/instructor/analytics` | Analytics |
 | `/instructor/settings` | Configuración y perfil |
 | `/instructor/profile/:id` | Perfil público del instructor |
+
+### AI Studio (Instructor) 🆕
+| Ruta | Descripción |
+|------|-------------|
+| `/ai-studio` | Redirect a Knowledge Base |
+| `/ai-studio/knowledge` | Knowledge Base y Style Profile |
+| `/ai-studio/blog` | Generador de Blogs |
 
 ### Admin (Rol requerido)
 | Ruta | Descripción |
@@ -208,28 +218,26 @@ cognitio/
 ├── src/
 │   ├── components/        # Componentes reutilizables
 │   │   ├── ui/            # shadcn/ui
+│   │   ├── ai-studio/     # Componentes AI Studio 🆕
 │   │   └── ...
 │   ├── pages/             # Componentes de página
 │   ├── contexts/          # React Context (Auth)
-│   ├── hooks/             # Hooks personalizados
+│   ├── hooks/             # Hooks personalizados (incl. AI hooks) 🆕
 │   ├── integrations/      # Supabase client/types
 │   ├── lib/               # Utilidades
-│   ├── locales/           # Traducciones (es.json)
+│   ├── locales/           # Traducciones (es.json, en.json)
 │   ├── test/              # Mocks y utilidades de test
+│   ├── types/             # TypeScript types (incl. aiStudio.ts) 🆕
 │   └── assets/            # Assets estáticos
 ├── supabase/
-│   ├── functions/         # Edge functions (Stripe, Mux)
+│   ├── functions/         # Edge functions (Stripe, Mux, AI) 🆕
 │   └── config.toml        # Configuración Supabase
-└── docs/
-    ├── DEVELOPMENT_PLAN.md
-    ├── TECHNOLOGY_STACK.md
-    ├── FEATURES.md
-    └── TESTING.md
+└── docs/                  # Documentación
 ```
 
 ---
 
-## 🎨 Sistema de Diseño (v2.4-v2.9)
+## 🎨 Sistema de Diseño (v2.4-v3.5)
 
 ### Identidad Visual
 - **Estilo**: "Elegancia académica sin pretensiones"
@@ -320,4 +328,4 @@ Parte del ecosistema Lovable. Ver términos de licencia de Lovable.
 
 ---
 
-*Última actualización: Diciembre 2025 | Versión: 2.9.3*
+*Última actualización: Enero 2026 | Versión: 3.5.0*

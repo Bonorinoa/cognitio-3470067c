@@ -5,6 +5,90 @@ All notable changes to Cognitio will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.5.0] - 2026-01-01
+
+### Added
+- **Progress Bar Visualization**: Added visual progress bar for generation quota in AI Studio sidebar
+  - Desktop sidebar shows progress bar below generation count
+  - Mobile header includes compact progress bar
+  - Real-time updates as generations are used
+
+### Changed
+- Updated all documentation to v3.5.0
+
+## [3.4.0] - 2026-01-01
+
+### Added
+- **Usage Tracking**: Implemented daily generation limits for AI Studio
+  - `useGenerationUsage` hook for tracking daily usage
+  - 10 generations per day limit per instructor
+  - Counter displayed in AI Studio sidebar
+  - Queries `ai_generation_history` for completed generations today
+
+## [3.3.0] - 2026-01-01
+
+### Added
+- **Blog Generator**: Full blog generation workflow
+  - `generate-content` edge function using Lovable AI Gateway
+  - Gemini 2.5 Flash model integration
+  - Streaming markdown output
+  - `useContentGeneration` hook with abort support
+  - Topic input with document selection
+  - Real-time content preview
+
+### Technical
+- Context Window Stuffing strategy (no RAG needed)
+- 100K token context budget
+- Strategic document placement by `context_role`
+
+## [3.2.0] - 2026-01-01
+
+### Added
+- **Style Profiles**: Instructor writing preferences
+  - `StyleProfileForm` component with collapsible UI
+  - `useStyleProfile` hook for CRUD operations
+  - Preferences: tone, length, language, audience
+  - Custom instructions support
+  - Setup completion tracking
+
+### Database
+- `instructor_style_profile` table with all preference fields
+
+## [3.1.0] - 2026-01-01
+
+### Added
+- **Knowledge Base**: Document management for AI context
+  - `DocumentEditor` component for creating/editing documents
+  - `useKnowledgeBase` hook for CRUD operations
+  - Document types: academic_paper, cv_bio, methodology, writing_sample, syllabus, other
+  - Context roles: style_reference, topic_source, background_context
+  - Token counting for budget tracking
+  - Tag support for organization
+
+### Database
+- `instructor_knowledge_base` table with full schema
+
+## [3.0.0] - 2026-01-01
+
+### Added
+- **AI Content Studio Foundation**
+  - `AIStudioLayout` component with sidebar
+  - `AIStudioSidebar` with navigation and usage display
+  - `AIStudioKnowledge` page for knowledge base management
+  - `AIStudioBlog` page for blog generation
+  - Mobile tab bar with `SlidingPillIndicator`
+  - Routes: `/ai-studio`, `/ai-studio/knowledge`, `/ai-studio/blog`
+  - Navbar dropdown link to AI Studio
+
+### Database
+- New tables: `instructor_knowledge_base`, `instructor_style_profile`, `ai_generation_history`
+- New enums: `content_type`, `context_role`, `document_type`, `generation_status`, `language_preference`, `length_preference`, `writing_tone`
+
+### Technical
+- New edge function: `generate-content`
+- Lovable AI Gateway integration
+- 4 new custom hooks for AI functionality
+
 ## [2.9.4] - 2025-12-31
 
 ### Fixed
