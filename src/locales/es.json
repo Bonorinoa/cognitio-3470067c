@@ -227,8 +227,8 @@
     "courses": "Cursos",
     "createCourse": "Crear Curso",
     "analytics": "Analíticas",
-    "knowledgeBase": "Base de Conocimiento",
     "settings": "Configuración",
+    "aiStudio": "Estudio IA",
     "signOut": "Cerrar Sesión"
   },
   "knowledgeBase": {

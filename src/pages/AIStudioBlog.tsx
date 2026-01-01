@@ -9,7 +9,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
@@ -17,18 +16,15 @@ import { useToast } from "@/hooks/use-toast";
 import { useKnowledgeBase } from "@/hooks/useKnowledgeBase";
 import { useContentGeneration } from "@/hooks/useContentGeneration";
 import { useStyleProfile } from "@/hooks/useStyleProfile";
-import type { ContentType } from "@/types/aiStudio";
-import { CONTENT_TYPE_OPTIONS } from "@/types/aiStudio";
 
 export default function AIStudioBlog() {
   const { t } = useTranslation();
   const { toast } = useToast();
   
   const { activeDocuments, isLoading: docsLoading } = useKnowledgeBase();
-  const { styleProfile, isLoading: styleLoading, hasCompletedSetup } = useStyleProfile();
+  const { isLoading: styleLoading, hasCompletedSetup } = useStyleProfile();
   const { generate, reset, isGenerating, generatedContent, error } = useContentGeneration();
 
-  const [contentType, setContentType] = useState<ContentType>("blog");
   const [topic, setTopic] = useState("");
   const [additionalInstructions, setAdditionalInstructions] = useState("");
   const [selectedDocIds, setSelectedDocIds] = useState<string[]>([]);
@@ -52,7 +48,7 @@ export default function AIStudioBlog() {
 
     try {
       await generate({
-        content_type: contentType,
+        content_type: "blog",
         topic: topic.trim(),
         additional_instructions: additionalInstructions.trim() || undefined,
         selected_document_ids: selectedDocIds,
@@ -123,40 +119,6 @@ export default function AIStudioBlog() {
       <div className="grid lg:grid-cols-2 gap-6">
         {/* Left: Configuration */}
         <div className="space-y-6">
-          {/* Content Type */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">{t("aiStudio.contentType", "Content Type")}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <RadioGroup
-                value={contentType}
-                onValueChange={(v) => setContentType(v as ContentType)}
-                className="space-y-3"
-              >
-                {CONTENT_TYPE_OPTIONS.map((option) => (
-                  <div
-                    key={option.value}
-                    className={`flex items-start space-x-3 p-3 rounded-lg border transition-colors cursor-pointer ${
-                      contentType === option.value
-                        ? "border-primary bg-primary/5"
-                        : "border-border hover:bg-muted/50"
-                    }`}
-                    onClick={() => setContentType(option.value)}
-                  >
-                    <RadioGroupItem value={option.value} id={option.value} />
-                    <div className="flex-1">
-                      <Label htmlFor={option.value} className="font-medium cursor-pointer">
-                        {option.label}
-                      </Label>
-                      <p className="text-sm text-muted-foreground">{option.description}</p>
-                    </div>
-                  </div>
-                ))}
-              </RadioGroup>
-            </CardContent>
-          </Card>
-
           {/* Topic & Instructions */}
           <Card>
             <CardHeader>
