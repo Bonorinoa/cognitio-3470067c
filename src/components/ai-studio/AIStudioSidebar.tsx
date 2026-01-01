@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { SlidingPillIndicator } from "@/components/ui/sliding-pill-indicator";
 import { LayoutGroup } from "framer-motion";
+import { useGenerationUsage } from "@/hooks/useGenerationUsage";
 import {
   Database,
   FileEdit,
@@ -14,6 +15,7 @@ import {
 export default function AIStudioSidebar() {
   const { t } = useTranslation();
   const location = useLocation();
+  const { remaining, limit, isLoading } = useGenerationUsage();
 
   const menuItems = [
     {
@@ -99,7 +101,9 @@ export default function AIStudioSidebar() {
         <div className="p-4 border-t border-border">
           <div className="text-xs text-muted-foreground flex justify-between items-center">
             <span>{t("aiStudioNav.generationsLeft", "Generations Left")}</span>
-            <span className="text-foreground font-medium">10 / 10</span>
+            <span className="text-foreground font-medium">
+              {isLoading ? "..." : `${remaining} / ${limit}`}
+            </span>
           </div>
         </div>
 
@@ -127,7 +131,7 @@ export default function AIStudioSidebar() {
           </div>
           <div className="ml-auto flex items-center gap-3">
             <span className="text-xs text-muted-foreground">
-              10/10 <span className="hidden sm:inline">{t("aiStudioNav.generationsLeft", "left")}</span>
+              {isLoading ? "..." : `${remaining}/${limit}`} <span className="hidden sm:inline">{t("aiStudioNav.generationsLeft", "left")}</span>
             </span>
             <Link to="/instructor">
               <Button variant="ghost" size="sm" className="gap-1.5 text-xs">
