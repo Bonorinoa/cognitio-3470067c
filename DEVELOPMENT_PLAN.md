@@ -1,16 +1,16 @@
 # Cognitio Development Plan
 
-**Current Version:** v2.9.3  
-**Last Updated:** December 30, 2025
+**Current Version:** v3.5.0  
+**Last Updated:** January 1, 2026
 
 ---
 
 ## Vision
 
-Cognitio is an invite-only, instructor-first academic ecosystem. It prioritizes instructor autonomy and revenue retention over marketplace scale. Core features: course creation (public/private/unlisted), Stripe payments, progress tracking, and an upcoming AI Content Studio for marketing assistance.
+Cognitio is an invite-only, instructor-first academic ecosystem. It prioritizes instructor autonomy and revenue retention over marketplace scale. Core features: course creation (public/private/unlisted), Stripe payments, progress tracking, and AI Content Studio for marketing assistance.
 
-**Tech Stack:** React + Vite + TypeScript + Tailwind + shadcn/ui + Supabase + Stripe + Mux  
-**Roles:** Admin (platform management) → Instructor (content creation) → Student (learning)
+**Tech Stack:** React + Vite + TypeScript + Tailwind + shadcn/ui + Supabase + Stripe + Mux + Lovable AI  
+**Roles:** Admin (platform management) → Instructor (content creation + AI tools) → Student (learning)
 
 ---
 
@@ -55,20 +55,76 @@ Complete UI/UX overhaul with warm color palette, glassmorphism, and animations.
 | v2.9.1 | Bug Fixes | Sidebar alignment, animation performance, scroll behavior | ✅ |
 | v2.9.2 | Membership | `CourseMembershipManager`, dashboard course fetching fix | ✅ |
 | v2.9.3 | Cleanup | Deprecated code removal, documentation consolidation | ✅ |
+| v2.9.4 | Testing | i18n test fixes, ESLint prefer-const fixes | ✅ |
+
+---
+
+### v3.x: AI Content Studio
+
+AI-powered content generation to help instructors create marketing materials from their expertise.
+
+| Version | Focus | Key Deliverables | Status |
+|---------|-------|------------------|--------|
+| v3.0 | Foundation | Database schema (`instructor_knowledge_base`, `instructor_style_profile`, `ai_generation_history`), enums, types | ✅ |
+| v3.1 | Knowledge Base | Document CRUD, `useKnowledgeBase` hook, document types and context roles | ✅ |
+| v3.2 | Style Profiles | `StyleProfileForm` component, `useStyleProfile` hook, tone/length/audience preferences | ✅ |
+| v3.3 | Blog Generator | `generate-content` edge function, `useContentGeneration` hook, streaming markdown UI | ✅ |
+| v3.4 | Usage Tracking | `useGenerationUsage` hook, daily limits (10/day), sidebar counter | ✅ |
+| v3.5 | Mobile & Polish | Tab bar navigation, progress bar visualization, layout refinements | ✅ |
+| v3.6 | Newsletter | Newsletter generator page, template variations | 🚧 Planned |
+| v3.7 | Export/Publish | Copy to clipboard, markdown export, publish workflow | 🚧 Planned |
+| v3.8 | History | Save generations to history, view/edit past generations | 🚧 Planned |
+| v3.9 | Course Context | Inject course content (titles, descriptions) as generation context | 🚧 Planned |
+
+---
+
+## Current: v3.5 AI Content Studio
+
+### Completed Features ✅
+
+#### Database Schema
+- `instructor_knowledge_base` - Documents with types and context roles
+- `instructor_style_profile` - Writing preferences (tone, length, audience)
+- `ai_generation_history` - Generation tracking with token counts
+
+#### Edge Functions
+- `generate-content` - Lovable AI Gateway integration with Gemini 2.5 Flash
+
+#### Frontend Components
+- `AIStudioLayout` - Two-column layout with sidebar
+- `AIStudioSidebar` - Navigation + usage tracking with progress bar
+- `AIStudioKnowledge` - Knowledge base CRUD with document editor
+- `AIStudioBlog` - Blog generator with topic input and streaming output
+- `StyleProfileForm` - Collapsible style configuration
+- `DocumentEditor` - Create/edit documents with type and role selection
+
+#### Custom Hooks
+- `useKnowledgeBase` - Document CRUD operations
+- `useStyleProfile` - Style preferences management
+- `useContentGeneration` - Streaming generation with abort support
+- `useGenerationUsage` - Daily usage tracking
+
+#### Design
+- Mobile tab bar with sliding pill indicator
+- Progress bar for generations remaining
+- Consistent with platform design system
+
+### Remaining Work (v3.6-v3.9)
+
+| Task | Version | Priority |
+|------|---------|----------|
+| Newsletter Generator Page | v3.6 | High |
+| Newsletter Templates | v3.6 | Medium |
+| Copy to Clipboard | v3.7 | High |
+| Markdown Export | v3.7 | Medium |
+| Save to History | v3.8 | High |
+| View Generation History | v3.8 | Medium |
+| Course Content Injection | v3.9 | Medium |
+| Transcript Integration | v3.9 | Low |
 
 ---
 
 ## Roadmap
-
-### v3.x: AI Content Studio
-
-AI-powered content generation to help instructors create marketing materials from course content.
-
-| Version | Focus | Planned Deliverables |
-|---------|-------|---------------------|
-| v3.0 | MVP | Edge function with Lovable AI, `instructor_contents` table, blog/newsletter generator UI |
-| v3.1 | Publishing | Podcast script generator, landing page copy, export/publish workflow |
-| v3.2 | Enhancements | Course-to-content context injection, usage analytics, generation limits |
 
 ### v4.x: Platform Maturity
 
@@ -92,6 +148,30 @@ These features are explicitly out of scope:
 - Heavy discussion forums or moderation systems
 - Subscription pricing or course bundles
 - Open instructor signups (invite-only by design)
+- RAG/vector search for AI (using context window stuffing instead)
+
+---
+
+## AI Studio Architecture
+
+### Context Window Strategy
+Instead of RAG (Retrieval Augmented Generation), we use "Context Window Stuffing":
+- Gemini 2.5 Flash supports 1M+ tokens
+- All selected documents fit in single context
+- Simpler architecture, no vector database needed
+- Documents tagged with `context_role` for strategic prompt placement
+
+### Document Roles
+| Role | Purpose |
+|------|---------|
+| `style_reference` | Writing samples to inform voice/tone |
+| `topic_source` | Main subject matter for generation |
+| `background_context` | Expertise and credentials |
+
+### Usage Limits
+- 10 generations per day per instructor
+- 10 documents max per generation
+- 100K token context budget
 
 ---
 
