@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import { 
   Sparkles, FileText, Send, RefreshCw, Copy, Check, AlertCircle, 
@@ -18,6 +18,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { EmptyState } from "@/components/EmptyState";
 import { useToast } from "@/hooks/use-toast";
 import { useKnowledgeBase } from "@/hooks/useKnowledgeBase";
 import { useContentGeneration } from "@/hooks/useContentGeneration";
@@ -29,6 +30,7 @@ import { supabase } from "@/integrations/supabase/client";
 export default function AIStudioBlog() {
   const { t } = useTranslation();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const aiStudioContext = useAIStudioContext();
   const { activeDocuments, isLoading: docsLoading } = useKnowledgeBase();
@@ -436,16 +438,15 @@ export default function AIStudioBlog() {
             </CardHeader>
             <CardContent>
               {activeDocuments.length === 0 ? (
-                <div className="text-center py-4">
-                  <p className="text-sm text-muted-foreground mb-2">
-                    {t("aiStudio.noDocuments", "No documents in your knowledge base yet.")}
-                  </p>
-                  <Link to="/ai-studio">
-                    <Button variant="outline" size="sm">
-                      {t("aiStudio.addDocuments", "Add Documents")}
-                    </Button>
-                  </Link>
-                </div>
+                <EmptyState
+                  icon={FileText}
+                  title={t("aiStudio.noDocuments", "No documents in your knowledge base yet.")}
+                  description={t("aiStudio.noDocumentsDescription", "Agrega documentos a tu base de conocimiento para usarlos como contexto en la generación de contenido.")}
+                  action={{
+                    label: t("aiStudio.addDocuments", "Add Documents"),
+                    onClick: () => navigate("/ai-studio")
+                  }}
+                />
               ) : (
                 <ScrollArea className="h-[200px] pr-4">
                   <div className="space-y-2">

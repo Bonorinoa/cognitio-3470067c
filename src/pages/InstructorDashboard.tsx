@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import ProgressCard from "@/components/ProgressCard";
+import { StatsCardSkeleton } from "@/components/StatsCardSkeleton";
+import { EmptyState } from "@/components/EmptyState";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -43,6 +45,7 @@ interface RecentEnrollment {
 const InstructorDashboard = () => {
   const { t } = useTranslation();
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [courses, setCourses] = useState<CourseWithStats[]>([]);
   const [recentEnrollments, setRecentEnrollments] = useState<RecentEnrollment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -193,27 +196,38 @@ const InstructorDashboard = () => {
 
         {/* Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          <ProgressCard
-            title={t("instructorDashboard.totalStudents")}
-            value={isLoading ? "..." : totalStudents.toLocaleString()}
-            icon="courses"
-            subtitle={courses.length > 0 ? t("instructorDashboard.acrossCourses", { count: courses.length }) : undefined}
-          />
-          <ProgressCard
-            title={t("instructorDashboard.totalRevenue")}
-            value={isLoading ? "..." : `$${totalRevenue.toLocaleString()}`}
-            icon="trending"
-          />
-          <ProgressCard
-            title={t("instructorDashboard.publishedCourses")}
-            value={isLoading ? "..." : publishedCourses}
-            icon="award"
-          />
-          <ProgressCard
-            title={t("instructorDashboard.draftCourses")}
-            value={isLoading ? "..." : courses.length - publishedCourses}
-            icon="trending"
-          />
+          {isLoading ? (
+            <>
+              <StatsCardSkeleton />
+              <StatsCardSkeleton />
+              <StatsCardSkeleton />
+              <StatsCardSkeleton />
+            </>
+          ) : (
+            <>
+              <ProgressCard
+                title={t("instructorDashboard.totalStudents")}
+                value={totalStudents.toLocaleString()}
+                icon="courses"
+                subtitle={courses.length > 0 ? t("instructorDashboard.acrossCourses", { count: courses.length }) : undefined}
+              />
+              <ProgressCard
+                title={t("instructorDashboard.totalRevenue")}
+                value={`$${totalRevenue.toLocaleString()}`}
+                icon="trending"
+              />
+              <ProgressCard
+                title={t("instructorDashboard.publishedCourses")}
+                value={publishedCourses}
+                icon="award"
+              />
+              <ProgressCard
+                title={t("instructorDashboard.draftCourses")}
+                value={courses.length - publishedCourses}
+                icon="trending"
+              />
+            </>
+          )}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -235,15 +249,15 @@ const InstructorDashboard = () => {
                   ))}
                 </div>
               ) : courses.length === 0 ? (
-                <div className="text-center py-8">
-                  <p className="text-muted-foreground mb-4">{t("instructorDashboard.noCourses")}</p>
-                  <Link to="/instructor/create">
-                    <Button>
-                      <PlusCircle className="mr-2 h-4 w-4" />
-                      {t("instructorDashboard.createFirst")}
-                    </Button>
-                  </Link>
-                </div>
+                <EmptyState
+                  icon={PlusCircle}
+                  title={t("instructorDashboard.noCourses")}
+                  description={t("instructorDashboard.createFirstDescription", "Crea tu primer curso y comienza a compartir tu conocimiento con estudiantes de todo el mundo.")}
+                  action={{
+                    label: t("instructorDashboard.createFirst"),
+                    onClick: () => navigate("/instructor/create")
+                  }}
+                />
               ) : (
                 <Table>
                   <TableHeader>

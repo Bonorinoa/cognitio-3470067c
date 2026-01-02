@@ -1,13 +1,15 @@
 import { useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Navbar from "@/components/Navbar";
 import CourseCard from "@/components/CourseCard";
+import { CourseCardSkeleton } from "@/components/CourseCardSkeleton";
+import { StatsCardSkeleton } from "@/components/StatsCardSkeleton";
+import { EmptyState } from "@/components/EmptyState";
 import ProgressCard from "@/components/ProgressCard";
 import { Tabs, TabsContent, TabsList } from "@/components/ui/tabs";
 import { SlidingPillIndicator } from "@/components/ui/sliding-pill-indicator";
 import { Input } from "@/components/ui/input";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Search, BookOpen } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useQuery } from "@tanstack/react-query";
@@ -96,6 +98,7 @@ interface EnrolledCourse {
 const StudentDashboard = () => {
   const { t } = useTranslation();
   const { user, isLoading: authLoading } = useAuth();
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("all");
 
@@ -215,10 +218,10 @@ const StudentDashboard = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           {isLoading ? (
             <>
-              <Skeleton className="h-28 rounded-lg" />
-              <Skeleton className="h-28 rounded-lg" />
-              <Skeleton className="h-28 rounded-lg" />
-              <Skeleton className="h-28 rounded-lg" />
+              <StatsCardSkeleton />
+              <StatsCardSkeleton />
+              <StatsCardSkeleton />
+              <StatsCardSkeleton />
             </>
           ) : (
             <>
@@ -266,11 +269,7 @@ const StudentDashboard = () => {
         {isLoading && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="space-y-4">
-                <Skeleton className="aspect-video w-full rounded-lg" />
-                <Skeleton className="h-6 w-3/4" />
-                <Skeleton className="h-4 w-full" />
-              </div>
+              <CourseCardSkeleton key={i} />
             ))}
           </div>
         )}
@@ -324,25 +323,24 @@ const StudentDashboard = () => {
 
         {/* Empty state - no courses */}
         {!isLoading && enrolledCourses.length === 0 && (
-          <div className="text-center py-12">
-            <BookOpen className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-medium text-foreground mb-2">{t("studentDashboard.noCoursesYet")}</h3>
-            <p className="text-muted-foreground mb-4">
-              {t("studentDashboard.startLearning")}
-            </p>
-            <Link to="/courses" className="text-primary hover:underline">
-              {t("studentDashboard.browseCourses")}
-            </Link>
-          </div>
+          <EmptyState
+            icon={BookOpen}
+            title={t("studentDashboard.noCoursesYet")}
+            description={t("studentDashboard.startLearning")}
+            action={{
+              label: t("studentDashboard.browseCourses"),
+              onClick: () => navigate("/courses")
+            }}
+          />
         )}
 
         {/* Empty state - search has no results */}
         {!isLoading && enrolledCourses.length > 0 && filteredCourses.length === 0 && (
-          <div className="text-center py-12">
-            <Search className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-medium text-foreground mb-2">{t("studentDashboard.noCoursesFound")}</h3>
-            <p className="text-muted-foreground">{t("studentDashboard.tryDifferentSearch")}</p>
-          </div>
+          <EmptyState
+            icon={Search}
+            title={t("studentDashboard.noCoursesFound")}
+            description={t("studentDashboard.tryDifferentSearch")}
+          />
         )}
       </main>
     </div>
