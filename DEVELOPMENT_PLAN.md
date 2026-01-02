@@ -1,7 +1,7 @@
 # Cognitio Development Plan
 
-**Current Version:** v3.5.0  
-**Last Updated:** January 1, 2026
+**Current Version:** v3.9.0  
+**Last Updated:** January 2, 2026
 
 ---
 
@@ -71,30 +71,34 @@ AI-powered content generation to help instructors create marketing materials fro
 | v3.3 | Blog Generator | `generate-content` edge function, `useContentGeneration` hook, streaming markdown UI | ✅ |
 | v3.4 | Usage Tracking | `useGenerationUsage` hook, daily limits (10/day), sidebar counter | ✅ |
 | v3.5 | Mobile & Polish | Tab bar navigation, progress bar visualization, layout refinements | ✅ |
-| v3.6 | Newsletter | Newsletter generator page, template variations | 🚧 Planned |
-| v3.7 | Export/Publish | Copy to clipboard, markdown export, publish workflow | 🚧 Planned |
-| v3.8 | History | Save generations to history, view/edit past generations | 🚧 Planned |
-| v3.9 | Course Context | Inject course content (titles, descriptions) as generation context | 🚧 Planned |
+| v3.6 | Rich Editor | Preview/Edit toggle, markdown rendering with ReactMarkdown | ✅ |
+| v3.7 | Refinement | `refine-content` edge function, inline text selection, diff view for changes | ✅ |
+| v3.8 | History | Save/Update/Delete generations, FIFO 10-item limit, load from history | ✅ |
+| v3.9 | Dashboard & Usage Fix | AI Studio Dashboard landing page, `is_active` soft-delete for accurate usage tracking | ✅ |
+| v3.10 | Newsletter | Newsletter generator page, template variations | 🚧 Planned |
+| v3.11 | Course Context | Inject course content (titles, descriptions) as generation context | 🚧 Planned |
 
 ---
 
-## Current: v3.5 AI Content Studio
+## Current: v3.9 AI Content Studio
 
 ### Completed Features ✅
 
 #### Database Schema
 - `instructor_knowledge_base` - Documents with types and context roles
 - `instructor_style_profile` - Writing preferences (tone, length, audience)
-- `ai_generation_history` - Generation tracking with token counts
+- `ai_generation_history` - Generation tracking with `is_active` for soft-delete
 
 #### Edge Functions
 - `generate-content` - Lovable AI Gateway integration with Gemini 2.5 Flash
+- `refine-content` - Inline text refinement with instruction-based editing
 
 #### Frontend Components
 - `AIStudioLayout` - Two-column layout with sidebar
 - `AIStudioSidebar` - Navigation + usage tracking with progress bar
+- `AIStudioDashboard` - Landing page with quick actions and stats 🆕
 - `AIStudioKnowledge` - Knowledge base CRUD with document editor
-- `AIStudioBlog` - Blog generator with topic input and streaming output
+- `AIStudioBlog` - Blog generator with topic input, streaming output, and history
 - `StyleProfileForm` - Collapsible style configuration
 - `DocumentEditor` - Create/edit documents with type and role selection
 
@@ -102,25 +106,40 @@ AI-powered content generation to help instructors create marketing materials fro
 - `useKnowledgeBase` - Document CRUD operations
 - `useStyleProfile` - Style preferences management
 - `useContentGeneration` - Streaming generation with abort support
-- `useGenerationUsage` - Daily usage tracking
+- `useGenerationUsage` - Daily usage tracking (counts ALL today's generations)
+- `useGenerationHistory` - History CRUD with soft-delete (`is_active` flag)
 
 #### Design
 - Mobile tab bar with sliding pill indicator
 - Progress bar for generations remaining
+- AI Studio Dashboard with 4 analytics cards
 - Consistent with platform design system
 
-### Remaining Work (v3.6-v3.9)
+### v3.9 Infrastructure Updates
+
+1. **`is_active` Column**: Added to `ai_generation_history` for soft-delete
+   - History display: shows only `is_active = true` (max 10)
+   - Usage counting: counts ALL records created today (regardless of `is_active`)
+   - Solves: usage counter bug when history hits 10-item limit
+
+2. **Dashboard Route**: `/ai-studio` now shows dedicated dashboard
+   - Quick actions: Blog Generator, Newsletter (coming soon)
+   - Recent generations with load buttons
+   - 4 stats cards: Documents, Style Status, Gen Today, Total Gen
+
+3. **Updated Navigation**: Dashboard as first menu item in sidebar
+
+---
+
+## Remaining Work (v3.10+)
 
 | Task | Version | Priority |
 |------|---------|----------|
-| Newsletter Generator Page | v3.6 | High |
-| Newsletter Templates | v3.6 | Medium |
-| Copy to Clipboard | v3.7 | High |
-| Markdown Export | v3.7 | Medium |
-| Save to History | v3.8 | High |
-| View Generation History | v3.8 | Medium |
-| Course Content Injection | v3.9 | Medium |
-| Transcript Integration | v3.9 | Low |
+| Newsletter Generator Page | v3.10 | High |
+| Newsletter Templates | v3.10 | Medium |
+| Course Content Injection | v3.11 | Medium |
+| Transcript Integration | v3.11 | Low |
+| Multi-language Generation | v3.12 | Low |
 
 ---
 
@@ -168,10 +187,17 @@ Instead of RAG (Retrieval Augmented Generation), we use "Context Window Stuffing
 | `topic_source` | Main subject matter for generation |
 | `background_context` | Expertise and credentials |
 
+### Usage Tracking Strategy
+- `is_active` column enables soft-delete for history management
+- FIFO: When 10 active items exist, oldest is soft-deleted
+- Daily usage: Counts ALL generations today (ignores `is_active`)
+- This ensures accurate quota tracking independent of history limits
+
 ### Usage Limits
 - 10 generations per day per instructor
 - 10 documents max per generation
 - 100K token context budget
+- 10 active history items (FIFO soft-delete)
 
 ---
 

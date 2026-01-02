@@ -1,7 +1,7 @@
 # Stack Tecnológico
 
-**Versión:** v3.5.0  
-**Última Actualización:** Enero 1, 2026
+**Versión:** v3.9.0  
+**Última Actualización:** Enero 2, 2026
 
 ## Resumen
 
@@ -83,34 +83,36 @@ Alternativa open-source a Firebase que proporciona:
 | `user_roles` | Roles de usuario (admin, instructor, student) |
 | `instructor_services` | Servicios de consultoría |
 
-#### Tablas AI Studio 🆕
+#### Tablas AI Studio
 | Tabla | Descripción |
 |-------|-------------|
 | `instructor_knowledge_base` | Documentos del instructor con roles de contexto |
 | `instructor_style_profile` | Preferencias de estilo de escritura |
-| `ai_generation_history` | Historial de generaciones con tracking de uso |
+| `ai_generation_history` | Historial de generaciones con `is_active` para soft-delete |
 
 ### Edge Functions
 
-5 Edge Functions activas:
+7 Edge Functions activas:
 
 | Función | Descripción |
 |---------|-------------|
 | `create-course-checkout` | Crea sesión de checkout en Stripe |
 | `record-purchase` | Registra compra después de pago exitoso |
+| `stripe-webhook` | Procesa eventos de webhook de Stripe |
 | `mux-upload` | Genera URL de upload para videos Mux |
 | `delete-account` | Elimina cuenta de usuario y datos asociados |
-| `generate-content` 🆕 | Generación de contenido con Lovable AI Gateway |
+| `generate-content` | Generación de contenido con Lovable AI Gateway |
+| `refine-content` | Refinamiento inline de texto seleccionado |
 
 ---
 
-## Integración de IA 🆕
+## Integración de IA
 
 ### Lovable AI Gateway
 Integración sin necesidad de API keys propias:
 
 - **Modelo**: Gemini 2.5 Flash (`google/gemini-2.5-flash`)
-- **Uso**: Generación de blogs y contenido de marketing
+- **Uso**: Generación de blogs, refinamiento de contenido
 - **Arquitectura**: Context Window Stuffing (100K tokens)
 - **Streaming**: Respuestas en tiempo real con markdown
 
@@ -120,10 +122,17 @@ Integración sin necesidad de API keys propias:
 3. Streaming de respuesta vía Edge Function
 4. Tracking de uso en `ai_generation_history`
 
+### Flujo de Refinamiento
+1. Usuario selecciona texto en el editor
+2. Envía instrucción de refinamiento
+3. `refine-content` procesa con IA
+4. Vista diff para aceptar/rechazar cambios
+
 ### Límites de Uso
 - 10 generaciones por día por instructor
 - Máximo 10 documentos por generación
 - Budget de 100K tokens de contexto
+- Historial FIFO: 10 items activos máximo (`is_active` column)
 
 ---
 
@@ -141,11 +150,12 @@ Integración sin necesidad de API keys propias:
 - `useUserRole` - Gestión de roles de usuario
 - `useInstructorAnalytics` - Métricas de instructor
 
-#### AI Studio 🆕
+#### AI Studio
 - `useKnowledgeBase` - CRUD de documentos
 - `useStyleProfile` - Gestión de perfil de estilo
 - `useContentGeneration` - Generación con streaming
-- `useGenerationUsage` - Tracking de uso diario
+- `useGenerationUsage` - Tracking de uso diario (cuenta todos los de hoy)
+- `useGenerationHistory` - CRUD historial con soft-delete (`is_active`)
 
 ---
 
@@ -301,9 +311,10 @@ Variables de entorno requeridas:
 
 Edge Functions (configuradas automáticamente):
 - `STRIPE_SECRET_KEY` - Clave secreta de Stripe
+- `STRIPE_WEBHOOK_SECRET` - Secreto del webhook de Stripe
 - `MUX_TOKEN_ID` / `MUX_TOKEN_SECRET` - Credenciales de Mux
 - `LOVABLE_API_KEY` - Gateway de IA (provisto automáticamente)
 
 ---
 
-*Última actualización: Enero 2026 | Versión: 3.5.0*
+*Última actualización: Enero 2026 | Versión: 3.9.0*
