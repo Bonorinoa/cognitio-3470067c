@@ -60,6 +60,8 @@ export default function AIStudioBlog() {
   const [refineDialogOpen, setRefineDialogOpen] = useState(false);
   const [refineInstruction, setRefineInstruction] = useState("");
   const [isRefining, setIsRefining] = useState(false);
+  const [refinedText, setRefinedText] = useState<string | null>(null);
+  const [showDiffView, setShowDiffView] = useState(false);
 
   // Sync generated content to editable content
   // Register handlers with context for sidebar communication
@@ -312,24 +314,10 @@ export default function AIStudioBlog() {
       }
 
       const { refined_text } = await response.json();
-
-      // Replace selection with refined text
-      const before = editableContent.slice(0, selectionRange.start);
-      const after = editableContent.slice(selectionRange.end);
-      setEditableContent(before + refined_text + after);
-      setHasUnsavedChanges(true);
-
-      toast({
-        title: t("aiStudio.refined", "Text refined"),
-        description: t("aiStudio.refinedDesc", "The selected text has been updated"),
-      });
-
-      // Reset refine state
-      setRefineDialogOpen(false);
-      setRefineInstruction("");
-      setSelectedText("");
-      setSelectionRange(null);
-      setShowRefineButton(false);
+      
+      // Show diff view instead of auto-replacing
+      setRefinedText(refined_text);
+      setShowDiffView(true);
 
     } catch (err) {
       toast({
@@ -340,6 +328,40 @@ export default function AIStudioBlog() {
     } finally {
       setIsRefining(false);
     }
+  };
+
+  const handleAcceptRefinement = () => {
+    if (!refinedText || !selectionRange) return;
+    
+    // Replace selection with refined text
+    const before = editableContent.slice(0, selectionRange.start);
+    const after = editableContent.slice(selectionRange.end);
+    setEditableContent(before + refinedText + after);
+    setHasUnsavedChanges(true);
+
+    toast({
+      title: t("aiStudio.refined", "Text refined"),
+      description: t("aiStudio.refinedDesc", "The selected text has been updated"),
+    });
+
+    // Reset refine state
+    handleCloseRefineDialog();
+  };
+
+  const handleRejectRefinement = () => {
+    // Go back to instruction view to try again
+    setRefinedText(null);
+    setShowDiffView(false);
+  };
+
+  const handleCloseRefineDialog = () => {
+    setRefineDialogOpen(false);
+    setRefineInstruction("");
+    setSelectedText("");
+    setSelectionRange(null);
+    setShowRefineButton(false);
+    setRefinedText(null);
+    setShowDiffView(false);
   };
 
   const setQuickRefineAction = (action: string) => {
@@ -695,84 +717,136 @@ export default function AIStudioBlog() {
       </div>
 
       {/* Refine Dialog */}
-      <Dialog open={refineDialogOpen} onOpenChange={setRefineDialogOpen}>
-        <DialogContent className="sm:max-w-md">
+      <Dialog open={refineDialogOpen} onOpenChange={(open) => !open && handleCloseRefineDialog()}>
+        <DialogContent className="sm:max-w-lg">
           <DialogHeader>
-            <DialogTitle>{t("aiStudio.refineTitle", "Refine Selection")}</DialogTitle>
+            <DialogTitle>
+              {showDiffView 
+                ? t("aiStudio.reviewChanges", "Review Changes")
+                : t("aiStudio.refineTitle", "Refine Selection")
+              }
+            </DialogTitle>
             <DialogDescription>
-              {t("aiStudio.refineDesc", "Tell the AI how to improve the selected text")}
+              {showDiffView
+                ? t("aiStudio.reviewChangesDesc", "Compare the original and refined text, then accept or reject the changes")
+                : t("aiStudio.refineDesc", "Tell the AI how to improve the selected text")
+              }
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-4">
-            {/* Selected text preview */}
-            <div className="p-3 bg-muted rounded-md text-sm max-h-32 overflow-auto">
-              <p className="text-muted-foreground text-xs mb-1">
-                {t("aiStudio.selectedText", "Selected text:")}
-              </p>
-              <p className="italic">
-                "{selectedText.length > 200 ? selectedText.slice(0, 200) + "..." : selectedText}"
-              </p>
+          {showDiffView && refinedText ? (
+            // Diff View
+            <div className="space-y-4">
+              <div className="grid gap-4">
+                {/* Original text */}
+                <div className="space-y-2">
+                  <Label className="text-xs font-medium text-muted-foreground flex items-center gap-2">
+                    <span className="inline-block w-2 h-2 rounded-full bg-destructive/50"></span>
+                    {t("aiStudio.original", "Original")}
+                  </Label>
+                  <div className="p-3 bg-destructive/5 border border-destructive/20 rounded-md text-sm max-h-40 overflow-auto">
+                    <p className="whitespace-pre-wrap">{selectedText}</p>
+                  </div>
+                </div>
+
+                {/* Refined text */}
+                <div className="space-y-2">
+                  <Label className="text-xs font-medium text-muted-foreground flex items-center gap-2">
+                    <span className="inline-block w-2 h-2 rounded-full bg-primary"></span>
+                    {t("aiStudio.refined", "Refined")}
+                  </Label>
+                  <div className="p-3 bg-primary/5 border border-primary/20 rounded-md text-sm max-h-40 overflow-auto">
+                    <p className="whitespace-pre-wrap">{refinedText}</p>
+                  </div>
+                </div>
+              </div>
             </div>
+          ) : (
+            // Instruction View
+            <div className="space-y-4">
+              {/* Selected text preview */}
+              <div className="p-3 bg-muted rounded-md text-sm max-h-32 overflow-auto">
+                <p className="text-muted-foreground text-xs mb-1">
+                  {t("aiStudio.selectedText", "Selected text:")}
+                </p>
+                <p className="italic">
+                  "{selectedText.length > 200 ? selectedText.slice(0, 200) + "..." : selectedText}"
+                </p>
+              </div>
 
-            {/* Quick actions */}
-            <div className="flex flex-wrap gap-2">
-              <Button 
-                variant="outline" 
-                size="sm" 
-                onClick={() => setQuickRefineAction("Make it more concise and shorter")}
-              >
-                {t("aiStudio.shorten", "Shorten")}
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                onClick={() => setQuickRefineAction("Make it more detailed and expand on the ideas")}
-              >
-                {t("aiStudio.expand", "Expand")}
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                onClick={() => setQuickRefineAction("Use simpler language and make it easier to understand")}
-              >
-                {t("aiStudio.simplify", "Simplify")}
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                onClick={() => setQuickRefineAction("Make it more formal and professional")}
-              >
-                {t("aiStudio.formalize", "Formalize")}
-              </Button>
+              {/* Quick actions */}
+              <div className="flex flex-wrap gap-2">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => setQuickRefineAction("Make it more concise and shorter")}
+                >
+                  {t("aiStudio.shorten", "Shorten")}
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => setQuickRefineAction("Make it more detailed and expand on the ideas")}
+                >
+                  {t("aiStudio.expand", "Expand")}
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => setQuickRefineAction("Use simpler language and make it easier to understand")}
+                >
+                  {t("aiStudio.simplify", "Simplify")}
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => setQuickRefineAction("Make it more formal and professional")}
+                >
+                  {t("aiStudio.formalize", "Formalize")}
+                </Button>
+              </div>
+
+              {/* Custom instruction */}
+              <Textarea
+                placeholder={t("aiStudio.customInstruction", "Or type custom instructions...")}
+                value={refineInstruction}
+                onChange={(e) => setRefineInstruction(e.target.value)}
+                rows={2}
+              />
             </div>
+          )}
 
-            {/* Custom instruction */}
-            <Textarea
-              placeholder={t("aiStudio.customInstruction", "Or type custom instructions...")}
-              value={refineInstruction}
-              onChange={(e) => setRefineInstruction(e.target.value)}
-              rows={2}
-            />
-          </div>
-
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setRefineDialogOpen(false)}>
-              {t("common.cancel", "Cancel")}
-            </Button>
-            <Button onClick={handleRefine} disabled={isRefining || !refineInstruction.trim()}>
-              {isRefining ? (
-                <>
-                  <RefreshCw className="h-4 w-4 mr-1 animate-spin" />
-                  {t("aiStudio.refining", "Refining...")}
-                </>
-              ) : (
-                <>
-                  <Sparkles className="h-4 w-4 mr-1" />
-                  {t("aiStudio.refine", "Refine")}
-                </>
-              )}
-            </Button>
+          <DialogFooter className="gap-2 sm:gap-0">
+            {showDiffView ? (
+              <>
+                <Button variant="outline" onClick={handleRejectRefinement}>
+                  {t("aiStudio.tryAgain", "Try Again")}
+                </Button>
+                <Button onClick={handleAcceptRefinement}>
+                  <Check className="h-4 w-4 mr-1" />
+                  {t("aiStudio.acceptChanges", "Accept Changes")}
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button variant="outline" onClick={handleCloseRefineDialog}>
+                  {t("common.cancel", "Cancel")}
+                </Button>
+                <Button onClick={handleRefine} disabled={isRefining || !refineInstruction.trim()}>
+                  {isRefining ? (
+                    <>
+                      <RefreshCw className="h-4 w-4 mr-1 animate-spin" />
+                      {t("aiStudio.refining", "Refining...")}
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="h-4 w-4 mr-1" />
+                      {t("aiStudio.refine", "Refine")}
+                    </>
+                  )}
+                </Button>
+              </>
+            )}
           </DialogFooter>
         </DialogContent>
       </Dialog>

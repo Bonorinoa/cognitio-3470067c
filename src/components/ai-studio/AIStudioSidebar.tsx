@@ -1,9 +1,20 @@
+import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { SlidingPillIndicator } from "@/components/ui/sliding-pill-indicator";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { LayoutGroup } from "framer-motion";
 import { useGenerationUsage } from "@/hooks/useGenerationUsage";
 import { useGenerationHistory, formatRelativeTime, GenerationHistoryItem } from "@/hooks/useGenerationHistory";
@@ -28,6 +39,11 @@ export default function AIStudioSidebar({ onLoadHistory, onDeleteHistory }: AISt
   const location = useLocation();
   const { remaining, limit, isLoading } = useGenerationUsage();
   const { history, isLoading: historyLoading, deleteGeneration } = useGenerationHistory();
+  
+  // Delete confirmation state
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const menuItems = [
     {
@@ -48,11 +64,25 @@ export default function AIStudioSidebar({ onLoadHistory, onDeleteHistory }: AISt
     },
   ];
 
-  const handleDeleteHistory = async (id: string) => {
-    if (onDeleteHistory) {
-      onDeleteHistory(id);
+  const handleDeleteClick = (id: string) => {
+    setPendingDeleteId(id);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!pendingDeleteId) return;
+    
+    setIsDeleting(true);
+    try {
+      await deleteGeneration(pendingDeleteId);
+      if (onDeleteHistory) {
+        onDeleteHistory(pendingDeleteId);
+      }
+    } finally {
+      setIsDeleting(false);
+      setDeleteDialogOpen(false);
+      setPendingDeleteId(null);
     }
-    await deleteGeneration(id);
   };
 
   return (
@@ -147,7 +177,10 @@ export default function AIStudioSidebar({ onLoadHistory, onDeleteHistory }: AISt
                       </span>
                     </button>
                     <button
-                      onClick={() => handleDeleteHistory(item.id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteClick(item.id);
+                      }}
                       className="p-1.5 mr-1 opacity-0 group-hover:opacity-100 hover:text-destructive transition-opacity rounded"
                       title={t("common.delete", "Delete")}
                     >
@@ -305,6 +338,30 @@ export default function AIStudioSidebar({ onLoadHistory, onDeleteHistory }: AISt
           </LayoutGroup>
         </div>
       </header>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t("aiStudioNav.deleteConfirmTitle", "Delete from history?")}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t("aiStudioNav.deleteConfirmDesc", "This will permanently remove this generation from your history. This action cannot be undone.")}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleting}>
+              {t("common.cancel", "Cancel")}
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleConfirmDelete}
+              disabled={isDeleting}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {isDeleting ? t("common.deleting", "Deleting...") : t("common.delete", "Delete")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }
