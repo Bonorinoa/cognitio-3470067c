@@ -2,9 +2,10 @@ import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CourseCard from "@/components/CourseCard";
+import { CourseCardSkeleton } from "@/components/CourseCardSkeleton";
+import { EmptyState } from "@/components/EmptyState";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
 import {
   Select,
   SelectContent,
@@ -12,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Search, Filter } from "lucide-react";
+import { Search, Filter, BookOpen } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -160,12 +161,7 @@ const CoursesPage = () => {
         {isLoading && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key={i} className="space-y-4">
-                <Skeleton className="aspect-video w-full rounded-lg" />
-                <Skeleton className="h-6 w-3/4" />
-                <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-4 w-1/2" />
-              </div>
+              <CourseCardSkeleton key={i} />
             ))}
           </div>
         )}
@@ -180,16 +176,21 @@ const CoursesPage = () => {
         )}
 
         {/* Empty state */}
-        {!isLoading && sortedCourses.length === 0 && (
-          <div className="text-center py-12">
-            <Filter className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-medium text-foreground mb-2">No se encontraron cursos</h3>
-            <p className="text-muted-foreground">
-              {courses.length === 0 
-                ? "Aún no hay cursos publicados. ¡Vuelve pronto!" 
-                : "Intenta ajustar tu búsqueda o los filtros"}
-            </p>
-          </div>
+        {!isLoading && sortedCourses.length === 0 && courses.length === 0 && (
+          <EmptyState
+            icon={BookOpen}
+            title="No hay cursos disponibles"
+            description="Aún no hay cursos publicados. ¡Vuelve pronto para descubrir nuevas oportunidades de aprendizaje!"
+          />
+        )}
+        
+        {/* No results state */}
+        {!isLoading && sortedCourses.length === 0 && courses.length > 0 && (
+          <EmptyState
+            icon={Filter}
+            title="No se encontraron cursos"
+            description="Intenta ajustar tu búsqueda o los filtros para encontrar el curso que buscas."
+          />
         )}
       </main>
 
