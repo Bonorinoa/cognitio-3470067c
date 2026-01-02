@@ -140,7 +140,14 @@ ${content_type === "blog"
   ? "Create a well-structured blog post with an engaging title, introduction, main body with subheadings, and conclusion."
   : "Create a newsletter with a compelling subject line, personal greeting, main content, and sign-off."}
 
-Format the output in Markdown.`;
+Format the output in clean Markdown.
+
+CRITICAL OUTPUT RULES:
+- Start DIRECTLY with the title (# Title) - no preamble or introduction
+- Do NOT include phrases like "Here's your blog post" or "I've written..."
+- Do NOT add meta-commentary or explanations about the content
+- Do NOT include "---" dividers at the start or end
+- Output ONLY the final content, nothing else`;
 
     const userPrompt = `Write ${content_type === "blog" ? "a blog post" : "a newsletter"} about: ${topic}${additional_instructions ? `\n\nAdditional instructions: ${additional_instructions}` : ""}`;
 
