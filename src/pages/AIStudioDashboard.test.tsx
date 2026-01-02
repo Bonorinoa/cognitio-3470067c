@@ -56,6 +56,7 @@ describe('AIStudioDashboard', () => {
       used: 0,
       remaining: 10,
       limit: 10,
+      totalCount: 0,
       isLoading: false,
     });
 
@@ -141,6 +142,7 @@ describe('AIStudioDashboard', () => {
       used: 3,
       remaining: 7,
       limit: 10,
+      totalCount: 3,
       isLoading: false,
     });
 
@@ -262,17 +264,17 @@ describe('AIStudioDashboard', () => {
     expect(allPendingElements.length).toBeGreaterThan(0);
   });
 
-  it('displays total generations count', () => {
-    const mockHistory = Array.from({ length: 5 }, (_, i) => ({
-      id: `gen-${i}`,
-      content_type: 'blog' as const,
-      topic: `Topic ${i}`,
-      generated_content: `Content ${i}`,
-      created_at: new Date().toISOString(),
-    }));
+  it('displays total generations count from usage hook', () => {
+    vi.mocked(useGenerationUsage).mockReturnValue({
+      used: 2,
+      remaining: 8,
+      limit: 10,
+      totalCount: 25,
+      isLoading: false,
+    });
 
     vi.mocked(useGenerationHistory).mockReturnValue({
-      history: mockHistory,
+      history: [],
       isLoading: false,
       saveGeneration: vi.fn(),
       updateGeneration: vi.fn(),
@@ -282,6 +284,7 @@ describe('AIStudioDashboard', () => {
 
     render(<AIStudioDashboard />);
 
-    expect(screen.getByText('5')).toBeInTheDocument();
+    // Total generations should show 25 (from totalCount, not history.length)
+    expect(screen.getByText('25')).toBeInTheDocument();
   });
 });
