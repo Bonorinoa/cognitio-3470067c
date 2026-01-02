@@ -27,6 +27,7 @@ import {
   History,
   ChevronDown,
   Trash2,
+  LayoutDashboard,
 } from "lucide-react";
 
 interface AIStudioSidebarProps {
@@ -47,9 +48,14 @@ export default function AIStudioSidebar({ onLoadHistory, onDeleteHistory }: AISt
 
   const menuItems = [
     {
+      icon: LayoutDashboard,
+      label: t("aiStudioNav.dashboard", "Dashboard"),
+      href: "/ai-studio",
+    },
+    {
       icon: Database,
       label: t("aiStudioNav.knowledge", "Knowledge Base"),
-      href: "/ai-studio",
+      href: "/ai-studio/knowledge",
     },
     {
       icon: FileEdit,

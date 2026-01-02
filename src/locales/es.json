@@ -500,5 +500,47 @@
     "savedDesc": "Tus preferencias de escritura IA han sido actualizadas.",
     "errorSave": "Error al guardar preferencias",
     "errorSaveDesc": "No se pudieron guardar las preferencias de estilo. Por favor, intenta de nuevo."
+  },
+  "aiStudio": {
+    "dashboardTitle": "AI Content Studio",
+    "dashboardSubtitle": "Tu asistente de contenido inteligente",
+    "quickActions": "Acciones Rápidas",
+    "generateBlog": "Generar Blog",
+    "blogDesc": "Crea artículos desde tu base de conocimiento",
+    "newsletterDesc": "Genera boletines para tu audiencia",
+    "recentGenerations": "Generaciones Recientes",
+    "noRecentGenerations": "Sin generaciones recientes",
+    "noRecentGenerationsDesc": "Tus generaciones guardadas aparecerán aquí",
+    "viewAll": "Ver todo",
+    "yourStudio": "Tu Estudio",
+    "documents": "Documentos",
+    "genToday": "Gen. hoy",
+    "totalGen": "Total gen.",
+    "configured": "Configurado",
+    "pending": "Pendiente",
+    "manage": "Gestionar",
+    "configure": "Configurar",
+    "start": "Comenzar",
+    "load": "Cargar"
+  },
+  "aiStudioNav": {
+    "dashboard": "Dashboard",
+    "knowledge": "Base de Conocimiento",
+    "blog": "Generador de Blog",
+    "newsletter": "Newsletter",
+    "recent": "Recientes",
+    "noHistory": "Sin generaciones guardadas",
+    "generationsLeft": "Generaciones Restantes",
+    "backToInstructor": "Volver al Panel de Instructor",
+    "recentGenerations": "Generaciones Recientes",
+    "deleteConfirmTitle": "¿Eliminar del historial?",
+    "deleteConfirmDesc": "Esto eliminará permanentemente esta generación de tu historial. Esta acción no se puede deshacer."
+  },
+  "common": {
+    "soon": "Próximamente",
+    "edit": "Editar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "deleting": "Eliminando..."
   }
 }
