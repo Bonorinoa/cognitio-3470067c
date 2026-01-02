@@ -1,10 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import { 
   Sparkles, FileText, Send, RefreshCw, Copy, Check, AlertCircle, 
-  FileEdit, Download, FileCode, Eye, Pencil, Wand2 
+  FileEdit, Download, FileCode, Eye, Pencil, Wand2, Save 
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -22,15 +22,19 @@ import { useToast } from "@/hooks/use-toast";
 import { useKnowledgeBase } from "@/hooks/useKnowledgeBase";
 import { useContentGeneration } from "@/hooks/useContentGeneration";
 import { useStyleProfile } from "@/hooks/useStyleProfile";
+import { useGenerationHistory, GenerationHistoryItem } from "@/hooks/useGenerationHistory";
+import { useAIStudioContext } from "@/components/AIStudioLayout";
 import { supabase } from "@/integrations/supabase/client";
 
 export default function AIStudioBlog() {
   const { t } = useTranslation();
   const { toast } = useToast();
-  
+  const [searchParams, setSearchParams] = useSearchParams();
+  const aiStudioContext = useAIStudioContext();
   const { activeDocuments, isLoading: docsLoading } = useKnowledgeBase();
   const { isLoading: styleLoading, hasCompletedSetup } = useStyleProfile();
   const { generate, reset, isGenerating, generatedContent, error } = useContentGeneration();
+  const { history, saveGeneration, updateGeneration, deleteGeneration } = useGenerationHistory();
 
   const [topic, setTopic] = useState("");
   const [additionalInstructions, setAdditionalInstructions] = useState("");
@@ -42,6 +46,11 @@ export default function AIStudioBlog() {
   const [editableContent, setEditableContent] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
+  // History state
+  const [loadedHistoryId, setLoadedHistoryId] = useState<string | null>(null);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+
   // Refine state
   const [selectedText, setSelectedText] = useState("");
   const [selectionRange, setSelectionRange] = useState<{ start: number; end: number } | null>(null);
@@ -51,16 +60,48 @@ export default function AIStudioBlog() {
   const [isRefining, setIsRefining] = useState(false);
 
   // Sync generated content to editable content
+  // Register handlers with context for sidebar communication
+  useEffect(() => {
+    if (aiStudioContext) {
+      aiStudioContext.setHandlers({
+        onLoadHistory: handleLoadHistory,
+        onDeleteHistory: handleDeleteHistory,
+      });
+    }
+  });
+
+  // Sync generated content to editable content
   useEffect(() => {
     if (generatedContent && !isGenerating) {
       setEditableContent(generatedContent);
+      // New generation, not from history
+      setLoadedHistoryId(null);
+      setHasUnsavedChanges(false);
     }
   }, [generatedContent, isGenerating]);
+
+  // Load from history via URL param
+  useEffect(() => {
+    const loadId = searchParams.get("load");
+    if (loadId && history.length > 0) {
+      const item = history.find(h => h.id === loadId);
+      if (item) {
+        handleLoadHistory(item);
+        // Clear the URL param after loading
+        setSearchParams({}, { replace: true });
+      }
+    }
+  }, [searchParams, history]);
 
   const handleDocToggle = (docId: string) => {
     setSelectedDocIds((prev) =>
       prev.includes(docId) ? prev.filter((id) => id !== docId) : [...prev, docId]
     );
+  };
+
+  const handleContentChange = (value: string) => {
+    setEditableContent(value);
+    setHasUnsavedChanges(true);
   };
 
   const handleGenerate = async () => {
@@ -112,6 +153,8 @@ export default function AIStudioBlog() {
     setShowRefineButton(false);
     setSelectedText("");
     setSelectionRange(null);
+    setLoadedHistoryId(null);
+    setHasUnsavedChanges(false);
   };
 
   const downloadFile = (content: string, filename: string, mimeType: string) => {
@@ -143,6 +186,79 @@ export default function AIStudioBlog() {
     const slug = topic.toLowerCase().replace(/\s+/g, "-").slice(0, 30);
     downloadFile(contentToExport, `${slug}.md`, "text/markdown");
     toast({ title: t("aiStudio.exported", "Exported as Markdown") });
+  };
+
+  // History handlers
+  const handleLoadHistory = (item: GenerationHistoryItem) => {
+    setTopic(item.topic);
+    setEditableContent(item.generated_content);
+    setLoadedHistoryId(item.id);
+    setHasUnsavedChanges(false);
+    setIsEditMode(true);
+    toast({ title: t("aiStudio.loadedFromHistory", "Loaded from history") });
+  };
+
+  const handleSaveToHistory = async () => {
+    if (!topic.trim() || !editableContent) return;
+
+    setIsSaving(true);
+    try {
+      const id = await saveGeneration({
+        content_type: "blog",
+        topic: topic.trim(),
+        generated_content: editableContent,
+        additional_instructions: additionalInstructions || undefined,
+        selected_document_ids: selectedDocIds,
+      });
+
+      if (id) {
+        setLoadedHistoryId(id);
+        setHasUnsavedChanges(false);
+        toast({ title: t("aiStudio.savedToHistory", "Saved to history") });
+      }
+    } catch (err) {
+      toast({
+        title: t("aiStudio.saveFailed", "Failed to save"),
+        description: err instanceof Error ? err.message : "Please try again",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleUpdateHistory = async () => {
+    if (!loadedHistoryId || !editableContent) return;
+
+    setIsSaving(true);
+    try {
+      await updateGeneration(loadedHistoryId, editableContent);
+      setHasUnsavedChanges(false);
+      toast({ title: t("aiStudio.changesSaved", "Changes saved") });
+    } catch {
+      toast({
+        title: t("aiStudio.updateFailed", "Failed to update"),
+        variant: "destructive",
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleDeleteHistory = async (id: string) => {
+    if (id === loadedHistoryId) {
+      setLoadedHistoryId(null);
+      setEditableContent("");
+      setTopic("");
+      setHasUnsavedChanges(false);
+    }
+
+    try {
+      await deleteGeneration(id);
+      toast({ title: t("aiStudio.deletedFromHistory", "Deleted from history") });
+    } catch {
+      toast({ title: t("aiStudio.deleteFailed", "Failed to delete"), variant: "destructive" });
+    }
   };
 
   // Selection handling for refine feature
@@ -199,6 +315,7 @@ export default function AIStudioBlog() {
       const before = editableContent.slice(0, selectionRange.start);
       const after = editableContent.slice(selectionRange.end);
       setEditableContent(before + refined_text + after);
+      setHasUnsavedChanges(true);
 
       toast({
         title: t("aiStudio.refined", "Text refined"),
@@ -229,6 +346,12 @@ export default function AIStudioBlog() {
 
   const isLoading = docsLoading || styleLoading;
   const hasContent = editableContent || generatedContent;
+
+  // Expose handlers for sidebar
+  (window as any).__aiStudioBlogHandlers = {
+    onLoadHistory: handleLoadHistory,
+    onDeleteHistory: handleDeleteHistory,
+  };
 
   return (
     <div className="space-y-6">
@@ -392,7 +515,12 @@ export default function AIStudioBlog() {
                 {hasContent && (
                   <Badge variant="secondary" className="text-xs">
                     <Sparkles className="h-3 w-3 mr-1" />
-                    {t("aiStudio.aiDraft", "AI Draft")}
+                    {loadedHistoryId ? t("aiStudio.saved", "Saved") : t("aiStudio.aiDraft", "AI Draft")}
+                  </Badge>
+                )}
+                {hasUnsavedChanges && loadedHistoryId && (
+                  <Badge variant="outline" className="text-xs text-muted-foreground">
+                    {t("aiStudio.unsaved", "Unsaved")}
                   </Badge>
                 )}
               </div>
@@ -403,7 +531,37 @@ export default function AIStudioBlog() {
               </CardDescription>
             </div>
             {hasContent && (
-              <div className="flex gap-2">
+              <div className="flex gap-2 flex-wrap">
+                {/* Save/Update Button */}
+                {loadedHistoryId ? (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleUpdateHistory}
+                    disabled={!hasUnsavedChanges || isSaving}
+                  >
+                    {isSaving ? (
+                      <RefreshCw className="h-4 w-4 mr-1 animate-spin" />
+                    ) : (
+                      <Save className="h-4 w-4 mr-1" />
+                    )}
+                    {t("aiStudio.update", "Update")}
+                  </Button>
+                ) : (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleSaveToHistory}
+                    disabled={isSaving}
+                  >
+                    {isSaving ? (
+                      <RefreshCw className="h-4 w-4 mr-1 animate-spin" />
+                    ) : (
+                      <Save className="h-4 w-4 mr-1" />
+                    )}
+                    {t("aiStudio.saveToHistory", "Save")}
+                  </Button>
+                )}
                 {/* Edit/Preview Toggle */}
                 <Button 
                   variant="ghost" 
@@ -503,7 +661,7 @@ export default function AIStudioBlog() {
                     <Textarea
                       ref={textareaRef}
                       value={editableContent}
-                      onChange={(e) => setEditableContent(e.target.value)}
+                      onChange={(e) => handleContentChange(e.target.value)}
                       onMouseUp={handleTextSelection}
                       onKeyUp={handleTextSelection}
                       className="h-[500px] font-mono text-sm resize-none"
