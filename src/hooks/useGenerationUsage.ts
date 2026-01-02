@@ -15,10 +15,13 @@ export function useGenerationUsage() {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
 
+      // Count ALL generations today (regardless of is_active status)
+      // This ensures accurate daily usage tracking even after history cleanup
       const { count, error } = await supabase
         .from("ai_generation_history")
         .select("*", { count: "exact", head: true })
         .eq("instructor_id", user.id)
+        .eq("status", "completed")
         .gte("created_at", today.toISOString());
 
       if (error) {

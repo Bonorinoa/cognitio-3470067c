@@ -24,6 +24,7 @@ export type Database = {
           id: string
           input_tokens: number | null
           instructor_id: string
+          is_active: boolean | null
           model_used: string | null
           output_tokens: number | null
           selected_document_ids: string[] | null
@@ -41,6 +42,7 @@ export type Database = {
           id?: string
           input_tokens?: number | null
           instructor_id: string
+          is_active?: boolean | null
           model_used?: string | null
           output_tokens?: number | null
           selected_document_ids?: string[] | null
@@ -58,6 +60,7 @@ export type Database = {
           id?: string
           input_tokens?: number | null
           instructor_id?: string
+          is_active?: boolean | null
           model_used?: string | null
           output_tokens?: number | null
           selected_document_ids?: string[] | null

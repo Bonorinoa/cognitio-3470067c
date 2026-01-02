@@ -34,6 +34,7 @@ export function useGenerationHistory() {
         .select("id, content_type, topic, generated_content, created_at")
         .eq("instructor_id", user.id)
         .eq("status", "completed")
+        .eq("is_active", true) // Only show active items in history
         .order("created_at", { ascending: false })
         .limit(HISTORY_LIMIT);
 
@@ -52,27 +53,29 @@ export function useGenerationHistory() {
   const saveGeneration = async (params: SaveGenerationParams): Promise<string | null> => {
     if (!user?.id) return null;
 
-    // Check current count
+    // Check current count of ACTIVE items
     const { count } = await supabase
       .from("ai_generation_history")
       .select("*", { count: "exact", head: true })
       .eq("instructor_id", user.id)
-      .eq("status", "completed");
+      .eq("status", "completed")
+      .eq("is_active", true);
 
-    // If at limit, delete oldest
+    // If at limit, soft-delete oldest (set is_active = false)
     if (count && count >= HISTORY_LIMIT) {
       const { data: oldest } = await supabase
         .from("ai_generation_history")
         .select("id")
         .eq("instructor_id", user.id)
         .eq("status", "completed")
+        .eq("is_active", true)
         .order("created_at", { ascending: true })
         .limit(1);
 
       if (oldest?.[0]) {
         await supabase
           .from("ai_generation_history")
-          .delete()
+          .update({ is_active: false })
           .eq("id", oldest[0].id);
       }
     }
