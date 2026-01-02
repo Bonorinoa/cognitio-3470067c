@@ -6,6 +6,25 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+const DAILY_LIMIT = 10;
+const RESET_HOUR_UTC = 9; // 6am Argentina = 09:00 UTC
+
+function getDayStart(): Date {
+  const now = new Date();
+  const dayStart = new Date(now);
+  dayStart.setUTCHours(RESET_HOUR_UTC, 0, 0, 0);
+  dayStart.setUTCMinutes(0);
+  dayStart.setUTCSeconds(0);
+  dayStart.setUTCMilliseconds(0);
+  
+  // If we haven't reached reset hour today, use yesterday's reset
+  if (now < dayStart) {
+    dayStart.setUTCDate(dayStart.getUTCDate() - 1);
+  }
+  
+  return dayStart;
+}
+
 serve(async (req) => {
   // Handle CORS preflight
   if (req.method === "OPTIONS") {
@@ -46,6 +65,35 @@ serve(async (req) => {
     console.log("Generating content for instructor:", user.id);
     console.log("Content type:", content_type, "Topic:", topic);
     console.log("Selected documents:", selected_document_ids);
+
+    // Check daily usage limit BEFORE calling AI
+    const dayStart = getDayStart();
+    console.log("Checking usage since:", dayStart.toISOString());
+
+    const { count: todayUsage, error: usageError } = await supabase
+      .from("ai_usage_logs")
+      .select("*", { count: "exact", head: true })
+      .eq("instructor_id", user.id)
+      .gte("created_at", dayStart.toISOString());
+
+    if (usageError) {
+      console.error("Error checking usage:", usageError);
+    }
+
+    console.log("Today's usage count:", todayUsage);
+
+    if (todayUsage !== null && todayUsage >= DAILY_LIMIT) {
+      console.log("Daily limit exceeded for user:", user.id);
+      return new Response(
+        JSON.stringify({ 
+          error: "Daily generation limit reached (10/day). Resets at 6am Argentina time." 
+        }),
+        {
+          status: 429,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
+    }
 
     // Fetch instructor profile
     const { data: profile } = await supabase
@@ -189,6 +237,23 @@ CRITICAL OUTPUT RULES:
       
       throw new Error(`AI Gateway error: ${response.status}`);
     }
+
+    // Log this AI call for usage tracking (fire and forget)
+    console.log("Logging usage for instructor:", user.id);
+    supabase
+      .from("ai_usage_logs")
+      .insert({
+        instructor_id: user.id,
+        content_type: content_type || "blog",
+        model_used: "google/gemini-2.5-flash",
+      })
+      .then(({ error: logError }) => {
+        if (logError) {
+          console.error("Failed to log usage:", logError);
+        } else {
+          console.log("Usage logged successfully");
+        }
+      });
 
     console.log("Streaming response to client...");
 

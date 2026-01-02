@@ -3,26 +3,41 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 
 const DAILY_LIMIT = 10;
+const RESET_HOUR_UTC = 9; // 6am Argentina = 09:00 UTC
+
+function getDayStart(): Date {
+  const now = new Date();
+  const dayStart = new Date(now);
+  dayStart.setUTCHours(RESET_HOUR_UTC, 0, 0, 0);
+  dayStart.setUTCMinutes(0);
+  dayStart.setUTCSeconds(0);
+  dayStart.setUTCMilliseconds(0);
+  
+  // If we haven't reached reset hour today, use yesterday's reset
+  if (now < dayStart) {
+    dayStart.setUTCDate(dayStart.getUTCDate() - 1);
+  }
+  
+  return dayStart;
+}
 
 export function useGenerationUsage() {
   const { user } = useAuth();
 
+  // Count today's AI calls from ai_usage_logs
   const { data: todayCount = 0, isLoading } = useQuery({
     queryKey: ["generation-usage", user?.id],
     queryFn: async () => {
       if (!user?.id) return 0;
 
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
+      const dayStart = getDayStart();
 
-      // Count ALL generations today (regardless of is_active status)
-      // This ensures accurate daily usage tracking even after history cleanup
+      // Count from ai_usage_logs table (actual AI calls)
       const { count, error } = await supabase
-        .from("ai_generation_history")
+        .from("ai_usage_logs")
         .select("*", { count: "exact", head: true })
         .eq("instructor_id", user.id)
-        .eq("status", "completed")
-        .gte("created_at", today.toISOString());
+        .gte("created_at", dayStart.toISOString());
 
       if (error) {
         console.error("Error fetching generation usage:", error);
@@ -33,19 +48,19 @@ export function useGenerationUsage() {
     },
     enabled: !!user?.id,
     staleTime: 30000, // Cache for 30 seconds
+    refetchInterval: 60000, // Refresh every minute for accuracy
   });
 
-  // Total all-time generations (regardless of is_active status)
+  // Total all-time AI calls (from ai_usage_logs)
   const { data: totalCount = 0 } = useQuery({
     queryKey: ["generation-total", user?.id],
     queryFn: async () => {
       if (!user?.id) return 0;
 
       const { count, error } = await supabase
-        .from("ai_generation_history")
+        .from("ai_usage_logs")
         .select("*", { count: "exact", head: true })
-        .eq("instructor_id", user.id)
-        .eq("status", "completed");
+        .eq("instructor_id", user.id);
 
       if (error) {
         console.error("Error fetching total generations:", error);
