@@ -110,7 +110,10 @@ export default function AIStudioSidebar({ onLoadHistory, onDeleteHistory }: AISt
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
           <LayoutGroup id="ai-studio-desktop">
             {menuItems.map((item) => {
-              const isActive = location.pathname === item.href;
+              // Dashboard uses exact match, others use startsWith for subroutes
+              const isActive = item.href === "/ai-studio" 
+                ? location.pathname === "/ai-studio"
+                : location.pathname.startsWith(item.href);
               const Icon = item.icon;
 
               if (item.disabled) {
@@ -302,7 +305,10 @@ export default function AIStudioSidebar({ onLoadHistory, onDeleteHistory }: AISt
         <div className="h-12 flex items-center px-2 gap-1 overflow-x-auto">
           <LayoutGroup id="ai-studio-mobile">
             {menuItems.map((item) => {
-              const isActive = location.pathname === item.href;
+              // Dashboard uses exact match, others use startsWith for subroutes
+              const isActive = item.href === "/ai-studio" 
+                ? location.pathname === "/ai-studio"
+                : location.pathname.startsWith(item.href);
               const Icon = item.icon;
 
               if (item.disabled) {
