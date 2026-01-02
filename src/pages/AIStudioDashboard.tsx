@@ -24,7 +24,7 @@ export default function AIStudioDashboard() {
   const navigate = useNavigate();
   const { documents } = useKnowledgeBase();
   const { hasCompletedSetup } = useStyleProfile();
-  const { remaining, limit } = useGenerationUsage();
+  const { remaining, limit, totalCount } = useGenerationUsage();
   const { history } = useGenerationHistory();
 
   // Calculate usage percentage
@@ -266,7 +266,7 @@ export default function AIStudioDashboard() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{history?.length || 0}</div>
+              <div className="text-2xl font-bold">{totalCount}</div>
               <p className="text-sm text-muted-foreground">
                 {t("aiStudio.totalGen", "Total gen.")}
               </p>
