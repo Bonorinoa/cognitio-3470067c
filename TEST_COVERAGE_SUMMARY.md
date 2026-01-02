@@ -1,7 +1,7 @@
 # Test Coverage Summary
 
-**Last Updated**: January 1, 2026  
-**Project**: Cognitio v3.5.0  
+**Last Updated**: January 2, 2026  
+**Project**: Cognitio v3.9.0  
 **Testing Stack**: Vitest + React Testing Library + Playwright
 
 ## Overview
@@ -51,7 +51,7 @@ Cognitio maintains comprehensive test coverage across multiple testing layers:
 - VideoUpload, AvatarUpload, InstructorCatalogCard
 - CourseMembershipManager
 
-### Pages (7+ test files)
+### Pages (8+ test files)
 
 ✅ **Tested Pages**:
 - Dashboard.test.tsx ✅
@@ -61,6 +61,7 @@ Cognitio maintains comprehensive test coverage across multiple testing layers:
 - CoursesPage.test.tsx ✅
 - Index.test.tsx ✅
 - AdminPanel.test.tsx ✅
+- AIStudioDashboard.test.tsx ✅
 
 ⚠️ **Pages Missing Tests**:
 - AIStudioKnowledge, AIStudioBlog
@@ -69,15 +70,40 @@ Cognitio maintains comprehensive test coverage across multiple testing layers:
 
 ### Hooks
 
-⚠️ **AI Studio Hooks (Manual Testing Only)**:
+✅ **AI Studio Hooks (v3.9)**:
 - useKnowledgeBase - Manual ✅
 - useStyleProfile - Manual ✅
 - useContentGeneration - Manual ✅
-- useGenerationUsage - Manual ✅
+- useGenerationUsage - Manual ✅ (tracks daily usage independently of history display)
+- useGenerationHistory - Manual ✅ (filters by is_active, soft-delete logic)
 
 ### E2E Test Coverage
 
 ✅ Authentication, Student Journey, Instructor Journey, Admin Operations, Navigation ✅
+
+## AI Studio Test Coverage (v3.9)
+
+### Manually Tested Features
+
+| Feature | Status | Notes |
+|---------|--------|-------|
+| AI Studio Dashboard | ✅ | Quick actions, analytics cards, recent activity |
+| Knowledge Base CRUD | ✅ | Create, read, update, delete documents |
+| Style Profile Setup | ✅ | All options, setup_completed flag |
+| Blog Generation | ✅ | Topic input, context selection, streaming output |
+| Content Editing | ✅ | Dual-mode editor (preview/edit) |
+| AI Refinement | ✅ | Text selection, quick actions, diff view |
+| History Management | ✅ | Save, update, load, delete with soft-delete |
+| Usage Tracking | ✅ | Daily limit (10/day), independent of history display |
+| Export Functions | ✅ | TXT and MD export working |
+| Mobile Navigation | ✅ | Responsive sidebar, tabs with sliding indicator |
+
+### Database Features Tested
+
+- `is_active` column for soft-delete ✅
+- Composite index for optimized queries ✅
+- Usage counting ignores `is_active` status ✅
+- History display filters by `is_active: true` ✅
 
 ## Testing Commands
 
@@ -103,7 +129,13 @@ npm run test:all          # Run both unit and E2E tests
 
 ## Recent Changes
 
-**January 1, 2026 (v3.5.0)**:
+**January 2, 2026 (v3.9.0)**:
+- ✅ AI Studio Dashboard implemented and tested
+- ✅ Generation usage tracking with `is_active` column
+- ✅ Soft-delete for history management
+- ✅ Fixed react-markdown ref warning
+
+**January 1, 2026 (v3.5.0-v3.8.0)**:
 - ✅ AI Content Studio features manually tested
 - ✅ Generation workflow verified
 - ✅ Usage tracking confirmed working
@@ -117,14 +149,19 @@ npm run test:all          # Run both unit and E2E tests
 ## Recommendations
 
 ### High Priority
-1. Add unit tests for AI Studio hooks
+1. Add unit tests for AI Studio hooks (useGenerationUsage, useGenerationHistory)
 2. Add component tests for DocumentEditor
 3. Add E2E tests for AI generation flow
 
 ### Medium Priority
 1. Add tests for CourseMembershipManager
-2. Increase page test coverage
+2. Increase page test coverage for AI Studio pages
 3. Add visual regression tests
+
+### Low Priority
+1. Add integration tests for refine-content edge function
+2. Add tests for export functionality
+3. Performance testing for large document contexts
 
 ---
 
