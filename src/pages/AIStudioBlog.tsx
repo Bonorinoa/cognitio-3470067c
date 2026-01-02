@@ -1,8 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
-import { Sparkles, FileText, Send, RefreshCw, Copy, Check, AlertCircle, FileEdit, Download, FileCode } from "lucide-react";
+import { 
+  Sparkles, FileText, Send, RefreshCw, Copy, Check, AlertCircle, 
+  FileEdit, Download, FileCode, Eye, Pencil, Wand2 
+} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,10 +17,12 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { useKnowledgeBase } from "@/hooks/useKnowledgeBase";
 import { useContentGeneration } from "@/hooks/useContentGeneration";
 import { useStyleProfile } from "@/hooks/useStyleProfile";
+import { supabase } from "@/integrations/supabase/client";
 
 export default function AIStudioBlog() {
   const { t } = useTranslation();
@@ -31,6 +36,26 @@ export default function AIStudioBlog() {
   const [additionalInstructions, setAdditionalInstructions] = useState("");
   const [selectedDocIds, setSelectedDocIds] = useState<string[]>([]);
   const [copied, setCopied] = useState(false);
+
+  // Edit mode state
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editableContent, setEditableContent] = useState("");
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Refine state
+  const [selectedText, setSelectedText] = useState("");
+  const [selectionRange, setSelectionRange] = useState<{ start: number; end: number } | null>(null);
+  const [showRefineButton, setShowRefineButton] = useState(false);
+  const [refineDialogOpen, setRefineDialogOpen] = useState(false);
+  const [refineInstruction, setRefineInstruction] = useState("");
+  const [isRefining, setIsRefining] = useState(false);
+
+  // Sync generated content to editable content
+  useEffect(() => {
+    if (generatedContent && !isGenerating) {
+      setEditableContent(generatedContent);
+    }
+  }, [generatedContent, isGenerating]);
 
   const handleDocToggle = (docId: string) => {
     setSelectedDocIds((prev) =>
@@ -69,7 +94,7 @@ export default function AIStudioBlog() {
   };
 
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(generatedContent);
+    await navigator.clipboard.writeText(editableContent || generatedContent);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
     toast({
@@ -82,6 +107,11 @@ export default function AIStudioBlog() {
     setTopic("");
     setAdditionalInstructions("");
     setSelectedDocIds([]);
+    setEditableContent("");
+    setIsEditMode(false);
+    setShowRefineButton(false);
+    setSelectedText("");
+    setSelectionRange(null);
   };
 
   const downloadFile = (content: string, filename: string, mimeType: string) => {
@@ -97,7 +127,8 @@ export default function AIStudioBlog() {
   };
 
   const handleExportTxt = () => {
-    const plainText = generatedContent
+    const contentToExport = editableContent || generatedContent;
+    const plainText = contentToExport
       .replace(/^#+\s*/gm, "")
       .replace(/\*\*(.*?)\*\*/g, "$1")
       .replace(/\*(.*?)\*/g, "$1")
@@ -108,12 +139,96 @@ export default function AIStudioBlog() {
   };
 
   const handleExportMd = () => {
+    const contentToExport = editableContent || generatedContent;
     const slug = topic.toLowerCase().replace(/\s+/g, "-").slice(0, 30);
-    downloadFile(generatedContent, `${slug}.md`, "text/markdown");
+    downloadFile(contentToExport, `${slug}.md`, "text/markdown");
     toast({ title: t("aiStudio.exported", "Exported as Markdown") });
   };
 
+  // Selection handling for refine feature
+  const handleTextSelection = () => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selected = textarea.value.substring(start, end);
+
+    if (selected.trim().length > 10) {
+      setSelectedText(selected);
+      setSelectionRange({ start, end });
+      setShowRefineButton(true);
+    } else {
+      setShowRefineButton(false);
+      setSelectedText("");
+      setSelectionRange(null);
+    }
+  };
+
+  const handleRefine = async () => {
+    if (!selectedText || !selectionRange || !refineInstruction.trim()) return;
+
+    setIsRefining(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error("Not authenticated");
+
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/refine-content`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session.access_token}`,
+          },
+          body: JSON.stringify({
+            selected_text: selectedText,
+            instruction: refineInstruction.trim(),
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || "Refinement failed");
+      }
+
+      const { refined_text } = await response.json();
+
+      // Replace selection with refined text
+      const before = editableContent.slice(0, selectionRange.start);
+      const after = editableContent.slice(selectionRange.end);
+      setEditableContent(before + refined_text + after);
+
+      toast({
+        title: t("aiStudio.refined", "Text refined"),
+        description: t("aiStudio.refinedDesc", "The selected text has been updated"),
+      });
+
+      // Reset refine state
+      setRefineDialogOpen(false);
+      setRefineInstruction("");
+      setSelectedText("");
+      setSelectionRange(null);
+      setShowRefineButton(false);
+
+    } catch (err) {
+      toast({
+        title: t("aiStudio.refineFailed", "Refinement failed"),
+        description: err instanceof Error ? err.message : "Please try again",
+        variant: "destructive",
+      });
+    } finally {
+      setIsRefining(false);
+    }
+  };
+
+  const setQuickRefineAction = (action: string) => {
+    setRefineInstruction(action);
+  };
+
   const isLoading = docsLoading || styleLoading;
+  const hasContent = editableContent || generatedContent;
 
   return (
     <div className="space-y-6">
@@ -260,7 +375,7 @@ export default function AIStudioBlog() {
                 </>
               )}
             </Button>
-            {generatedContent && (
+            {hasContent && (
               <Button variant="outline" onClick={handleReset} size="lg">
                 {t("aiStudio.reset", "Reset")}
               </Button>
@@ -274,7 +389,7 @@ export default function AIStudioBlog() {
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <CardTitle className="text-lg">{t("aiStudio.output", "Generated Content")}</CardTitle>
-                {generatedContent && (
+                {hasContent && (
                   <Badge variant="secondary" className="text-xs">
                     <Sparkles className="h-3 w-3 mr-1" />
                     {t("aiStudio.aiDraft", "AI Draft")}
@@ -282,13 +397,36 @@ export default function AIStudioBlog() {
                 )}
               </div>
               <CardDescription>
-                {generatedContent
+                {hasContent
                   ? t("aiStudio.outputReady", "Your content is ready to copy")
                   : t("aiStudio.outputEmpty", "Content will appear here")}
               </CardDescription>
             </div>
-            {generatedContent && (
+            {hasContent && (
               <div className="flex gap-2">
+                {/* Edit/Preview Toggle */}
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={() => {
+                    setIsEditMode(!isEditMode);
+                    setShowRefineButton(false);
+                    setSelectedText("");
+                    setSelectionRange(null);
+                  }}
+                >
+                  {isEditMode ? (
+                    <>
+                      <Eye className="h-4 w-4 mr-1" />
+                      {t("aiStudio.preview", "Preview")}
+                    </>
+                  ) : (
+                    <>
+                      <Pencil className="h-4 w-4 mr-1" />
+                      {t("aiStudio.edit", "Edit")}
+                    </>
+                  )}
+                </Button>
                 <Button variant="outline" size="sm" onClick={handleCopy}>
                   {copied ? (
                     <>
@@ -336,17 +474,48 @@ export default function AIStudioBlog() {
                     <AlertDescription>{error}</AlertDescription>
                   </Alert>
                 </motion.div>
-              ) : generatedContent ? (
+              ) : hasContent ? (
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
+                  className="relative"
                 >
-                  <ScrollArea className="h-[500px]">
-                    <div className="prose prose-sm dark:prose-invert max-w-none">
-                      <ReactMarkdown>{generatedContent}</ReactMarkdown>
-                    </div>
-                  </ScrollArea>
+                  {/* Floating Refine Button */}
+                  {showRefineButton && isEditMode && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="absolute -top-2 left-1/2 -translate-x-1/2 z-10"
+                    >
+                      <Button
+                        size="sm"
+                        onClick={() => setRefineDialogOpen(true)}
+                        className="shadow-lg"
+                      >
+                        <Wand2 className="h-4 w-4 mr-1" />
+                        {t("aiStudio.refineWithAI", "Refine with AI")}
+                      </Button>
+                    </motion.div>
+                  )}
+
+                  {isEditMode ? (
+                    <Textarea
+                      ref={textareaRef}
+                      value={editableContent}
+                      onChange={(e) => setEditableContent(e.target.value)}
+                      onMouseUp={handleTextSelection}
+                      onKeyUp={handleTextSelection}
+                      className="h-[500px] font-mono text-sm resize-none"
+                      placeholder="Edit your content here..."
+                    />
+                  ) : (
+                    <ScrollArea className="h-[500px]">
+                      <div className="prose prose-sm dark:prose-invert max-w-none">
+                        <ReactMarkdown>{editableContent || generatedContent}</ReactMarkdown>
+                      </div>
+                    </ScrollArea>
+                  )}
                 </motion.div>
               ) : (
                 <motion.div
@@ -365,6 +534,89 @@ export default function AIStudioBlog() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Refine Dialog */}
+      <Dialog open={refineDialogOpen} onOpenChange={setRefineDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>{t("aiStudio.refineTitle", "Refine Selection")}</DialogTitle>
+            <DialogDescription>
+              {t("aiStudio.refineDesc", "Tell the AI how to improve the selected text")}
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            {/* Selected text preview */}
+            <div className="p-3 bg-muted rounded-md text-sm max-h-32 overflow-auto">
+              <p className="text-muted-foreground text-xs mb-1">
+                {t("aiStudio.selectedText", "Selected text:")}
+              </p>
+              <p className="italic">
+                "{selectedText.length > 200 ? selectedText.slice(0, 200) + "..." : selectedText}"
+              </p>
+            </div>
+
+            {/* Quick actions */}
+            <div className="flex flex-wrap gap-2">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => setQuickRefineAction("Make it more concise and shorter")}
+              >
+                {t("aiStudio.shorten", "Shorten")}
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => setQuickRefineAction("Make it more detailed and expand on the ideas")}
+              >
+                {t("aiStudio.expand", "Expand")}
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => setQuickRefineAction("Use simpler language and make it easier to understand")}
+              >
+                {t("aiStudio.simplify", "Simplify")}
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => setQuickRefineAction("Make it more formal and professional")}
+              >
+                {t("aiStudio.formalize", "Formalize")}
+              </Button>
+            </div>
+
+            {/* Custom instruction */}
+            <Textarea
+              placeholder={t("aiStudio.customInstruction", "Or type custom instructions...")}
+              value={refineInstruction}
+              onChange={(e) => setRefineInstruction(e.target.value)}
+              rows={2}
+            />
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setRefineDialogOpen(false)}>
+              {t("common.cancel", "Cancel")}
+            </Button>
+            <Button onClick={handleRefine} disabled={isRefining || !refineInstruction.trim()}>
+              {isRefining ? (
+                <>
+                  <RefreshCw className="h-4 w-4 mr-1 animate-spin" />
+                  {t("aiStudio.refining", "Refining...")}
+                </>
+              ) : (
+                <>
+                  <Sparkles className="h-4 w-4 mr-1" />
+                  {t("aiStudio.refine", "Refine")}
+                </>
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
