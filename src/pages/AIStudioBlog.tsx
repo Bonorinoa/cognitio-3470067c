@@ -692,9 +692,16 @@ export default function AIStudioBlog() {
                     />
                   ) : (
                     <ScrollArea className="h-[500px]">
-                      <div className="prose prose-sm dark:prose-invert max-w-none">
-                        <ReactMarkdown>{editableContent || generatedContent}</ReactMarkdown>
-                      </div>
+                      <article className="prose prose-sm dark:prose-invert max-w-none">
+                        <ReactMarkdown
+                          components={{
+                            // Wrap content in a fragment to avoid ref warning
+                            p: ({ children }) => <p>{children}</p>,
+                          }}
+                        >
+                          {editableContent || generatedContent}
+                        </ReactMarkdown>
+                      </article>
                     </ScrollArea>
                   )}
                 </motion.div>
