@@ -29,11 +29,11 @@ Cognitio no es un marketplace abierto. Es un "Instructor Studio" curado: LMS lig
 
 ---
 
-## 📍 Estado Actual: v3.5.0
+## 📍 Estado Actual: v3.9.0
 
-**Última Actualización:** Enero 1, 2026
+**Última Actualización:** Enero 2, 2026
 
-### ✅ Funcionalidades Completas (v1.0 - v3.5)
+### ✅ Funcionalidades Completas (v1.0 - v3.9)
 
 #### Core Platform (v1.0 - v2.9.4)
 - Autenticación de usuarios (registro/inicio de sesión/recuperación de contraseña)
@@ -52,19 +52,23 @@ Cognitio no es un marketplace abierto. Es un "Instructor Studio" curado: LMS lig
 - Internacionalización completa (Español/Inglés)
 - Security audit complete: 0 vulnerabilities
 
-#### AI Content Studio (v3.0 - v3.5) 🆕
+#### AI Content Studio (v3.0 - v3.9) 🆕
+- **AI Studio Dashboard**: Landing page con estadísticas y acciones rápidas
 - **Knowledge Base**: Gestión de documentos con tipos y roles de contexto
 - **Style Profiles**: Configuración de tono, longitud, audiencia objetivo
 - **Blog Generator**: Generación de contenido con streaming en tiempo real
-- **Usage Tracking**: Límite de 10 generaciones por día con barra de progreso
+- **Content Refinement**: Edición inline con IA (refine-content edge function)
+- **Rich Editor**: Toggle Preview/Edit con soporte markdown completo
+- **Generation History**: Guardar, cargar, actualizar y eliminar generaciones (FIFO 10 items)
+- **Usage Tracking**: Límite de 10 generaciones/día con soft-delete (`is_active` column)
+- **Export Options**: Exportar como .txt o .md
 - **Mobile Navigation**: Tab bar responsive para AI Studio
 - **Lovable AI Integration**: Gemini 2.5 Flash vía AI Gateway
 
-### 🚧 Próximo: v3.6 - v3.9
+### 🚧 Próximo: v3.10+
 - Newsletter Generator
-- Export/Publish Workflow
-- Generation History Persistence
 - Course Context Integration
+- Multi-language generation
 
 Consulta **[DEVELOPMENT_PLAN.md](./DEVELOPMENT_PLAN.md)** para el roadmap completo.
 Consulta **[CHANGELOG.md](./CHANGELOG.md)** para el historial de cambios.
@@ -200,9 +204,9 @@ npx vitest           # Tests en modo watch
 ### AI Studio (Instructor) 🆕
 | Ruta | Descripción |
 |------|-------------|
-| `/ai-studio` | Redirect a Knowledge Base |
+| `/ai-studio` | Dashboard del AI Studio |
 | `/ai-studio/knowledge` | Knowledge Base y Style Profile |
-| `/ai-studio/blog` | Generador de Blogs |
+| `/ai-studio/blog` | Generador de Blogs con historial |
 
 ### Admin (Rol requerido)
 | Ruta | Descripción |
@@ -218,26 +222,26 @@ cognitio/
 ├── src/
 │   ├── components/        # Componentes reutilizables
 │   │   ├── ui/            # shadcn/ui
-│   │   ├── ai-studio/     # Componentes AI Studio 🆕
+│   │   ├── ai-studio/     # Componentes AI Studio
 │   │   └── ...
 │   ├── pages/             # Componentes de página
 │   ├── contexts/          # React Context (Auth)
-│   ├── hooks/             # Hooks personalizados (incl. AI hooks) 🆕
+│   ├── hooks/             # Hooks personalizados (incl. AI hooks)
 │   ├── integrations/      # Supabase client/types
 │   ├── lib/               # Utilidades
 │   ├── locales/           # Traducciones (es.json, en.json)
 │   ├── test/              # Mocks y utilidades de test
-│   ├── types/             # TypeScript types (incl. aiStudio.ts) 🆕
+│   ├── types/             # TypeScript types (incl. aiStudio.ts)
 │   └── assets/            # Assets estáticos
 ├── supabase/
-│   ├── functions/         # Edge functions (Stripe, Mux, AI) 🆕
+│   ├── functions/         # Edge functions (Stripe, Mux, AI)
 │   └── config.toml        # Configuración Supabase
 └── docs/                  # Documentación
 ```
 
 ---
 
-## 🎨 Sistema de Diseño (v2.4-v3.5)
+## 🎨 Sistema de Diseño (v2.4-v3.9)
 
 ### Identidad Visual
 - **Estilo**: "Elegancia académica sin pretensiones"
@@ -328,4 +332,4 @@ Parte del ecosistema Lovable. Ver términos de licencia de Lovable.
 
 ---
 
-*Última actualización: Enero 2026 | Versión: 3.5.0*
+*Última actualización: Enero 2026 | Versión: 3.9.0*

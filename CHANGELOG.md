@@ -5,6 +5,78 @@ All notable changes to Cognitio will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.9.0] - 2026-01-02
+
+### Added
+- **AI Studio Dashboard**: New landing page at `/ai-studio` with:
+  - Quick action cards for Blog Generator and Newsletter (coming soon)
+  - Recent generations list with load buttons
+  - 4 analytics cards: Documents count, Style status, Generations today, Total generations
+  - Responsive design matching platform design system
+
+- **`is_active` Column**: Database migration adding soft-delete capability to `ai_generation_history`
+  - Enables accurate daily usage tracking independent of history display limit
+  - Index added for performance: `idx_ai_generation_history_active`
+
+### Changed
+- **`useGenerationHistory`**: Updated to use soft-delete (set `is_active = false`) instead of hard-delete when reaching 10-item history limit
+- **`useGenerationUsage`**: Now counts ALL generations created today regardless of `is_active` status, ensuring accurate quota tracking
+- **AI Studio Sidebar**: Dashboard added as first menu item, improved active link detection
+- **Routing**: `/ai-studio` now shows Dashboard, Knowledge Base moved to `/ai-studio/knowledge`
+
+### Fixed
+- **Usage Counter Bug**: Previously showed incorrect count when history hit 10-item limit; now accurately tracks daily usage
+
+## [3.8.0] - 2026-01-02
+
+### Added
+- **Generation History**: Full CRUD for saved generations
+  - Save to History button for new generations
+  - Update existing history items
+  - Load history items back into editor
+  - Delete with confirmation dialog
+  - FIFO queue (10 items max)
+
+- **History Sidebar**: Collapsible list in AI Studio sidebar
+  - Shows recent generations with relative timestamps
+  - Quick-load buttons
+  - Delete icons with AlertDialog confirmation
+
+### Technical
+- RLS policy for DELETE operation on `ai_generation_history`
+
+## [3.7.0] - 2026-01-01
+
+### Added
+- **Inline Refinement**: AI-powered text editing
+  - `refine-content` edge function for targeted text refinement
+  - Text selection triggers "Refine with AI" floating button
+  - Refinement dialog with custom instructions input
+  - Quick actions: Shorten, Expand, Simplify, Formalize
+  - Side-by-side diff view for accepting/rejecting changes
+
+- **Export Options**: Multiple export formats
+  - Export as .txt (strips markdown formatting)
+  - Export as .md (preserves markdown)
+  - Dropdown menu for format selection
+
+### Changed
+- Editor now tracks `editableContent` separately for manual edits
+- Export uses edited content, not original generation
+
+## [3.6.0] - 2026-01-01
+
+### Added
+- **Rich Editor**: Dual-mode content editing
+  - Preview mode with ReactMarkdown rendering
+  - Edit mode with Textarea for direct markdown editing
+  - Toggle button to switch between modes
+  - Editable content state for manual modifications
+
+### Technical
+- Integrated `react-markdown` for proper content rendering
+- System prompt enforces strict "content-only" output rules
+
 ## [3.5.0] - 2026-01-01
 
 ### Added
