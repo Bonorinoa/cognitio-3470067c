@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import { 
   Sparkles, FileText, Send, RefreshCw, Copy, Check, AlertCircle, 
@@ -30,6 +30,7 @@ import { supabase } from "@/integrations/supabase/client";
 export default function AIStudioBlog() {
   const { t } = useTranslation();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const aiStudioContext = useAIStudioContext();
   const { activeDocuments, isLoading: docsLoading } = useKnowledgeBase();
@@ -440,10 +441,10 @@ export default function AIStudioBlog() {
                 <EmptyState
                   icon={FileText}
                   title={t("aiStudio.noDocuments", "No documents in your knowledge base yet.")}
-                  description="Agrega documentos a tu base de conocimiento para usarlos como contexto en la generación de contenido."
+                  description={t("aiStudio.noDocumentsDescription", "Agrega documentos a tu base de conocimiento para usarlos como contexto en la generación de contenido.")}
                   action={{
                     label: t("aiStudio.addDocuments", "Add Documents"),
-                    onClick: () => window.location.href = "/ai-studio"
+                    onClick: () => navigate("/ai-studio")
                   }}
                 />
               ) : (

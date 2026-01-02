@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import ProgressCard from "@/components/ProgressCard";
 import { StatsCardSkeleton } from "@/components/StatsCardSkeleton";
@@ -45,6 +45,7 @@ interface RecentEnrollment {
 const InstructorDashboard = () => {
   const { t } = useTranslation();
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [courses, setCourses] = useState<CourseWithStats[]>([]);
   const [recentEnrollments, setRecentEnrollments] = useState<RecentEnrollment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -251,10 +252,10 @@ const InstructorDashboard = () => {
                 <EmptyState
                   icon={PlusCircle}
                   title={t("instructorDashboard.noCourses")}
-                  description="Crea tu primer curso y comienza a compartir tu conocimiento con estudiantes de todo el mundo."
+                  description={t("instructorDashboard.createFirstDescription", "Crea tu primer curso y comienza a compartir tu conocimiento con estudiantes de todo el mundo.")}
                   action={{
                     label: t("instructorDashboard.createFirst"),
-                    onClick: () => window.location.href = "/instructor/create"
+                    onClick: () => navigate("/instructor/create")
                   }}
                 />
               ) : (

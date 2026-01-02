@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Navbar from "@/components/Navbar";
 import CourseCard from "@/components/CourseCard";
@@ -98,6 +98,7 @@ interface EnrolledCourse {
 const StudentDashboard = () => {
   const { t } = useTranslation();
   const { user, isLoading: authLoading } = useAuth();
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("all");
 
@@ -328,7 +329,7 @@ const StudentDashboard = () => {
             description={t("studentDashboard.startLearning")}
             action={{
               label: t("studentDashboard.browseCourses"),
-              onClick: () => window.location.href = "/courses"
+              onClick: () => navigate("/courses")
             }}
           />
         )}
