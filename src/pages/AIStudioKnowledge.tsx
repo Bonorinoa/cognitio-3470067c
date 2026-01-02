@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useKnowledgeBase } from "@/hooks/useKnowledgeBase";
 import { useStyleProfile } from "@/hooks/useStyleProfile";
+import { EmptyState } from "@/components/EmptyState";
 import DocumentEditor from "@/components/ai-studio/DocumentEditor";
 import StyleProfileForm from "@/components/ai-studio/StyleProfileForm";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -221,17 +222,15 @@ export default function AIStudioKnowledge() {
 
       {/* Documents Grid */}
       {documents.length === 0 ? (
-        <Card>
-          <CardContent className="flex flex-col items-center justify-center py-12 text-center">
-            <FileText className="h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-semibold mb-2">{t("knowledgeBase.noDocuments")}</h3>
-            <p className="text-muted-foreground mb-4">{t("knowledgeBase.noDocumentsHint")}</p>
-            <Button onClick={handleAdd} className="gap-2">
-              <Plus className="h-4 w-4" />
-              {t("knowledgeBase.addFirst")}
-            </Button>
-          </CardContent>
-        </Card>
+        <EmptyState
+          icon={FileText}
+          title={t("knowledgeBase.noDocuments")}
+          description={t("knowledgeBase.noDocumentsHint")}
+          action={{
+            label: t("knowledgeBase.addFirst"),
+            onClick: handleAdd
+          }}
+        />
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {documents.map((doc) => {
