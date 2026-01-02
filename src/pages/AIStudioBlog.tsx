@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { Sparkles, FileText, Send, RefreshCw, Copy, Check, AlertCircle, FileEdit } from "lucide-react";
+import ReactMarkdown from "react-markdown";
+import { Sparkles, FileText, Send, RefreshCw, Copy, Check, AlertCircle, FileEdit, Download, FileCode } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,6 +13,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
 import { useKnowledgeBase } from "@/hooks/useKnowledgeBase";
 import { useContentGeneration } from "@/hooks/useContentGeneration";
@@ -80,6 +82,35 @@ export default function AIStudioBlog() {
     setTopic("");
     setAdditionalInstructions("");
     setSelectedDocIds([]);
+  };
+
+  const downloadFile = (content: string, filename: string, mimeType: string) => {
+    const blob = new Blob([content], { type: mimeType });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleExportTxt = () => {
+    const plainText = generatedContent
+      .replace(/^#+\s*/gm, "")
+      .replace(/\*\*(.*?)\*\*/g, "$1")
+      .replace(/\*(.*?)\*/g, "$1")
+      .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
+    const slug = topic.toLowerCase().replace(/\s+/g, "-").slice(0, 30);
+    downloadFile(plainText, `${slug}.txt`, "text/plain");
+    toast({ title: t("aiStudio.exported", "Exported as TXT") });
+  };
+
+  const handleExportMd = () => {
+    const slug = topic.toLowerCase().replace(/\s+/g, "-").slice(0, 30);
+    downloadFile(generatedContent, `${slug}.md`, "text/markdown");
+    toast({ title: t("aiStudio.exported", "Exported as Markdown") });
   };
 
   const isLoading = docsLoading || styleLoading;
@@ -257,19 +288,39 @@ export default function AIStudioBlog() {
               </CardDescription>
             </div>
             {generatedContent && (
-              <Button variant="outline" size="sm" onClick={handleCopy}>
-                {copied ? (
-                  <>
-                    <Check className="h-4 w-4 mr-1" />
-                    {t("aiStudio.copied", "Copied")}
-                  </>
-                ) : (
-                  <>
-                    <Copy className="h-4 w-4 mr-1" />
-                    {t("aiStudio.copy", "Copy")}
-                  </>
-                )}
-              </Button>
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm" onClick={handleCopy}>
+                  {copied ? (
+                    <>
+                      <Check className="h-4 w-4 mr-1" />
+                      {t("aiStudio.copied", "Copied")}
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="h-4 w-4 mr-1" />
+                      {t("aiStudio.copy", "Copy")}
+                    </>
+                  )}
+                </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="sm">
+                      <Download className="h-4 w-4 mr-1" />
+                      {t("aiStudio.export", "Export")}
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={handleExportTxt}>
+                      <FileText className="h-4 w-4 mr-2" />
+                      {t("aiStudio.exportTxt", "Plain Text (.txt)")}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleExportMd}>
+                      <FileCode className="h-4 w-4 mr-2" />
+                      {t("aiStudio.exportMd", "Markdown (.md)")}
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             )}
           </CardHeader>
           <CardContent>
@@ -292,8 +343,8 @@ export default function AIStudioBlog() {
                   exit={{ opacity: 0 }}
                 >
                   <ScrollArea className="h-[500px]">
-                    <div className="prose prose-sm dark:prose-invert max-w-none whitespace-pre-wrap">
-                      {generatedContent}
+                    <div className="prose prose-sm dark:prose-invert max-w-none">
+                      <ReactMarkdown>{generatedContent}</ReactMarkdown>
                     </div>
                   </ScrollArea>
                 </motion.div>
