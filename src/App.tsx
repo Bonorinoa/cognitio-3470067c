@@ -19,6 +19,7 @@ import InstructorDashboard from "./pages/InstructorDashboard";
 import InstructorCourses from "./pages/InstructorCourses";
 import InstructorAnalytics from "./pages/InstructorAnalytics";
 import InstructorSettings from "./pages/InstructorSettings";
+import AIStudioDashboard from "./pages/AIStudioDashboard";
 import AIStudioKnowledge from "./pages/AIStudioKnowledge";
 import AIStudioBlog from "./pages/AIStudioBlog";
 import InstructorProfile from "./pages/InstructorProfile";
@@ -61,7 +62,8 @@ const App = () => (
             
             {/* AI Studio routes with dedicated layout */}
             <Route path="/ai-studio" element={<RequireInstructor><AIStudioLayout /></RequireInstructor>}>
-              <Route index element={<AIStudioKnowledge />} />
+              <Route index element={<AIStudioDashboard />} />
+              <Route path="knowledge" element={<AIStudioKnowledge />} />
               <Route path="blog" element={<AIStudioBlog />} />
             </Route>
             

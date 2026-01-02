@@ -495,5 +495,47 @@
     "savedDesc": "Your AI writing preferences have been updated.",
     "errorSave": "Error saving preferences",
     "errorSaveDesc": "Failed to save style preferences. Please try again."
+  },
+  "aiStudio": {
+    "dashboardTitle": "AI Content Studio",
+    "dashboardSubtitle": "Your intelligent content assistant",
+    "quickActions": "Quick Actions",
+    "generateBlog": "Generate Blog",
+    "blogDesc": "Create articles from your knowledge base",
+    "newsletterDesc": "Generate newsletters for your audience",
+    "recentGenerations": "Recent Generations",
+    "noRecentGenerations": "No recent generations",
+    "noRecentGenerationsDesc": "Your saved generations will appear here",
+    "viewAll": "View all",
+    "yourStudio": "Your Studio",
+    "documents": "Documents",
+    "genToday": "Gen. today",
+    "totalGen": "Total gen.",
+    "configured": "Configured",
+    "pending": "Pending",
+    "manage": "Manage",
+    "configure": "Configure",
+    "start": "Get Started",
+    "load": "Load"
+  },
+  "aiStudioNav": {
+    "dashboard": "Dashboard",
+    "knowledge": "Knowledge Base",
+    "blog": "Blog Generator",
+    "newsletter": "Newsletter",
+    "recent": "Recent",
+    "noHistory": "No saved generations yet",
+    "generationsLeft": "Generations Left",
+    "backToInstructor": "Back to Instructor Panel",
+    "recentGenerations": "Recent Generations",
+    "deleteConfirmTitle": "Delete from history?",
+    "deleteConfirmDesc": "This will permanently remove this generation from your history. This action cannot be undone."
+  },
+  "common": {
+    "soon": "Coming Soon",
+    "edit": "Edit",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "deleting": "Deleting..."
   }
 }
