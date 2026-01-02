@@ -9,6 +9,7 @@ Cognitio no es un marketplace abierto. Es un "Instructor Studio" curado: LMS lig
 ## 🎯 Visión del Producto
 
 ### Filosofía Core
+
 - **Exclusivo por invitación**: Los instructores son aprobados manualmente por Admins
 - **Centrado en el instructor**: Maximizar autonomía y retención de ingresos
 - **Simplicidad**: Arquitectura fácil de mantener para un equipo pequeño
@@ -16,26 +17,28 @@ Cognitio no es un marketplace abierto. Es un "Instructor Studio" curado: LMS lig
 
 ### Personas de Usuario
 
-| Persona | Descripción | Necesidades Principales |
-|---------|-------------|------------------------|
-| **Instructor Curado** | Académicos, investigadores, consultores (40-70+ años) | Vender cursos, ofrecer consultoría, identidad digital simple, ayuda con IA para marketing |
-| **Estudiante de por Vida** | Profesionales buscando expertise nicho | Experiencia de lectura limpia, reproductor sin distracciones, seguimiento de progreso |
-| **Admin de Plataforma** | Equipo interno pequeño | Gestión de roles, tareas de soporte |
+| Persona                    | Descripción                                           | Necesidades Principales                                                                   |
+| -------------------------- | ----------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| **Instructor Curado**      | Académicos, investigadores, consultores (40-70+ años) | Vender cursos, ofrecer consultoría, identidad digital simple, ayuda con IA para marketing |
+| **Estudiante de por Vida** | Profesionales buscando expertise nicho                | Experiencia de lectura limpia, reproductor sin distracciones, seguimiento de progreso     |
+| **Admin de Plataforma**    | Equipo interno pequeño                                | Gestión de roles, tareas de soporte                                                       |
 
 ### Tipos de Cursos
+
 - **Públicos**: Visibles en catálogo, comprables vía Stripe
 - **Privados**: Solo para cohortes específicas (ej: estudiantes universitarios), inscripción manual
 - **Unlisted**: Accesibles solo por link directo
 
 ---
 
-## 📍 Estado Actual: v3.9.0
+## 📍 Estado Actual: v3.5.0
 
-**Última Actualización:** Enero 2, 2026
+**Última Actualización:** Enero 1, 2026
 
-### ✅ Funcionalidades Completas (v1.0 - v3.9)
+### ✅ Funcionalidades Completas (v1.0 - v3.5)
 
 #### Core Platform (v1.0 - v2.9.4)
+
 - Autenticación de usuarios (registro/inicio de sesión/recuperación de contraseña)
 - Sistema de roles (admin/instructor/student)
 - Creación y edición de cursos con carga de video Mux
@@ -52,23 +55,21 @@ Cognitio no es un marketplace abierto. Es un "Instructor Studio" curado: LMS lig
 - Internacionalización completa (Español/Inglés)
 - Security audit complete: 0 vulnerabilities
 
-#### AI Content Studio (v3.0 - v3.9) 🆕
-- **AI Studio Dashboard**: Landing page con estadísticas y acciones rápidas
+#### AI Content Studio (v3.0 - v3.5) 🆕
+
 - **Knowledge Base**: Gestión de documentos con tipos y roles de contexto
 - **Style Profiles**: Configuración de tono, longitud, audiencia objetivo
 - **Blog Generator**: Generación de contenido con streaming en tiempo real
-- **Content Refinement**: Edición inline con IA (refine-content edge function)
-- **Rich Editor**: Toggle Preview/Edit con soporte markdown completo
-- **Generation History**: Guardar, cargar, actualizar y eliminar generaciones (FIFO 10 items)
-- **Usage Tracking**: Límite de 10 generaciones/día con soft-delete (`is_active` column)
-- **Export Options**: Exportar como .txt o .md
+- **Usage Tracking**: Límite de 10 generaciones por día con barra de progreso
 - **Mobile Navigation**: Tab bar responsive para AI Studio
 - **Lovable AI Integration**: Gemini 2.5 Flash vía AI Gateway
 
-### 🚧 Próximo: v3.10+
+### 🚧 Próximo: v3.6 - v3.9
+
 - Newsletter Generator
+- Export/Publish Workflow
+- Generation History Persistence
 - Course Context Integration
-- Multi-language generation
 
 Consulta **[DEVELOPMENT_PLAN.md](./DEVELOPMENT_PLAN.md)** para el roadmap completo.
 Consulta **[CHANGELOG.md](./CHANGELOG.md)** para el historial de cambios.
@@ -78,31 +79,32 @@ Consulta **[CHANGELOG.md](./CHANGELOG.md)** para el historial de cambios.
 ## 🚫 Non-Goals (Fuera de Alcance)
 
 Cognitio **NO** es y **NO** construirá:
+
 - LMS complejo (quizzes, gradebooks, SCORM)
 - Funcionalidades enterprise (SAML SSO, integraciones HR)
 - Foros de discusión pesados
 - Calificación basada en IA
-- Modelo de suscripción/bundles (solo pagos únicos)
 - Signup abierto de instructores
 
 ---
 
 ## 📚 Documentación
 
-| Documento | Contenido |
-|-----------|-----------|
+| Documento                                    | Contenido                                               |
+| -------------------------------------------- | ------------------------------------------------------- |
 | [DEVELOPMENT_PLAN.md](./DEVELOPMENT_PLAN.md) | Roadmap v1.x-v4.x, versiones completadas y planificadas |
-| [TECHNOLOGY_STACK.md](./TECHNOLOGY_STACK.md) | Stack tecnológico completo incluyendo AI |
-| [FEATURES.md](./FEATURES.md) | Documentación detallada de funcionalidades |
-| [TESTING.md](./TESTING.md) | Infraestructura y guías de testing |
-| [CHANGELOG.md](./CHANGELOG.md) | Historial de cambios y versiones |
-| [REVIEW_SUMMARY.md](./REVIEW_SUMMARY.md) | Análisis de calidad del código |
+| [TECHNOLOGY_STACK.md](./TECHNOLOGY_STACK.md) | Stack tecnológico completo incluyendo AI                |
+| [FEATURES.md](./FEATURES.md)                 | Documentación detallada de funcionalidades              |
+| [TESTING.md](./TESTING.md)                   | Infraestructura y guías de testing                      |
+| [CHANGELOG.md](./CHANGELOG.md)               | Historial de cambios y versiones                        |
+| [REVIEW_SUMMARY.md](./REVIEW_SUMMARY.md)     | Análisis de calidad del código                          |
 
 ---
 
 ## 🛠️ Stack Tecnológico
 
 ### Core (No Cambiar)
+
 ```
 Frontend: React 18 + TypeScript + Vite + Tailwind CSS
 UI: shadcn/ui + Radix UI + Framer Motion
@@ -116,6 +118,7 @@ Testing: Vitest + React Testing Library + MSW
 ```
 
 ### Bibliotecas Clave
+
 - React Router DOM - Enrutamiento
 - React Hook Form + Zod - Formularios y validación
 - Recharts - Visualización de datos
@@ -128,6 +131,7 @@ Para detalles completos, consulta [TECHNOLOGY_STACK.md](./TECHNOLOGY_STACK.md).
 ## 🏁 Comenzar
 
 ### Prerrequisitos
+
 - Node.js 18+ y npm
 - Proyecto Supabase conectado (vía Lovable Cloud)
 
@@ -162,11 +166,11 @@ npx vitest           # Tests en modo watch
 
 ## 🔐 Sistema de Roles
 
-| Rol | Capacidades |
-|-----|-------------|
-| **Student** | Navegar cursos, comprar, ver videos, seguir progreso |
+| Rol            | Capacidades                                                                          |
+| -------------- | ------------------------------------------------------------------------------------ |
+| **Student**    | Navegar cursos, comprar, ver videos, seguir progreso                                 |
 | **Instructor** | Todo de Student + crear/editar cursos, ver analytics, gestionar capítulos, AI Studio |
-| **Admin** | Todo de Instructor + asignar roles, ver todos los cursos, tareas de soporte |
+| **Admin**      | Todo de Instructor + asignar roles, ver todos los cursos, tareas de soporte          |
 
 **Importante:** Solo Admins pueden otorgar el rol de Instructor. No hay signup público de instructor.
 
@@ -175,42 +179,47 @@ npx vitest           # Tests en modo watch
 ## 🌐 Estructura de Rutas
 
 ### Públicas
-| Ruta | Descripción |
-|------|-------------|
-| `/` | Página de inicio |
-| `/auth` | Autenticación |
-| `/courses` | Catálogo de cursos |
-| `/course/:id` | Detalle/reproductor de curso |
-| `/instructors` | Catálogo de instructores |
-| `/services` | Servicios de consultoría |
+
+| Ruta           | Descripción                  |
+| -------------- | ---------------------------- |
+| `/`            | Página de inicio             |
+| `/auth`        | Autenticación                |
+| `/courses`     | Catálogo de cursos           |
+| `/course/:id`  | Detalle/reproductor de curso |
+| `/instructors` | Catálogo de instructores     |
+| `/services`    | Servicios de consultoría     |
 
 ### Estudiante (Autenticado)
-| Ruta | Descripción |
-|------|-------------|
+
+| Ruta         | Descripción              |
+| ------------ | ------------------------ |
 | `/dashboard` | Dashboard del estudiante |
-| `/settings` | Configuración de cuenta |
+| `/settings`  | Configuración de cuenta  |
 
 ### Instructor (Rol requerido)
-| Ruta | Descripción |
-|------|-------------|
-| `/instructor` | Dashboard del instructor |
-| `/instructor/courses` | Lista de cursos propios |
-| `/instructor/create` | Crear nuevo curso |
-| `/instructor/edit/:id` | Editar curso |
-| `/instructor/analytics` | Analytics |
-| `/instructor/settings` | Configuración y perfil |
+
+| Ruta                      | Descripción                   |
+| ------------------------- | ----------------------------- |
+| `/instructor`             | Dashboard del instructor      |
+| `/instructor/courses`     | Lista de cursos propios       |
+| `/instructor/create`      | Crear nuevo curso             |
+| `/instructor/edit/:id`    | Editar curso                  |
+| `/instructor/analytics`   | Analytics                     |
+| `/instructor/settings`    | Configuración y perfil        |
 | `/instructor/profile/:id` | Perfil público del instructor |
 
 ### AI Studio (Instructor) 🆕
-| Ruta | Descripción |
-|------|-------------|
-| `/ai-studio` | Dashboard del AI Studio |
+
+| Ruta                   | Descripción                    |
+| ---------------------- | ------------------------------ |
+| `/ai-studio`           | Redirect a Knowledge Base      |
 | `/ai-studio/knowledge` | Knowledge Base y Style Profile |
-| `/ai-studio/blog` | Generador de Blogs con historial |
+| `/ai-studio/blog`      | Generador de Blogs             |
 
 ### Admin (Rol requerido)
-| Ruta | Descripción |
-|------|-------------|
+
+| Ruta     | Descripción             |
+| -------- | ----------------------- |
 | `/admin` | Panel de administración |
 
 ---
@@ -222,28 +231,29 @@ cognitio/
 ├── src/
 │   ├── components/        # Componentes reutilizables
 │   │   ├── ui/            # shadcn/ui
-│   │   ├── ai-studio/     # Componentes AI Studio
+│   │   ├── ai-studio/     # Componentes AI Studio 🆕
 │   │   └── ...
 │   ├── pages/             # Componentes de página
 │   ├── contexts/          # React Context (Auth)
-│   ├── hooks/             # Hooks personalizados (incl. AI hooks)
+│   ├── hooks/             # Hooks personalizados (incl. AI hooks) 🆕
 │   ├── integrations/      # Supabase client/types
 │   ├── lib/               # Utilidades
 │   ├── locales/           # Traducciones (es.json, en.json)
 │   ├── test/              # Mocks y utilidades de test
-│   ├── types/             # TypeScript types (incl. aiStudio.ts)
+│   ├── types/             # TypeScript types (incl. aiStudio.ts) 🆕
 │   └── assets/            # Assets estáticos
 ├── supabase/
-│   ├── functions/         # Edge functions (Stripe, Mux, AI)
+│   ├── functions/         # Edge functions (Stripe, Mux, AI) 🆕
 │   └── config.toml        # Configuración Supabase
 └── docs/                  # Documentación
 ```
 
 ---
 
-## 🎨 Sistema de Diseño (v2.4-v3.9)
+## 🎨 Sistema de Diseño (v2.4-v3.5)
 
 ### Identidad Visual
+
 - **Estilo**: "Elegancia académica sin pretensiones"
 - **Acento primario**: Coral/Salmon (hsl 14, 90%, 67%)
 - **Fondos**: Blanco cálido y off-white
@@ -251,6 +261,7 @@ cognitio/
 - **Tokens**: 100% HSL semánticos, sin colores directos
 
 ### Directrices
+
 - Tipografía: `Roboto` o `Inter` para cuerpo, monospace para acentos
 - Glassmorphism sutil en navbars, cards, modales
 - Animaciones suaves con Framer Motion (sin parallax ni scroll-jacking)
@@ -280,9 +291,11 @@ Para documentación detallada, consulta [TESTING.md](./TESTING.md).
 ## 🌍 Despliegue
 
 ### Con Lovable
+
 Abre [Lovable](https://lovable.dev) → Share → Publish
 
 ### Otras Plataformas
+
 ```bash
 npm run build
 # Subir contenido de dist/ a Vercel, Netlify, etc.
@@ -295,7 +308,7 @@ npm run build
 - **Gustavo González Bonorino** - Co-fundador e Instructor
 - **Augusto González Bonorino** - Co-fundador e Instructor
 
-*"Nos dedicamos a aprender enseñando"*
+_"Nos dedicamos a aprender enseñando"_
 
 ---
 
@@ -310,6 +323,7 @@ npm run build
 5. **Terminología**: Usar "instructor" (no "teacher") en nuevo código
 
 ### Flujo de Desarrollo
+
 1. Revisar DEVELOPMENT_PLAN.md para la versión actual
 2. Crear rama de feature
 3. Implementar cambios siguiendo las directrices
@@ -332,4 +346,4 @@ Parte del ecosistema Lovable. Ver términos de licencia de Lovable.
 
 ---
 
-*Última actualización: Enero 2026 | Versión: 3.9.0*
+_Última actualización: Enero 2026 | Versión: 3.5.0_
