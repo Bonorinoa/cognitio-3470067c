@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import type { ContentType } from "@/types/aiStudio";
 
@@ -13,6 +14,7 @@ export function useContentGeneration() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedContent, setGeneratedContent] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
   const generate = useCallback(async (request: GenerationRequest) => {
     setIsGenerating(true);
@@ -108,6 +110,10 @@ export function useContentGeneration() {
         }
       }
 
+      // Invalidate usage queries after successful generation
+      queryClient.invalidateQueries({ queryKey: ["generation-usage"] });
+      queryClient.invalidateQueries({ queryKey: ["generation-total"] });
+
       return fullContent;
     } catch (err) {
       const message = err instanceof Error ? err.message : "Generation failed";
@@ -116,7 +122,7 @@ export function useContentGeneration() {
     } finally {
       setIsGenerating(false);
     }
-  }, []);
+  }, [queryClient]);
 
   const reset = useCallback(() => {
     setGeneratedContent("");

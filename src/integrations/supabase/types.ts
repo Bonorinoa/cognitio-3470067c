@@ -79,6 +79,30 @@ export type Database = {
           },
         ]
       }
+      ai_usage_logs: {
+        Row: {
+          content_type: string
+          created_at: string
+          id: string
+          instructor_id: string
+          model_used: string | null
+        }
+        Insert: {
+          content_type?: string
+          created_at?: string
+          id?: string
+          instructor_id: string
+          model_used?: string | null
+        }
+        Update: {
+          content_type?: string
+          created_at?: string
+          id?: string
+          instructor_id?: string
+          model_used?: string | null
+        }
+        Relationships: []
+      }
       chapters: {
         Row: {
           course_id: string
