@@ -18,6 +18,7 @@ import {
 import { Upload, Plus, Trash2, GripVertical, Save, ArrowLeft, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { getErrorMessage } from "@/lib/errorUtils";
 import { useAuth } from "@/contexts/AuthContext";
 import VideoUpload from "@/components/VideoUpload";
 
@@ -105,9 +106,9 @@ const CreateCourse = () => {
         .getPublicUrl(filePath);
 
       return publicUrl;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error uploading image:', error);
-      toast.error(error.message || 'Failed to upload image');
+      toast.error(getErrorMessage(error));
       return null;
     } finally {
       setIsUploadingImage(false);
@@ -205,9 +206,9 @@ const CreateCourse = () => {
 
       toast.success(publish ? t("createCourse.successPublish") : t("createCourse.successDraft"));
       navigate("/instructor");
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error saving course:", error);
-      toast.error(error.message || t("createCourse.errorSave"));
+      toast.error(getErrorMessage(error));
     } finally {
       setIsSaving(false);
       setIsPublishing(false);

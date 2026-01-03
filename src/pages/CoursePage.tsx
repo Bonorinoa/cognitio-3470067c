@@ -13,6 +13,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
+import { getErrorMessage } from "@/lib/errorUtils";
 
 interface Chapter {
   id: string;
@@ -238,9 +239,9 @@ const CoursePage = () => {
       } else {
         throw new Error("No checkout URL received");
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Checkout error:", error);
-      toast.error(error.message || "Failed to start checkout");
+      toast.error(getErrorMessage(error));
       setIsCheckoutLoading(false);
     }
   };
@@ -269,9 +270,9 @@ const CoursePage = () => {
       
       toast.success("Chapter marked as complete!");
       refetchProgress();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error marking complete:", error);
-      toast.error(error.message || "Failed to mark chapter as complete");
+      toast.error(getErrorMessage(error));
     } finally {
       setIsMarkingComplete(false);
     }

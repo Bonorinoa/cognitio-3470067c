@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { toast } from "@/hooks/use-toast";
 import { Lock, Loader2, Eye, EyeOff } from "lucide-react";
+import { getErrorMessage } from "@/lib/errorUtils";
 
 const passwordSchema = z.object({
   newPassword: z.string().min(6, "Password must be at least 6 characters"),
@@ -48,11 +49,11 @@ const PasswordChangeForm = () => {
       });
 
       form.reset();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error updating password:", error);
       toast({
         title: "Error",
-        description: error.message || "No se pudo actualizar la contraseña.",
+        description: getErrorMessage(error),
         variant: "destructive",
       });
     } finally {

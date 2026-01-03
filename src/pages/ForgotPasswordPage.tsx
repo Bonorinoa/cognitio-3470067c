@@ -10,6 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { toast } from "sonner";
 import { Mail, Loader2, ArrowLeft, GraduationCap, CheckCircle } from "lucide-react";
+import { getErrorMessage } from "@/lib/errorUtils";
 
 const forgotPasswordSchema = z.object({
   email: z.string().email("Ingresa un correo electrónico válido"),
@@ -41,9 +42,9 @@ const ForgotPasswordPage = () => {
       setSentEmail(values.email);
       setEmailSent(true);
       toast.success("Correo de recuperación enviado");
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error sending reset email:", error);
-      toast.error(error.message || "No se pudo enviar el correo de recuperación");
+      toast.error(getErrorMessage(error));
     } finally {
       setIsLoading(false);
     }

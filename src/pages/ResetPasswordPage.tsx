@@ -11,6 +11,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { toast } from "sonner";
 import { Lock, Loader2, Eye, EyeOff, GraduationCap, CheckCircle } from "lucide-react";
 import { Link } from "react-router-dom";
+import { getErrorMessage } from "@/lib/errorUtils";
 
 const resetPasswordSchema = z.object({
   password: z.string().min(6, "La contraseña debe tener al menos 6 caracteres"),
@@ -80,9 +81,9 @@ const ResetPasswordPage = () => {
       setTimeout(() => {
         navigate("/auth");
       }, 3000);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error resetting password:", error);
-      toast.error(error.message || "No se pudo actualizar la contraseña");
+      toast.error(getErrorMessage(error));
     } finally {
       setIsLoading(false);
     }
