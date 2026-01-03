@@ -84,6 +84,8 @@ const Index = () => {
             src={heroImage}
             alt="Fondo de aprendizaje"
             className="h-full w-full object-cover opacity-30"
+            loading="eager"
+            fetchPriority="high"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/70 to-background" />
           <HeroBackground />
