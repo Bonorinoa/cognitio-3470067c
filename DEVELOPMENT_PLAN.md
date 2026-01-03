@@ -1,7 +1,7 @@
 # Cognitio Development Plan
 
-**Current Version:** v3.9.0  
-**Last Updated:** January 2, 2026
+**Current Version:** v3.9.1  
+**Last Updated:** January 3, 2026
 
 ---
 
@@ -75,67 +75,45 @@ AI-powered content generation to help instructors create marketing materials fro
 | v3.7 | Refinement | `refine-content` edge function, inline text selection, diff view for changes | ✅ |
 | v3.8 | History | Save/Update/Delete generations, FIFO 10-item limit, load from history | ✅ |
 | v3.9 | Dashboard & Usage Fix | AI Studio Dashboard landing page, `is_active` soft-delete for accurate usage tracking | ✅ |
+| v3.9.1 | Stabilization Sprint | Toast unification (Sonner), TypeScript `getErrorMessage`, dead code cleanup | ✅ |
 
-**✅ v3.x COMPLETO - Blog Generator Feature Complete**
-
----
-
-## Current: v3.9 AI Content Studio ✅ COMPLETO
-
-### Completed Features ✅ **ALL COMPLETE**
-
-#### Database Schema
-- `instructor_knowledge_base` - Documents with types and context roles
-- `instructor_style_profile` - Writing preferences (tone, length, audience)
-- `ai_generation_history` - Generation tracking with `is_active` for soft-delete
-
-#### Edge Functions
-- `generate-content` - Lovable AI Gateway integration with Gemini 2.5 Flash
-- `refine-content` - Inline text refinement with instruction-based editing
-
-#### Frontend Components
-- `AIStudioLayout` - Two-column layout with sidebar
-- `AIStudioSidebar` - Navigation + usage tracking with progress bar
-- `AIStudioDashboard` - Landing page with quick actions and stats 🆕
-- `AIStudioKnowledge` - Knowledge base CRUD with document editor
-- `AIStudioBlog` - Blog generator with topic input, streaming output, and history
-- `StyleProfileForm` - Collapsible style configuration
-- `DocumentEditor` - Create/edit documents with type and role selection
-
-#### Custom Hooks
-- `useKnowledgeBase` - Document CRUD operations
-- `useStyleProfile` - Style preferences management
-- `useContentGeneration` - Streaming generation with abort support
-- `useGenerationUsage` - Daily usage tracking (counts ALL today's generations)
-- `useGenerationHistory` - History CRUD with soft-delete (`is_active` flag)
-
-#### Design
-- Mobile tab bar with sliding pill indicator
-- Progress bar for generations remaining
-- AI Studio Dashboard with 4 analytics cards
-- Consistent with platform design system
-
-### v3.9 Infrastructure Updates
-
-1. **`is_active` Column**: Added to `ai_generation_history` for soft-delete
-   - History display: shows only `is_active = true` (max 10)
-   - Usage counting: counts ALL records created today (regardless of `is_active`)
-   - Solves: usage counter bug when history hits 10-item limit
-
-2. **Dashboard Route**: `/ai-studio` now shows dedicated dashboard
-   - Quick actions: Blog Generator, Newsletter (coming soon)
-   - Recent generations with load buttons
-   - 4 stats cards: Documents, Style Status, Gen Today, Total Gen
-
-3. **Updated Navigation**: Dashboard as first menu item in sidebar
+**✅ v3.9.1 COMPLETO - Stabilization Sprint Complete**
 
 ---
 
-## Roadmap: v4.x y Más Allá
+## Current: v3.9.1 Stabilization Sprint ✅ COMPLETO
+
+### v3.9.1 Completed ✅
+
+#### Code Quality
+- **Toast Unification**: Migrated from dual toast system to Sonner only
+- **TypeScript Improvements**: Added `getErrorMessage` utility for type-safe error handling
+- **Dead Code Removal**: Eliminated deprecated `isTeacher` pattern and unused handlers
+
+#### Documentation Consolidation
+- **Deleted Outdated Files**: E2E_EVALUATION_SUMMARY, GO_NO_GO_RECOMMENDATION, RELEASE_CHECKLIST, SECURITY_AUDIT, E2E_TEST_PLAN, EXECUTIVE_SUMMARY, REVIEW_SUMMARY
+- **Updated README**: Reflects v3.9.1 stabilization changes
+- **Streamlined Docs Table**: Only essential documents retained
+
+### v3.9.0 Infrastructure (Previous)
+
+1. **`is_active` Column**: Soft-delete for `ai_generation_history`
+2. **Dashboard Route**: `/ai-studio` with quick actions and stats
+3. **Usage Tracking**: Counts ALL generations today (ignores `is_active`)
+
+---
+
+## Roadmap: v3.10+ Next Steps
+
+### Immediate Priorities (v3.10)
+
+| Focus | Planned Deliverables | Priority |
+|-------|---------------------|----------|
+| Bundle Optimization | Analyze and reduce bundle size, code splitting | 🔴 High |
+| Test Coverage | Increase unit test coverage for hooks and components | 🟡 Medium |
+| Performance | Lazy loading for routes, image optimization | 🟡 Medium |
 
 ### v4.0: Newsletter Generator & Content Expansion
-
-Newsletter generation as the next AI Studio feature, plus platform maturity improvements.
 
 | Version | Focus | Planned Deliverables | Status |
 |---------|-------|---------------------|--------|
@@ -152,11 +130,10 @@ Newsletter generation as the next AI Studio feature, plus platform maturity impr
 | AI Studio | Multi-language generation, social media post generator, course outline generator |
 | Platform | Webhooks for integrations, public API, advanced reporting |
 
-**Rationale for v3.x → v4.x Reorganization:**
-- v3.x successfully completed Blog Generator (core AI Studio feature)
-- Newsletter is a distinct content type, not an iteration of Blog
-- v4.0 marks expansion of AI Studio to multiple content formats
-- Clean separation between Blog (v3) and Newsletter (v4) features
+**Next Steps After Stabilization:**
+- ✅ v3.9.1 Stabilization complete - platform is production-ready
+- 🔜 v3.10 focuses on performance and test coverage before new features
+- 📋 v4.0 Newsletter Generator when platform metrics are healthy
 
 ---
 
@@ -208,5 +185,5 @@ Instead of RAG (Retrieval Augmented Generation), we use "Context Window Stuffing
 
 - **Detailed Changes:** See [CHANGELOG.md](./CHANGELOG.md)
 - **Feature Documentation:** See [FEATURES.md](./FEATURES.md)
-- **Codebase Health:** See [REVIEW_SUMMARY.md](./REVIEW_SUMMARY.md)
+- **Test Coverage:** See [TEST_COVERAGE_SUMMARY.md](./TEST_COVERAGE_SUMMARY.md)
 - **Tech Details:** See [TECHNOLOGY_STACK.md](./TECHNOLOGY_STACK.md)
