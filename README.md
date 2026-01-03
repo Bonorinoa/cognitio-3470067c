@@ -31,11 +31,11 @@ Cognitio no es un marketplace abierto. Es un "Instructor Studio" curado: LMS lig
 
 ---
 
-## 📍 Estado Actual: v3.9.0
+## 📍 Estado Actual: v3.9.1
 
-**Última Actualización:** Enero 2, 2026
+**Última Actualización:** Enero 3, 2026
 
-### ✅ Funcionalidades Completas (v1.0 - v3.9)
+### ✅ Funcionalidades Completas (v1.0 - v3.9.1)
 
 #### Core Platform (v1.0 - v2.9.4)
 
@@ -55,7 +55,7 @@ Cognitio no es un marketplace abierto. Es un "Instructor Studio" curado: LMS lig
 - Internacionalización completa (Español/Inglés)
 - Security audit complete: 0 vulnerabilities críticas
 
-#### AI Content Studio (v3.0 - v3.9) 🆕 ✅ COMPLETO
+#### AI Content Studio (v3.0 - v3.9.1) 🆕 ✅ COMPLETO
 
 - **Knowledge Base**: Gestión de documentos con tipos y roles de contexto
 - **Style Profiles**: Configuración de tono, longitud, audiencia objetivo
@@ -64,10 +64,16 @@ Cognitio no es un marketplace abierto. Es un "Instructor Studio" curado: LMS lig
 - **Content Refinement**: Edición inline con instrucciones de IA
 - **Generation History**: Guardar, cargar y gestionar generaciones (FIFO 10 items)
 - **AI Studio Dashboard**: Landing page con métricas y acciones rápidas
-- **Usage Tracking**: Límite de 10 generaciones por día con barra de progreso
+- **Usage Tracking**: Límite de 15 acciones IA por día (generación + refinamiento)
 - **Export Options**: Descargar contenido como Markdown o TXT
 - **Mobile Navigation**: Tab bar responsive para AI Studio
 - **Lovable AI Integration**: Gemini 2.5 Flash vía AI Gateway
+
+#### Estabilización (v3.9.1) 🆕
+
+- **Toast System Unificado**: Migración completa a Sonner
+- **TypeScript Mejorado**: Utilidad `getErrorMessage` para manejo de errores type-safe
+- **Dead Code Cleanup**: Eliminación de código deprecated (`isTeacher`, handlers no usados)
 
 ### 🚧 Próximo: v3.10+
 
@@ -94,14 +100,14 @@ Cognitio **NO** es y **NO** construirá:
 
 ## 📚 Documentación
 
-| Documento                                    | Contenido                                               |
-| -------------------------------------------- | ------------------------------------------------------- |
-| [DEVELOPMENT_PLAN.md](./DEVELOPMENT_PLAN.md) | Roadmap v1.x-v4.x, versiones completadas y planificadas |
-| [TECHNOLOGY_STACK.md](./TECHNOLOGY_STACK.md) | Stack tecnológico completo incluyendo AI                |
-| [FEATURES.md](./FEATURES.md)                 | Documentación detallada de funcionalidades              |
-| [TESTING.md](./TESTING.md)                   | Infraestructura y guías de testing                      |
-| [CHANGELOG.md](./CHANGELOG.md)               | Historial de cambios y versiones                        |
-| [REVIEW_SUMMARY.md](./REVIEW_SUMMARY.md)     | Análisis de calidad del código                          |
+| Documento                                              | Contenido                                               |
+| ------------------------------------------------------ | ------------------------------------------------------- |
+| [DEVELOPMENT_PLAN.md](./DEVELOPMENT_PLAN.md)           | Roadmap v1.x-v4.x, versiones completadas y planificadas |
+| [TECHNOLOGY_STACK.md](./TECHNOLOGY_STACK.md)           | Stack tecnológico completo incluyendo AI                |
+| [FEATURES.md](./FEATURES.md)                           | Documentación detallada de funcionalidades              |
+| [TESTING.md](./TESTING.md)                             | Infraestructura y guías de testing                      |
+| [CHANGELOG.md](./CHANGELOG.md)                         | Historial de cambios y versiones                        |
+| [TEST_COVERAGE_SUMMARY.md](./TEST_COVERAGE_SUMMARY.md) | Resumen de cobertura de tests                           |
 
 ---
 
@@ -351,4 +357,4 @@ Parte del ecosistema Lovable. Ver términos de licencia de Lovable.
 
 ---
 
-_Última actualización: Enero 2026 | Versión: 3.9.0_
+_Última actualización: Enero 2026 | Versión: 3.9.1_
