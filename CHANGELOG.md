@@ -5,6 +5,24 @@ All notable changes to Cognitio will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.9.1] - 2026-01-03
+
+### Changed
+- **Toast System Unified**: Migrated all components to Sonner, removed shadcn Toaster
+  - VideoUpload.tsx migrated from useToast to Sonner
+  - AIStudioBlog.tsx migrated from useToast to Sonner
+  - Removed shadcn Toaster from App.tsx
+
+### Removed
+- **Dead Code Cleanup**:
+  - Removed deprecated `isTeacher` alias from useUserRole hook
+  - Removed unused `__aiStudioBlogHandlers` window assignment
+  
+### Technical
+- **TypeScript Improvements**: Created `getErrorMessage` utility in `src/lib/errorUtils.ts`
+  - Replaced 12 instances of `catch (error: any)` with type-safe error handling
+  - Consistent error message extraction across edge functions and hooks
+
 ## [3.9.0] - 2026-01-02
 
 ### Added
