@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -32,8 +32,14 @@ import { getErrorMessage } from "@/lib/errorUtils";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import VideoUpload from "@/components/VideoUpload";
 import CourseMembershipManager from "@/components/CourseMembershipManager";
+
+// Lazy load heavy video upload component
+const VideoUpload = lazy(() => import("@/components/VideoUpload"));
+
+const VideoUploadFallback = () => (
+  <div className="h-10 w-full bg-muted rounded animate-pulse" />
+);
 
 interface Chapter {
   id: string;
@@ -518,13 +524,15 @@ const EditCourse = () => {
                           }
                           className="bg-background border-border"
                         />
-                        <VideoUpload
-                          chapterId={chapter.id}
-                          onUploadComplete={(playbackId, assetId) =>
-                            handleVideoUploadSuccess(chapter.id, playbackId, assetId)
-                          }
-                          currentPlaybackId={chapter.muxPlaybackId}
-                        />
+                        <Suspense fallback={<VideoUploadFallback />}>
+                          <VideoUpload
+                            chapterId={chapter.id}
+                            onUploadComplete={(playbackId, assetId) =>
+                              handleVideoUploadSuccess(chapter.id, playbackId, assetId)
+                            }
+                            currentPlaybackId={chapter.muxPlaybackId}
+                          />
+                        </Suspense>
                       </div>
                       <Button
                         variant="ghost"

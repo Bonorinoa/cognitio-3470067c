@@ -6,9 +6,11 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import RequireInstructor from "@/components/RequireInstructor";
 import RequireAdmin from "@/components/RequireAdmin";
-import InstructorLayout from "@/components/InstructorLayout";
-import AIStudioLayout from "@/components/AIStudioLayout";
 import { Loader2 } from "lucide-react";
+
+// Lazy-loaded layouts - only loaded when user navigates to protected routes
+const InstructorLayout = lazy(() => import("./components/InstructorLayout"));
+const AIStudioLayout = lazy(() => import("./components/AIStudioLayout"));
 
 // Lazy-loaded page components - only loaded when user navigates to them
 const Index = lazy(() => import("./pages/Index"));

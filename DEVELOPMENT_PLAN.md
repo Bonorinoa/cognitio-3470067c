@@ -105,13 +105,21 @@ AI-powered content generation to help instructors create marketing materials fro
 
 ## Roadmap: v3.10+ Next Steps
 
-### Immediate Priorities (v3.10)
+### v3.10: Bundle Optimization ✅ In Progress
+
+| Task | Status | Details |
+|------|--------|---------|
+| Route Code Splitting | ✅ Done | All pages already lazy-loaded in App.tsx |
+| Layout Lazy Loading | ✅ Done | `InstructorLayout`, `AIStudioLayout` now lazy-loaded |
+| Heavy Component Lazy Loading | ✅ Done | `VideoPlayer` (Mux), `VideoUpload`, `FoundersStorySection` (Framer) |
+| Suspense Fallbacks | ✅ Done | Custom loading states for each lazy component |
+
+### Next Priorities
 
 | Focus | Planned Deliverables | Priority |
 |-------|---------------------|----------|
-| Bundle Optimization | Analyze and reduce bundle size, code splitting | 🔴 High |
 | Test Coverage | Increase unit test coverage for hooks and components | 🟡 Medium |
-| Performance | Lazy loading for routes, image optimization | 🟡 Medium |
+| Performance Audit | Lighthouse analysis, Core Web Vitals optimization | 🟡 Medium |
 
 ### v4.0: Newsletter Generator & Content Expansion
 
