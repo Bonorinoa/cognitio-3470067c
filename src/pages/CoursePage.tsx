@@ -1,7 +1,6 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, lazy, Suspense } from "react";
 import { useParams, useSearchParams, Link, useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
-import VideoPlayer from "@/components/VideoPlayer";
 import ChapterList from "@/components/ChapterList";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -14,6 +13,15 @@ import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
 import { getErrorMessage } from "@/lib/errorUtils";
+
+// Lazy load heavy Mux player component
+const VideoPlayer = lazy(() => import("@/components/VideoPlayer"));
+
+const VideoPlayerFallback = () => (
+  <div className="aspect-video w-full rounded-lg bg-muted flex items-center justify-center">
+    <Loader2 className="h-8 w-8 animate-spin text-primary" />
+  </div>
+);
 
 interface Chapter {
   id: string;
@@ -349,11 +357,13 @@ const CoursePage = () => {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Video Player */}
               <div className="lg:col-span-2">
-                <VideoPlayer
-                  playbackId={currentChapter?.mux_playback_id || undefined}
-                  poster={course.image_url || "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1200"}
-                  title={currentChapter?.title}
-                />
+                <Suspense fallback={<VideoPlayerFallback />}>
+                  <VideoPlayer
+                    playbackId={currentChapter?.mux_playback_id || undefined}
+                    poster={course.image_url || "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1200"}
+                    title={currentChapter?.title}
+                  />
+                </Suspense>
                 {/* Mark Complete Button - Only show if user has access and is not owner */}
                 {(hasPurchased && !isOwner) && currentChapter && (
                   <div className="mt-4">

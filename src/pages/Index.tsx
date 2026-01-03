@@ -1,11 +1,23 @@
+import { lazy, Suspense } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import FoundersStorySection from "@/components/FoundersStorySection";
 import HeroBackground from "@/components/HeroBackground";
+import { Skeleton } from "@/components/ui/skeleton";
 import heroImage from "@/assets/hero-bg.jpg";
 import { ArrowRight, GraduationCap, Users, Lightbulb, Target } from "lucide-react";
+
+// Lazy load heavy scroll-animated component
+const FoundersStorySection = lazy(() => import("@/components/FoundersStorySection"));
+
+const FoundersStorySkeleton = () => (
+  <div className="space-y-6">
+    {[1, 2, 3].map((i) => (
+      <div key={i} className="bg-primary/10 rounded-2xl h-48 animate-pulse" />
+    ))}
+  </div>
+);
 
 // Founder images
 import gusLooking from "@/assets/founders/gus-looking.jpg";
@@ -182,7 +194,9 @@ const Index = () => {
               Padre e hijo unidos por la pasión de enseñar
             </p>
           </div>
-          <FoundersStorySection cards={founderCards} />
+          <Suspense fallback={<FoundersStorySkeleton />}>
+            <FoundersStorySection cards={founderCards} />
+          </Suspense>
         </div>
       </section>
 
