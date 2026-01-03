@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 
-const DAILY_LIMIT = 10;
+const DAILY_LIMIT = 15;
 const RESET_HOUR_UTC = 9; // 6am Argentina = 09:00 UTC
 
 function getDayStart(): Date {

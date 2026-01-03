@@ -6,7 +6,7 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const DAILY_LIMIT = 10;
+const DAILY_LIMIT = 15;
 const RESET_HOUR_UTC = 9; // 6am Argentina = 09:00 UTC
 
 function getDayStart(): Date {
