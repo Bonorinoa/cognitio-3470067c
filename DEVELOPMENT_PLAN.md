@@ -75,14 +75,14 @@ AI-powered content generation to help instructors create marketing materials fro
 | v3.7 | Refinement | `refine-content` edge function, inline text selection, diff view for changes | ✅ |
 | v3.8 | History | Save/Update/Delete generations, FIFO 10-item limit, load from history | ✅ |
 | v3.9 | Dashboard & Usage Fix | AI Studio Dashboard landing page, `is_active` soft-delete for accurate usage tracking | ✅ |
-| v3.10 | Newsletter | Newsletter generator page, template variations | 🚧 Planned |
-| v3.11 | Course Context | Inject course content (titles, descriptions) as generation context | 🚧 Planned |
+
+**✅ v3.x COMPLETO - Blog Generator Feature Complete**
 
 ---
 
-## Current: v3.9 AI Content Studio
+## Current: v3.9 AI Content Studio ✅ COMPLETO
 
-### Completed Features ✅
+### Completed Features ✅ **ALL COMPLETE**
 
 #### Database Schema
 - `instructor_knowledge_base` - Documents with types and context roles
@@ -131,29 +131,32 @@ AI-powered content generation to help instructors create marketing materials fro
 
 ---
 
-## Remaining Work (v3.10+)
+## Roadmap: v4.x y Más Allá
 
-| Task | Version | Priority |
-|------|---------|----------|
-| Newsletter Generator Page | v3.10 | High |
-| Newsletter Templates | v3.10 | Medium |
-| Course Content Injection | v3.11 | Medium |
-| Transcript Integration | v3.11 | Low |
-| Multi-language Generation | v3.12 | Low |
+### v4.0: Newsletter Generator & Content Expansion
 
----
+Newsletter generation as the next AI Studio feature, plus platform maturity improvements.
 
-## Roadmap
+| Version | Focus | Planned Deliverables | Status |
+|---------|-------|---------------------|--------|
+| v4.0 | Newsletter | Newsletter generator page, email templates, multi-format export | 📋 Planned |
+| v4.1 | Course Context | Inject course content (titles, descriptions, transcripts) as generation context | 📋 Planned |
+| v4.2 | Enrollment | Invite links for private courses, bulk CSV enrollment | 📋 Planned |
+| v4.3 | Notifications | Email notifications for enrollments, completions, new content | 📋 Planned |
 
-### v4.x: Platform Maturity
+### v5.0+: Advanced Features (Future)
 
-Scaling features for larger instructor operations and improved student experience.
+| Focus | Planned Features |
+|-------|-----------------|
+| Analytics | Advanced student analytics, cohort tracking, completion funnels |
+| AI Studio | Multi-language generation, social media post generator, course outline generator |
+| Platform | Webhooks for integrations, public API, advanced reporting |
 
-| Version | Focus | Planned Deliverables |
-|---------|-------|---------------------|
-| v4.0 | Enrollment | Invite links for private courses, bulk CSV enrollment |
-| v4.1 | Notifications | Email notifications for enrollments, completions |
-| v4.2 | Analytics | Advanced student analytics, cohort tracking |
+**Rationale for v3.x → v4.x Reorganization:**
+- v3.x successfully completed Blog Generator (core AI Studio feature)
+- Newsletter is a distinct content type, not an iteration of Blog
+- v4.0 marks expansion of AI Studio to multiple content formats
+- Clean separation between Blog (v3) and Newsletter (v4) features
 
 ---
 

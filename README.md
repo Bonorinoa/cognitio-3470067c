@@ -31,11 +31,11 @@ Cognitio no es un marketplace abierto. Es un "Instructor Studio" curado: LMS lig
 
 ---
 
-## 📍 Estado Actual: v3.5.0
+## 📍 Estado Actual: v3.9.0
 
-**Última Actualización:** Enero 1, 2026
+**Última Actualización:** Enero 2, 2026
 
-### ✅ Funcionalidades Completas (v1.0 - v3.5)
+### ✅ Funcionalidades Completas (v1.0 - v3.9)
 
 #### Core Platform (v1.0 - v2.9.4)
 
@@ -53,23 +53,27 @@ Cognitio no es un marketplace abierto. Es un "Instructor Studio" curado: LMS lig
 - Servicios de consultoría de instructor
 - Sistema de diseño con tema claro cálido
 - Internacionalización completa (Español/Inglés)
-- Security audit complete: 0 vulnerabilities
+- Security audit complete: 0 vulnerabilities críticas
 
-#### AI Content Studio (v3.0 - v3.5) 🆕
+#### AI Content Studio (v3.0 - v3.9) 🆕 ✅ COMPLETO
 
 - **Knowledge Base**: Gestión de documentos con tipos y roles de contexto
 - **Style Profiles**: Configuración de tono, longitud, audiencia objetivo
 - **Blog Generator**: Generación de contenido con streaming en tiempo real
+- **Rich Editor**: Modo preview/edit con ReactMarkdown
+- **Content Refinement**: Edición inline con instrucciones de IA
+- **Generation History**: Guardar, cargar y gestionar generaciones (FIFO 10 items)
+- **AI Studio Dashboard**: Landing page con métricas y acciones rápidas
 - **Usage Tracking**: Límite de 10 generaciones por día con barra de progreso
+- **Export Options**: Descargar contenido como Markdown o TXT
 - **Mobile Navigation**: Tab bar responsive para AI Studio
 - **Lovable AI Integration**: Gemini 2.5 Flash vía AI Gateway
 
-### 🚧 Próximo: v3.6 - v3.9
+### 🚧 Próximo: v3.10+
 
-- Newsletter Generator
-- Export/Publish Workflow
-- Generation History Persistence
-- Course Context Integration
+- Newsletter Generator (v3.10)
+- Course Context Integration (v3.11)
+- Enrollment & Notifications (v4.0+)
 
 Consulta **[DEVELOPMENT_PLAN.md](./DEVELOPMENT_PLAN.md)** para el roadmap completo.
 Consulta **[CHANGELOG.md](./CHANGELOG.md)** para el historial de cambios.
@@ -122,6 +126,7 @@ Testing: Vitest + React Testing Library + MSW
 - React Router DOM - Enrutamiento
 - React Hook Form + Zod - Formularios y validación
 - Recharts - Visualización de datos
+- React Markdown - Renderizado de contenido generado por IA
 - Lucide React - Iconos
 
 Para detalles completos, consulta [TECHNOLOGY_STACK.md](./TECHNOLOGY_STACK.md).
@@ -210,11 +215,11 @@ npx vitest           # Tests en modo watch
 
 ### AI Studio (Instructor) 🆕
 
-| Ruta                   | Descripción                    |
-| ---------------------- | ------------------------------ |
-| `/ai-studio`           | Redirect a Knowledge Base      |
-| `/ai-studio/knowledge` | Knowledge Base y Style Profile |
-| `/ai-studio/blog`      | Generador de Blogs             |
+| Ruta                   | Descripción                      |
+| ---------------------- | -------------------------------- |
+| `/ai-studio`           | Dashboard de AI Studio           |
+| `/ai-studio/knowledge` | Knowledge Base y Style Profile   |
+| `/ai-studio/blog`      | Generador de Blogs con streaming |
 
 ### Admin (Rol requerido)
 
@@ -346,4 +351,4 @@ Parte del ecosistema Lovable. Ver términos de licencia de Lovable.
 
 ---
 
-_Última actualización: Enero 2026 | Versión: 3.5.0_
+_Última actualización: Enero 2026 | Versión: 3.9.0_
