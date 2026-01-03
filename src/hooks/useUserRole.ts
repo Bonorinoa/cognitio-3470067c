@@ -11,8 +11,6 @@ interface UseUserRoleResult {
   isStudent: boolean;
   isLoading: boolean;
   hasRole: (role: AppRole) => boolean;
-  /** @deprecated Use isInstructor instead */
-  isTeacher: boolean;
 }
 
 export const useUserRole = (): UseUserRoleResult => {
@@ -72,7 +70,6 @@ export const useUserRole = (): UseUserRoleResult => {
   return {
     roles,
     isInstructor,
-    isTeacher: isInstructor, // Deprecated alias for backward compatibility
     isAdmin: hasRole("admin"),
     isStudent: hasRole("student") || roles.length === 0, // Default to student if no roles
     isLoading,
