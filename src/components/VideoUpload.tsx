@@ -3,7 +3,7 @@ import { Upload, CheckCircle, Loader2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 
 interface VideoUploadProps {
   chapterId?: string;
@@ -18,7 +18,6 @@ const VideoUpload = ({ chapterId, onUploadComplete, currentPlaybackId }: VideoUp
   const [progress, setProgress] = useState(0);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { toast } = useToast();
 
   const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -26,11 +25,7 @@ const VideoUpload = ({ chapterId, onUploadComplete, currentPlaybackId }: VideoUp
 
     // Validate file type
     if (!file.type.startsWith("video/")) {
-      toast({
-        title: "Invalid file type",
-        description: "Please select a video file",
-        variant: "destructive",
-      });
+      toast.error("Invalid file type: Please select a video file");
       return;
     }
 
@@ -137,19 +132,12 @@ const VideoUpload = ({ chapterId, onUploadComplete, currentPlaybackId }: VideoUp
       setStatus("ready");
       onUploadComplete(playbackId, assetId);
 
-      toast({
-        title: "Video uploaded successfully",
-        description: "Your video is now ready for playback",
-      });
+      toast.success("Video uploaded successfully");
     } catch (error) {
       console.error("Upload error:", error);
       setStatus("error");
       setErrorMessage(error instanceof Error ? error.message : "Upload failed");
-      toast({
-        title: "Upload failed",
-        description: error instanceof Error ? error.message : "An error occurred",
-        variant: "destructive",
-      });
+      toast.error(error instanceof Error ? error.message : "Upload failed");
     }
 
     // Reset file input
