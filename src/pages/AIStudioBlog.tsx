@@ -371,11 +371,6 @@ export default function AIStudioBlog() {
   const isLoading = docsLoading || styleLoading;
   const hasContent = editableContent || generatedContent;
 
-  // Expose handlers for sidebar
-  (window as any).__aiStudioBlogHandlers = {
-    onLoadHistory: handleLoadHistory,
-    onDeleteHistory: handleDeleteHistory,
-  };
 
   return (
     <div className="space-y-6">
