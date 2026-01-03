@@ -18,6 +18,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { toast } from "@/hooks/use-toast";
+import { getErrorMessage } from "@/lib/errorUtils";
 import { Trash2, Loader2, AlertTriangle } from "lucide-react";
 
 const AccountDeletionSection = () => {
@@ -56,11 +57,11 @@ const AccountDeletionSection = () => {
       });
 
       navigate("/");
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error deleting account:", error);
       toast({
         title: "Error",
-        description: error.message || "No se pudo eliminar la cuenta.",
+        description: getErrorMessage(error),
         variant: "destructive",
       });
     } finally {

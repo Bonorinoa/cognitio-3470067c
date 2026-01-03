@@ -48,7 +48,7 @@ const AuthPage = () => {
 
       toast.success(t("auth.welcomeBack"));
       navigate("/dashboard");
-    } catch (error: any) {
+    } catch {
       toast.error(t("auth.unexpectedError"));
     } finally {
       setIsLoading(false);
@@ -84,7 +84,7 @@ const AuthPage = () => {
 
       toast.success(t("auth.accountCreated"));
       navigate("/dashboard");
-    } catch (error: any) {
+    } catch {
       toast.error(t("auth.unexpectedError"));
     } finally {
       setIsLoading(false);

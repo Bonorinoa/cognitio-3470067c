@@ -28,6 +28,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Plus, Trash2, GripVertical, Save, ArrowLeft, Loader2, Eye, EyeOff } from "lucide-react";
+import { getErrorMessage } from "@/lib/errorUtils";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -261,9 +262,9 @@ const EditCourse = () => {
 
       toast.success("Course updated successfully!");
       setChaptersToDelete([]);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error saving course:", error);
-      toast.error(error.message || "Failed to save course");
+      toast.error(getErrorMessage(error));
     } finally {
       setIsSaving(false);
     }
@@ -282,9 +283,9 @@ const EditCourse = () => {
 
       toast.success("Course deleted successfully");
       navigate("/instructor/courses");
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error deleting course:", error);
-      toast.error(error.message || "Failed to delete course");
+      toast.error(getErrorMessage(error));
     }
   };
 
