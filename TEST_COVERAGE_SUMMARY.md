@@ -1,7 +1,7 @@
 # Test Coverage Summary
 
-**Last Updated**: January 2, 2026  
-**Project**: Cognitio v3.9.0  
+**Last Updated**: January 3, 2026  
+**Project**: Cognitio v3.9.1  
 **Testing Stack**: Vitest + React Testing Library + Playwright
 
 ## Overview
@@ -128,6 +128,12 @@ npm run test:all          # Run both unit and E2E tests
 - **E2E Testing**: See [E2E_TESTING.md](./E2E_TESTING.md)
 
 ## Recent Changes
+
+**January 3, 2026 (v3.9.1)**:
+- ✅ Unified toast system to Sonner (removed shadcn Toaster)
+- ✅ Created getErrorMessage utility for type-safe error handling
+- ✅ Removed dead code (isTeacher alias, window handlers)
+- ✅ All tests remain passing after Phase 3 & 4 changes
 
 **January 2, 2026 (v3.9.0)**:
 - ✅ AI Studio Dashboard implemented and tested
