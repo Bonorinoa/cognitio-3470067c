@@ -19,7 +19,7 @@ import { Badge } from "@/components/ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { EmptyState } from "@/components/EmptyState";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { useKnowledgeBase } from "@/hooks/useKnowledgeBase";
 import { useContentGeneration } from "@/hooks/useContentGeneration";
 import { useStyleProfile } from "@/hooks/useStyleProfile";
@@ -29,7 +29,6 @@ import { supabase } from "@/integrations/supabase/client";
 
 export default function AIStudioBlog() {
   const { t } = useTranslation();
-  const { toast } = useToast();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const aiStudioContext = useAIStudioContext();
@@ -110,11 +109,7 @@ export default function AIStudioBlog() {
 
   const handleGenerate = async () => {
     if (!topic.trim()) {
-      toast({
-        title: t("aiStudio.topicRequired", "Topic required"),
-        description: t("aiStudio.enterTopic", "Please enter a topic for your content."),
-        variant: "destructive",
-      });
+      toast.error(t("aiStudio.topicRequired", "Topic required"));
       return;
     }
 
@@ -125,16 +120,9 @@ export default function AIStudioBlog() {
         additional_instructions: additionalInstructions.trim() || undefined,
         selected_document_ids: selectedDocIds,
       });
-      toast({
-        title: t("aiStudio.generated", "Content generated"),
-        description: t("aiStudio.generatedDesc", "Your content is ready!"),
-      });
+      toast.success(t("aiStudio.generated", "Content generated"));
     } catch {
-      toast({
-        title: t("aiStudio.error", "Generation failed"),
-        description: error || t("aiStudio.errorDesc", "Please try again."),
-        variant: "destructive",
-      });
+      toast.error(error || t("aiStudio.error", "Generation failed"));
     }
   };
 
@@ -142,9 +130,7 @@ export default function AIStudioBlog() {
     await navigator.clipboard.writeText(editableContent || generatedContent);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
-    toast({
-      title: t("aiStudio.copied", "Copied to clipboard"),
-    });
+    toast.success(t("aiStudio.copied", "Copied to clipboard"));
   };
 
   const handleReset = () => {
@@ -182,14 +168,14 @@ export default function AIStudioBlog() {
       .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
     const slug = topic.toLowerCase().replace(/\s+/g, "-").slice(0, 30);
     downloadFile(plainText, `${slug}.txt`, "text/plain");
-    toast({ title: t("aiStudio.exported", "Exported as TXT") });
+    toast.success(t("aiStudio.exported", "Exported as TXT"));
   };
 
   const handleExportMd = () => {
     const contentToExport = editableContent || generatedContent;
     const slug = topic.toLowerCase().replace(/\s+/g, "-").slice(0, 30);
     downloadFile(contentToExport, `${slug}.md`, "text/markdown");
-    toast({ title: t("aiStudio.exported", "Exported as Markdown") });
+    toast.success(t("aiStudio.exported", "Exported as Markdown"));
   };
 
   // History handlers
@@ -199,7 +185,7 @@ export default function AIStudioBlog() {
     setLoadedHistoryId(item.id);
     setHasUnsavedChanges(false);
     setIsEditMode(true);
-    toast({ title: t("aiStudio.loadedFromHistory", "Loaded from history") });
+    toast.success(t("aiStudio.loadedFromHistory", "Loaded from history"));
   };
 
   const handleSaveToHistory = async () => {
@@ -218,14 +204,10 @@ export default function AIStudioBlog() {
       if (id) {
         setLoadedHistoryId(id);
         setHasUnsavedChanges(false);
-        toast({ title: t("aiStudio.savedToHistory", "Saved to history") });
+        toast.success(t("aiStudio.savedToHistory", "Saved to history"));
       }
     } catch (err) {
-      toast({
-        title: t("aiStudio.saveFailed", "Failed to save"),
-        description: err instanceof Error ? err.message : "Please try again",
-        variant: "destructive",
-      });
+      toast.error(err instanceof Error ? err.message : t("aiStudio.saveFailed", "Failed to save"));
     } finally {
       setIsSaving(false);
     }
@@ -238,12 +220,9 @@ export default function AIStudioBlog() {
     try {
       await updateGeneration(loadedHistoryId, editableContent);
       setHasUnsavedChanges(false);
-      toast({ title: t("aiStudio.changesSaved", "Changes saved") });
+      toast.success(t("aiStudio.changesSaved", "Changes saved"));
     } catch {
-      toast({
-        title: t("aiStudio.updateFailed", "Failed to update"),
-        variant: "destructive",
-      });
+      toast.error(t("aiStudio.updateFailed", "Failed to update"));
     } finally {
       setIsSaving(false);
     }
@@ -259,9 +238,9 @@ export default function AIStudioBlog() {
 
     try {
       await deleteGeneration(id);
-      toast({ title: t("aiStudio.deletedFromHistory", "Deleted from history") });
+      toast.success(t("aiStudio.deletedFromHistory", "Deleted from history"));
     } catch {
-      toast({ title: t("aiStudio.deleteFailed", "Failed to delete"), variant: "destructive" });
+      toast.error(t("aiStudio.deleteFailed", "Failed to delete"));
     }
   };
 
@@ -320,11 +299,7 @@ export default function AIStudioBlog() {
       setShowDiffView(true);
 
     } catch (err) {
-      toast({
-        title: t("aiStudio.refineFailed", "Refinement failed"),
-        description: err instanceof Error ? err.message : "Please try again",
-        variant: "destructive",
-      });
+      toast.error(err instanceof Error ? err.message : t("aiStudio.refineFailed", "Refinement failed"));
     } finally {
       setIsRefining(false);
     }
@@ -339,10 +314,7 @@ export default function AIStudioBlog() {
     setEditableContent(before + refinedText + after);
     setHasUnsavedChanges(true);
 
-    toast({
-      title: t("aiStudio.refined", "Text refined"),
-      description: t("aiStudio.refinedDesc", "The selected text has been updated"),
-    });
+    toast.success(t("aiStudio.refined", "Text refined"));
 
     // Reset refine state
     handleCloseRefineDialog();
