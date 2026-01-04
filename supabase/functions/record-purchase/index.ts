@@ -1,13 +1,11 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
 
-// Project-specific origin patterns for CORS - prevents CSRF attacks
-// Only allows this project's subdomains, not arbitrary lovable.app domains
+// CORS origin patterns - allows all Lovable preview/production domains
 const allowedOriginPatterns = [
-  /^https:\/\/[a-z0-9-]+--hlnvfkturjctxbiikfoe\.lovable\.app$/,
-  /^https:\/\/hlnvfkturjctxbiikfoe\.lovable\.app$/,
+  /^https:\/\/[a-z0-9-]+\.lovable\.app$/,
   /^https:\/\/[a-z0-9-]+\.lovableproject\.com$/,
-  /^http:\/\/localhost:(5173|8080)$/,
+  /^http:\/\/localhost:(5173|8080|3000)$/,
 ];
 
 const isOriginAllowed = (origin: string | null): boolean => {
