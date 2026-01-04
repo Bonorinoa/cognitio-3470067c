@@ -238,22 +238,23 @@ CRITICAL OUTPUT RULES:
       throw new Error(`AI Gateway error: ${response.status}`);
     }
 
-    // Log this AI call for usage tracking (fire and forget)
+    // Log this AI call for usage tracking BEFORE streaming response
+    // This ensures the log is recorded even if the stream terminates early
     console.log("Logging usage for instructor:", user.id);
-    supabase
+    const { error: logError } = await supabase
       .from("ai_usage_logs")
       .insert({
         instructor_id: user.id,
         content_type: content_type || "blog",
         model_used: "google/gemini-2.5-flash",
-      })
-      .then(({ error: logError }) => {
-        if (logError) {
-          console.error("Failed to log usage:", logError);
-        } else {
-          console.log("Usage logged successfully");
-        }
       });
+
+    if (logError) {
+      console.error("Failed to log usage:", logError);
+      // Don't fail the request if logging fails, but log the error
+    } else {
+      console.log("Usage logged successfully");
+    }
 
     console.log("Streaming response to client...");
 

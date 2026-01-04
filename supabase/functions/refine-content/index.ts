@@ -148,21 +148,22 @@ Instruction: ${instruction}`;
 
     console.log("Refinement complete, output length:", refinedText.length);
 
-    // Log this AI call for usage tracking
-    supabase
+    // Log this AI call for usage tracking - await to ensure it completes
+    console.log("Logging usage for user:", user.id);
+    const { error: logError } = await supabase
       .from("ai_usage_logs")
       .insert({
         instructor_id: user.id,
         content_type: "refine",
         model_used: "google/gemini-2.5-flash",
-      })
-      .then(({ error: logError }) => {
-        if (logError) {
-          console.error("Failed to log usage:", logError);
-        } else {
-          console.log("Usage logged successfully");
-        }
       });
+
+    if (logError) {
+      console.error("Failed to log usage:", logError);
+      // Don't fail the request if logging fails, but log the error
+    } else {
+      console.log("Usage logged successfully");
+    }
 
     return new Response(JSON.stringify({ refined_text: refinedText }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
