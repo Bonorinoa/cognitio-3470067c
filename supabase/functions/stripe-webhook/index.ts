@@ -24,9 +24,11 @@ serve(async (req) => {
 
     const stripe = new Stripe(stripeKey, { apiVersion: "2025-08-27.basil" });
 
-    // Get raw body for signature verification
-    const body = await req.text();
+    // Read RAW request body bytes for signature verification (avoid any re-encoding issues)
+    const bodyBytes = new Uint8Array(await req.arrayBuffer());
     const signature = req.headers.get("stripe-signature");
+
+    logStep("Webhook payload received", { bytes: bodyBytes.byteLength, hasSignature: Boolean(signature) });
 
     if (!signature) {
       logStep("ERROR: No stripe-signature header");
@@ -36,7 +38,7 @@ serve(async (req) => {
     // Verify webhook signature (must use async version in Deno runtime)
     let event: Stripe.Event;
     try {
-      event = await stripe.webhooks.constructEventAsync(body, signature, webhookSecret);
+      event = await stripe.webhooks.constructEventAsync(bodyBytes, signature, webhookSecret);
       logStep("Signature verified", { type: event.type });
     } catch (err) {
       const message = err instanceof Error ? err.message : "Unknown error";
