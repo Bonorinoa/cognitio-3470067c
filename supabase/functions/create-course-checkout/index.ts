@@ -152,14 +152,19 @@ serve(async (req) => {
       }
     }
 
+    const successUrl = `${origin}/course/${courseId}?payment=success`;
+    const cancelUrl = `${origin}/course/${courseId}?payment=canceled`;
+    
+    logStep("Creating checkout session", { origin, successUrl, cancelUrl, priceId });
+
     // Create checkout session
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       customer_email: customerId ? undefined : user.email,
       line_items: [{ price: priceId, quantity: 1 }],
       mode: "payment",
-      success_url: `${origin}/course/${courseId}?payment=success`,
-      cancel_url: `${origin}/course/${courseId}?payment=canceled`,
+      success_url: successUrl,
+      cancel_url: cancelUrl,
       metadata: {
         courseId,
         userId: user.id,

@@ -17,33 +17,57 @@ serve(async (req) => {
     logStep("Webhook received");
 
     const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
-    const webhookSecret = Deno.env.get("STRIPE_WEBHOOK_SECRET");
+    const webhookSecretRaw = Deno.env.get("STRIPE_WEBHOOK_SECRET");
     
     if (!stripeKey) throw new Error("STRIPE_SECRET_KEY is not set");
-    if (!webhookSecret) throw new Error("STRIPE_WEBHOOK_SECRET is not set");
+    if (!webhookSecretRaw) throw new Error("STRIPE_WEBHOOK_SECRET is not set");
+
+    // Support multiple secrets (comma or newline separated)
+    const webhookSecrets = webhookSecretRaw
+      .split(/[,\n]/)
+      .map(s => s.trim())
+      .filter(s => s.length > 0);
+
+    logStep("Webhook secrets parsed", { count: webhookSecrets.length });
 
     const stripe = new Stripe(stripeKey, { apiVersion: "2025-08-27.basil" });
 
-    // Read RAW request body bytes for signature verification (avoid any re-encoding issues)
+    // Read RAW request body bytes for signature verification
     const bodyBytes = new Uint8Array(await req.arrayBuffer());
     const signature = req.headers.get("stripe-signature");
 
-    logStep("Webhook payload received", { bytes: bodyBytes.byteLength, hasSignature: Boolean(signature) });
+    logStep("Webhook payload received", { 
+      bytes: bodyBytes.byteLength, 
+      hasSignature: Boolean(signature),
+      signaturePrefix: signature ? signature.substring(0, 20) + "..." : null
+    });
 
     if (!signature) {
       logStep("ERROR: No stripe-signature header");
       return new Response("No signature", { status: 400 });
     }
 
-    // Verify webhook signature (must use async version in Deno runtime)
-    let event: Stripe.Event;
-    try {
-      event = await stripe.webhooks.constructEventAsync(bodyBytes, signature, webhookSecret);
-      logStep("Signature verified", { type: event.type });
-    } catch (err) {
-      const message = err instanceof Error ? err.message : "Unknown error";
-      logStep("ERROR: Signature verification failed", { message });
-      return new Response(`Webhook signature verification failed: ${message}`, { status: 400 });
+    // Try each webhook secret until one works
+    let event: Stripe.Event | null = null;
+    let lastError: string = "";
+    
+    for (let i = 0; i < webhookSecrets.length; i++) {
+      try {
+        event = await stripe.webhooks.constructEventAsync(bodyBytes, signature, webhookSecrets[i]);
+        logStep("Signature verified", { type: event.type, secretIndex: i });
+        break;
+      } catch (err) {
+        lastError = err instanceof Error ? err.message : "Unknown error";
+        logStep(`Secret ${i + 1}/${webhookSecrets.length} failed`, { message: lastError.substring(0, 100) });
+      }
+    }
+
+    if (!event) {
+      logStep("ERROR: All signature verifications failed", { 
+        secretsAttempted: webhookSecrets.length,
+        lastError: lastError.substring(0, 150)
+      });
+      return new Response(`Webhook signature verification failed`, { status: 400 });
     }
 
     // Handle the checkout.session.completed event
