@@ -47,15 +47,17 @@ serve(async (req) => {
       });
     }
 
-    // Check for active subscription
+    // Check for active or trialing subscription
     const { data: subscription } = await supabase
       .from("ai_subscriptions")
       .select("bundle, status")
       .eq("user_id", user.id)
-      .eq("status", "active")
+      .in("status", ["active", "trialing"])
       .order("created_at", { ascending: false })
       .limit(1)
       .maybeSingle();
+
+    console.log("Subscription check result:", subscription);
 
     if (subscription) {
       const tierName = subscription.bundle === "pro" ? "pro" : subscription.bundle;
