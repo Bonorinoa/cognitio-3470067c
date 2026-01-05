@@ -50,7 +50,7 @@ export default function PricingSection() {
       price: 19,
       description: t("aiStudio.marketingPricingDesc", "All marketing content tools"),
       features: [
-        t("aiStudio.marketingFeature1", "100 generations/day"),
+        t("aiStudio.marketingFeature1", "200 generations/day"),
         t("aiStudio.marketingFeature2", "Blog posts, social media"),
         t("aiStudio.marketingFeature3", "Newsletter generation"),
         t("aiStudio.marketingFeature4", "Priority support"),
@@ -63,7 +63,7 @@ export default function PricingSection() {
       price: 19,
       description: t("aiStudio.academicPricingDesc", "Research & academic writing tools"),
       features: [
-        t("aiStudio.academicFeature1", "100 generations/day"),
+        t("aiStudio.academicFeature1", "200 generations/day"),
         t("aiStudio.academicFeature2", "Literature review"),
         t("aiStudio.academicFeature3", "Paper formatting"),
         t("aiStudio.academicFeature4", "Citation generator"),
@@ -76,7 +76,7 @@ export default function PricingSection() {
       price: 29,
       description: t("aiStudio.proPricingDesc", "Everything in Marketing + Academic"),
       features: [
-        t("aiStudio.proFeature1", "Unlimited generations"),
+        t("aiStudio.proFeature1", "500 generations/day"),
         t("aiStudio.proFeature2", "All Marketing tools"),
         t("aiStudio.proFeature3", "All Academic tools"),
         t("aiStudio.proFeature4", "Priority support"),
