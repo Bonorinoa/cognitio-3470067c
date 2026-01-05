@@ -31,11 +31,11 @@ Cognitio no es un marketplace abierto. Es un "Instructor Studio" curado: LMS lig
 
 ---
 
-## 📍 Estado Actual: v4.0
+## 📍 Estado Actual: v4.0.1
 
 **Última Actualización:** Enero 5, 2026
 
-### ✅ Funcionalidades Completas (v1.0 - v3.9.1)
+### ✅ Funcionalidades Completas
 
 #### Core Platform (v1.0 - v2.9.4)
 
@@ -53,11 +53,11 @@ Cognitio no es un marketplace abierto. Es un "Instructor Studio" curado: LMS lig
 - Servicios de consultoría de instructor
 - Sistema de diseño con tema claro cálido
 - Internacionalización completa (Español/Inglés)
-- Security audit complete: 0 vulnerabilities críticas
+- Security audit complete: 0 vulnerabilidades críticas
 
-#### AI Studio - Public Content Platform (v4.0) 🆕 ✅ COMPLETO
+#### AI Studio - Public Content Platform (v4.0) ✅
 
-- **Public Landing Page**: Hero, bundles showcase, how it works, pricing teaser
+- **Public Landing Page**: Hero, bundles showcase, how it works, pricing
 - **Bundle-Based Architecture**: Marketing and Academic bundles with separate routes
 - **Knowledge Base**: Global document management with types and context roles
 - **Style Settings**: Simplified configuration (tone, audience, language, custom instructions)
@@ -65,24 +65,21 @@ Cognitio no es un marketplace abierto. Es un "Instructor Studio" curado: LMS lig
 - **Rich Editor**: Preview/edit modes with ReactMarkdown
 - **Content Refinement**: Inline editing with AI instructions
 - **Generation History**: Save, load, and manage generations (FIFO 10 items)
-- **Dynamic Tier Limits**: Free (10/day), Instructor (50/day), future subscription tiers
-- **Coming Soon Placeholders**: LinkedIn, Twitter, Newsletter, Academic features
+- **Subscription System**: Stripe integration with Marketing ($19/mo), Academic ($19/mo), and Pro ($29/mo) bundles
+- **Dynamic Tier Limits**: 
+  - Free: 10 generations/day
+  - Instructor perk: 50 generations/day
+  - Marketing/Academic: 200 generations/day
+  - Pro: 500 generations/day
 - **Export Options**: Download content as Markdown or TXT
 - **Mobile Navigation**: Responsive sidebar and tab navigation
 - **Lovable AI Integration**: Gemini 2.5 Flash via AI Gateway
-
-#### Estabilización (v3.9.1) 🆕
-
-- **Toast System Unificado**: Migración completa a Sonner
-- **TypeScript Mejorado**: Utilidad `getErrorMessage` para manejo de errores type-safe
-- **Dead Code Cleanup**: Eliminación de código deprecated (`isTeacher`, handlers no usados)
 
 ### 🚧 Próximo: v4.1+
 
 - LinkedIn Post Generator (v4.1)
 - X/Twitter Generator (v4.2)
 - Newsletter Generator (v4.3)
-- Stripe Subscription Integration (v4.5)
 - Academic Bundle Features (v5.0+)
 
 Consulta **[DEVELOPMENT_PLAN.md](./DEVELOPMENT_PLAN.md)** para el roadmap completo.
@@ -104,14 +101,12 @@ Cognitio **NO** es y **NO** construirá:
 
 ## 📚 Documentación
 
-| Documento                                              | Contenido                                               |
-| ------------------------------------------------------ | ------------------------------------------------------- |
-| [DEVELOPMENT_PLAN.md](./DEVELOPMENT_PLAN.md)           | Roadmap v1.x-v4.x, versiones completadas y planificadas |
-| [TECHNOLOGY_STACK.md](./TECHNOLOGY_STACK.md)           | Stack tecnológico completo incluyendo AI                |
-| [FEATURES.md](./FEATURES.md)                           | Documentación detallada de funcionalidades              |
-| [TESTING.md](./TESTING.md)                             | Infraestructura y guías de testing                      |
-| [CHANGELOG.md](./CHANGELOG.md)                         | Historial de cambios y versiones                        |
-| [TEST_COVERAGE_SUMMARY.md](./TEST_COVERAGE_SUMMARY.md) | Resumen de cobertura de tests                           |
+| Documento                                    | Contenido                                               |
+| -------------------------------------------- | ------------------------------------------------------- |
+| [DEVELOPMENT_PLAN.md](./DEVELOPMENT_PLAN.md) | Roadmap v1.x-v4.x, versiones completadas y planificadas |
+| [TESTING.md](./TESTING.md)                   | Infraestructura y guías de testing unitario             |
+| [E2E_TESTING.md](./E2E_TESTING.md)           | Guía completa de tests End-to-End con Playwright        |
+| [CHANGELOG.md](./CHANGELOG.md)               | Historial de cambios y versiones                        |
 
 ---
 
@@ -128,7 +123,7 @@ Video: Mux
 Pagos: Stripe
 Estado: TanStack Query
 i18n: i18next
-Testing: Vitest + React Testing Library + MSW
+Testing: Vitest + React Testing Library + Playwright + MSW
 ```
 
 ### Bibliotecas Clave
@@ -138,8 +133,6 @@ Testing: Vitest + React Testing Library + MSW
 - Recharts - Visualización de datos
 - React Markdown - Renderizado de contenido generado por IA
 - Lucide React - Iconos
-
-Para detalles completos, consulta [TECHNOLOGY_STACK.md](./TECHNOLOGY_STACK.md).
 
 ---
 
@@ -173,8 +166,8 @@ npm run dev          # Servidor de desarrollo
 npm run build        # Build de producción
 npm run lint         # Ejecutar ESLint
 npm run preview      # Vista previa de producción
-npx vitest run       # Ejecutar tests
-npx vitest           # Tests en modo watch
+npx vitest run       # Ejecutar tests unitarios
+npx playwright test  # Ejecutar tests E2E
 ```
 
 ---
@@ -224,11 +217,11 @@ npx vitest           # Tests en modo watch
 | `/instructor/settings`    | Configuración y perfil        |
 | `/instructor/profile/:id` | Perfil público del instructor |
 
-### AI Studio (Público) 🆕
+### AI Studio (Público)
 
 | Ruta                              | Descripción                              |
 | --------------------------------- | ---------------------------------------- |
-| `/ai-studio`                      | Landing page pública                     |
+| `/ai-studio`                      | Landing page pública con pricing         |
 | `/ai-studio/knowledge`            | Base de Conocimiento (auth requerido)    |
 | `/ai-studio/settings`             | Configuración de Estilo (auth requerido) |
 | `/ai-studio/marketing`            | Hub del Paquete Marketing                |
@@ -253,41 +246,27 @@ cognitio/
 ├── src/
 │   ├── components/        # Componentes reutilizables
 │   │   ├── ui/            # shadcn/ui
-│   │   ├── ai-studio/     # Componentes AI Studio 🆕
+│   │   ├── ai-studio/     # Componentes AI Studio
 │   │   └── ...
 │   ├── pages/             # Componentes de página
-│   │   ├── AIStudioLanding.tsx      # Public landing 🆕
-│   │   ├── AIStudioSettings.tsx     # Style settings 🆕
-│   │   ├── AIStudioKnowledge.tsx    # Knowledge base
-│   │   ├── AIStudioBlog.tsx         # Blog generator
-│   │   ├── MarketingBundleHub.tsx   # Marketing hub 🆕
-│   │   ├── AcademicBundleHub.tsx    # Academic hub 🆕
-│   │   ├── ComingSoonFeature.tsx    # Coming soon page 🆕
-│   │   └── ...
-│   ├── components/
-│   │   ├── ai-studio/
-│   │   │   ├── AIStudioSidebar.tsx
-│   │   │   ├── BundleCard.tsx       # Bundle display 🆕
-│   │   │   ├── FeatureCard.tsx      # Feature display 🆕
-│   │   │   ├── StyleProfileForm.tsx
-│   │   │   └── DocumentEditor.tsx
 │   ├── contexts/          # React Context (Auth)
-│   ├── hooks/             # Hooks personalizados (incl. AI hooks) 🆕
+│   ├── hooks/             # Hooks personalizados
 │   ├── integrations/      # Supabase client/types
 │   ├── lib/               # Utilidades
 │   ├── locales/           # Traducciones (es.json, en.json)
 │   ├── test/              # Mocks y utilidades de test
-│   ├── types/             # TypeScript types (incl. aiStudio.ts) 🆕
+│   ├── types/             # TypeScript types
 │   └── assets/            # Assets estáticos
 ├── supabase/
-│   ├── functions/         # Edge functions (Stripe, Mux, AI) 🆕
+│   ├── functions/         # Edge functions (Stripe, Mux, AI)
 │   └── config.toml        # Configuración Supabase
+├── e2e/                   # Tests E2E con Playwright
 └── docs/                  # Documentación
 ```
 
 ---
 
-## 🎨 Sistema de Diseño (v2.4-v3.5)
+## 🎨 Sistema de Diseño
 
 ### Identidad Visual
 
@@ -311,7 +290,7 @@ cognitio/
 ## 🧪 Testing
 
 ```bash
-# Ejecutar todos los tests
+# Ejecutar tests unitarios
 npx vitest run
 
 # Modo watch
@@ -319,9 +298,15 @@ npx vitest
 
 # Con cobertura
 npx vitest run --coverage
+
+# Tests E2E
+npx playwright test
+
+# E2E con UI interactiva
+npx playwright test --ui
 ```
 
-Para documentación detallada, consulta [TESTING.md](./TESTING.md).
+Para documentación detallada, consulta [TESTING.md](./TESTING.md) y [E2E_TESTING.md](./E2E_TESTING.md).
 
 ---
 
@@ -377,10 +362,10 @@ Parte del ecosistema Lovable. Ver términos de licencia de Lovable.
 
 ## 🆘 Soporte
 
-1. Consultar documentación (DEVELOPMENT_PLAN.md, FEATURES.md, etc.)
+1. Consultar documentación (DEVELOPMENT_PLAN.md, TESTING.md, etc.)
 2. Revisar issues existentes
 3. Abrir nuevo issue con información detallada
 
 ---
 
-_Última actualización: Enero 2026 | Versión: 4.0_
+_Última actualización: Enero 2026 | Versión: 4.0.1_
