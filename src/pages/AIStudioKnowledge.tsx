@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { useKnowledgeBase } from "@/hooks/useKnowledgeBase";
 import { useStyleProfile } from "@/hooks/useStyleProfile";
+import { useAuth } from "@/contexts/AuthContext";
 import { EmptyState } from "@/components/EmptyState";
 import DocumentEditor from "@/components/ai-studio/DocumentEditor";
 import StyleProfileForm from "@/components/ai-studio/StyleProfileForm";
@@ -66,6 +68,8 @@ const CONTEXT_ROLE_COLORS: Record<ContextRole, string> = {
 
 export default function AIStudioKnowledge() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const {
     documents,
     activeDocuments,
@@ -91,6 +95,15 @@ export default function AIStudioKnowledge() {
   const budgetInfo = getBudgetDisplayInfo(totalTokens);
 
   const handleAdd = () => {
+    if (!user) {
+      toast({
+        title: t("aiStudio.loginRequired", "Login Required"),
+        description: t("aiStudio.loginRequiredDesc", "Please log in to manage your knowledge base"),
+        variant: "destructive",
+      });
+      navigate("/auth");
+      return;
+    }
     setEditingDocument(null);
     setEditorOpen(true);
   };

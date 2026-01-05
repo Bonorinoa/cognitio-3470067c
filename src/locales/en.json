@@ -9,7 +9,8 @@
     "myLearning": "My Learning",
     "instructorPanel": "Instructor Panel",
     "adminPanel": "Admin Panel",
-    "logout": "Sign Out"
+    "logout": "Sign Out",
+    "aiStudio": "AI Studio"
   },
   "services": {
     "title": "Consulting Services",

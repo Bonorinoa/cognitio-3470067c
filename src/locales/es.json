@@ -9,7 +9,8 @@
     "myLearning": "Mi Aprendizaje",
     "instructorPanel": "Panel de Instructor",
     "adminPanel": "Panel de Admin",
-    "logout": "Cerrar Sesión"
+    "logout": "Cerrar Sesión",
+    "aiStudio": "AI Studio"
   },
   "services": {
     "title": "Servicios de Consultoría",
