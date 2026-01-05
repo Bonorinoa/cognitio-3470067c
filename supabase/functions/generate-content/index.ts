@@ -6,7 +6,6 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const DAILY_LIMIT = 15;
 const RESET_HOUR_UTC = 9; // 6am Argentina = 09:00 UTC
 
 function getDayStart(): Date {
@@ -23,6 +22,53 @@ function getDayStart(): Date {
   }
   
   return dayStart;
+}
+
+// Helper to get user's tier and daily limit
+async function getUserTierAndLimit(supabase: any, userId: string): Promise<{ tier: string; dailyLimit: number }> {
+  // 1. Check for active subscription
+  const { data: subscription } = await supabase
+    .from("ai_subscriptions")
+    .select("bundle, status")
+    .eq("user_id", userId)
+    .eq("status", "active")
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (subscription) {
+    const tierName = subscription.bundle === "pro" ? "pro" : subscription.bundle;
+    const { data: tierLimit } = await supabase
+      .from("ai_tier_limits")
+      .select("daily_limit")
+      .eq("tier_name", tierName)
+      .single();
+    
+    return { tier: tierName, dailyLimit: tierLimit?.daily_limit || 200 };
+  }
+
+  // 2. Check if user is an instructor
+  const { data: hasInstructorRole } = await supabase
+    .rpc("has_role", { _user_id: userId, _role: "instructor" });
+
+  if (hasInstructorRole) {
+    const { data: tierLimit } = await supabase
+      .from("ai_tier_limits")
+      .select("daily_limit")
+      .eq("tier_name", "instructor")
+      .single();
+    
+    return { tier: "instructor", dailyLimit: tierLimit?.daily_limit || 50 };
+  }
+
+  // 3. Default to free tier
+  const { data: tierLimit } = await supabase
+    .from("ai_tier_limits")
+    .select("daily_limit")
+    .eq("tier_name", "free")
+    .single();
+  
+  return { tier: "free", dailyLimit: tierLimit?.daily_limit || 10 };
 }
 
 serve(async (req) => {
@@ -62,9 +108,13 @@ serve(async (req) => {
 
     const { content_type, topic, additional_instructions, selected_document_ids } = await req.json();
 
-    console.log("Generating content for instructor:", user.id);
+    console.log("Generating content for user:", user.id);
     console.log("Content type:", content_type, "Topic:", topic);
     console.log("Selected documents:", selected_document_ids);
+
+    // Get user's tier and dynamic limit
+    const { tier, dailyLimit } = await getUserTierAndLimit(supabase, user.id);
+    console.log("User tier:", tier, "Daily limit:", dailyLimit);
 
     // Check daily usage limit BEFORE calling AI
     const dayStart = getDayStart();
@@ -73,7 +123,7 @@ serve(async (req) => {
     const { count: todayUsage, error: usageError } = await supabase
       .from("ai_usage_logs")
       .select("*", { count: "exact", head: true })
-      .eq("instructor_id", user.id)
+      .eq("user_id", user.id)
       .gte("created_at", dayStart.toISOString());
 
     if (usageError) {
@@ -82,11 +132,11 @@ serve(async (req) => {
 
     console.log("Today's usage count:", todayUsage);
 
-    if (todayUsage !== null && todayUsage >= DAILY_LIMIT) {
+    if (todayUsage !== null && todayUsage >= dailyLimit) {
       console.log("Daily limit exceeded for user:", user.id);
       return new Response(
         JSON.stringify({ 
-          error: "Daily generation limit reached (10/day). Resets at 6am Argentina time." 
+          error: `Daily generation limit reached (${dailyLimit}/day for ${tier} tier). Resets at 6am Argentina time.` 
         }),
         {
           status: 429,
@@ -95,7 +145,7 @@ serve(async (req) => {
       );
     }
 
-    // Fetch instructor profile
+    // Fetch user profile
     const { data: profile } = await supabase
       .from("profiles")
       .select("full_name, headline, bio, affiliation, credentials")
@@ -104,19 +154,19 @@ serve(async (req) => {
 
     // Fetch style profile
     const { data: styleProfile } = await supabase
-      .from("instructor_style_profile")
+      .from("user_style_profile")
       .select("*")
-      .eq("instructor_id", user.id)
+      .eq("user_id", user.id)
       .single();
 
     // Fetch selected documents
     let documents: any[] = [];
     if (selected_document_ids && selected_document_ids.length > 0) {
       const { data: docs } = await supabase
-        .from("instructor_knowledge_base")
+        .from("user_knowledge_base")
         .select("*")
         .in("id", selected_document_ids)
-        .eq("instructor_id", user.id);
+        .eq("user_id", user.id);
       documents = docs || [];
     }
 
@@ -161,10 +211,10 @@ serve(async (req) => {
         : "Write in English.";
 
     // Build system prompt
-    const systemPrompt = `You are an expert content writer helping an academic instructor create ${content_type === "blog" ? "a blog post" : "a newsletter"}.
+    const systemPrompt = `You are an expert content writer helping a user create ${content_type === "blog" ? "a blog post" : "a newsletter"}.
 
-## Instructor Profile
-Name: ${profile?.full_name || "Instructor"}
+## User Profile
+Name: ${profile?.full_name || "User"}
 ${profile?.headline ? `Headline: ${profile.headline}` : ""}
 ${profile?.affiliation ? `Affiliation: ${profile.affiliation}` : ""}
 ${profile?.credentials?.length ? `Credentials: ${profile.credentials.join(", ")}` : ""}
@@ -240,11 +290,11 @@ CRITICAL OUTPUT RULES:
 
     // Log this AI call for usage tracking BEFORE streaming response
     // This ensures the log is recorded even if the stream terminates early
-    console.log("Logging usage for instructor:", user.id);
+    console.log("Logging usage for user:", user.id);
     const { error: logError } = await supabase
       .from("ai_usage_logs")
       .insert({
-        instructor_id: user.id,
+        user_id: user.id,
         content_type: content_type || "blog",
         model_used: "google/gemini-2.5-flash",
       });

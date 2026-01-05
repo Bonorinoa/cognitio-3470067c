@@ -23,7 +23,6 @@ export type Database = {
           generated_content: string | null
           id: string
           input_tokens: number | null
-          instructor_id: string
           is_active: boolean | null
           model_used: string | null
           output_tokens: number | null
@@ -32,6 +31,7 @@ export type Database = {
           topic: string
           total_tokens: number | null
           updated_at: string
+          user_id: string
         }
         Insert: {
           additional_instructions?: string | null
@@ -41,7 +41,6 @@ export type Database = {
           generated_content?: string | null
           id?: string
           input_tokens?: number | null
-          instructor_id: string
           is_active?: boolean | null
           model_used?: string | null
           output_tokens?: number | null
@@ -50,6 +49,7 @@ export type Database = {
           topic: string
           total_tokens?: number | null
           updated_at?: string
+          user_id: string
         }
         Update: {
           additional_instructions?: string | null
@@ -59,7 +59,6 @@ export type Database = {
           generated_content?: string | null
           id?: string
           input_tokens?: number | null
-          instructor_id?: string
           is_active?: boolean | null
           model_used?: string | null
           output_tokens?: number | null
@@ -68,38 +67,105 @@ export type Database = {
           topic?: string
           total_tokens?: number | null
           updated_at?: string
+          user_id?: string
         }
         Relationships: [
           {
             foreignKeyName: "ai_generation_history_instructor_id_fkey"
-            columns: ["instructor_id"]
+            columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
       }
+      ai_subscriptions: {
+        Row: {
+          bundle: Database["public"]["Enums"]["ai_bundle"]
+          cancel_at_period_end: boolean | null
+          created_at: string | null
+          current_period_end: string | null
+          current_period_start: string | null
+          id: string
+          status: Database["public"]["Enums"]["subscription_status"]
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          bundle: Database["public"]["Enums"]["ai_bundle"]
+          cancel_at_period_end?: boolean | null
+          created_at?: string | null
+          current_period_end?: string | null
+          current_period_start?: string | null
+          id?: string
+          status?: Database["public"]["Enums"]["subscription_status"]
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          bundle?: Database["public"]["Enums"]["ai_bundle"]
+          cancel_at_period_end?: boolean | null
+          created_at?: string | null
+          current_period_end?: string | null
+          current_period_start?: string | null
+          id?: string
+          status?: Database["public"]["Enums"]["subscription_status"]
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      ai_tier_limits: {
+        Row: {
+          created_at: string | null
+          daily_limit: number
+          description: string | null
+          requests_per_minute: number
+          tier_name: string
+        }
+        Insert: {
+          created_at?: string | null
+          daily_limit: number
+          description?: string | null
+          requests_per_minute?: number
+          tier_name: string
+        }
+        Update: {
+          created_at?: string | null
+          daily_limit?: number
+          description?: string | null
+          requests_per_minute?: number
+          tier_name?: string
+        }
+        Relationships: []
+      }
       ai_usage_logs: {
         Row: {
           content_type: string
           created_at: string
           id: string
-          instructor_id: string
           model_used: string | null
+          user_id: string
         }
         Insert: {
           content_type?: string
           created_at?: string
           id?: string
-          instructor_id: string
           model_used?: string | null
+          user_id: string
         }
         Update: {
           content_type?: string
           created_at?: string
           id?: string
-          instructor_id?: string
           model_used?: string | null
+          user_id?: string
         }
         Relationships: []
       }
@@ -248,56 +314,6 @@ export type Database = {
         }
         Relationships: []
       }
-      instructor_knowledge_base: {
-        Row: {
-          content: string
-          content_tokens: number
-          context_role: Database["public"]["Enums"]["context_role"]
-          created_at: string
-          document_type: Database["public"]["Enums"]["document_type"]
-          id: string
-          instructor_id: string
-          is_active: boolean | null
-          tags: string[] | null
-          title: string
-          updated_at: string
-        }
-        Insert: {
-          content: string
-          content_tokens?: number
-          context_role?: Database["public"]["Enums"]["context_role"]
-          created_at?: string
-          document_type?: Database["public"]["Enums"]["document_type"]
-          id?: string
-          instructor_id: string
-          is_active?: boolean | null
-          tags?: string[] | null
-          title: string
-          updated_at?: string
-        }
-        Update: {
-          content?: string
-          content_tokens?: number
-          context_role?: Database["public"]["Enums"]["context_role"]
-          created_at?: string
-          document_type?: Database["public"]["Enums"]["document_type"]
-          id?: string
-          instructor_id?: string
-          is_active?: boolean | null
-          tags?: string[] | null
-          title?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "instructor_knowledge_base_instructor_id_fkey"
-            columns: ["instructor_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       instructor_services: {
         Row: {
           created_at: string
@@ -337,74 +353,6 @@ export type Database = {
             foreignKeyName: "instructor_services_instructor_id_fkey"
             columns: ["instructor_id"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      instructor_style_profile: {
-        Row: {
-          created_at: string
-          custom_instructions: string | null
-          id: string
-          include_call_to_action: boolean | null
-          include_citations: boolean | null
-          instructor_id: string
-          language_preference:
-            | Database["public"]["Enums"]["language_preference"]
-            | null
-          preferred_length:
-            | Database["public"]["Enums"]["length_preference"]
-            | null
-          setup_completed: boolean | null
-          target_audience: string | null
-          tone: Database["public"]["Enums"]["writing_tone"] | null
-          updated_at: string
-          use_examples: boolean | null
-        }
-        Insert: {
-          created_at?: string
-          custom_instructions?: string | null
-          id?: string
-          include_call_to_action?: boolean | null
-          include_citations?: boolean | null
-          instructor_id: string
-          language_preference?:
-            | Database["public"]["Enums"]["language_preference"]
-            | null
-          preferred_length?:
-            | Database["public"]["Enums"]["length_preference"]
-            | null
-          setup_completed?: boolean | null
-          target_audience?: string | null
-          tone?: Database["public"]["Enums"]["writing_tone"] | null
-          updated_at?: string
-          use_examples?: boolean | null
-        }
-        Update: {
-          created_at?: string
-          custom_instructions?: string | null
-          id?: string
-          include_call_to_action?: boolean | null
-          include_citations?: boolean | null
-          instructor_id?: string
-          language_preference?:
-            | Database["public"]["Enums"]["language_preference"]
-            | null
-          preferred_length?:
-            | Database["public"]["Enums"]["length_preference"]
-            | null
-          setup_completed?: boolean | null
-          target_audience?: string | null
-          tone?: Database["public"]["Enums"]["writing_tone"] | null
-          updated_at?: string
-          use_examples?: boolean | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "instructor_style_profile_instructor_id_fkey"
-            columns: ["instructor_id"]
-            isOneToOne: true
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
@@ -496,6 +444,56 @@ export type Database = {
           },
         ]
       }
+      user_knowledge_base: {
+        Row: {
+          content: string
+          content_tokens: number
+          context_role: Database["public"]["Enums"]["context_role"]
+          created_at: string
+          document_type: Database["public"]["Enums"]["document_type"]
+          id: string
+          is_active: boolean | null
+          tags: string[] | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          content_tokens?: number
+          context_role?: Database["public"]["Enums"]["context_role"]
+          created_at?: string
+          document_type?: Database["public"]["Enums"]["document_type"]
+          id?: string
+          is_active?: boolean | null
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          content_tokens?: number
+          context_role?: Database["public"]["Enums"]["context_role"]
+          created_at?: string
+          document_type?: Database["public"]["Enums"]["document_type"]
+          id?: string
+          is_active?: boolean | null
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "instructor_knowledge_base_instructor_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_progress: {
         Row: {
           chapter_id: string
@@ -555,6 +553,74 @@ export type Database = {
         }
         Relationships: []
       }
+      user_style_profile: {
+        Row: {
+          created_at: string
+          custom_instructions: string | null
+          id: string
+          include_call_to_action: boolean | null
+          include_citations: boolean | null
+          language_preference:
+            | Database["public"]["Enums"]["language_preference"]
+            | null
+          preferred_length:
+            | Database["public"]["Enums"]["length_preference"]
+            | null
+          setup_completed: boolean | null
+          target_audience: string | null
+          tone: Database["public"]["Enums"]["writing_tone"] | null
+          updated_at: string
+          use_examples: boolean | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          custom_instructions?: string | null
+          id?: string
+          include_call_to_action?: boolean | null
+          include_citations?: boolean | null
+          language_preference?:
+            | Database["public"]["Enums"]["language_preference"]
+            | null
+          preferred_length?:
+            | Database["public"]["Enums"]["length_preference"]
+            | null
+          setup_completed?: boolean | null
+          target_audience?: string | null
+          tone?: Database["public"]["Enums"]["writing_tone"] | null
+          updated_at?: string
+          use_examples?: boolean | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          custom_instructions?: string | null
+          id?: string
+          include_call_to_action?: boolean | null
+          include_citations?: boolean | null
+          language_preference?:
+            | Database["public"]["Enums"]["language_preference"]
+            | null
+          preferred_length?:
+            | Database["public"]["Enums"]["length_preference"]
+            | null
+          setup_completed?: boolean | null
+          target_audience?: string | null
+          tone?: Database["public"]["Enums"]["writing_tone"] | null
+          updated_at?: string
+          use_examples?: boolean | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "instructor_style_profile_instructor_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -600,6 +666,7 @@ export type Database = {
       }
     }
     Enums: {
+      ai_bundle: "marketing" | "academic" | "pro"
       app_role: "admin" | "teacher" | "student" | "instructor"
       content_type: "blog" | "newsletter"
       context_role: "style_reference" | "topic_source" | "background_context"
@@ -614,6 +681,7 @@ export type Database = {
       generation_status: "pending" | "completed" | "failed"
       language_preference: "es" | "en" | "bilingual"
       length_preference: "concise" | "moderate" | "detailed"
+      subscription_status: "active" | "canceled" | "past_due" | "trialing"
       writing_tone: "formal" | "conversational" | "academic" | "journalistic"
     }
     CompositeTypes: {
@@ -742,6 +810,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      ai_bundle: ["marketing", "academic", "pro"],
       app_role: ["admin", "teacher", "student", "instructor"],
       content_type: ["blog", "newsletter"],
       context_role: ["style_reference", "topic_source", "background_context"],
@@ -757,6 +826,7 @@ export const Constants = {
       generation_status: ["pending", "completed", "failed"],
       language_preference: ["es", "en", "bilingual"],
       length_preference: ["concise", "moderate", "detailed"],
+      subscription_status: ["active", "canceled", "past_due", "trialing"],
       writing_tone: ["formal", "conversational", "academic", "journalistic"],
     },
   },

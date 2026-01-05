@@ -32,7 +32,7 @@ export function useGenerationHistory() {
       const { data, error } = await supabase
         .from("ai_generation_history")
         .select("id, content_type, topic, generated_content, created_at")
-        .eq("instructor_id", user.id)
+        .eq("user_id", user.id)
         .eq("status", "completed")
         .eq("is_active", true) // Only show active items in history
         .order("created_at", { ascending: false })
@@ -57,7 +57,7 @@ export function useGenerationHistory() {
     const { count } = await supabase
       .from("ai_generation_history")
       .select("*", { count: "exact", head: true })
-      .eq("instructor_id", user.id)
+      .eq("user_id", user.id)
       .eq("status", "completed")
       .eq("is_active", true);
 
@@ -66,7 +66,7 @@ export function useGenerationHistory() {
       const { data: oldest } = await supabase
         .from("ai_generation_history")
         .select("id")
-        .eq("instructor_id", user.id)
+        .eq("user_id", user.id)
         .eq("status", "completed")
         .eq("is_active", true)
         .order("created_at", { ascending: true })
@@ -84,7 +84,7 @@ export function useGenerationHistory() {
     const { data, error } = await supabase
       .from("ai_generation_history")
       .insert({
-        instructor_id: user.id,
+        user_id: user.id,
         content_type: params.content_type,
         topic: params.topic,
         generated_content: params.generated_content,
@@ -111,7 +111,7 @@ export function useGenerationHistory() {
         updated_at: new Date().toISOString(),
       })
       .eq("id", id)
-      .eq("instructor_id", user.id);
+      .eq("user_id", user.id);
 
     if (error) throw error;
     invalidate();
@@ -124,7 +124,7 @@ export function useGenerationHistory() {
       .from("ai_generation_history")
       .delete()
       .eq("id", id)
-      .eq("instructor_id", user.id);
+      .eq("user_id", user.id);
 
     if (error) throw error;
     invalidate();

@@ -15,7 +15,7 @@ import type {
   WritingTone, 
   LengthPreference, 
   LanguagePreference,
-  InstructorStyleProfile
+  UserStyleProfile
 } from "@/types/aiStudio";
 import {
   WRITING_TONE_OPTIONS,
@@ -34,7 +34,7 @@ const DEFAULT_FORM_DATA: StyleProfileFormData = {
   custom_instructions: "",
 };
 
-function profileToFormData(profile: InstructorStyleProfile): StyleProfileFormData {
+function profileToFormData(profile: UserStyleProfile): StyleProfileFormData {
   return {
     tone: profile.tone,
     target_audience: profile.target_audience || "",
