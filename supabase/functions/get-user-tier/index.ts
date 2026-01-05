@@ -6,6 +6,17 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+// Helper function to fetch tier limit from database
+async function getTierLimit(supabase: any, tierName: string, defaultLimit: number): Promise<number> {
+  const { data: tierLimit } = await supabase
+    .from("ai_tier_limits")
+    .select("daily_limit")
+    .eq("tier_name", tierName)
+    .single();
+  
+  return tierLimit?.daily_limit || defaultLimit;
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -45,15 +56,11 @@ serve(async (req) => {
 
     if (subscription) {
       const tierName = subscription.bundle === "pro" ? "pro" : subscription.bundle;
-      const { data: tierLimit } = await supabase
-        .from("ai_tier_limits")
-        .select("daily_limit")
-        .eq("tier_name", tierName)
-        .single();
+      const dailyLimit = await getTierLimit(supabase, tierName, 200);
       
       return new Response(JSON.stringify({ 
         tier: tierName, 
-        dailyLimit: tierLimit?.daily_limit || 200 
+        dailyLimit 
       }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -64,30 +71,22 @@ serve(async (req) => {
       .rpc("has_role", { _user_id: user.id, _role: "instructor" });
 
     if (hasInstructorRole) {
-      const { data: tierLimit } = await supabase
-        .from("ai_tier_limits")
-        .select("daily_limit")
-        .eq("tier_name", "instructor")
-        .single();
+      const dailyLimit = await getTierLimit(supabase, "instructor", 50);
       
       return new Response(JSON.stringify({ 
         tier: "instructor", 
-        dailyLimit: tierLimit?.daily_limit || 50 
+        dailyLimit 
       }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
     // Default to free tier
-    const { data: tierLimit } = await supabase
-      .from("ai_tier_limits")
-      .select("daily_limit")
-      .eq("tier_name", "free")
-      .single();
+    const dailyLimit = await getTierLimit(supabase, "free", 10);
     
     return new Response(JSON.stringify({ 
       tier: "free", 
-      dailyLimit: tierLimit?.daily_limit || 10 
+      dailyLimit 
     }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });

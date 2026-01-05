@@ -26,7 +26,7 @@ export function useGenerationUsage() {
     queryFn: async () => {
       const { data, error } = await supabase.functions.invoke("get-user-tier");
       if (error) {
-        console.error("Error fetching user tier:", error);
+        console.error("Error fetching user tier:", error.message || error);
         return { tier: "free", dailyLimit: DEFAULT_LIMIT };
       }
       return data as { tier: string; dailyLimit: number };
