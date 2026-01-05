@@ -1,8 +1,12 @@
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import BundleCard from "@/components/ai-studio/BundleCard";
+import PricingSection from "@/components/ai-studio/PricingSection";
+import { useAISubscription } from "@/hooks/useAISubscription";
+import { toast } from "sonner";
 import {
   Sparkles,
   Megaphone,
@@ -15,6 +19,18 @@ import {
 
 export default function AIStudioLanding() {
   const { t } = useTranslation();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { invalidateSubscription } = useAISubscription();
+
+  // Handle checkout success
+  useEffect(() => {
+    if (searchParams.get("checkout") === "success") {
+      invalidateSubscription();
+      toast.success(t("aiStudio.subscriptionActivated", "Subscription activated!"));
+      // Remove the query param
+      setSearchParams({});
+    }
+  }, [searchParams, setSearchParams, invalidateSubscription, t]);
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
@@ -204,22 +220,8 @@ export default function AIStudioLanding() {
         </div>
       </section>
 
-      {/* Pricing Teaser */}
-      <section className="space-y-4">
-        <Card className="rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 border-2 border-primary/20">
-          <CardContent className="pt-6 text-center space-y-4">
-            <h3 className="text-xl font-bold">
-              {t("aiStudio.freeTier", "Nivel Gratuito: 10 generaciones/día")}
-            </h3>
-            <p className="text-muted-foreground">
-              {t("aiStudio.instructorPerk", "¿Eres instructor de Cognitio? Disfruta de 50 generaciones diarias.")}
-            </p>
-            <p className="text-sm text-muted-foreground">
-              {t("aiStudio.upgradeTeaser", "Planes Pro con acceso ilimitado - Próximamente")}
-            </p>
-          </CardContent>
-        </Card>
-      </section>
+      {/* Pricing Section */}
+      <PricingSection />
     </div>
   );
 }
