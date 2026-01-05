@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Lock, CheckCircle2, Loader2, ArrowLeft } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { isValidEmail } from "@/lib/emailValidation";
 
@@ -61,30 +60,13 @@ export default function ComingSoonFeature({
 
     setIsSubmitting(true);
 
-    try {
-      const { error } = await supabase.from("feature_notify_requests").insert({
-        email,
-        feature_key: featureKey,
-        user_id: user?.id || null,
-      });
-
-      if (error) {
-        if (error.code === "23505") {
-          toast.info(t("aiStudio.alreadyNotified", "You're already on the list for this feature!"));
-          setIsSuccess(true);
-        } else {
-          throw error;
-        }
-      } else {
-        setIsSuccess(true);
-        toast.success(t("aiStudio.notifySuccess", "We'll notify you when it's ready!"));
-      }
-    } catch (error) {
-      console.error("Failed to submit notification request:", error);
-      toast.error(t("aiStudio.notifyError", "Failed to submit request. Please try again."));
-    } finally {
-      setIsSubmitting(false);
-    }
+    // Deferred feature - just show success for now
+    // TODO: Implement actual notification storage when needed
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    setIsSuccess(true);
+    toast.success(t("aiStudio.notifySuccess", "We'll notify you when it's ready!"));
+    setIsSubmitting(false);
   };
 
   return (

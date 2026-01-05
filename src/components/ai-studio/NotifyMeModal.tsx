@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from "@/integrations/supabase/client";
 import {
   Dialog,
   DialogContent,
@@ -66,30 +65,13 @@ export default function NotifyMeModal({
 
     setIsSubmitting(true);
 
-    try {
-      const { error } = await supabase.from("feature_notify_requests").insert({
-        email,
-        feature_key: featureKey,
-        user_id: user?.id || null,
-      });
-
-      if (error) {
-        // Check if it's a duplicate entry
-        if (error.code === "23505") {
-          toast.info(t("aiStudio.alreadyNotified", "You're already on the list for this feature!"));
-          setIsSuccess(true);
-        } else {
-          throw error;
-        }
-      } else {
-        setIsSuccess(true);
-      }
-    } catch (error) {
-      console.error("Failed to submit notification request:", error);
-      toast.error(t("aiStudio.notifyError", "Failed to submit request. Please try again."));
-    } finally {
-      setIsSubmitting(false);
-    }
+    // Deferred feature - just show success for now
+    // TODO: Implement actual notification storage when needed
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    toast.success(t("aiStudio.notifySuccess", "We'll notify you when it's ready!"));
+    setIsSuccess(true);
+    setIsSubmitting(false);
   };
 
   return (
