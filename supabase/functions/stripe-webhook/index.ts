@@ -2,7 +2,7 @@ import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@18.5.0";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
 
-const logStep = (step: string, details?: any) => {
+const logStep = (step: string, details?: Record<string, unknown>) => {
   const detailsStr = details ? ` - ${JSON.stringify(details)}` : '';
   console.log(`[STRIPE-WEBHOOK] ${step}${detailsStr}`);
 };
@@ -70,64 +70,183 @@ serve(async (req) => {
       return new Response(`Webhook signature verification failed`, { status: 400 });
     }
 
-    // Handle the checkout.session.completed event
-    if (event.type === "checkout.session.completed") {
-      const session = event.data.object as Stripe.Checkout.Session;
-      logStep("Processing checkout.session.completed", { sessionId: session.id });
+    // Create Supabase admin client
+    const supabaseAdmin = createClient(
+      Deno.env.get("SUPABASE_URL") ?? "",
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
+      { auth: { persistSession: false } }
+    );
 
-      const userId = session.metadata?.userId;
-      const courseId = session.metadata?.courseId;
-      const amountTotal = session.amount_total;
+    // Handle events based on type
+    switch (event.type) {
+      case "checkout.session.completed": {
+        const session = event.data.object as Stripe.Checkout.Session;
+        logStep("Processing checkout.session.completed", { sessionId: session.id });
 
-      if (!userId || !courseId) {
-        logStep("ERROR: Missing metadata", { userId, courseId });
-        return new Response("Missing metadata", { status: 400 });
+        const userId = session.metadata?.userId;
+        const courseId = session.metadata?.courseId;
+        const bundle = session.metadata?.bundle;
+
+        // This is a course purchase (existing flow)
+        if (courseId && userId) {
+          const amountTotal = session.amount_total;
+          logStep("Course purchase detected", { userId, courseId, amountTotal });
+
+          // Check if purchase already exists (idempotency)
+          const { data: existingPurchase } = await supabaseAdmin
+            .from("purchases")
+            .select("id")
+            .eq("user_id", userId)
+            .eq("course_id", courseId)
+            .maybeSingle();
+
+          if (existingPurchase) {
+            logStep("Purchase already exists, skipping", { purchaseId: existingPurchase.id });
+            return new Response(JSON.stringify({ received: true, status: "already_recorded" }), {
+              headers: { "Content-Type": "application/json" },
+              status: 200,
+            });
+          }
+
+          // Insert purchase record
+          const amount = amountTotal ? amountTotal / 100 : 0;
+          const { error: insertError } = await supabaseAdmin
+            .from("purchases")
+            .insert({
+              user_id: userId,
+              course_id: courseId,
+              amount,
+              stripe_payment_id: session.payment_intent as string,
+            });
+
+          if (insertError) {
+            logStep("ERROR: Failed to insert purchase", { error: insertError.message });
+            return new Response(`Failed to record purchase: ${insertError.message}`, { status: 500 });
+          }
+
+          logStep("Purchase recorded successfully", { userId, courseId, amount });
+        } 
+        // This is an AI subscription checkout (new flow)
+        else if (bundle && userId) {
+          logStep("AI subscription checkout detected", { userId, bundle });
+          // Subscription will be created by customer.subscription.created event
+          // We just log here for tracking
+        } else {
+          logStep("Checkout session without courseId or bundle", { metadata: session.metadata });
+        }
+        break;
       }
 
-      logStep("Extracted metadata", { userId, courseId, amountTotal });
-
-      // Create Supabase admin client
-      const supabaseAdmin = createClient(
-        Deno.env.get("SUPABASE_URL") ?? "",
-        Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
-        { auth: { persistSession: false } }
-      );
-
-      // Check if purchase already exists (idempotency)
-      const { data: existingPurchase } = await supabaseAdmin
-        .from("purchases")
-        .select("id")
-        .eq("user_id", userId)
-        .eq("course_id", courseId)
-        .maybeSingle();
-
-      if (existingPurchase) {
-        logStep("Purchase already exists, skipping", { purchaseId: existingPurchase.id });
-        return new Response(JSON.stringify({ received: true, status: "already_recorded" }), {
-          headers: { "Content-Type": "application/json" },
-          status: 200,
+      case "customer.subscription.created":
+      case "customer.subscription.updated": {
+        const subscription = event.data.object as Stripe.Subscription;
+        logStep(`Processing ${event.type}`, { 
+          subscriptionId: subscription.id,
+          status: subscription.status 
         });
+
+        // Get metadata from subscription
+        const userId = subscription.metadata?.userId;
+        const bundle = subscription.metadata?.bundle as "marketing" | "academic" | "pro" | undefined;
+
+        if (!userId || !bundle) {
+          logStep("Subscription missing required metadata", { 
+            userId, 
+            bundle,
+            metadata: subscription.metadata 
+          });
+          // Don't fail - might be a subscription from elsewhere
+          break;
+        }
+
+        // Map Stripe status to our status enum
+        const statusMap: Record<string, string> = {
+          active: "active",
+          trialing: "trialing",
+          past_due: "past_due",
+          canceled: "canceled",
+          unpaid: "past_due",
+          incomplete: "past_due",
+          incomplete_expired: "canceled",
+          paused: "canceled",
+        };
+
+        const mappedStatus = statusMap[subscription.status] || "canceled";
+
+        // Upsert subscription record
+        const { error: upsertError } = await supabaseAdmin
+          .from("ai_subscriptions")
+          .upsert({
+            user_id: userId,
+            bundle: bundle,
+            status: mappedStatus,
+            stripe_subscription_id: subscription.id,
+            stripe_customer_id: subscription.customer as string,
+            current_period_start: new Date(subscription.current_period_start * 1000).toISOString(),
+            current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
+            cancel_at_period_end: subscription.cancel_at_period_end,
+            updated_at: new Date().toISOString(),
+          }, {
+            onConflict: "user_id",
+          });
+
+        if (upsertError) {
+          logStep("ERROR: Failed to upsert subscription", { error: upsertError.message });
+          return new Response(`Failed to record subscription: ${upsertError.message}`, { status: 500 });
+        }
+
+        logStep("Subscription recorded successfully", { userId, bundle, status: mappedStatus });
+        break;
       }
 
-      // Insert purchase record
-      const amount = amountTotal ? amountTotal / 100 : 0; // Convert cents to dollars
-      const { error: insertError } = await supabaseAdmin
-        .from("purchases")
-        .insert({
-          user_id: userId,
-          course_id: courseId,
-          amount,
-          stripe_payment_id: session.payment_intent as string,
-        });
+      case "customer.subscription.deleted": {
+        const subscription = event.data.object as Stripe.Subscription;
+        logStep("Processing customer.subscription.deleted", { subscriptionId: subscription.id });
 
-      if (insertError) {
-        logStep("ERROR: Failed to insert purchase", { error: insertError.message });
-        return new Response(`Failed to record purchase: ${insertError.message}`, { status: 500 });
+        const userId = subscription.metadata?.userId;
+
+        if (userId) {
+          const { error: updateError } = await supabaseAdmin
+            .from("ai_subscriptions")
+            .update({ 
+              status: "canceled",
+              updated_at: new Date().toISOString(),
+            })
+            .eq("stripe_subscription_id", subscription.id);
+
+          if (updateError) {
+            logStep("ERROR: Failed to mark subscription as canceled", { error: updateError.message });
+          } else {
+            logStep("Subscription marked as canceled", { userId, subscriptionId: subscription.id });
+          }
+        }
+        break;
       }
 
-      logStep("Purchase recorded successfully", { userId, courseId, amount });
-    } else {
-      logStep("Unhandled event type", { type: event.type });
+      case "invoice.payment_failed": {
+        const invoice = event.data.object as Stripe.Invoice;
+        logStep("Processing invoice.payment_failed", { invoiceId: invoice.id });
+
+        if (invoice.subscription) {
+          const { error: updateError } = await supabaseAdmin
+            .from("ai_subscriptions")
+            .update({ 
+              status: "past_due",
+              updated_at: new Date().toISOString(),
+            })
+            .eq("stripe_subscription_id", invoice.subscription as string);
+
+          if (updateError) {
+            logStep("ERROR: Failed to mark subscription as past_due", { error: updateError.message });
+          } else {
+            logStep("Subscription marked as past_due", { subscriptionId: invoice.subscription });
+          }
+        }
+        break;
+      }
+
+      default:
+        logStep("Unhandled event type", { type: event.type });
     }
 
     return new Response(JSON.stringify({ received: true }), {
