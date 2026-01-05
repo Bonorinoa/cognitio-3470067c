@@ -1,10 +1,8 @@
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import BundleCard from "@/components/ai-studio/BundleCard";
-import NotifyMeModal from "@/components/ai-studio/NotifyMeModal";
 import {
   Sparkles,
   Megaphone,
@@ -17,13 +15,6 @@ import {
 
 export default function AIStudioLanding() {
   const { t } = useTranslation();
-  const [notifyModalOpen, setNotifyModalOpen] = useState(false);
-  const [selectedFeature, setSelectedFeature] = useState({ key: "", name: "" });
-
-  const handleNotifyClick = (featureKey: string, featureName: string) => {
-    setSelectedFeature({ key: featureKey, name: featureName });
-    setNotifyModalOpen(true);
-  };
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
@@ -137,60 +128,24 @@ export default function AIStudioLanding() {
                 available: false,
               },
             ]}
-            ctaText={t("aiStudio.notifyMe", "Notify Me")}
-            ctaAction={() =>
-              handleNotifyClick(
-                "academic_bundle",
-                t("aiStudio.academicBundle", "Academic Bundle")
-              )
-            }
             comingSoon
           />
         </div>
       </section>
 
-      {/* Knowledge Base Section */}
-      <section className="space-y-6">
-        <Card className="rounded-xl border-2">
-          <CardContent className="pt-6">
-            <div className="grid md:grid-cols-2 gap-8 items-center">
-              <div className="space-y-4">
-                <h3 className="text-2xl font-bold">
-                  {t("aiStudio.poweredByKnowledge", "Powered by Your Knowledge")}
-                </h3>
-                <p className="text-muted-foreground">
-                  {t(
-                    "aiStudio.knowledgeDesc",
-                    "Upload your documents, papers, and writing samples. Our AI learns your voice and expertise to create content that sounds authentically YOU."
-                  )}
-                </p>
-                <Link to="/ai-studio/knowledge">
-                  <Button className="gap-2">
-                    {t("aiStudio.setupKnowledge", "Set Up Knowledge Base")}
-                    <ArrowRight className="h-4 w-4" />
-                  </Button>
-                </Link>
-              </div>
-              <div className="flex items-center justify-center">
-                <div className="p-8 bg-primary/5 rounded-2xl">
-                  <Upload className="h-24 w-24 text-primary" />
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </section>
-
-      {/* How It Works Section */}
+      {/* How It Works Section - Enhanced */}
       <section className="space-y-6">
         <div className="text-center space-y-2">
           <h2 className="text-3xl font-bold">
-            {t("aiStudio.howItWorks", "How It Works")}
+            {t("aiStudio.howItWorks", "Cómo Funciona")}
           </h2>
+          <p className="text-muted-foreground max-w-2xl mx-auto">
+            {t("aiStudio.howItWorksDesc", "La IA aprende tu voz y estilo para crear contenido que suena auténticamente como tú.")}
+          </p>
         </div>
 
         <div className="grid md:grid-cols-3 gap-6">
-          {/* Step 1 */}
+          {/* Step 1 - Enhanced with knowledge base info */}
           <Card className="rounded-xl text-center">
             <CardContent className="pt-6 space-y-4">
               <div className="flex justify-center">
@@ -200,10 +155,10 @@ export default function AIStudioLanding() {
               </div>
               <div>
                 <h3 className="font-semibold text-lg mb-2">
-                  {t("aiStudio.step1Title", "Upload")}
+                  {t("aiStudio.step1Title", "Sube")}
                 </h3>
                 <p className="text-sm text-muted-foreground">
-                  {t("aiStudio.step1Desc", "Your docs & writing samples")}
+                  {t("aiStudio.step1DescEnhanced", "Tus documentos, artículos y muestras de escritura para personalizar la IA")}
                 </p>
               </div>
             </CardContent>
@@ -219,10 +174,10 @@ export default function AIStudioLanding() {
               </div>
               <div>
                 <h3 className="font-semibold text-lg mb-2">
-                  {t("aiStudio.step2Title", "Configure")}
+                  {t("aiStudio.step2Title", "Configura")}
                 </h3>
                 <p className="text-sm text-muted-foreground">
-                  {t("aiStudio.step2Desc", "Your style preferences")}
+                  {t("aiStudio.step2DescEnhanced", "Tu tono, audiencia e idioma preferido")}
                 </p>
               </div>
             </CardContent>
@@ -238,10 +193,10 @@ export default function AIStudioLanding() {
               </div>
               <div>
                 <h3 className="font-semibold text-lg mb-2">
-                  {t("aiStudio.step3Title", "Generate")}
+                  {t("aiStudio.step3Title", "Genera")}
                 </h3>
                 <p className="text-sm text-muted-foreground">
-                  {t("aiStudio.step3Desc", "Professional content instantly")}
+                  {t("aiStudio.step3DescEnhanced", "Artículos, posts y más contenido profesional al instante")}
                 </p>
               </div>
             </CardContent>
@@ -254,22 +209,17 @@ export default function AIStudioLanding() {
         <Card className="rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 border-2 border-primary/20">
           <CardContent className="pt-6 text-center space-y-4">
             <h3 className="text-xl font-bold">
-              {t("aiStudio.freeTier", "Free Tier: 10 generations/day")}
+              {t("aiStudio.freeTier", "Nivel Gratuito: 10 generaciones/día")}
             </h3>
             <p className="text-muted-foreground">
-              {t("aiStudio.upgradeTeaser", "Upgrade to Pro for unlimited access - Coming Soon")}
+              {t("aiStudio.instructorPerk", "¿Eres instructor de Cognitio? Disfruta de 50 generaciones diarias.")}
+            </p>
+            <p className="text-sm text-muted-foreground">
+              {t("aiStudio.upgradeTeaser", "Planes Pro con acceso ilimitado - Próximamente")}
             </p>
           </CardContent>
         </Card>
       </section>
-
-      {/* Notify Me Modal */}
-      <NotifyMeModal
-        open={notifyModalOpen}
-        onOpenChange={setNotifyModalOpen}
-        featureKey={selectedFeature.key}
-        featureName={selectedFeature.name}
-      />
     </div>
   );
 }

@@ -5,7 +5,6 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Loader2, Sparkles, Check } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
@@ -13,13 +12,11 @@ import { useStyleProfile } from "@/hooks/useStyleProfile";
 import type { 
   StyleProfileFormData, 
   WritingTone, 
-  LengthPreference, 
   LanguagePreference,
   UserStyleProfile
 } from "@/types/aiStudio";
 import {
   WRITING_TONE_OPTIONS,
-  LENGTH_PREFERENCE_OPTIONS,
   LANGUAGE_PREFERENCE_OPTIONS,
 } from "@/types/aiStudio";
 
@@ -137,26 +134,6 @@ export default function StyleProfileForm({ embedded = false }: StyleProfileFormP
           />
         </div>
 
-        {/* Content Length */}
-        <div className="space-y-3">
-          <Label className="text-base font-medium">{t("styleProfile.length")}</Label>
-          <p className="text-sm text-muted-foreground">{t("styleProfile.lengthDesc")}</p>
-          <RadioGroup
-            value={formData.preferred_length}
-            onValueChange={(value) => handleChange("preferred_length", value as LengthPreference)}
-            className="grid grid-cols-3 gap-3"
-          >
-            {LENGTH_PREFERENCE_OPTIONS.map((option) => (
-              <div key={option.value} className="flex items-center space-x-2">
-                <RadioGroupItem value={option.value} id={`length-${option.value}`} />
-                <Label htmlFor={`length-${option.value}`} className="cursor-pointer text-sm">
-                  {t(`styleProfile.lengths.${option.value}`)}
-                </Label>
-              </div>
-            ))}
-          </RadioGroup>
-        </div>
-
         {/* Language Preference */}
         <div className="space-y-3">
           <Label className="text-base font-medium">{t("styleProfile.language")}</Label>
@@ -175,50 +152,6 @@ export default function StyleProfileForm({ embedded = false }: StyleProfileFormP
               </div>
             ))}
           </RadioGroup>
-        </div>
-
-        {/* Content Preferences */}
-        <div className="space-y-4">
-          <Label className="text-base font-medium">{t("styleProfile.preferences")}</Label>
-          <p className="text-sm text-muted-foreground">{t("styleProfile.preferencesDesc")}</p>
-          
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label htmlFor="include_citations">{t("styleProfile.citations")}</Label>
-                <p className="text-xs text-muted-foreground">{t("styleProfile.citationsDesc")}</p>
-              </div>
-              <Switch
-                id="include_citations"
-                checked={formData.include_citations}
-                onCheckedChange={(checked) => handleChange("include_citations", checked)}
-              />
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label htmlFor="use_examples">{t("styleProfile.examples")}</Label>
-                <p className="text-xs text-muted-foreground">{t("styleProfile.examplesDesc")}</p>
-              </div>
-              <Switch
-                id="use_examples"
-                checked={formData.use_examples}
-                onCheckedChange={(checked) => handleChange("use_examples", checked)}
-              />
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label htmlFor="include_call_to_action">{t("styleProfile.cta")}</Label>
-                <p className="text-xs text-muted-foreground">{t("styleProfile.ctaDesc")}</p>
-              </div>
-              <Switch
-                id="include_call_to_action"
-                checked={formData.include_call_to_action}
-                onCheckedChange={(checked) => handleChange("include_call_to_action", checked)}
-              />
-            </div>
-          </div>
         </div>
 
         {/* Custom Instructions */}

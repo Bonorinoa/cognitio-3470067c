@@ -23,11 +23,14 @@ serve(async (req) => {
   }
 
   try {
+    console.log("get-user-tier called");
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     const authHeader = req.headers.get("Authorization");
+    console.log("Auth header present:", !!authHeader);
+    
     if (!authHeader) {
       // Return free tier for unauthenticated users
       return new Response(JSON.stringify({ tier: "free", dailyLimit: 10 }), {
@@ -66,12 +69,24 @@ serve(async (req) => {
       });
     }
 
-    // Check if user is an instructor
-    const { data: hasInstructorRole } = await supabase
-      .rpc("has_role", { _user_id: user.id, _role: "instructor" });
+    // Check if user is an instructor by querying user_roles table directly
+    console.log("Checking instructor role for user:", user.id);
+    const { data: instructorRole, error: roleError } = await supabase
+      .from("user_roles")
+      .select("id")
+      .eq("user_id", user.id)
+      .eq("role", "instructor")
+      .maybeSingle();
 
-    if (hasInstructorRole) {
+    if (roleError) {
+      console.error("Error checking instructor role:", roleError);
+    }
+
+    console.log("Instructor role check result:", instructorRole);
+
+    if (instructorRole) {
       const dailyLimit = await getTierLimit(supabase, "instructor", 50);
+      console.log("User is instructor, returning limit:", dailyLimit);
       
       return new Response(JSON.stringify({ 
         tier: "instructor", 
