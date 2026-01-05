@@ -9,16 +9,19 @@ import { Lock, CheckCircle2, Loader2, ArrowLeft } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { isValidEmail } from "@/lib/emailValidation";
 
 interface ComingSoonFeatureProps {
   featureKey: string;
-  title: string;
+  titleKey?: string; // Translation key for the title
+  title?: string; // Fallback title if no translation key
   bundle: "marketing" | "academic";
   description?: string;
 }
 
 export default function ComingSoonFeature({
   featureKey,
+  titleKey,
   title,
   bundle,
   description,
@@ -28,6 +31,8 @@ export default function ComingSoonFeature({
   const [email, setEmail] = useState(user?.email || "");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+
+  const featureTitle = titleKey ? t(titleKey) : title || "";
 
   const bundleName = bundle === "marketing" 
     ? t("aiStudio.marketingBundle", "Marketing")
@@ -43,7 +48,7 @@ export default function ComingSoonFeature({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!email || !email.includes("@")) {
+    if (!isValidEmail(email)) {
       toast.error(t("aiStudio.invalidEmail", "Please enter a valid email address"));
       return;
     }
@@ -98,7 +103,7 @@ export default function ComingSoonFeature({
 
           {/* Title and Description */}
           <div className="space-y-4">
-            <h1 className="text-3xl font-bold">{title}</h1>
+            <h1 className="text-3xl font-bold">{featureTitle}</h1>
             <div className="inline-block px-4 py-2 bg-primary/10 rounded-full">
               <span className="text-sm font-medium text-primary">
                 {t("aiStudio.comingSoon", "Coming Soon")}
@@ -140,7 +145,7 @@ export default function ComingSoonFeature({
                 {t(
                   "aiStudio.notifyPrivacy",
                   "We'll only email you about {{feature}} and won't share your email.",
-                  { feature: title }
+                  { feature: featureTitle }
                 )}
               </p>
             </form>

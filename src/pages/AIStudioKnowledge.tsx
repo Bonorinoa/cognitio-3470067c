@@ -40,6 +40,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { formatTokenCount, getBudgetDisplayInfo } from "@/lib/tokenUtils";
+import { AI_STUDIO_ROUTES } from "@/lib/aiStudioRoutes";
 import type { KnowledgeBaseDocument, DocumentFormData, DocumentType, ContextRole } from "@/types/aiStudio";
 
 // Icons for document types
@@ -181,7 +182,7 @@ export default function AIStudioKnowledge() {
         <CardContent>
           <Button
             variant={hasCompletedSetup ? "outline" : "default"}
-            onClick={() => navigate("/ai-studio/settings")}
+            onClick={() => navigate(AI_STUDIO_ROUTES.SETTINGS)}
             className="w-full"
           >
             {hasCompletedSetup

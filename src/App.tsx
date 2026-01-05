@@ -85,17 +85,17 @@ const App = () => (
                 <Route path="marketing">
                   <Route index element={<MarketingBundleHub />} />
                   <Route path="blog" element={<AIStudioBlog />} />
-                  <Route path="linkedin" element={<ComingSoonFeature featureKey="marketing_linkedin" title="LinkedIn Post Generator" bundle="marketing" />} />
-                  <Route path="twitter" element={<ComingSoonFeature featureKey="marketing_twitter" title="X/Twitter Post Generator" bundle="marketing" />} />
-                  <Route path="newsletter" element={<ComingSoonFeature featureKey="marketing_newsletter" title="Newsletter Generator" bundle="marketing" />} />
+                  <Route path="linkedin" element={<ComingSoonFeature featureKey="marketing_linkedin" titleKey="aiStudio.linkedinGenerator" bundle="marketing" />} />
+                  <Route path="twitter" element={<ComingSoonFeature featureKey="marketing_twitter" titleKey="aiStudio.twitterGenerator" bundle="marketing" />} />
+                  <Route path="newsletter" element={<ComingSoonFeature featureKey="marketing_newsletter" titleKey="aiStudio.newsletterGenerator" bundle="marketing" />} />
                 </Route>
                 
                 {/* Academic Bundle */}
                 <Route path="academic">
                   <Route index element={<AcademicBundleHub />} />
-                  <Route path="literature-review" element={<ComingSoonFeature featureKey="academic_literature_review" title="Literature Review Generator" bundle="academic" />} />
-                  <Route path="paper-formatter" element={<ComingSoonFeature featureKey="academic_paper_formatter" title="Paper Formatter" bundle="academic" />} />
-                  <Route path="paper-editor" element={<ComingSoonFeature featureKey="academic_paper_editor" title="Paper Editor" bundle="academic" />} />
+                  <Route path="literature-review" element={<ComingSoonFeature featureKey="academic_literature_review" titleKey="aiStudio.literatureReview" bundle="academic" />} />
+                  <Route path="paper-formatter" element={<ComingSoonFeature featureKey="academic_paper_formatter" titleKey="aiStudio.paperFormatter" bundle="academic" />} />
+                  <Route path="paper-editor" element={<ComingSoonFeature featureKey="academic_paper_editor" titleKey="aiStudio.paperEditor" bundle="academic" />} />
                 </Route>
               </Route>
               

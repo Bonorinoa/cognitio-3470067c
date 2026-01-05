@@ -16,9 +16,9 @@ ALTER TABLE public.feature_notify_requests ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Anyone can request notification" ON public.feature_notify_requests
   FOR INSERT WITH CHECK (true);
 
--- Users can see their own requests
+-- Users can only see their own requests (not anonymous ones)
 CREATE POLICY "Users can view own requests" ON public.feature_notify_requests
-  FOR SELECT USING (auth.uid() = user_id OR user_id IS NULL);
+  FOR SELECT USING (auth.uid() = user_id AND user_id IS NOT NULL);
 
 -- Create index for faster lookups
 CREATE INDEX IF NOT EXISTS idx_feature_notify_requests_feature_key ON public.feature_notify_requests(feature_key);

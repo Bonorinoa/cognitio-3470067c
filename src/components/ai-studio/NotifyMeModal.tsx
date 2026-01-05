@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { CheckCircle2, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { isValidEmail } from "@/lib/emailValidation";
 
 interface NotifyMeModalProps {
   open: boolean;
@@ -58,7 +59,7 @@ export default function NotifyMeModal({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!email || !email.includes("@")) {
+    if (!isValidEmail(email)) {
       toast.error(t("aiStudio.invalidEmail", "Please enter a valid email address"));
       return;
     }
