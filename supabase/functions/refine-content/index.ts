@@ -6,7 +6,6 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const DAILY_LIMIT = 15;
 const RESET_HOUR_UTC = 9; // 6am Argentina = 09:00 UTC
 
 function getDayStart(): Date {
@@ -22,6 +21,53 @@ function getDayStart(): Date {
   }
   
   return dayStart;
+}
+
+// Helper to get user's tier and daily limit
+async function getUserTierAndLimit(supabase: any, userId: string): Promise<{ tier: string; dailyLimit: number }> {
+  // 1. Check for active subscription
+  const { data: subscription } = await supabase
+    .from("ai_subscriptions")
+    .select("bundle, status")
+    .eq("user_id", userId)
+    .eq("status", "active")
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (subscription) {
+    const tierName = subscription.bundle === "pro" ? "pro" : subscription.bundle;
+    const { data: tierLimit } = await supabase
+      .from("ai_tier_limits")
+      .select("daily_limit")
+      .eq("tier_name", tierName)
+      .single();
+    
+    return { tier: tierName, dailyLimit: tierLimit?.daily_limit || 200 };
+  }
+
+  // 2. Check if user is an instructor
+  const { data: hasInstructorRole } = await supabase
+    .rpc("has_role", { _user_id: userId, _role: "instructor" });
+
+  if (hasInstructorRole) {
+    const { data: tierLimit } = await supabase
+      .from("ai_tier_limits")
+      .select("daily_limit")
+      .eq("tier_name", "instructor")
+      .single();
+    
+    return { tier: "instructor", dailyLimit: tierLimit?.daily_limit || 50 };
+  }
+
+  // 3. Default to free tier
+  const { data: tierLimit } = await supabase
+    .from("ai_tier_limits")
+    .select("daily_limit")
+    .eq("tier_name", "free")
+    .single();
+  
+  return { tier: "free", dailyLimit: tierLimit?.daily_limit || 10 };
 }
 
 serve(async (req) => {
@@ -54,23 +100,27 @@ serve(async (req) => {
       });
     }
 
+    // Get user's tier and dynamic limit
+    const { tier, dailyLimit } = await getUserTierAndLimit(supabase, user.id);
+    console.log("User tier:", tier, "Daily limit:", dailyLimit);
+
     // Check daily usage limit BEFORE processing
     const dayStart = getDayStart();
     const { count: todayUsage, error: usageError } = await supabase
       .from("ai_usage_logs")
       .select("*", { count: "exact", head: true })
-      .eq("instructor_id", user.id)
+      .eq("user_id", user.id)
       .gte("created_at", dayStart.toISOString());
 
     if (usageError) {
       console.error("Error checking usage:", usageError);
     }
 
-    if (todayUsage !== null && todayUsage >= DAILY_LIMIT) {
+    if (todayUsage !== null && todayUsage >= dailyLimit) {
       console.log("Daily limit exceeded for user:", user.id);
       return new Response(
         JSON.stringify({ 
-          error: "Daily AI limit reached (15/day). Resets at 6am Argentina time." 
+          error: `Daily AI limit reached (${dailyLimit}/day for ${tier} tier). Resets at 6am Argentina time.` 
         }),
         {
           status: 429,
@@ -153,7 +203,7 @@ Instruction: ${instruction}`;
     const { error: logError } = await supabase
       .from("ai_usage_logs")
       .insert({
-        instructor_id: user.id,
+        user_id: user.id,
         content_type: "refine",
         model_used: "google/gemini-2.5-flash",
       });

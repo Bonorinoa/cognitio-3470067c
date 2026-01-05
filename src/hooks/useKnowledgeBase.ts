@@ -13,7 +13,7 @@ import type {
 function mapRowToDocument(row: Record<string, unknown>): KnowledgeBaseDocument {
   return {
     id: row.id as string,
-    instructor_id: row.instructor_id as string,
+    user_id: row.user_id as string,
     title: row.title as string,
     document_type: row.document_type as DocumentType,
     context_role: row.context_role as ContextRole,
@@ -30,16 +30,16 @@ export function useKnowledgeBase() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
 
-  // Fetch all documents for the instructor
+  // Fetch all documents for the user
   const { data: documents = [], isLoading, error } = useQuery({
-    queryKey: ["instructor-knowledge-base", user?.id],
+    queryKey: ["user-knowledge-base", user?.id],
     queryFn: async () => {
       if (!user) return [];
 
       const { data, error } = await supabase
-        .from("instructor_knowledge_base")
+        .from("user_knowledge_base")
         .select("*")
-        .eq("instructor_id", user.id)
+        .eq("user_id", user.id)
         .order("created_at", { ascending: false });
 
       if (error) throw error;
@@ -56,9 +56,9 @@ export function useKnowledgeBase() {
       const tokenCount = estimateTokens(formData.content);
 
       const { data, error } = await supabase
-        .from("instructor_knowledge_base")
+        .from("user_knowledge_base")
         .insert({
-          instructor_id: user.id,
+          user_id: user.id,
           title: formData.title,
           document_type: formData.document_type,
           context_role: formData.context_role,
@@ -74,7 +74,7 @@ export function useKnowledgeBase() {
       return mapRowToDocument(data);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["instructor-knowledge-base", user?.id] });
+      queryClient.invalidateQueries({ queryKey: ["user-knowledge-base", user?.id] });
     },
   });
 
@@ -86,7 +86,7 @@ export function useKnowledgeBase() {
       const tokenCount = estimateTokens(formData.content);
 
       const { data, error } = await supabase
-        .from("instructor_knowledge_base")
+        .from("user_knowledge_base")
         .update({
           title: formData.title,
           document_type: formData.document_type,
@@ -96,7 +96,7 @@ export function useKnowledgeBase() {
           tags: formData.tags,
         })
         .eq("id", id)
-        .eq("instructor_id", user.id)
+        .eq("user_id", user.id)
         .select()
         .single();
 
@@ -104,7 +104,7 @@ export function useKnowledgeBase() {
       return mapRowToDocument(data);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["instructor-knowledge-base", user?.id] });
+      queryClient.invalidateQueries({ queryKey: ["user-knowledge-base", user?.id] });
     },
   });
 
@@ -114,15 +114,15 @@ export function useKnowledgeBase() {
       if (!user) throw new Error("Not authenticated");
 
       const { error } = await supabase
-        .from("instructor_knowledge_base")
+        .from("user_knowledge_base")
         .update({ is_active: isActive })
         .eq("id", id)
-        .eq("instructor_id", user.id);
+        .eq("user_id", user.id);
 
       if (error) throw error;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["instructor-knowledge-base", user?.id] });
+      queryClient.invalidateQueries({ queryKey: ["user-knowledge-base", user?.id] });
     },
   });
 
@@ -132,15 +132,15 @@ export function useKnowledgeBase() {
       if (!user) throw new Error("Not authenticated");
 
       const { error } = await supabase
-        .from("instructor_knowledge_base")
+        .from("user_knowledge_base")
         .delete()
         .eq("id", id)
-        .eq("instructor_id", user.id);
+        .eq("user_id", user.id);
 
       if (error) throw error;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["instructor-knowledge-base", user?.id] });
+      queryClient.invalidateQueries({ queryKey: ["user-knowledge-base", user?.id] });
     },
   });
 

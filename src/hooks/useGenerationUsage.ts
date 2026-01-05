@@ -36,7 +36,7 @@ export function useGenerationUsage() {
       const { count, error } = await supabase
         .from("ai_usage_logs")
         .select("*", { count: "exact", head: true })
-        .eq("instructor_id", user.id)
+        .eq("user_id", user.id)
         .gte("created_at", dayStart.toISOString());
 
       if (error) {
@@ -60,7 +60,7 @@ export function useGenerationUsage() {
       const { count, error } = await supabase
         .from("ai_usage_logs")
         .select("*", { count: "exact", head: true })
-        .eq("instructor_id", user.id);
+        .eq("user_id", user.id);
 
       if (error) {
         console.error("Error fetching total generations:", error);

@@ -43,9 +43,9 @@ export type ContentType =
 
 // === Interfaces ===
 
-export interface InstructorStyleProfile {
+export interface UserStyleProfile {
   id: string;
-  instructor_id: string;
+  user_id: string;
   tone: WritingTone;
   target_audience: string | null;
   preferred_length: LengthPreference;
@@ -61,7 +61,7 @@ export interface InstructorStyleProfile {
 
 export interface KnowledgeBaseDocument {
   id: string;
-  instructor_id: string;
+  user_id: string;
   title: string;
   document_type: DocumentType;
   context_role: ContextRole;
@@ -75,7 +75,7 @@ export interface KnowledgeBaseDocument {
 
 export interface GenerationHistoryEntry {
   id: string;
-  instructor_id: string;
+  user_id: string;
   content_type: ContentType;
   topic: string;
   additional_instructions: string | null;
@@ -121,7 +121,7 @@ export interface BlogGenerationRequest {
 
 // === Context Assembly Types ===
 
-export interface InstructorContext {
+export interface UserContext {
   profile: {
     full_name: string;
     headline: string | null;
@@ -129,7 +129,7 @@ export interface InstructorContext {
     affiliation: string | null;
     credentials: string[] | null;
   };
-  style: InstructorStyleProfile | null;
+  style: UserStyleProfile | null;
   documents: {
     style_reference: KnowledgeBaseDocument[];
     topic_source: KnowledgeBaseDocument[];

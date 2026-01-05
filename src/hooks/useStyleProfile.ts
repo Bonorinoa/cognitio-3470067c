@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import type { 
-  InstructorStyleProfile, 
+  UserStyleProfile, 
   StyleProfileFormData,
   WritingTone,
   LengthPreference,
@@ -10,10 +10,10 @@ import type {
 } from "@/types/aiStudio";
 
 // Map database row to typed interface
-function mapRowToStyleProfile(row: Record<string, unknown>): InstructorStyleProfile {
+function mapRowToStyleProfile(row: Record<string, unknown>): UserStyleProfile {
   return {
     id: row.id as string,
-    instructor_id: row.instructor_id as string,
+    user_id: row.user_id as string,
     tone: row.tone as WritingTone,
     target_audience: row.target_audience as string | null,
     preferred_length: row.preferred_length as LengthPreference,
@@ -33,14 +33,14 @@ export function useStyleProfile() {
   const queryClient = useQueryClient();
 
   const { data: styleProfile, isLoading, error } = useQuery({
-    queryKey: ["instructor-style-profile", user?.id],
+    queryKey: ["user-style-profile", user?.id],
     queryFn: async () => {
       if (!user) return null;
 
       const { data, error } = await supabase
-        .from("instructor_style_profile")
+        .from("user_style_profile")
         .select("*")
-        .eq("instructor_id", user.id)
+        .eq("user_id", user.id)
         .maybeSingle();
 
       if (error) throw error;
@@ -57,15 +57,15 @@ export function useStyleProfile() {
 
       // Check if profile exists
       const { data: existing } = await supabase
-        .from("instructor_style_profile")
+        .from("user_style_profile")
         .select("id")
-        .eq("instructor_id", user.id)
+        .eq("user_id", user.id)
         .maybeSingle();
 
       if (existing) {
         // Update existing
         const { data, error } = await supabase
-          .from("instructor_style_profile")
+          .from("user_style_profile")
           .update({
             tone: formData.tone,
             target_audience: formData.target_audience || null,
@@ -77,7 +77,7 @@ export function useStyleProfile() {
             custom_instructions: formData.custom_instructions || null,
             setup_completed: true,
           })
-          .eq("instructor_id", user.id)
+          .eq("user_id", user.id)
           .select()
           .single();
 
@@ -86,9 +86,9 @@ export function useStyleProfile() {
       } else {
         // Insert new
         const { data, error } = await supabase
-          .from("instructor_style_profile")
+          .from("user_style_profile")
           .insert({
-            instructor_id: user.id,
+            user_id: user.id,
             tone: formData.tone,
             target_audience: formData.target_audience || null,
             preferred_length: formData.preferred_length,
@@ -107,7 +107,7 @@ export function useStyleProfile() {
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["instructor-style-profile", user?.id] });
+      queryClient.invalidateQueries({ queryKey: ["user-style-profile", user?.id] });
     },
   });
 
