@@ -23,9 +23,13 @@ const InstructorDashboard = lazy(() => import("./pages/InstructorDashboard"));
 const InstructorCourses = lazy(() => import("./pages/InstructorCourses"));
 const InstructorAnalytics = lazy(() => import("./pages/InstructorAnalytics"));
 const InstructorSettings = lazy(() => import("./pages/InstructorSettings"));
-const AIStudioDashboard = lazy(() => import("./pages/AIStudioDashboard"));
+const AIStudioLanding = lazy(() => import("./pages/AIStudioLanding"));
+const AIStudioSettings = lazy(() => import("./pages/AIStudioSettings"));
 const AIStudioKnowledge = lazy(() => import("./pages/AIStudioKnowledge"));
 const AIStudioBlog = lazy(() => import("./pages/AIStudioBlog"));
+const MarketingBundleHub = lazy(() => import("./pages/MarketingBundleHub"));
+const AcademicBundleHub = lazy(() => import("./pages/AcademicBundleHub"));
+const ComingSoonFeature = lazy(() => import("./pages/ComingSoonFeature"));
 const InstructorProfile = lazy(() => import("./pages/InstructorProfile"));
 const CreateCourse = lazy(() => import("./pages/CreateCourse"));
 const EditCourse = lazy(() => import("./pages/EditCourse"));
@@ -73,10 +77,30 @@ const App = () => (
               
               {/* AI Studio routes with dedicated layout */}
               <Route path="/ai-studio" element={<AIStudioLayout />}>
-                <Route index element={<AIStudioDashboard />} />
+                <Route index element={<AIStudioLanding />} />
                 <Route path="knowledge" element={<AIStudioKnowledge />} />
-                <Route path="blog" element={<AIStudioBlog />} />
+                <Route path="settings" element={<AIStudioSettings />} />
+                
+                {/* Marketing Bundle */}
+                <Route path="marketing">
+                  <Route index element={<MarketingBundleHub />} />
+                  <Route path="blog" element={<AIStudioBlog />} />
+                  <Route path="linkedin" element={<ComingSoonFeature featureKey="marketing_linkedin" title="LinkedIn Post Generator" bundle="marketing" />} />
+                  <Route path="twitter" element={<ComingSoonFeature featureKey="marketing_twitter" title="X/Twitter Post Generator" bundle="marketing" />} />
+                  <Route path="newsletter" element={<ComingSoonFeature featureKey="marketing_newsletter" title="Newsletter Generator" bundle="marketing" />} />
+                </Route>
+                
+                {/* Academic Bundle */}
+                <Route path="academic">
+                  <Route index element={<AcademicBundleHub />} />
+                  <Route path="literature-review" element={<ComingSoonFeature featureKey="academic_literature_review" title="Literature Review Generator" bundle="academic" />} />
+                  <Route path="paper-formatter" element={<ComingSoonFeature featureKey="academic_paper_formatter" title="Paper Formatter" bundle="academic" />} />
+                  <Route path="paper-editor" element={<ComingSoonFeature featureKey="academic_paper_editor" title="Paper Editor" bundle="academic" />} />
+                </Route>
               </Route>
+              
+              {/* Backward compatibility redirect */}
+              <Route path="/ai-studio/blog" element={<Navigate to="/ai-studio/marketing/blog" replace />} />
               
               {/* Public instructor profile - not part of layout */}
               <Route path="/instructor/profile/:id" element={<InstructorProfile />} />
