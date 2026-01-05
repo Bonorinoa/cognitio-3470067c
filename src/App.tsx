@@ -7,6 +7,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import RequireInstructor from "@/components/RequireInstructor";
 import RequireAdmin from "@/components/RequireAdmin";
 import { Loader2 } from "lucide-react";
+import { COMING_SOON_FEATURES } from "@/lib/aiStudioRoutes";
 
 // Lazy-loaded layouts - only loaded when user navigates to protected routes
 const InstructorLayout = lazy(() => import("./components/InstructorLayout"));
@@ -23,9 +24,13 @@ const InstructorDashboard = lazy(() => import("./pages/InstructorDashboard"));
 const InstructorCourses = lazy(() => import("./pages/InstructorCourses"));
 const InstructorAnalytics = lazy(() => import("./pages/InstructorAnalytics"));
 const InstructorSettings = lazy(() => import("./pages/InstructorSettings"));
-const AIStudioDashboard = lazy(() => import("./pages/AIStudioDashboard"));
+const AIStudioLanding = lazy(() => import("./pages/AIStudioLanding"));
+const AIStudioSettings = lazy(() => import("./pages/AIStudioSettings"));
 const AIStudioKnowledge = lazy(() => import("./pages/AIStudioKnowledge"));
 const AIStudioBlog = lazy(() => import("./pages/AIStudioBlog"));
+const MarketingBundleHub = lazy(() => import("./pages/MarketingBundleHub"));
+const AcademicBundleHub = lazy(() => import("./pages/AcademicBundleHub"));
+const ComingSoonFeature = lazy(() => import("./pages/ComingSoonFeature"));
 const InstructorProfile = lazy(() => import("./pages/InstructorProfile"));
 const CreateCourse = lazy(() => import("./pages/CreateCourse"));
 const EditCourse = lazy(() => import("./pages/EditCourse"));
@@ -73,10 +78,30 @@ const App = () => (
               
               {/* AI Studio routes with dedicated layout */}
               <Route path="/ai-studio" element={<AIStudioLayout />}>
-                <Route index element={<AIStudioDashboard />} />
+                <Route index element={<AIStudioLanding />} />
                 <Route path="knowledge" element={<AIStudioKnowledge />} />
-                <Route path="blog" element={<AIStudioBlog />} />
+                <Route path="settings" element={<AIStudioSettings />} />
+                
+                {/* Marketing Bundle */}
+                <Route path="marketing">
+                  <Route index element={<MarketingBundleHub />} />
+                  <Route path="blog" element={<AIStudioBlog />} />
+                  <Route path="linkedin" element={<ComingSoonFeature {...COMING_SOON_FEATURES.marketing.linkedin} />} />
+                  <Route path="twitter" element={<ComingSoonFeature {...COMING_SOON_FEATURES.marketing.twitter} />} />
+                  <Route path="newsletter" element={<ComingSoonFeature {...COMING_SOON_FEATURES.marketing.newsletter} />} />
+                </Route>
+                
+                {/* Academic Bundle */}
+                <Route path="academic">
+                  <Route index element={<AcademicBundleHub />} />
+                  <Route path="literature-review" element={<ComingSoonFeature {...COMING_SOON_FEATURES.academic["literature-review"]} />} />
+                  <Route path="paper-formatter" element={<ComingSoonFeature {...COMING_SOON_FEATURES.academic["paper-formatter"]} />} />
+                  <Route path="paper-editor" element={<ComingSoonFeature {...COMING_SOON_FEATURES.academic["paper-editor"]} />} />
+                </Route>
               </Route>
+              
+              {/* Backward compatibility redirect */}
+              <Route path="/ai-studio/blog" element={<Navigate to="/ai-studio/marketing/blog" replace />} />
               
               {/* Public instructor profile - not part of layout */}
               <Route path="/instructor/profile/:id" element={<InstructorProfile />} />

@@ -28,6 +28,11 @@ import {
   ChevronDown,
   Trash2,
   LayoutDashboard,
+  Settings2,
+  Megaphone,
+  GraduationCap,
+  Linkedin,
+  Twitter,
 } from "lucide-react";
 
 interface AIStudioSidebarProps {
@@ -49,7 +54,7 @@ export default function AIStudioSidebar({ onLoadHistory, onDeleteHistory }: AISt
   const menuItems = [
     {
       icon: LayoutDashboard,
-      label: t("aiStudioNav.dashboard", "Dashboard"),
+      label: t("aiStudioNav.overview", "Overview"),
       href: "/ai-studio",
     },
     {
@@ -58,15 +63,57 @@ export default function AIStudioSidebar({ onLoadHistory, onDeleteHistory }: AISt
       href: "/ai-studio/knowledge",
     },
     {
+      icon: Settings2,
+      label: t("aiStudioNav.settings", "Settings"),
+      href: "/ai-studio/settings",
+    },
+  ];
+
+  const marketingItems = [
+    {
       icon: FileEdit,
-      label: t("aiStudioNav.blog", "Blog Generator"),
-      href: "/ai-studio/blog",
+      label: t("aiStudioNav.blog", "Blog Posts"),
+      href: "/ai-studio/marketing/blog",
+      available: true,
+    },
+    {
+      icon: Linkedin,
+      label: t("aiStudioNav.linkedin", "LinkedIn"),
+      href: "/ai-studio/marketing/linkedin",
+      available: false,
+    },
+    {
+      icon: Twitter,
+      label: t("aiStudioNav.twitter", "X/Twitter"),
+      href: "/ai-studio/marketing/twitter",
+      available: false,
     },
     {
       icon: Mail,
       label: t("aiStudioNav.newsletter", "Newsletter"),
-      href: "/ai-studio/newsletter",
-      disabled: true,
+      href: "/ai-studio/marketing/newsletter",
+      available: false,
+    },
+  ];
+
+  const academicItems = [
+    {
+      icon: GraduationCap,
+      label: t("aiStudioNav.literatureReview", "Literature Review"),
+      href: "/ai-studio/academic/literature-review",
+      available: false,
+    },
+    {
+      icon: FileEdit,
+      label: t("aiStudioNav.paperFormatter", "Paper Formatter"),
+      href: "/ai-studio/academic/paper-formatter",
+      available: false,
+    },
+    {
+      icon: FileEdit,
+      label: t("aiStudioNav.paperEditor", "Paper Editor"),
+      href: "/ai-studio/academic/paper-editor",
+      available: false,
     },
   ];
 
@@ -116,21 +163,6 @@ export default function AIStudioSidebar({ onLoadHistory, onDeleteHistory }: AISt
                 : location.pathname.startsWith(item.href);
               const Icon = item.icon;
 
-              if (item.disabled) {
-                return (
-                  <div
-                    key={item.href}
-                    className="relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-muted-foreground/50 cursor-not-allowed"
-                  >
-                    <Icon className="h-5 w-5" />
-                    <span className="font-medium">{item.label}</span>
-                    <span className="ml-auto text-xs bg-muted px-1.5 py-0.5 rounded">
-                      {t("common.soon", "Soon")}
-                    </span>
-                  </div>
-                );
-              }
-
               return (
                 <Link
                   key={item.href}
@@ -153,6 +185,73 @@ export default function AIStudioSidebar({ onLoadHistory, onDeleteHistory }: AISt
               );
             })}
           </LayoutGroup>
+
+          {/* Marketing Bundle Section */}
+          <div className="pt-4 border-t border-border/50">
+            <div className="px-3 py-2 flex items-center gap-2">
+              <Megaphone className="h-4 w-4 text-muted-foreground" />
+              <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                {t("aiStudioNav.marketing", "Marketing")}
+              </span>
+            </div>
+            <div className="space-y-1">
+              {marketingItems.map((item) => {
+                const isActive = location.pathname.startsWith(item.href);
+                const Icon = item.icon;
+
+                return (
+                  <Link
+                    key={item.href}
+                    to={item.href}
+                    className={`relative flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
+                      !item.available
+                        ? "text-muted-foreground/50 cursor-pointer"
+                        : isActive
+                        ? "text-foreground"
+                        : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                    }`}
+                  >
+                    <Icon className="h-5 w-5 relative z-10" />
+                    <span className="font-medium relative z-10">{item.label}</span>
+                    {!item.available && (
+                      <span className="ml-auto text-xs bg-muted px-1.5 py-0.5 rounded relative z-10">
+                        {t("common.soon", "Soon")}
+                      </span>
+                    )}
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Academic Bundle Section */}
+          <div className="pt-4 border-t border-border/50 opacity-60">
+            <div className="px-3 py-2 flex items-center gap-2">
+              <GraduationCap className="h-4 w-4 text-muted-foreground" />
+              <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                {t("aiStudioNav.academic", "Academic")}
+              </span>
+              <span className="ml-auto text-xs bg-muted px-1.5 py-0.5 rounded">
+                {t("common.soon", "Soon")}
+              </span>
+            </div>
+            <div className="space-y-1">
+              {academicItems.map((item) => {
+                const Icon = item.icon;
+
+                return (
+                  <Link
+                    key={item.href}
+                    to={item.href}
+                    className="relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-muted-foreground/50 cursor-pointer transition-colors hover:text-muted-foreground/70"
+                  >
+                    <Icon className="h-5 w-5" />
+                    <span className="font-medium">{item.label}</span>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
 
           {/* History Section */}
           <Collapsible defaultOpen className="mt-4 pt-4 border-t border-border/50">
@@ -310,21 +409,6 @@ export default function AIStudioSidebar({ onLoadHistory, onDeleteHistory }: AISt
                 ? location.pathname === "/ai-studio"
                 : location.pathname.startsWith(item.href);
               const Icon = item.icon;
-
-              if (item.disabled) {
-                return (
-                  <div
-                    key={item.href}
-                    className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-muted-foreground/50 whitespace-nowrap"
-                  >
-                    <Icon className="h-4 w-4" />
-                    <span className="text-sm">{item.label}</span>
-                    <span className="text-[10px] bg-muted px-1.5 py-0.5 rounded">
-                      {t("common.soon", "Soon")}
-                    </span>
-                  </div>
-                );
-              }
 
               return (
                 <Link

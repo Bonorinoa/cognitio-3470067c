@@ -6,7 +6,6 @@ import { useStyleProfile } from "@/hooks/useStyleProfile";
 import { useAuth } from "@/contexts/AuthContext";
 import { EmptyState } from "@/components/EmptyState";
 import DocumentEditor from "@/components/ai-studio/DocumentEditor";
-import StyleProfileForm from "@/components/ai-studio/StyleProfileForm";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -21,11 +20,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
 import { 
   Plus, 
   FileText, 
@@ -41,12 +35,12 @@ import {
   FileQuestion,
   ScrollText,
   FileUser,
-  ChevronDown,
   Settings2,
   CheckCircle2,
 } from "lucide-react";
 import { toast } from "sonner";
 import { formatTokenCount, getBudgetDisplayInfo } from "@/lib/tokenUtils";
+import { AI_STUDIO_ROUTES } from "@/lib/aiStudioRoutes";
 import type { KnowledgeBaseDocument, DocumentFormData, DocumentType, ContextRole } from "@/types/aiStudio";
 
 // Icons for document types
@@ -90,7 +84,6 @@ export default function AIStudioKnowledge() {
   const [editingDocument, setEditingDocument] = useState<KnowledgeBaseDocument | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [documentToDelete, setDocumentToDelete] = useState<KnowledgeBaseDocument | null>(null);
-  const [styleProfileOpen, setStyleProfileOpen] = useState(!hasCompletedSetup);
 
   const budgetInfo = getBudgetDisplayInfo(totalTokens);
 
@@ -162,41 +155,42 @@ export default function AIStudioKnowledge() {
         </Button>
       </div>
 
-      {/* Style Profile Section */}
-      <Collapsible open={styleProfileOpen} onOpenChange={setStyleProfileOpen}>
-        <Card className={!hasCompletedSetup ? "border-primary/50 bg-primary/5" : ""}>
-          <CollapsibleTrigger asChild>
-            <CardHeader className="cursor-pointer hover:bg-muted/50 transition-colors">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <Settings2 className="h-5 w-5 text-primary" />
-                  <div>
-                    <CardTitle className="text-base">
-                      {t("aiStudio.styleProfile", "AI Writing Style")}
-                    </CardTitle>
-                    <CardDescription>
-                      {hasCompletedSetup
-                        ? t("aiStudio.styleProfileComplete", "Your writing preferences are configured")
-                        : t("aiStudio.styleProfileSetup", "Configure your writing style for AI content")}
-                    </CardDescription>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  {hasCompletedSetup && (
-                    <CheckCircle2 className="h-5 w-5 text-green-600" />
-                  )}
-                  <ChevronDown className={`h-5 w-5 text-muted-foreground transition-transform ${styleProfileOpen ? "rotate-180" : ""}`} />
-                </div>
+      {/* Style Profile Section - Link to Settings */}
+      <Card className={!hasCompletedSetup ? "border-primary/50 bg-primary/5" : ""}>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Settings2 className="h-5 w-5 text-primary" />
+              <div>
+                <CardTitle className="text-base">
+                  {t("aiStudio.styleProfile", "AI Writing Style")}
+                </CardTitle>
+                <CardDescription>
+                  {hasCompletedSetup
+                    ? t("aiStudio.styleProfileComplete", "Your writing preferences are configured")
+                    : t("aiStudio.styleProfileSetup", "Configure your writing style for AI content")}
+                </CardDescription>
               </div>
-            </CardHeader>
-          </CollapsibleTrigger>
-          <CollapsibleContent>
-            <CardContent className="pt-0">
-              <StyleProfileForm embedded />
-            </CardContent>
-          </CollapsibleContent>
-        </Card>
-      </Collapsible>
+            </div>
+            <div className="flex items-center gap-2">
+              {hasCompletedSetup && (
+                <CheckCircle2 className="h-5 w-5 text-green-600" />
+              )}
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <Button
+            variant={hasCompletedSetup ? "outline" : "default"}
+            onClick={() => navigate(AI_STUDIO_ROUTES.SETTINGS)}
+            className="w-full"
+          >
+            {hasCompletedSetup
+              ? t("common.edit", "Edit Settings")
+              : t("aiStudio.configure", "Configure Style")} →
+          </Button>
+        </CardContent>
+      </Card>
 
       {/* Token Budget Indicator */}
       <Card>
