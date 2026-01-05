@@ -1,18 +1,9 @@
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Megaphone, FileEdit, Linkedin, Twitter, Mail } from "lucide-react";
 import FeatureCard from "@/components/ai-studio/FeatureCard";
-import NotifyMeModal from "@/components/ai-studio/NotifyMeModal";
 
 export default function MarketingBundleHub() {
   const { t } = useTranslation();
-  const [notifyModalOpen, setNotifyModalOpen] = useState(false);
-  const [selectedFeature, setSelectedFeature] = useState({ key: "", name: "" });
-
-  const handleNotifyClick = (featureKey: string, featureName: string) => {
-    setSelectedFeature({ key: featureKey, name: featureName });
-    setNotifyModalOpen(true);
-  };
 
   return (
     <div className="max-w-7xl mx-auto space-y-8">
@@ -60,13 +51,7 @@ export default function MarketingBundleHub() {
             "Create professional LinkedIn posts that engage your network"
           )}
           status="coming-soon"
-          ctaText={t("aiStudio.notifyMe", "Notify Me")}
-          ctaAction={() =>
-            handleNotifyClick(
-              "marketing_linkedin",
-              t("aiStudio.linkedinGenerator", "LinkedIn Post Generator")
-            )
-          }
+          ctaText={t("aiStudio.comingSoon", "Coming Soon")}
         />
 
         {/* X/Twitter Posts - Coming Soon */}
@@ -78,13 +63,7 @@ export default function MarketingBundleHub() {
             "Generate engaging tweets and threads for your audience"
           )}
           status="coming-soon"
-          ctaText={t("aiStudio.notifyMe", "Notify Me")}
-          ctaAction={() =>
-            handleNotifyClick(
-              "marketing_twitter",
-              t("aiStudio.twitterGenerator", "X/Twitter Post Generator")
-            )
-          }
+          ctaText={t("aiStudio.comingSoon", "Coming Soon")}
         />
 
         {/* Newsletter - Coming Soon */}
@@ -96,23 +75,9 @@ export default function MarketingBundleHub() {
             "Create compelling newsletters for your subscribers"
           )}
           status="coming-soon"
-          ctaText={t("aiStudio.notifyMe", "Notify Me")}
-          ctaAction={() =>
-            handleNotifyClick(
-              "marketing_newsletter",
-              t("aiStudio.newsletterGenerator", "Newsletter Generator")
-            )
-          }
+          ctaText={t("aiStudio.comingSoon", "Coming Soon")}
         />
       </div>
-
-      {/* Notify Me Modal */}
-      <NotifyMeModal
-        open={notifyModalOpen}
-        onOpenChange={setNotifyModalOpen}
-        featureKey={selectedFeature.key}
-        featureName={selectedFeature.name}
-      />
     </div>
   );
 }
