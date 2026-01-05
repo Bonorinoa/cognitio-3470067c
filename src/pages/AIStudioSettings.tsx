@@ -1,17 +1,24 @@
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAISubscription } from "@/hooks/useAISubscription";
 import StyleProfileForm from "@/components/ai-studio/StyleProfileForm";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Settings2, Lock, CreditCard, Loader2, AlertCircle } from "lucide-react";
+import { Settings2, Lock, CreditCard, Loader2, AlertCircle, CheckCircle } from "lucide-react";
 import { format } from "date-fns";
+import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 
 export default function AIStudioSettings() {
   const { t } = useTranslation();
   const { user } = useAuth();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [isActivating, setIsActivating] = useState(false);
+  const pollCount = useRef(0);
+  const maxPolls = 6; // ~20 seconds total with backoff
+  
   const {
     subscription,
     hasActiveSubscription,
@@ -21,7 +28,54 @@ export default function AIStudioSettings() {
     isLoading: isLoadingSubscription,
     openPortal,
     isOpeningPortal,
+    refetch,
+    invalidateSubscription,
   } = useAISubscription();
+
+  // Handle subscription=success query param with polling
+  useEffect(() => {
+    const isSuccess = searchParams.get("subscription") === "success";
+    if (!isSuccess || !user) return;
+
+    // Clear param immediately to avoid re-triggering on refresh
+    setSearchParams({}, { replace: true });
+
+    // If already has subscription, just show success
+    if (hasActiveSubscription) {
+      toast.success(t("aiStudio.subscriptionActivated", "Subscription activated!"));
+      return;
+    }
+
+    // Start polling for subscription activation
+    setIsActivating(true);
+    pollCount.current = 0;
+    toast.info(t("aiStudio.activatingSubscription", "Payment received — activating subscription…"));
+
+    const poll = async () => {
+      if (pollCount.current >= maxPolls) {
+        setIsActivating(false);
+        toast.error(t("aiStudio.activationTimeout", "Subscription activation is taking longer than expected. Please refresh the page."));
+        return;
+      }
+
+      invalidateSubscription();
+      const result = await refetch();
+      
+      if (result.data && ["active", "trialing"].includes(result.data.status)) {
+        setIsActivating(false);
+        toast.success(t("aiStudio.subscriptionActivated", "Subscription activated!"));
+        return;
+      }
+
+      // Exponential backoff: 2s, 3s, 4s, 5s, 6s, 7s
+      pollCount.current++;
+      const delay = 2000 + (pollCount.current * 1000);
+      setTimeout(poll, delay);
+    };
+
+    // Start first poll after a short delay
+    setTimeout(poll, 1500);
+  }, [searchParams, user, hasActiveSubscription, invalidateSubscription, refetch, setSearchParams, t]);
 
   if (!user) {
     return (
@@ -101,10 +155,12 @@ export default function AIStudioSettings() {
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
-          {isLoadingSubscription ? (
+          {isLoadingSubscription || isActivating ? (
             <div className="flex items-center gap-2 text-muted-foreground">
               <Loader2 className="h-4 w-4 animate-spin" />
-              {t("common.loading", "Loading...")}
+              {isActivating 
+                ? t("aiStudio.activatingSubscription", "Activating subscription…") 
+                : t("common.loading", "Loading...")}
             </div>
           ) : (
             <>
