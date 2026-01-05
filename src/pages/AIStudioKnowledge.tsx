@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { useKnowledgeBase } from "@/hooks/useKnowledgeBase";
 import { useStyleProfile } from "@/hooks/useStyleProfile";
+import { useAuth } from "@/contexts/AuthContext";
 import { EmptyState } from "@/components/EmptyState";
 import DocumentEditor from "@/components/ai-studio/DocumentEditor";
 import StyleProfileForm from "@/components/ai-studio/StyleProfileForm";
@@ -43,7 +45,7 @@ import {
   Settings2,
   CheckCircle2,
 } from "lucide-react";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { formatTokenCount, getBudgetDisplayInfo } from "@/lib/tokenUtils";
 import type { KnowledgeBaseDocument, DocumentFormData, DocumentType, ContextRole } from "@/types/aiStudio";
 
@@ -66,6 +68,8 @@ const CONTEXT_ROLE_COLORS: Record<ContextRole, string> = {
 
 export default function AIStudioKnowledge() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const {
     documents,
     activeDocuments,
@@ -91,6 +95,11 @@ export default function AIStudioKnowledge() {
   const budgetInfo = getBudgetDisplayInfo(totalTokens);
 
   const handleAdd = () => {
+    if (!user) {
+      toast.error(t("aiStudio.loginRequired", "Login Required"));
+      navigate("/auth");
+      return;
+    }
     setEditingDocument(null);
     setEditorOpen(true);
   };
@@ -103,25 +112,16 @@ export default function AIStudioKnowledge() {
   const handleSave = async (formData: DocumentFormData) => {
     if (editingDocument) {
       await updateDocument({ id: editingDocument.id, formData });
-      toast({
-        title: t("knowledgeBase.updated"),
-        description: t("knowledgeBase.updatedDesc"),
-      });
+      toast.success(t("knowledgeBase.updated"));
     } else {
       await createDocument(formData);
-      toast({
-        title: t("knowledgeBase.created"),
-        description: t("knowledgeBase.createdDesc"),
-      });
+      toast.success(t("knowledgeBase.created"));
     }
   };
 
   const handleToggleActive = async (doc: KnowledgeBaseDocument) => {
     await toggleActive({ id: doc.id, isActive: !doc.is_active });
-    toast({
-      title: doc.is_active ? t("knowledgeBase.deactivated") : t("knowledgeBase.activated"),
-      description: doc.is_active ? t("knowledgeBase.deactivatedDesc") : t("knowledgeBase.activatedDesc"),
-    });
+    toast.success(doc.is_active ? t("knowledgeBase.deactivated") : t("knowledgeBase.activated"));
   };
 
   const handleDeleteClick = (doc: KnowledgeBaseDocument) => {
@@ -132,10 +132,7 @@ export default function AIStudioKnowledge() {
   const handleDeleteConfirm = async () => {
     if (!documentToDelete) return;
     await deleteDocument(documentToDelete.id);
-    toast({
-      title: t("knowledgeBase.deleted"),
-      description: t("knowledgeBase.deletedDesc"),
-    });
+    toast.success(t("knowledgeBase.deleted"));
     setDeleteDialogOpen(false);
     setDocumentToDelete(null);
   };

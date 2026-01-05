@@ -72,7 +72,7 @@ const App = () => (
               </Route>
               
               {/* AI Studio routes with dedicated layout */}
-              <Route path="/ai-studio" element={<RequireInstructor><AIStudioLayout /></RequireInstructor>}>
+              <Route path="/ai-studio" element={<AIStudioLayout />}>
                 <Route index element={<AIStudioDashboard />} />
                 <Route path="knowledge" element={<AIStudioKnowledge />} />
                 <Route path="blog" element={<AIStudioBlog />} />

@@ -22,7 +22,7 @@ import {
   Database,
   FileEdit,
   Mail,
-  ArrowLeft,
+  Home,
   Sparkles,
   History,
   ChevronDown,
@@ -220,12 +220,12 @@ export default function AIStudioSidebar({ onLoadHistory, onDeleteHistory }: AISt
           )}
         </div>
 
-        {/* Back to Instructor Panel */}
+        {/* Back to Home */}
         <div className="p-4 border-t border-border">
-          <Link to="/instructor">
+          <Link to="/">
             <Button variant="ghost" className="w-full justify-start gap-2">
-              <ArrowLeft className="h-4 w-4" />
-              {t("aiStudioNav.backToInstructor", "Back to Instructor Panel")}
+              <Home className="h-4 w-4" />
+              {t("aiStudioNav.backToHome", "Back to Home")}
             </Button>
           </Link>
         </div>
@@ -292,10 +292,10 @@ export default function AIStudioSidebar({ onLoadHistory, onDeleteHistory }: AISt
                 {isLoading ? "..." : `${remaining}/${limit}`}
               </span>
             </div>
-            <Link to="/instructor">
+            <Link to="/">
               <Button variant="ghost" size="sm" className="gap-1.5 text-xs">
-                <ArrowLeft className="h-3.5 w-3.5" />
-                <span className="hidden sm:inline">{t("aiStudioNav.backToInstructor", "Back")}</span>
+                <Home className="h-3.5 w-3.5" />
+                <span className="hidden sm:inline">{t("aiStudioNav.backToHome", "Home")}</span>
               </Button>
             </Link>
           </div>

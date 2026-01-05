@@ -25,6 +25,7 @@ import { useContentGeneration } from "@/hooks/useContentGeneration";
 import { useStyleProfile } from "@/hooks/useStyleProfile";
 import { useGenerationHistory, GenerationHistoryItem } from "@/hooks/useGenerationHistory";
 import { useAIStudioContext } from "@/components/AIStudioLayout";
+import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 
 export default function AIStudioBlog() {
@@ -32,6 +33,7 @@ export default function AIStudioBlog() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const aiStudioContext = useAIStudioContext();
+  const { user } = useAuth();
   const { activeDocuments, isLoading: docsLoading } = useKnowledgeBase();
   const { isLoading: styleLoading, hasCompletedSetup } = useStyleProfile();
   const { generate, reset, isGenerating, generatedContent, error } = useContentGeneration();
@@ -108,6 +110,12 @@ export default function AIStudioBlog() {
   };
 
   const handleGenerate = async () => {
+    if (!user) {
+      toast.error(t("aiStudio.loginRequired", "Please log in to use AI generation features"));
+      navigate("/auth");
+      return;
+    }
+
     if (!topic.trim()) {
       toast.error(t("aiStudio.topicRequired", "Topic required"));
       return;
