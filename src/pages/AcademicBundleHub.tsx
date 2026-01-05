@@ -1,19 +1,11 @@
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { GraduationCap, BookOpen, FileText, Pencil, Quote } from "lucide-react";
 import FeatureCard from "@/components/ai-studio/FeatureCard";
-import NotifyMeModal from "@/components/ai-studio/NotifyMeModal";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 
 export default function AcademicBundleHub() {
   const { t } = useTranslation();
-  const [notifyModalOpen, setNotifyModalOpen] = useState(false);
-
-  const handleNotifyClick = () => {
-    setNotifyModalOpen(true);
-  };
 
   return (
     <div className="max-w-7xl mx-auto space-y-8">
@@ -43,12 +35,9 @@ export default function AcademicBundleHub() {
             <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
               {t(
                 "aiStudio.academicComingSoonDesc",
-                "We're building powerful tools for researchers and academics. Get notified when these features launch."
+                "We're building powerful tools for researchers and academics."
               )}
             </p>
-            <Button onClick={handleNotifyClick} size="lg" className="mt-2">
-              {t("aiStudio.notifyWhenAvailable", "Notify Me When Available")}
-            </Button>
           </div>
         </CardContent>
       </Card>
@@ -103,14 +92,6 @@ export default function AcademicBundleHub() {
           ctaText={t("aiStudio.comingSoon", "Coming Soon")}
         />
       </div>
-
-      {/* Notify Me Modal */}
-      <NotifyMeModal
-        open={notifyModalOpen}
-        onOpenChange={setNotifyModalOpen}
-        featureKey="academic_bundle"
-        featureName={t("aiStudio.academicBundle", "Academic Bundle")}
-      />
     </div>
   );
 }
