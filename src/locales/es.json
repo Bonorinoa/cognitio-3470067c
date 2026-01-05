@@ -644,7 +644,14 @@
     "citationGeneratorDesc": "Genera automáticamente citas y bibliografías",
     "startGenerating": "Comenzar →",
     "notifyWhenAvailable": "Notificarme Cuando Esté Disponible",
-    "academicComingSoonDesc": "Estamos construyendo herramientas poderosas para investigadores y académicos. Recibe notificaciones cuando se lancen estas funciones."
+    "academicComingSoonDesc": "Estamos construyendo herramientas poderosas para investigadores y académicos. Recibe notificaciones cuando se lancen estas funciones.",
+    "loginToConfigureStyle": "Inicia sesión para configurar tu estilo",
+    "loginToConfigureStyleDesc": "Necesitas una cuenta para guardar tus preferencias de escritura.",
+    "howItWorksDesc": "La IA aprende tu voz y estilo para crear contenido que suena auténticamente como tú.",
+    "step1DescEnhanced": "Tus documentos, artículos y muestras de escritura para personalizar la IA",
+    "step2DescEnhanced": "Tu tono, audiencia e idioma preferido",
+    "step3DescEnhanced": "Artículos, posts y más contenido profesional al instante",
+    "instructorPerk": "¿Eres instructor de Cognitio? Disfruta de 50 generaciones diarias."
   },
   "aiStudioNav": {
     "dashboard": "Dashboard",

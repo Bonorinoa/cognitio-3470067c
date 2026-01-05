@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useKnowledgeBase } from "@/hooks/useKnowledgeBase";
-import { useStyleProfile } from "@/hooks/useStyleProfile";
 import { useAuth } from "@/contexts/AuthContext";
 import { EmptyState } from "@/components/EmptyState";
 import DocumentEditor from "@/components/ai-studio/DocumentEditor";
@@ -35,12 +34,9 @@ import {
   FileQuestion,
   ScrollText,
   FileUser,
-  Settings2,
-  CheckCircle2,
 } from "lucide-react";
 import { toast } from "sonner";
 import { formatTokenCount, getBudgetDisplayInfo } from "@/lib/tokenUtils";
-import { AI_STUDIO_ROUTES } from "@/lib/aiStudioRoutes";
 import type { KnowledgeBaseDocument, DocumentFormData, DocumentType, ContextRole } from "@/types/aiStudio";
 
 // Icons for document types
@@ -77,8 +73,6 @@ export default function AIStudioKnowledge() {
     isUpdating,
     isDeleting,
   } = useKnowledgeBase();
-
-  const { hasCompletedSetup, isLoading: styleLoading } = useStyleProfile();
 
   const [editorOpen, setEditorOpen] = useState(false);
   const [editingDocument, setEditingDocument] = useState<KnowledgeBaseDocument | null>(null);
@@ -130,7 +124,7 @@ export default function AIStudioKnowledge() {
     setDocumentToDelete(null);
   };
 
-  if (isLoading || styleLoading) {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
         <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
@@ -154,43 +148,6 @@ export default function AIStudioKnowledge() {
           {t("knowledgeBase.addDocument")}
         </Button>
       </div>
-
-      {/* Style Profile Section - Link to Settings */}
-      <Card className={!hasCompletedSetup ? "border-primary/50 bg-primary/5" : ""}>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Settings2 className="h-5 w-5 text-primary" />
-              <div>
-                <CardTitle className="text-base">
-                  {t("aiStudio.styleProfile", "AI Writing Style")}
-                </CardTitle>
-                <CardDescription>
-                  {hasCompletedSetup
-                    ? t("aiStudio.styleProfileComplete", "Your writing preferences are configured")
-                    : t("aiStudio.styleProfileSetup", "Configure your writing style for AI content")}
-                </CardDescription>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              {hasCompletedSetup && (
-                <CheckCircle2 className="h-5 w-5 text-green-600" />
-              )}
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <Button
-            variant={hasCompletedSetup ? "outline" : "default"}
-            onClick={() => navigate(AI_STUDIO_ROUTES.SETTINGS)}
-            className="w-full"
-          >
-            {hasCompletedSetup
-              ? t("common.edit", "Edit Settings")
-              : t("aiStudio.configure", "Configure Style")} →
-          </Button>
-        </CardContent>
-      </Card>
 
       {/* Token Budget Indicator */}
       <Card>

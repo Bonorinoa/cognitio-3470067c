@@ -639,7 +639,14 @@
     "citationGeneratorDesc": "Automatically generate citations and bibliographies",
     "startGenerating": "Start →",
     "notifyWhenAvailable": "Notify Me When Available",
-    "academicComingSoonDesc": "We're building powerful tools for researchers and academics. Get notified when these features launch."
+    "academicComingSoonDesc": "We're building powerful tools for researchers and academics. Get notified when these features launch.",
+    "loginToConfigureStyle": "Log in to configure your style",
+    "loginToConfigureStyleDesc": "You need an account to save your writing preferences.",
+    "howItWorksDesc": "AI learns your voice and style to create content that sounds authentically like you.",
+    "step1DescEnhanced": "Your documents, articles and writing samples to personalize the AI",
+    "step2DescEnhanced": "Your tone, audience and preferred language",
+    "step3DescEnhanced": "Articles, posts and more professional content instantly",
+    "instructorPerk": "Are you a Cognitio instructor? Enjoy 50 daily generations."
   },
   "aiStudioNav": {
     "dashboard": "Dashboard",

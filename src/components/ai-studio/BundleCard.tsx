@@ -15,7 +15,7 @@ interface BundleCardProps {
   title: string;
   description: string;
   features: BundleFeature[];
-  ctaText: string;
+  ctaText?: string;
   ctaAction?: () => void;
   ctaLink?: string;
   comingSoon?: boolean;
@@ -79,20 +79,22 @@ export default function BundleCard({
         </ul>
       </CardContent>
 
-      <CardFooter>
-        <Button
-          className="w-full"
-          variant={comingSoon ? "outline" : "default"}
-          onClick={(e) => {
-            if (ctaAction) {
-              e.preventDefault();
-              ctaAction();
-            }
-          }}
-        >
-          {ctaText}
-        </Button>
-      </CardFooter>
+      {ctaText && (
+        <CardFooter>
+          <Button
+            className="w-full"
+            variant={comingSoon ? "outline" : "default"}
+            onClick={(e) => {
+              if (ctaAction) {
+                e.preventDefault();
+                ctaAction();
+              }
+            }}
+          >
+            {ctaText}
+          </Button>
+        </CardFooter>
+      )}
     </Card>
   );
 
