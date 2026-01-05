@@ -130,6 +130,11 @@ serve(async (req) => {
         else if (bundle && userId) {
           logStep("AI subscription checkout detected", { userId, bundle });
 
+          const toIso = (unixSeconds?: number | null) => {
+            if (!unixSeconds || Number.isNaN(unixSeconds)) return null;
+            return new Date(unixSeconds * 1000).toISOString();
+          };
+
           // Retrieve the full subscription from Stripe to get all details
           const subscriptionId = session.subscription as string;
           if (!subscriptionId) {
@@ -138,9 +143,9 @@ serve(async (req) => {
           }
 
           const stripeSubscription = await stripe.subscriptions.retrieve(subscriptionId);
-          logStep("Retrieved subscription from checkout session", { 
+          logStep("Retrieved subscription from checkout session", {
             subscriptionId: stripeSubscription.id,
-            status: stripeSubscription.status 
+            status: stripeSubscription.status,
           });
 
           // Map Stripe status to our status enum
@@ -160,19 +165,22 @@ serve(async (req) => {
           // Upsert subscription record
           const { error: upsertError } = await supabaseAdmin
             .from("ai_subscriptions")
-            .upsert({
-              user_id: userId,
-              bundle: bundle as "marketing" | "academic" | "pro",
-              status: mappedStatus,
-              stripe_subscription_id: stripeSubscription.id,
-              stripe_customer_id: stripeSubscription.customer as string,
-              current_period_start: new Date(stripeSubscription.current_period_start * 1000).toISOString(),
-              current_period_end: new Date(stripeSubscription.current_period_end * 1000).toISOString(),
-              cancel_at_period_end: stripeSubscription.cancel_at_period_end,
-              updated_at: new Date().toISOString(),
-            }, {
-              onConflict: "user_id",
-            });
+            .upsert(
+              {
+                user_id: userId,
+                bundle: bundle as "marketing" | "academic" | "pro",
+                status: mappedStatus,
+                stripe_subscription_id: stripeSubscription.id,
+                stripe_customer_id: stripeSubscription.customer as string,
+                current_period_start: toIso(stripeSubscription.current_period_start),
+                current_period_end: toIso(stripeSubscription.current_period_end),
+                cancel_at_period_end: stripeSubscription.cancel_at_period_end,
+                updated_at: new Date().toISOString(),
+              },
+              {
+                onConflict: "user_id",
+              }
+            );
 
           if (upsertError) {
             logStep("ERROR: Failed to upsert subscription from checkout", { error: upsertError.message });
@@ -189,20 +197,25 @@ serve(async (req) => {
       case "customer.subscription.created":
       case "customer.subscription.updated": {
         const subscription = event.data.object as Stripe.Subscription;
-        logStep(`Processing ${event.type}`, { 
+        logStep(`Processing ${event.type}`, {
           subscriptionId: subscription.id,
-          status: subscription.status 
+          status: subscription.status,
         });
+
+        const toIso = (unixSeconds?: number | null) => {
+          if (!unixSeconds || Number.isNaN(unixSeconds)) return null;
+          return new Date(unixSeconds * 1000).toISOString();
+        };
 
         // Get metadata from subscription
         const userId = subscription.metadata?.userId;
         const bundle = subscription.metadata?.bundle as "marketing" | "academic" | "pro" | undefined;
 
         if (!userId || !bundle) {
-          logStep("Subscription missing required metadata", { 
-            userId, 
+          logStep("Subscription missing required metadata", {
+            userId,
             bundle,
-            metadata: subscription.metadata 
+            metadata: subscription.metadata,
           });
           // Don't fail - might be a subscription from elsewhere
           break;
@@ -225,19 +238,22 @@ serve(async (req) => {
         // Upsert subscription record
         const { error: upsertError } = await supabaseAdmin
           .from("ai_subscriptions")
-          .upsert({
-            user_id: userId,
-            bundle: bundle,
-            status: mappedStatus,
-            stripe_subscription_id: subscription.id,
-            stripe_customer_id: subscription.customer as string,
-            current_period_start: new Date(subscription.current_period_start * 1000).toISOString(),
-            current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
-            cancel_at_period_end: subscription.cancel_at_period_end,
-            updated_at: new Date().toISOString(),
-          }, {
-            onConflict: "user_id",
-          });
+          .upsert(
+            {
+              user_id: userId,
+              bundle: bundle,
+              status: mappedStatus,
+              stripe_subscription_id: subscription.id,
+              stripe_customer_id: subscription.customer as string,
+              current_period_start: toIso(subscription.current_period_start),
+              current_period_end: toIso(subscription.current_period_end),
+              cancel_at_period_end: subscription.cancel_at_period_end,
+              updated_at: new Date().toISOString(),
+            },
+            {
+              onConflict: "user_id",
+            }
+          );
 
         if (upsertError) {
           logStep("ERROR: Failed to upsert subscription", { error: upsertError.message });
