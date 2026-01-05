@@ -517,6 +517,8 @@ AI Studio is a public AI-powered content generation platform that helps users cr
 
 ### AI Studio - Database Schema (v4.0)
 
+**Note:** Tables were renamed from `instructor_*` to `user_*` in Phase 1 of v4.0 to support public access for all authenticated users, not just instructors.
+
 #### user_knowledge_base (renamed from instructor_knowledge_base)
 - id, user_id (was instructor_id)
 - title, content
