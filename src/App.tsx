@@ -7,6 +7,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import RequireInstructor from "@/components/RequireInstructor";
 import RequireAdmin from "@/components/RequireAdmin";
 import { Loader2 } from "lucide-react";
+import { COMING_SOON_FEATURES } from "@/lib/aiStudioRoutes";
 
 // Lazy-loaded layouts - only loaded when user navigates to protected routes
 const InstructorLayout = lazy(() => import("./components/InstructorLayout"));
@@ -85,17 +86,17 @@ const App = () => (
                 <Route path="marketing">
                   <Route index element={<MarketingBundleHub />} />
                   <Route path="blog" element={<AIStudioBlog />} />
-                  <Route path="linkedin" element={<ComingSoonFeature featureKey="marketing_linkedin" titleKey="aiStudio.linkedinGenerator" bundle="marketing" />} />
-                  <Route path="twitter" element={<ComingSoonFeature featureKey="marketing_twitter" titleKey="aiStudio.twitterGenerator" bundle="marketing" />} />
-                  <Route path="newsletter" element={<ComingSoonFeature featureKey="marketing_newsletter" titleKey="aiStudio.newsletterGenerator" bundle="marketing" />} />
+                  <Route path="linkedin" element={<ComingSoonFeature {...COMING_SOON_FEATURES.marketing.linkedin} />} />
+                  <Route path="twitter" element={<ComingSoonFeature {...COMING_SOON_FEATURES.marketing.twitter} />} />
+                  <Route path="newsletter" element={<ComingSoonFeature {...COMING_SOON_FEATURES.marketing.newsletter} />} />
                 </Route>
                 
                 {/* Academic Bundle */}
                 <Route path="academic">
                   <Route index element={<AcademicBundleHub />} />
-                  <Route path="literature-review" element={<ComingSoonFeature featureKey="academic_literature_review" titleKey="aiStudio.literatureReview" bundle="academic" />} />
-                  <Route path="paper-formatter" element={<ComingSoonFeature featureKey="academic_paper_formatter" titleKey="aiStudio.paperFormatter" bundle="academic" />} />
-                  <Route path="paper-editor" element={<ComingSoonFeature featureKey="academic_paper_editor" titleKey="aiStudio.paperEditor" bundle="academic" />} />
+                  <Route path="literature-review" element={<ComingSoonFeature {...COMING_SOON_FEATURES.academic["literature-review"]} />} />
+                  <Route path="paper-formatter" element={<ComingSoonFeature {...COMING_SOON_FEATURES.academic["paper-formatter"]} />} />
+                  <Route path="paper-editor" element={<ComingSoonFeature {...COMING_SOON_FEATURES.academic["paper-editor"]} />} />
                 </Route>
               </Route>
               

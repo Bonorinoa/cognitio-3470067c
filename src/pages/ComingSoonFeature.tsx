@@ -34,10 +34,16 @@ export default function ComingSoonFeature({
 
   const featureTitle = titleKey ? t(titleKey) : title || "";
 
-  const bundleName = bundle === "marketing" 
-    ? t("aiStudio.marketingBundle", "Marketing")
-    : t("aiStudio.academicBundle", "Academic");
+  // Helper function to get localized bundle name
+  const getBundleName = (bundleType: "marketing" | "academic"): string => {
+    const bundleTranslations = {
+      marketing: t("aiStudio.marketingBundle", "Marketing"),
+      academic: t("aiStudio.academicBundle", "Academic"),
+    };
+    return bundleTranslations[bundleType];
+  };
 
+  const bundleName = getBundleName(bundle);
   const bundlePath = `/ai-studio/${bundle}`;
 
   const defaultDescription = t(

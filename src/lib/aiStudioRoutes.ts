@@ -34,3 +34,43 @@ export const FEATURE_KEYS = {
   ACADEMIC_PAPER_FORMATTER: "academic_paper_formatter",
   ACADEMIC_PAPER_EDITOR: "academic_paper_editor",
 } as const;
+
+/**
+ * Coming soon feature configurations
+ */
+export const COMING_SOON_FEATURES = {
+  marketing: {
+    linkedin: {
+      featureKey: FEATURE_KEYS.MARKETING_LINKEDIN,
+      titleKey: "aiStudio.linkedinGenerator",
+      bundle: "marketing" as const,
+    },
+    twitter: {
+      featureKey: FEATURE_KEYS.MARKETING_TWITTER,
+      titleKey: "aiStudio.twitterGenerator",
+      bundle: "marketing" as const,
+    },
+    newsletter: {
+      featureKey: FEATURE_KEYS.MARKETING_NEWSLETTER,
+      titleKey: "aiStudio.newsletterGenerator",
+      bundle: "marketing" as const,
+    },
+  },
+  academic: {
+    "literature-review": {
+      featureKey: FEATURE_KEYS.ACADEMIC_LITERATURE_REVIEW,
+      titleKey: "aiStudio.literatureReview",
+      bundle: "academic" as const,
+    },
+    "paper-formatter": {
+      featureKey: FEATURE_KEYS.ACADEMIC_PAPER_FORMATTER,
+      titleKey: "aiStudio.paperFormatter",
+      bundle: "academic" as const,
+    },
+    "paper-editor": {
+      featureKey: FEATURE_KEYS.ACADEMIC_PAPER_EDITOR,
+      titleKey: "aiStudio.paperEditor",
+      bundle: "academic" as const,
+    },
+  },
+} as const;
