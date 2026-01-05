@@ -1,5 +1,6 @@
 import { LucideIcon } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -25,6 +26,7 @@ export default function FeatureCard({
   ctaLink,
   className = "",
 }: FeatureCardProps) {
+  const { t } = useTranslation();
   const isComingSoon = status === "coming-soon";
 
   const cardContent = (
@@ -42,7 +44,7 @@ export default function FeatureCard({
           </div>
           {isComingSoon && (
             <Badge variant="secondary" className="text-xs">
-              Coming Soon
+              {t("aiStudio.comingSoon", "Coming Soon")}
             </Badge>
           )}
         </div>

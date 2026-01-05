@@ -31,9 +31,9 @@ Cognitio no es un marketplace abierto. Es un "Instructor Studio" curado: LMS lig
 
 ---
 
-## 📍 Estado Actual: v3.9.1
+## 📍 Estado Actual: v4.0
 
-**Última Actualización:** Enero 3, 2026
+**Última Actualización:** Enero 5, 2026
 
 ### ✅ Funcionalidades Completas (v1.0 - v3.9.1)
 
@@ -55,19 +55,21 @@ Cognitio no es un marketplace abierto. Es un "Instructor Studio" curado: LMS lig
 - Internacionalización completa (Español/Inglés)
 - Security audit complete: 0 vulnerabilities críticas
 
-#### AI Content Studio (v3.0 - v3.9.1) 🆕 ✅ COMPLETO
+#### AI Studio - Public Content Platform (v4.0) 🆕 ✅ COMPLETO
 
-- **Knowledge Base**: Gestión de documentos con tipos y roles de contexto
-- **Style Profiles**: Configuración de tono, longitud, audiencia objetivo
-- **Blog Generator**: Generación de contenido con streaming en tiempo real
-- **Rich Editor**: Modo preview/edit con ReactMarkdown
-- **Content Refinement**: Edición inline con instrucciones de IA
-- **Generation History**: Guardar, cargar y gestionar generaciones (FIFO 10 items)
-- **AI Studio Dashboard**: Landing page con métricas y acciones rápidas
-- **Usage Tracking**: Límite de 15 acciones IA por día (generación + refinamiento)
-- **Export Options**: Descargar contenido como Markdown o TXT
-- **Mobile Navigation**: Tab bar responsive para AI Studio
-- **Lovable AI Integration**: Gemini 2.5 Flash vía AI Gateway
+- **Public Landing Page**: Hero, bundles showcase, how it works, pricing teaser
+- **Bundle-Based Architecture**: Marketing and Academic bundles with separate routes
+- **Knowledge Base**: Global document management with types and context roles
+- **Style Settings**: Simplified configuration (tone, audience, language, custom instructions)
+- **Blog Generator**: Content generation with streaming, editing, and refinement
+- **Rich Editor**: Preview/edit modes with ReactMarkdown
+- **Content Refinement**: Inline editing with AI instructions
+- **Generation History**: Save, load, and manage generations (FIFO 10 items)
+- **Dynamic Tier Limits**: Free (10/day), Instructor (50/day), future subscription tiers
+- **Coming Soon Placeholders**: LinkedIn, Twitter, Newsletter, Academic features
+- **Export Options**: Download content as Markdown or TXT
+- **Mobile Navigation**: Responsive sidebar and tab navigation
+- **Lovable AI Integration**: Gemini 2.5 Flash via AI Gateway
 
 #### Estabilización (v3.9.1) 🆕
 
@@ -75,11 +77,13 @@ Cognitio no es un marketplace abierto. Es un "Instructor Studio" curado: LMS lig
 - **TypeScript Mejorado**: Utilidad `getErrorMessage` para manejo de errores type-safe
 - **Dead Code Cleanup**: Eliminación de código deprecated (`isTeacher`, handlers no usados)
 
-### 🚧 Próximo: v3.10+
+### 🚧 Próximo: v4.1+
 
-- Newsletter Generator (v3.10)
-- Course Context Integration (v3.11)
-- Enrollment & Notifications (v4.0+)
+- LinkedIn Post Generator (v4.1)
+- X/Twitter Generator (v4.2)
+- Newsletter Generator (v4.3)
+- Stripe Subscription Integration (v4.5)
+- Academic Bundle Features (v5.0+)
 
 Consulta **[DEVELOPMENT_PLAN.md](./DEVELOPMENT_PLAN.md)** para el roadmap completo.
 Consulta **[CHANGELOG.md](./CHANGELOG.md)** para el historial de cambios.
@@ -177,11 +181,12 @@ npx vitest           # Tests en modo watch
 
 ## 🔐 Sistema de Roles
 
-| Rol            | Capacidades                                                                          |
-| -------------- | ------------------------------------------------------------------------------------ |
-| **Student**    | Navegar cursos, comprar, ver videos, seguir progreso                                 |
-| **Instructor** | Todo de Student + crear/editar cursos, ver analytics, gestionar capítulos, AI Studio |
-| **Admin**      | Todo de Instructor + asignar roles, ver todos los cursos, tareas de soporte          |
+| Rol            | Capacidades                                                                                      |
+| -------------- | ------------------------------------------------------------------------------------------------ |
+| **Visitante**  | Ver landing de AI Studio, explorar bundles, ver cursos públicos                                  |
+| **Student**    | Todo de Visitante + 10 gen IA/día, navegar cursos, comprar, ver videos, seguir progreso          |
+| **Instructor** | Todo de Student + 50 gen IA/día, crear/editar cursos, ver analytics, gestionar capítulos         |
+| **Admin**      | Todo de Instructor + asignar roles, ver todos los cursos, tareas de soporte                      |
 
 **Importante:** Solo Admins pueden otorgar el rol de Instructor. No hay signup público de instructor.
 
@@ -219,13 +224,19 @@ npx vitest           # Tests en modo watch
 | `/instructor/settings`    | Configuración y perfil        |
 | `/instructor/profile/:id` | Perfil público del instructor |
 
-### AI Studio (Instructor) 🆕
+### AI Studio (Público) 🆕
 
-| Ruta                   | Descripción                      |
-| ---------------------- | -------------------------------- |
-| `/ai-studio`           | Dashboard de AI Studio           |
-| `/ai-studio/knowledge` | Knowledge Base y Style Profile   |
-| `/ai-studio/blog`      | Generador de Blogs con streaming |
+| Ruta                              | Descripción                              |
+| --------------------------------- | ---------------------------------------- |
+| `/ai-studio`                      | Landing page pública                     |
+| `/ai-studio/knowledge`            | Base de Conocimiento (auth requerido)    |
+| `/ai-studio/settings`             | Configuración de Estilo (auth requerido) |
+| `/ai-studio/marketing`            | Hub del Paquete Marketing                |
+| `/ai-studio/marketing/blog`       | Generador de Blogs                       |
+| `/ai-studio/marketing/linkedin`   | LinkedIn (Próximamente)                  |
+| `/ai-studio/marketing/twitter`    | X/Twitter (Próximamente)                 |
+| `/ai-studio/marketing/newsletter` | Newsletter (Próximamente)                |
+| `/ai-studio/academic`             | Hub del Paquete Académico (Próximamente) |
 
 ### Admin (Rol requerido)
 
@@ -245,6 +256,21 @@ cognitio/
 │   │   ├── ai-studio/     # Componentes AI Studio 🆕
 │   │   └── ...
 │   ├── pages/             # Componentes de página
+│   │   ├── AIStudioLanding.tsx      # Public landing 🆕
+│   │   ├── AIStudioSettings.tsx     # Style settings 🆕
+│   │   ├── AIStudioKnowledge.tsx    # Knowledge base
+│   │   ├── AIStudioBlog.tsx         # Blog generator
+│   │   ├── MarketingBundleHub.tsx   # Marketing hub 🆕
+│   │   ├── AcademicBundleHub.tsx    # Academic hub 🆕
+│   │   ├── ComingSoonFeature.tsx    # Coming soon page 🆕
+│   │   └── ...
+│   ├── components/
+│   │   ├── ai-studio/
+│   │   │   ├── AIStudioSidebar.tsx
+│   │   │   ├── BundleCard.tsx       # Bundle display 🆕
+│   │   │   ├── FeatureCard.tsx      # Feature display 🆕
+│   │   │   ├── StyleProfileForm.tsx
+│   │   │   └── DocumentEditor.tsx
 │   ├── contexts/          # React Context (Auth)
 │   ├── hooks/             # Hooks personalizados (incl. AI hooks) 🆕
 │   ├── integrations/      # Supabase client/types
@@ -357,4 +383,4 @@ Parte del ecosistema Lovable. Ver términos de licencia de Lovable.
 
 ---
 
-_Última actualización: Enero 2026 | Versión: 3.9.1_
+_Última actualización: Enero 2026 | Versión: 4.0_

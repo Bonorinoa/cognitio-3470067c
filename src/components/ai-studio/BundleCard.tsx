@@ -1,5 +1,6 @@
 import { LucideIcon } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -33,6 +34,7 @@ export default function BundleCard({
   comingSoon = false,
   className = "",
 }: BundleCardProps) {
+  const { t } = useTranslation();
   const cardContent = (
     <Card
       className={`rounded-xl border-2 transition-all duration-300 h-full flex flex-col ${
@@ -52,7 +54,7 @@ export default function BundleCard({
                 <CardTitle>{title}</CardTitle>
                 {comingSoon && (
                   <Badge variant="secondary" className="text-xs">
-                    Coming Soon
+                    {t("aiStudio.comingSoon", "Próximamente")}
                   </Badge>
                 )}
               </div>

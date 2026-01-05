@@ -1,7 +1,7 @@
 # Cognitio Development Plan
 
-**Current Version:** v3.9.1  
-**Last Updated:** January 3, 2026
+**Current Version:** v4.0  
+**Last Updated:** January 5, 2026
 
 ---
 
@@ -76,12 +76,66 @@ AI-powered content generation to help instructors create marketing materials fro
 | v3.8 | History | Save/Update/Delete generations, FIFO 10-item limit, load from history | ✅ |
 | v3.9 | Dashboard & Usage Fix | AI Studio Dashboard landing page, `is_active` soft-delete for accurate usage tracking | ✅ |
 | v3.9.1 | Stabilization Sprint | Toast unification (Sonner), TypeScript `getErrorMessage`, dead code cleanup | ✅ |
+| v4.0 | AI Studio Commercialization | Public landing, bundle-based architecture, simplified settings, dynamic tier limits | ✅ |
 
-**✅ v3.9.1 COMPLETO - Stabilization Sprint Complete**
+**✅ v4.0 COMPLETO - AI Studio Commercialization Complete**
 
 ---
 
-## Current: v3.9.1 Stabilization Sprint ✅ COMPLETO
+## ✅ Completado
+
+### AI Studio Commercialization (v4.0) - Enero 2026
+
+#### Phase 1: Database Schema ✅
+- Renamed instructor_* tables to user_*
+- Created ai_bundle and subscription_status enums
+- Created ai_subscriptions and ai_tier_limits tables
+- Updated RLS policies for any authenticated user
+
+#### Phase 2: Backend Updates ✅
+- Updated generate-content with dynamic tier limits
+- Updated refine-content with dynamic tier limits
+- Created get-user-tier edge function
+
+#### Phase 3: Public Navigation ✅
+- Added AI Studio to main navbar
+- Removed RequireInstructor wrapper from routes
+- Implemented auth guards at feature level
+- Updated sidebar with "Back to Home"
+
+#### Phase 4: Landing & Bundles ✅
+- Created public landing page with bundles showcase
+- Implemented bundle-based routing (/ai-studio/marketing/*, /ai-studio/academic/*)
+- Created Marketing and Academic bundle hub pages
+- Added coming soon placeholder pages
+- Simplified style settings (removed content length and preferences)
+- Removed redundant AI Writing Style card from Knowledge Base
+- Streamlined landing page (merged Knowledge section into How It Works)
+
+---
+
+## Current: v4.0 AI Studio Commercialization ✅ COMPLETO
+
+### v4.0 Completed ✅
+
+#### Public Landing & Bundles
+- **Public Landing Page**: Hero section, bundles showcase, how it works, pricing teaser
+- **Bundle-Based Architecture**: Marketing and Academic bundles with separate routes
+- **Marketing Bundle Hub**: Blog, LinkedIn, Twitter, Newsletter (coming soon features)
+- **Academic Bundle Hub**: Literature Review, Paper Formatter, Paper Editor, Citation Generator (all coming soon)
+- **Coming Soon Pages**: Placeholder pages for unreleased features
+
+#### Simplified Settings
+- **Style Settings**: Streamlined to tone, audience, language, custom instructions
+- **Removed Complexity**: Eliminated content length and preferences options
+- **Global Configuration**: Single settings page for all AI content types
+
+#### Dynamic Tier System
+- **Free Tier**: 10 generations/day for any authenticated user
+- **Instructor Tier**: 50 generations/day for Cognitio instructors
+- **Future Tiers**: Database ready for subscription-based tiers
+
+#### Previous Versions (v3.9.1)
 
 ### v3.9.1 Completed ✅
 
@@ -103,9 +157,29 @@ AI-powered content generation to help instructors create marketing materials fro
 
 ---
 
-## Roadmap: v3.10+ Next Steps
+## Roadmap: v4.1+ Next Steps
 
-### v3.10: Bundle Optimization ✅ In Progress
+### 🔜 Próximo
+
+#### Phase 5: Stripe Integration (v4.5)
+- [ ] Create Stripe products (Marketing, Academic, Pro bundles)
+- [ ] Implement checkout flow
+- [ ] Create webhook for subscription events
+- [ ] Subscription management UI
+- [ ] Complete pricing page
+
+#### Phase 6: Marketing Bundle Features (v4.1-v4.3)
+- [ ] LinkedIn Post Generator (v4.1)
+- [ ] X/Twitter Generator with threads support (v4.2)
+- [ ] Newsletter Generator (v4.3)
+
+#### Phase 7: Academic Bundle (v5.0+)
+- [ ] Literature Review Generator
+- [ ] Paper Formatter (journal styles)
+- [ ] Paper Editor
+- [ ] Citation Generator
+
+### v3.10: Bundle Optimization ✅ Complete
 
 | Task | Status | Details |
 |------|--------|---------|
@@ -121,27 +195,25 @@ AI-powered content generation to help instructors create marketing materials fro
 | Test Coverage | Increase unit test coverage for hooks and components | 🟡 Medium |
 | Performance Audit | Lighthouse analysis, Core Web Vitals optimization | 🟡 Medium |
 
-### v4.0: Newsletter Generator & Content Expansion
+---
 
-| Version | Focus | Planned Deliverables | Status |
-|---------|-------|---------------------|--------|
-| v4.0 | Newsletter | Newsletter generator page, email templates, multi-format export | 📋 Planned |
-| v4.1 | Course Context | Inject course content (titles, descriptions, transcripts) as generation context | 📋 Planned |
-| v4.2 | Enrollment | Invite links for private courses, bulk CSV enrollment | 📋 Planned |
-| v4.3 | Notifications | Email notifications for enrollments, completions, new content | 📋 Planned |
+## Future Roadmap
 
 ### v5.0+: Advanced Features (Future)
 
 | Focus | Planned Features |
 |-------|-----------------|
 | Analytics | Advanced student analytics, cohort tracking, completion funnels |
-| AI Studio | Multi-language generation, social media post generator, course outline generator |
+| AI Studio | Multi-language generation, course outline generator, advanced academic tools |
 | Platform | Webhooks for integrations, public API, advanced reporting |
+| Enrollment | Invite links for private courses, bulk CSV enrollment |
+| Notifications | Email notifications for enrollments, completions, new content |
 
-**Next Steps After Stabilization:**
-- ✅ v3.9.1 Stabilization complete - platform is production-ready
-- 🔜 v3.10 focuses on performance and test coverage before new features
-- 📋 v4.0 Newsletter Generator when platform metrics are healthy
+**Next Steps:**
+- ✅ v4.0 AI Studio Commercialization complete - platform is production-ready with public AI features
+- 🔜 v4.1+ Marketing bundle feature rollout (LinkedIn, Twitter, Newsletter)
+- 📋 v4.5 Stripe subscription integration for monetization
+- 📋 v5.0+ Academic bundle features for researchers
 
 ---
 
