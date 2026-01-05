@@ -248,16 +248,22 @@ Los instructores pueden crear cursos, gestionar contenido y seguir el engagement
   - `/instructor/settings` - Configuración del instructor
   - `/instructor/profile/:id` - Perfil público del instructor
   - `/admin` - Panel de Administración
-  - **AI Studio** (v3.0+):
-    - `/ai-studio` - AI Studio Dashboard
-    - `/ai-studio/knowledge` - Knowledge Base & Style Profile
-    - `/ai-studio/blog` - Blog Generator
+  - **AI Studio** (v4.0):
+    - `/ai-studio` - Public landing page
+    - `/ai-studio/knowledge` - Knowledge Base management (auth required)
+    - `/ai-studio/settings` - Style configuration (auth required)
+    - `/ai-studio/marketing` - Marketing bundle hub
+    - `/ai-studio/marketing/blog` - Blog generator
+    - `/ai-studio/marketing/linkedin` - LinkedIn (coming soon)
+    - `/ai-studio/marketing/twitter` - Twitter (coming soon)
+    - `/ai-studio/marketing/newsletter` - Newsletter (coming soon)
+    - `/ai-studio/academic` - Academic bundle hub (coming soon)
   - `*` - Página 404 Not Found
   
 - **Componentes de Navegación**
-  - Navbar global con estado de auth
+  - Navbar global con estado de auth (incluye AI Studio)
   - Navegación sidebar del instructor
-  - AI Studio sidebar con historial de generaciones
+  - AI Studio sidebar con navegación de bundles y features
   - Navegación breadcrumb
   - Botones de navegación hacia atrás
 
@@ -283,21 +289,42 @@ Los instructores pueden crear cursos, gestionar contenido y seguir el engagement
 
 ---
 
-## 🤖 AI Content Studio (v3.0-v3.9)
+## 🤖 AI Studio - Public Content Platform (v4.0)
 
-### 16. AI Studio Dashboard (v3.9)
-- **Panel de Control Central**
-  - Bienvenida personalizada con nombre del instructor
-  - Tarjetas de acción rápida para Blog Generator y Knowledge Base
-  - Lista de actividad reciente con carga rápida de generaciones
+### Overview
+AI Studio is a public AI-powered content generation platform that helps users create professional marketing and academic content from their knowledge base. Available to any authenticated user with tiered daily limits.
+
+### Architecture
+
+#### Bundle-Based Structure
+- **Marketing Bundle**: Blog posts, LinkedIn posts, Twitter/X threads, newsletters
+- **Academic Bundle**: Literature reviews, paper formatting, paper editing, citation generation
+
+#### Routes
+- `/ai-studio` - Public landing page (no auth required)
+- `/ai-studio/knowledge` - Knowledge Base management (auth required)
+- `/ai-studio/settings` - Style configuration (auth required)
+- `/ai-studio/marketing` - Marketing bundle hub
+- `/ai-studio/marketing/blog` - Blog generator (available)
+- `/ai-studio/marketing/linkedin` - LinkedIn (coming soon)
+- `/ai-studio/marketing/twitter` - Twitter (coming soon)
+- `/ai-studio/marketing/newsletter` - Newsletter (coming soon)
+- `/ai-studio/academic` - Academic bundle hub (coming soon)
+
+### 16. AI Studio Landing (v4.0)
+- **Public Access**
+  - No authentication required to view
+  - Hero section with value proposition
+  - Bundles showcase (Marketing and Academic)
+  - How It Works section
+  - Pricing teaser (free tier promotion)
   
-- **Métricas del Dashboard**
-  - Conteo de documentos activos en Knowledge Base
-  - Estado del Style Profile (Configurado/Pendiente)
-  - Uso diario de generaciones (barra de progreso visual)
-  - Total de generaciones históricas
+- **Call to Actions**
+  - "Try Free - 10 generations/day" for non-authenticated users
+  - Direct access to available features for authenticated users
+  - "Coming Soon" badges for unreleased features
 
-### 17. Knowledge Base (v3.5)
+### 17. Knowledge Base (v3.5, Updated v4.0)
 - **Gestión de Documentos**
   - CRUD completo para documentos de conocimiento
   - Tipos de documento: academic_paper, cv_bio, methodology, writing_sample, syllabus, other
@@ -310,48 +337,51 @@ Los instructores pueden crear cursos, gestionar contenido y seguir el engagement
   - Documentos seleccionables como contexto para generación
   - Context window stuffing (hasta 100K tokens)
   - Priorización por context_role
+  - Global access across all content types
 
-### 18. Style Profile (v3.5)
-- **Configuración de Estilo de Escritura**
+### 18. Style Settings (v4.0 - Simplified)
+- **Configuración Global de Estilo**
   - Tono: formal, conversational, academic, journalistic
-  - Longitud preferida: concise, moderate, detailed
-  - Preferencia de idioma: español, inglés, bilingüe
   - Audiencia objetivo personalizable
+  - Preferencia de idioma: español, inglés, bilingüe
   - Instrucciones custom adicionales
   
-- **Opciones de Contenido**
-  - Incluir ejemplos
-  - Incluir citas/referencias
-  - Incluir llamada a la acción
+- **Simplificaciones desde v3.x**
+  - Removed: Content length preferences (now dynamic per feature)
+  - Removed: Content preferences (citations, examples, CTA)
+  - Single settings page for all content types
+  - Applies globally to all AI generations
 
-### 19. Blog Generator (v3.5-v3.8)
+### 19. Blog Generator (v3.5-v4.0)
 - **Generación de Contenido**
   - Input de tema requerido
   - Instrucciones adicionales opcionales
   - Selección de documentos de contexto
   - Generación via Gemini 2.5 Flash (Lovable AI Gateway)
   - Streaming de contenido en tiempo real
+  - Dynamic tier limit checking
   
-- **Editor de Contenido Dual (v3.7)**
+- **Editor de Contenido Dual**
   - Modo Preview con ReactMarkdown
   - Modo Edit con textarea
   - Toggle entre modos
   - Tracking de cambios no guardados
   
-- **Refinamiento con AI (v3.7)**
+- **Refinamiento con AI**
   - Selección de texto para refinar
   - Botón flotante "Refine with AI"
   - Acciones rápidas: Shorten, Expand, Simplify, Formalize
   - Instrucciones personalizadas
   - Vista diff para comparar original vs refinado
   - Aceptar/Rechazar cambios
+  - Counts toward daily tier limit
 
-- **Exportación (v3.6)**
+- **Exportación**
   - Export a Plain Text (.txt)
   - Export a Markdown (.md)
   - Dropdown menu de opciones
 
-### 20. Generation History (v3.8-v3.9)
+### 20. Generation History (v3.8-v4.0)
 - **Gestión de Historial**
   - FIFO queue de hasta 10 generaciones activas
   - Soft-delete con columna `is_active`
@@ -360,11 +390,83 @@ Los instructores pueden crear cursos, gestionar contenido y seguir el engagement
   - Cargar desde historial al editor
   - Eliminar con confirmación
   
-- **Tracking de Uso Diario (v3.9)**
-  - Límite de 10 generaciones por día
+- **Tracking de Uso Diario (v4.0)**
+  - Dynamic tier-based limits:
+    - Free tier (any authenticated user): 10 generations/day
+    - Instructor tier: 50 generations/day
+    - Future subscription tiers ready in database
   - Conteo independiente del historial visible
   - Barra de progreso visual en sidebar
   - Queries optimizadas con índice compuesto
+  - Counts ALL generations (generate + refine) today
+
+### 21. Bundle Hubs (v4.0)
+- **Marketing Bundle Hub**
+  - Overview of available and coming soon features
+  - Feature cards with status badges
+  - Direct navigation to available features
+  - "Notify Me" modal for coming soon features
+  
+- **Academic Bundle Hub**
+  - Coming soon placeholder
+  - Feature showcase for future academic tools
+  - Literature review, paper formatter, paper editor, citation generator
+  - "Notify Me" functionality for launch notifications
+
+### 22. Coming Soon Features (v4.0)
+- **Placeholder Pages**
+  - Consistent design across all coming soon features
+  - Feature description and benefits
+  - "Notify Me" form for launch notifications
+  - Breadcrumb navigation back to bundle hubs
+  
+- **Planned Features**
+  - LinkedIn Post Generator (v4.1)
+  - X/Twitter Generator with threads (v4.2)
+  - Newsletter Generator (v4.3)
+  - Academic bundle tools (v5.0+)
+
+### Dynamic Tier System (v4.0)
+
+#### Database Schema
+- **ai_subscriptions table**
+  - user_id, ai_bundle (enum), subscription_status (enum)
+  - stripe_subscription_id, stripe_customer_id
+  - current_period_start, current_period_end
+  
+- **ai_tier_limits table**
+  - tier_name, daily_generations_limit
+  - Supports: free, instructor, marketing_pro, academic_pro, ultimate_pro
+
+#### Edge Functions
+- **get-user-tier**: Determines user's current tier based on role and subscriptions
+- **generate-content**: Checks tier limits before generation
+- **refine-content**: Checks tier limits before refinement
+
+#### Tier Limits
+- **Free Tier**: Any authenticated user gets 10 generations/day
+- **Instructor Tier**: Cognitio instructors get 50 generations/day
+- **Future Pro Tiers**: Database ready for subscription-based limits
+
+### Technical Implementation
+
+#### AI Integration
+- Lovable AI Gateway with Gemini 2.5 Flash
+- Context window stuffing (no RAG/vector DB)
+- 1M+ token context window support
+- Strategic document placement by context_role
+
+#### Usage Tracking
+- Counts ALL generations today (ignores is_active for counting)
+- Separate history management (FIFO 10 items with is_active)
+- Optimized queries with composite indexes
+- Real-time limit checking before generation
+
+#### Public Access Strategy
+- Landing page is public (no auth wall)
+- Feature pages require authentication
+- Tiered limits based on user role/subscription
+- Seamless upgrade path to paid tiers (future)
 
 ---
 
@@ -413,31 +515,48 @@ Los instructores pueden crear cursos, gestionar contenido y seguir el engagement
 - URLs de redes sociales
 - Timestamps
 
-### AI Studio - Knowledge Base (v3.5)
-- instructor_knowledge_base:
-  - id, instructor_id, title, content
-  - document_type (enum), context_role (enum)
-  - content_tokens, tags[], is_active
-  - created_at, updated_at
+### AI Studio - Database Schema (v4.0)
 
-### AI Studio - Style Profile (v3.5)
-- instructor_style_profile:
-  - id, instructor_id
-  - tone, preferred_length, language_preference
-  - target_audience, custom_instructions
-  - include_citations, include_call_to_action, use_examples
-  - setup_completed
-  - created_at, updated_at
+#### user_knowledge_base (renamed from instructor_knowledge_base)
+- id, user_id (was instructor_id)
+- title, content
+- document_type (enum), context_role (enum)
+- content_tokens, tags[], is_active
+- created_at, updated_at
 
-### AI Studio - Generation History (v3.8-v3.9)
-- ai_generation_history:
-  - id, instructor_id, content_type
-  - topic, generated_content
-  - additional_instructions, selected_document_ids[]
-  - status (enum), error_message
-  - model_used, input_tokens, output_tokens, total_tokens
-  - is_active (para soft-delete y tracking)
-  - created_at, updated_at
+#### user_style_profile (renamed from instructor_style_profile)
+- id, user_id (was instructor_id)
+- tone (enum: formal, conversational, academic, journalistic)
+- language_preference (enum: español, inglés, bilingüe)
+- target_audience, custom_instructions
+- setup_completed
+- created_at, updated_at
+
+#### ai_generation_history
+- id, user_id, content_type
+- topic, generated_content
+- additional_instructions, selected_document_ids[]
+- status (enum), error_message
+- model_used, input_tokens, output_tokens, total_tokens
+- is_active (para soft-delete y tracking)
+- created_at, updated_at
+
+#### ai_subscriptions (v4.0)
+- id, user_id
+- ai_bundle (enum: marketing, academic, both)
+- subscription_status (enum: active, canceled, past_due, trialing)
+- stripe_subscription_id, stripe_customer_id
+- current_period_start, current_period_end
+- created_at, updated_at
+
+#### ai_tier_limits (v4.0)
+- tier_name (primary key): free, instructor, marketing_pro, academic_pro, ultimate_pro
+- daily_generations_limit
+- created_at, updated_at
+
+#### Enums (v4.0)
+- ai_bundle: marketing, academic, both
+- subscription_status: active, canceled, past_due, trialing
 
 ---
 
