@@ -129,8 +129,57 @@ serve(async (req) => {
         // This is an AI subscription checkout (new flow)
         else if (bundle && userId) {
           logStep("AI subscription checkout detected", { userId, bundle });
-          // Subscription will be created by customer.subscription.created event
-          // We just log here for tracking
+
+          // Retrieve the full subscription from Stripe to get all details
+          const subscriptionId = session.subscription as string;
+          if (!subscriptionId) {
+            logStep("ERROR: No subscription ID on checkout session", { sessionId: session.id });
+            break;
+          }
+
+          const stripeSubscription = await stripe.subscriptions.retrieve(subscriptionId);
+          logStep("Retrieved subscription from checkout session", { 
+            subscriptionId: stripeSubscription.id,
+            status: stripeSubscription.status 
+          });
+
+          // Map Stripe status to our status enum
+          const statusMap: Record<string, string> = {
+            active: "active",
+            trialing: "trialing",
+            past_due: "past_due",
+            canceled: "canceled",
+            unpaid: "past_due",
+            incomplete: "past_due",
+            incomplete_expired: "canceled",
+            paused: "canceled",
+          };
+
+          const mappedStatus = statusMap[stripeSubscription.status] || "canceled";
+
+          // Upsert subscription record
+          const { error: upsertError } = await supabaseAdmin
+            .from("ai_subscriptions")
+            .upsert({
+              user_id: userId,
+              bundle: bundle as "marketing" | "academic" | "pro",
+              status: mappedStatus,
+              stripe_subscription_id: stripeSubscription.id,
+              stripe_customer_id: stripeSubscription.customer as string,
+              current_period_start: new Date(stripeSubscription.current_period_start * 1000).toISOString(),
+              current_period_end: new Date(stripeSubscription.current_period_end * 1000).toISOString(),
+              cancel_at_period_end: stripeSubscription.cancel_at_period_end,
+              updated_at: new Date().toISOString(),
+            }, {
+              onConflict: "user_id",
+            });
+
+          if (upsertError) {
+            logStep("ERROR: Failed to upsert subscription from checkout", { error: upsertError.message });
+            return new Response(`Failed to record subscription: ${upsertError.message}`, { status: 500 });
+          }
+
+          logStep("Subscription recorded successfully from checkout", { userId, bundle, status: mappedStatus });
         } else {
           logStep("Checkout session without courseId or bundle", { metadata: session.metadata });
         }
