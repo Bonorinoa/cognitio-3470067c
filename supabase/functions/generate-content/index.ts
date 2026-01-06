@@ -31,7 +31,7 @@ async function getUserTierAndLimit(supabase: any, userId: string): Promise<{ tie
     .from("ai_subscriptions")
     .select("bundle, status")
     .eq("user_id", userId)
-    .eq("status", "active")
+    .in("status", ["active", "trialing"])
     .order("created_at", { ascending: false })
     .limit(1)
     .maybeSingle();
