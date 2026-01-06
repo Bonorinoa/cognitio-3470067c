@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Discussion } from "@/hooks/useDiscussions";
 import { useAITutorSettings } from "@/hooks/useAITutor";
 import ThreadList from "./ThreadList";
@@ -31,6 +31,11 @@ export default function DiscussionTab({
   const { t } = useTranslation();
   const [selectedThread, setSelectedThread] = useState<Discussion | null>(null);
   const { settings: aiSettings } = useAITutorSettings();
+
+  // Reset selected thread when chapter changes
+  useEffect(() => {
+    setSelectedThread(null);
+  }, [chapterId]);
 
   const isInstructorOrOwner = userId === instructorId;
 

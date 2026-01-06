@@ -45,7 +45,7 @@ serve(async (req) => {
     }
     log("User authenticated");
 
-    const { discussion_id, chapter_id, video_timestamp_seconds, user_message, stream } = await req.json();
+    const { discussion_id, chapter_id, video_timestamp_seconds, user_message, stream, language } = await req.json();
 
     // Parallel fetch: settings, usage count, discussion, chapter, and recent replies
     log("Starting parallel DB queries");
@@ -167,7 +167,16 @@ serve(async (req) => {
       `${r.is_ai_generated ? "AI" : "Student"}: ${r.content}`
     ).join("\n") || "";
 
+    // Determine response language
+    const langInstruction = language === "es" 
+      ? "IMPORTANT: Respond in Spanish (Español)." 
+      : language === "en" 
+        ? "IMPORTANT: Respond in English."
+        : "IMPORTANT: Respond in the same language as the student's message.";
+
     const fullPrompt = `${systemPrompt}
+
+${langInstruction}
 
 ${contextParts.length > 0 ? `Context:\n${contextParts.join("\n")}\n` : ""}
 Original Question: ${discussion?.title}
