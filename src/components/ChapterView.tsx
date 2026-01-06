@@ -1,8 +1,10 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Loader2, Check, ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Loader2, Check, ArrowLeft, ChevronLeft, ChevronRight, MessageSquare } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import ChapterList from "@/components/ChapterList";
+import DiscussionTab from "@/components/discussion/DiscussionTab";
 
 const VideoPlayer = lazy(() => import("@/components/VideoPlayer"));
 
@@ -27,6 +29,7 @@ interface ChapterViewProps {
     id: string;
     title: string;
     image_url: string | null;
+    instructor_id: string;
   };
   chapters: Chapter[];
   currentChapter: Chapter | undefined;
@@ -38,6 +41,8 @@ interface ChapterViewProps {
   onSelectChapter: (chapterId: string) => void;
   onMarkComplete: () => void;
   onBackToOverview: () => void;
+  userId?: string;
+  isAuthenticated?: boolean;
 }
 
 const ChapterView = ({
@@ -52,8 +57,11 @@ const ChapterView = ({
   onSelectChapter,
   onMarkComplete,
   onBackToOverview,
+  userId,
+  isAuthenticated = false,
 }: ChapterViewProps) => {
   const { t } = useTranslation();
+  const [activeTab, setActiveTab] = useState("content");
 
   const hasAccess = hasPurchased || isOwner;
   const currentIndex = chapters.findIndex((ch) => ch.id === currentChapterId);
@@ -146,17 +154,42 @@ const ChapterView = ({
             </Button>
           )}
 
-          {/* Chapter Description (if available) */}
-          {currentChapter?.description && (
-            <div className="pt-4 border-t border-border">
-              <h3 className="font-semibold text-foreground mb-2">
-                {t("coursePage.chapterDescription")}
-              </h3>
-              <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
-                {currentChapter.description}
-              </p>
-            </div>
-          )}
+          {/* Tabs for Content / Discussion */}
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-6">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="content">{t("coursePage.aboutCourse")}</TabsTrigger>
+              <TabsTrigger value="discussion" className="gap-2">
+                <MessageSquare className="h-4 w-4" />
+                {t("coursePage.discussionTab")}
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="content" className="mt-4">
+              {currentChapter?.description ? (
+                <div>
+                  <h3 className="font-semibold text-foreground mb-2">
+                    {t("coursePage.chapterDescription")}
+                  </h3>
+                  <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
+                    {currentChapter.description}
+                  </p>
+                </div>
+              ) : (
+                <p className="text-muted-foreground">{t("coursePage.noDescription")}</p>
+              )}
+            </TabsContent>
+
+            <TabsContent value="discussion" className="mt-4">
+              <DiscussionTab
+                chapterId={currentChapterId}
+                courseId={course.id}
+                instructorId={course.instructor_id}
+                hasAccess={hasAccess}
+                isAuthenticated={isAuthenticated}
+                userId={userId}
+              />
+            </TabsContent>
+          </Tabs>
         </div>
 
         {/* Chapters List Sidebar */}

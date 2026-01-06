@@ -13,7 +13,6 @@ export interface AITutorSettings {
 }
 
 export function useAITutorSettings() {
-  // Fetch AI tutor settings
   const { data: settings, isLoading } = useQuery({
     queryKey: ["ai-tutor-settings"],
     queryFn: async () => {
@@ -70,7 +69,6 @@ export function useAITutorSettings() {
 export function useAITutorUsage(chapterId: string | undefined) {
   const { user } = useAuth();
 
-  // Fetch user's AI tutor usage for this chapter
   const { data: usage = 0, isLoading } = useQuery({
     queryKey: ["ai-tutor-usage", user?.id, chapterId],
     queryFn: async () => {

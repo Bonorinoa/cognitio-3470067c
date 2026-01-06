@@ -6,8 +6,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
-import { Loader2, Shield, UserPlus, UserMinus, Search, Users } from "lucide-react";
+import { Loader2, Shield, UserPlus, UserMinus, Search, Users, Bot, RotateCcw } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import type { Database } from "@/integrations/supabase/types";
 
@@ -20,15 +24,40 @@ interface UserWithRoles {
   roles: AppRole[];
 }
 
+const DEFAULT_SYSTEM_PROMPT = `You are CognitioAI, a Socratic learning assistant for the Cognitio platform. Your role is to help students understand course material by guiding them to discover answers themselves rather than giving direct answers.
+
+Guidelines:
+- Ask clarifying questions to understand what the student is struggling with
+- Break down complex concepts into simpler parts
+- Use analogies and examples relevant to the course content
+- Reference the video transcript when helpful
+- Encourage critical thinking
+- Be supportive and patient
+- Keep responses concise and focused`;
+
+const AI_MODELS = [
+  { value: "google/gemini-2.5-flash", label: "Gemini 2.5 Flash (Recommended)" },
+  { value: "google/gemini-2.5-pro", label: "Gemini 2.5 Pro" },
+  { value: "google/gemini-2.5-flash-lite", label: "Gemini 2.5 Flash Lite" },
+  { value: "openai/gpt-5-mini", label: "GPT-5 Mini" },
+  { value: "openai/gpt-5-nano", label: "GPT-5 Nano" },
+];
+
 const AdminPanel = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const queryClient = useQueryClient();
+
+  // AI Tutor Settings State
+  const [aiEnabled, setAiEnabled] = useState(true);
+  const [aiSystemPrompt, setAiSystemPrompt] = useState(DEFAULT_SYSTEM_PROMPT);
+  const [aiModel, setAiModel] = useState("google/gemini-2.5-flash");
+  const [aiTemperature, setAiTemperature] = useState(0.7);
+  const [aiMaxTokens, setAiMaxTokens] = useState(1024);
 
   // Fetch all profiles with their roles
   const { data: users, isLoading } = useQuery({
     queryKey: ["admin-users"],
     queryFn: async () => {
-      // Fetch all profiles
       const { data: profiles, error: profilesError } = await supabase
         .from("profiles")
         .select("id, email, full_name")
@@ -36,14 +65,12 @@ const AdminPanel = () => {
 
       if (profilesError) throw profilesError;
 
-      // Fetch all user roles
       const { data: userRoles, error: rolesError } = await supabase
         .from("user_roles")
         .select("user_id, role");
 
       if (rolesError) throw rolesError;
 
-      // Map roles to users
       const usersWithRoles: UserWithRoles[] = (profiles || []).map((profile) => ({
         id: profile.id,
         email: profile.email,
@@ -54,6 +81,65 @@ const AdminPanel = () => {
       }));
 
       return usersWithRoles;
+    },
+  });
+
+  // Fetch AI Tutor Settings
+  const { isLoading: isLoadingSettings } = useQuery({
+    queryKey: ["ai-tutor-settings-admin"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("platform_settings")
+        .select("key, value")
+        .in("key", [
+          "ai_tutor_enabled",
+          "ai_tutor_system_prompt",
+          "ai_tutor_model",
+          "ai_tutor_temperature",
+          "ai_tutor_max_tokens",
+        ]);
+
+      if (error) throw error;
+
+      const settingsMap = data.reduce((acc, { key, value }) => {
+        acc[key] = value;
+        return acc;
+      }, {} as Record<string, unknown>);
+
+      setAiEnabled(settingsMap.ai_tutor_enabled as boolean ?? true);
+      setAiSystemPrompt(settingsMap.ai_tutor_system_prompt as string ?? DEFAULT_SYSTEM_PROMPT);
+      setAiModel(settingsMap.ai_tutor_model as string ?? "google/gemini-2.5-flash");
+      setAiTemperature(settingsMap.ai_tutor_temperature as number ?? 0.7);
+      setAiMaxTokens(settingsMap.ai_tutor_max_tokens as number ?? 1024);
+
+      return settingsMap;
+    },
+  });
+
+  // Save AI Tutor Settings
+  const saveAISettings = useMutation({
+    mutationFn: async () => {
+      const settings = [
+        { key: "ai_tutor_enabled", value: aiEnabled },
+        { key: "ai_tutor_system_prompt", value: aiSystemPrompt },
+        { key: "ai_tutor_model", value: aiModel },
+        { key: "ai_tutor_temperature", value: aiTemperature },
+        { key: "ai_tutor_max_tokens", value: aiMaxTokens },
+      ];
+
+      for (const setting of settings) {
+        const { error } = await supabase
+          .from("platform_settings")
+          .upsert({ key: setting.key, value: setting.value as unknown as Database["public"]["Tables"]["platform_settings"]["Insert"]["value"] }, { onConflict: "key" });
+        if (error) throw error;
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["ai-tutor-settings"] });
+      toast({ title: "AI Tutor settings saved successfully" });
+    },
+    onError: (error: Error) => {
+      toast({ title: "Failed to save settings", description: error.message, variant: "destructive" });
     },
   });
 
@@ -74,10 +160,9 @@ const AdminPanel = () => {
     },
   });
 
-  // Remove instructor role (handles both "teacher" and "instructor" for migration)
+  // Remove instructor role
   const removeInstructor = useMutation({
     mutationFn: async (userId: string) => {
-      // Remove both "teacher" and "instructor" roles to handle legacy data
       const { error } = await supabase
         .from("user_roles")
         .delete()
@@ -100,7 +185,6 @@ const AdminPanel = () => {
       user.full_name?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Check for both "teacher" and "instructor" roles for backward compatibility
   const isInstructor = (user: UserWithRoles) => 
     user.roles.includes("teacher") || user.roles.includes("instructor");
   const isAdmin = (user: UserWithRoles) => user.roles.includes("admin");
@@ -108,17 +192,159 @@ const AdminPanel = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-8 space-y-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground flex items-center gap-2">
             <Shield className="h-8 w-8 text-primary" />
             Admin Panel
           </h1>
           <p className="text-muted-foreground mt-2">
-            Manage users and assign instructor roles
+            Manage users, roles, and platform settings
           </p>
         </div>
 
+        {/* AI Tutor Settings */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Bot className="h-5 w-5" />
+              AI Tutor Settings
+            </CardTitle>
+            <CardDescription>
+              Configure the AI tutor that helps students in course discussions
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {isLoadingSettings ? (
+              <div className="flex items-center justify-center py-8">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              </div>
+            ) : (
+              <>
+                {/* Enable/Disable Toggle */}
+                <div className="flex items-center justify-between p-4 rounded-lg border border-border bg-muted/50">
+                  <div>
+                    <Label htmlFor="ai-enabled" className="text-base font-medium">
+                      AI Tutor Enabled
+                    </Label>
+                    <p className="text-sm text-muted-foreground">
+                      When disabled, students cannot use @CognitioAI in discussions
+                    </p>
+                  </div>
+                  <Switch
+                    id="ai-enabled"
+                    checked={aiEnabled}
+                    onCheckedChange={setAiEnabled}
+                  />
+                </div>
+
+                {!aiEnabled && (
+                  <div className="p-4 rounded-lg border border-destructive bg-destructive/10 text-destructive">
+                    ⚠️ AI Tutor is currently disabled for all users
+                  </div>
+                )}
+
+                {/* System Prompt */}
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="system-prompt">System Prompt</Label>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setAiSystemPrompt(DEFAULT_SYSTEM_PROMPT)}
+                    >
+                      <RotateCcw className="h-4 w-4 mr-1" />
+                      Reset to Default
+                    </Button>
+                  </div>
+                  <Textarea
+                    id="system-prompt"
+                    value={aiSystemPrompt}
+                    onChange={(e) => setAiSystemPrompt(e.target.value)}
+                    rows={8}
+                    placeholder="Enter the system prompt for the AI tutor..."
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    This prompt defines how the AI tutor behaves and responds to students
+                  </p>
+                </div>
+
+                {/* Model Selection */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="ai-model">AI Model</Label>
+                    <Select value={aiModel} onValueChange={setAiModel}>
+                      <SelectTrigger id="ai-model">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {AI_MODELS.map((model) => (
+                          <SelectItem key={model.value} value={model.value}>
+                            {model.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="temperature">
+                      Temperature: {aiTemperature.toFixed(1)}
+                    </Label>
+                    <Input
+                      id="temperature"
+                      type="range"
+                      min="0"
+                      max="1"
+                      step="0.1"
+                      value={aiTemperature}
+                      onChange={(e) => setAiTemperature(parseFloat(e.target.value))}
+                      className="cursor-pointer"
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      Lower = more focused, Higher = more creative
+                    </p>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="max-tokens">Max Tokens</Label>
+                    <Input
+                      id="max-tokens"
+                      type="number"
+                      min="256"
+                      max="4096"
+                      step="256"
+                      value={aiMaxTokens}
+                      onChange={(e) => setAiMaxTokens(parseInt(e.target.value) || 1024)}
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      Maximum response length (256-4096)
+                    </p>
+                  </div>
+                </div>
+
+                {/* Save Button */}
+                <div className="flex justify-end">
+                  <Button
+                    onClick={() => saveAISettings.mutate()}
+                    disabled={saveAISettings.isPending}
+                  >
+                    {saveAISettings.isPending ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Saving...
+                      </>
+                    ) : (
+                      "Save AI Settings"
+                    )}
+                  </Button>
+                </div>
+              </>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* User Management */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
