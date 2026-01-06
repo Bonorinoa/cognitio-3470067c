@@ -5,34 +5,6 @@ All notable changes to Cognitio will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased] - 2026-01-06
-
-### Security
-- **Removed `.env` from repository**: Sensitive environment variables no longer tracked in git
-- **Removed duplicate lockfile**: Removed `bun.lockb` from repository (using npm as primary package manager)
-
-### Fixed
-- **Discussion Upvoting Logic**: Fixed three bugs in `ThreadView.tsx`
-  - Vote state now correctly uses `null` instead of `0` for "no vote" state
-  - Rollback logic properly restores `null` when there was no previous vote
-  - Memoized `getUserVotes` with `useCallback` to prevent infinite re-render loops
-- **Translation Keys**: Updated resource translation keys to match exact specifications
-  - Spanish: "No hay recursos disponibles para este capítulo" (was "Aún no hay recursos para este capítulo")
-  - English: "No resources available for this chapter" (was "No resources for this chapter yet")
-  - Updated all resource type labels for consistency
-
-### Changed
-- **Meta Tags Update**: Updated `index.html` with proper Cognitio branding
-  - Changed description from "Lovable Generated Project" to proper Spanish description
-  - Updated author from "Lovable" to "Cognitio"
-  - Removed TODO comments
-  - Updated Open Graph and Twitter card meta tags
-- **`.gitignore` Update**: Added `bun.lockb` to ignore list (using npm package-lock.json)
-
-### Documentation
-- **README.md**: Added documentation for discussion features, AI tutor (5 calls/chapter limit), and resources
-- **TESTING.md**: Added comprehensive test scenarios for discussion features including upvoting, AI tutor integration, and thread management
-
 ## [4.0.3] - 2026-01-06
 
 ### Added

@@ -15,9 +15,6 @@ dist-ssr
 .env.local
 .env*.local
 
-# Bun lockfile (using npm instead)
-bun.lockb
-
 # Test artifacts
 test-results/
 playwright-report/

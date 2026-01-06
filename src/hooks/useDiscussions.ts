@@ -1,7 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { useCallback } from "react";
 
 export interface Discussion {
   id: string;
@@ -264,7 +263,7 @@ export function useDiscussionVotes() {
   const queryClient = useQueryClient();
 
   // Get user's votes for a set of targets
-  const getUserVotes = useCallback(async (targetType: "discussion" | "reply", targetIds: string[]) => {
+  const getUserVotes = async (targetType: "discussion" | "reply", targetIds: string[]) => {
     if (!user || targetIds.length === 0) return {};
 
     const { data, error } = await supabase
@@ -280,7 +279,7 @@ export function useDiscussionVotes() {
     }
 
     return data.reduce((acc, v) => ({ ...acc, [v.target_id]: v.vote }), {} as Record<string, number>);
-  }, [user]);
+  };
 
   // Vote on a discussion or reply
   const vote = useMutation({

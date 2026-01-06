@@ -107,7 +107,7 @@ export default function ThreadView({
     // Optimistic update
     setUserVotes((prev) => ({
       ...prev,
-      [replyId]: prevVote === voteValue ? null : voteValue,
+      [replyId]: prevVote === voteValue ? 0 : voteValue,
     }));
     
     try {
@@ -121,7 +121,7 @@ export default function ThreadView({
       // Rollback on error
       setUserVotes((prev) => ({
         ...prev,
-        [replyId]: prevVote,
+        [replyId]: prevVote || 0,
       }));
     }
   };

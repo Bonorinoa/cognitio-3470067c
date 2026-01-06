@@ -739,12 +739,12 @@
     "backToHome": "Volver al Inicio"
   },
   "resources": {
-    "empty": "No hay recursos disponibles para este capítulo",
+    "empty": "Aún no hay recursos para este capítulo",
     "pdf": "Documento PDF",
-    "link": "Enlace externo",
-    "notebook": "Notebook de código",
-    "video": "Video adicional",
-    "other": "Otro recurso"
+    "link": "Enlace Externo",
+    "notebook": "Cuaderno de Código",
+    "video": "Video",
+    "other": "Recurso"
   },
   "common": {
     "soon": "Próximamente",

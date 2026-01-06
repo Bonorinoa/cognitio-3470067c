@@ -503,48 +503,6 @@ it('has no accessibility violations', async () => {
 - [Testing Best Practices](https://testingjavascript.com/)
 - [React Testing Guide](https://react.dev/learn/testing)
 
-## Discussion Feature Tests
-
-### Overview
-The discussion system allows users to ask questions, post replies, and vote on content within each chapter.
-
-### Test Scenarios
-
-#### Upvoting/Downvoting
-| Scenario | Expected Behavior | Test Priority |
-|----------|-------------------|---------------|
-| User upvotes a discussion | `upvote_count` increases by 1, UI shows active state (primary color) | High |
-| User clicks upvote again (toggle off) | Count decreases by 1, button returns to neutral state | High |
-| User changes from upvote to downvote | Count changes by -2 total (removes +1, adds -1) | High |
-| Non-authenticated user tries to vote | Button is disabled, no mutation fires | High |
-| Rapid double-click on vote button | Only one vote is registered (no race condition) | Medium |
-| Page refresh after voting | Vote state persists correctly from database | High |
-
-#### AI Tutor Integration
-| Scenario | Expected Behavior | Test Priority |
-|----------|-------------------|---------------|
-| User @mentions AI in reply | AI response generated, usage count incremented | High |
-| User at 5/5 usage for a chapter | AI button disabled, shows limit message | High |
-| User switches to different chapter | Usage counter shows 0/5 for new chapter | Medium |
-| Instructor at 5/5 usage | Same restriction applies (no role override) | High |
-
-**Note**: The 5-call AI tutor limit is intentionally per chapter and applies to all users regardless of role (students, instructors, admins) to encourage critical thinking.
-
-#### Discussion Threads
-| Scenario | Expected Behavior | Test Priority |
-|----------|-------------------|---------------|
-| Create new discussion | Discussion appears in chapter discussion list | High |
-| Reply to discussion | Reply appears in thread, reply count increments | High |
-| Mark answer as accepted | Answer shows accepted badge, moves to top | Medium |
-| Sort discussions by "new" | Discussions ordered by creation time descending | Medium |
-| Sort discussions by "top" | Discussions ordered by upvote count with time decay | Medium |
-
-### Implementation Notes
-- Vote state uses `null` for "no vote" (not `0`)
-- `getUserVotes` function is memoized with `useCallback` to prevent infinite re-renders
-- Optimistic updates with rollback on error
-- AI tutor usage is tracked per chapter, per user
-
 ## Maintenance
 
 ### Regular Tasks
