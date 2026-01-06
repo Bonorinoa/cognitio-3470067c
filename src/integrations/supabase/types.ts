@@ -449,6 +449,7 @@ export type Database = {
           id: string
           is_accepted_answer: boolean | null
           is_ai_generated: boolean | null
+          parent_reply_id: string | null
           upvote_count: number | null
           user_id: string
         }
@@ -459,6 +460,7 @@ export type Database = {
           id?: string
           is_accepted_answer?: boolean | null
           is_ai_generated?: boolean | null
+          parent_reply_id?: string | null
           upvote_count?: number | null
           user_id: string
         }
@@ -469,6 +471,7 @@ export type Database = {
           id?: string
           is_accepted_answer?: boolean | null
           is_ai_generated?: boolean | null
+          parent_reply_id?: string | null
           upvote_count?: number | null
           user_id?: string
         }
@@ -478,6 +481,13 @@ export type Database = {
             columns: ["discussion_id"]
             isOneToOne: false
             referencedRelation: "discussions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "discussion_replies_parent_reply_id_fkey"
+            columns: ["parent_reply_id"]
+            isOneToOne: false
+            referencedRelation: "discussion_replies"
             referencedColumns: ["id"]
           },
         ]

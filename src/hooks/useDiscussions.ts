@@ -31,6 +31,7 @@ export interface DiscussionReply {
   is_accepted_answer: boolean;
   upvote_count: number;
   created_at: string;
+  parent_reply_id: string | null;
   author?: {
     full_name: string | null;
     avatar_url: string | null;

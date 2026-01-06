@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -38,7 +39,8 @@ import {
   ChevronDown, 
   Pencil,
   Loader2,
-  FolderOpen
+  FolderOpen,
+  Upload
 } from "lucide-react";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/lib/errorUtils";
@@ -81,10 +83,13 @@ export default function ChapterResourceManager({
   chapterTitle,
   isNewChapter = false 
 }: ChapterResourceManagerProps) {
+  const { user } = useAuth();
   const queryClient = useQueryClient();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingResource, setEditingResource] = useState<ChapterResource | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
   
   // Form state
   const [title, setTitle] = useState("");
@@ -223,6 +228,58 @@ export default function ChapterResourceManager({
     setDialogOpen(true);
   };
 
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file || !user) return;
+
+    // Validate file size (max 20MB)
+    if (file.size > 20 * 1024 * 1024) {
+      toast.error("File size must be less than 20MB");
+      return;
+    }
+
+    setIsUploading(true);
+    try {
+      // Generate unique file path
+      const fileExt = file.name.split(".").pop();
+      const fileName = `${user.id}/${chapterId}/${Date.now()}.${fileExt}`;
+
+      // Upload to resources bucket
+      const { error: uploadError } = await supabase.storage
+        .from("resources")
+        .upload(fileName, file);
+
+      if (uploadError) throw uploadError;
+
+      // Get public URL
+      const { data: urlData } = supabase.storage
+        .from("resources")
+        .getPublicUrl(fileName);
+
+      // Auto-detect resource type
+      let detectedType = "other";
+      if (fileExt?.toLowerCase() === "pdf") detectedType = "pdf";
+      else if (["ipynb", "py", "js", "ts"].includes(fileExt?.toLowerCase() || "")) detectedType = "notebook";
+      else if (["mp4", "webm", "mov"].includes(fileExt?.toLowerCase() || "")) detectedType = "video";
+
+      // Pre-fill form with uploaded file info
+      setTitle(file.name.replace(/\.[^/.]+$/, "")); // Remove extension for title
+      setUrl(urlData.publicUrl);
+      setResourceType(detectedType);
+      setDialogOpen(true);
+      
+      toast.success("File uploaded! Complete the form to add the resource.");
+    } catch (error) {
+      toast.error(getErrorMessage(error));
+    } finally {
+      setIsUploading(false);
+      // Reset file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }
+  };
+
   const handleSubmit = () => {
     if (!title.trim() || !url.trim()) {
       toast.error("Title and URL are required");
@@ -341,86 +398,112 @@ export default function ChapterResourceManager({
               );
             })}
 
-            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-              <DialogTrigger asChild>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="w-full h-8 text-xs"
-                  onClick={() => handleOpenDialog()}
-                >
-                  <Plus className="h-3 w-3 mr-1" />
-                  Add Resource
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>
-                    {editingResource ? "Edit Resource" : "Add Resource"}
-                  </DialogTitle>
-                  <DialogDescription>
-                    Add supplementary materials for "{chapterTitle}"
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="space-y-4 py-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="resource-title">Title</Label>
-                    <Input
-                      id="resource-title"
-                      placeholder="e.g., Lecture Slides"
-                      value={title}
-                      onChange={(e) => setTitle(e.target.value)}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="resource-type">Type</Label>
-                    <Select value={resourceType} onValueChange={setResourceType}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {resourceTypes.map((type) => (
-                          <SelectItem key={type.value} value={type.value}>
-                            <span className="flex items-center gap-2">
-                              <type.icon className="h-4 w-4" />
-                              {type.label}
-                            </span>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="resource-url">URL</Label>
-                    <Input
-                      id="resource-url"
-                      placeholder="https://..."
-                      value={url}
-                      onChange={(e) => setUrl(e.target.value)}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="resource-description">Description (optional)</Label>
-                    <Textarea
-                      id="resource-description"
-                      placeholder="Brief description of this resource"
-                      value={description}
-                      onChange={(e) => setDescription(e.target.value)}
-                      className="min-h-[80px]"
-                    />
-                  </div>
-                </div>
-                <DialogFooter>
-                  <Button variant="outline" onClick={() => setDialogOpen(false)}>
-                    Cancel
+            {/* Hidden file input */}
+            <input
+              ref={fileInputRef}
+              type="file"
+              className="hidden"
+              accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.ipynb,.py,.js,.ts,.txt,.md,.mp4,.webm,.mov"
+              onChange={handleFileUpload}
+            />
+
+            {/* Action buttons */}
+            <div className="flex gap-2">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="flex-1 h-8 text-xs"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={isUploading}
+              >
+                {isUploading ? (
+                  <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+                ) : (
+                  <Upload className="h-3 w-3 mr-1" />
+                )}
+                Upload File
+              </Button>
+              <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="flex-1 h-8 text-xs"
+                    onClick={() => handleOpenDialog()}
+                  >
+                    <Plus className="h-3 w-3 mr-1" />
+                    Add Link
                   </Button>
-                  <Button onClick={handleSubmit} disabled={isMutating}>
-                    {isMutating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    {editingResource ? "Save Changes" : "Add Resource"}
-                  </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>
+                      {editingResource ? "Edit Resource" : "Add Resource"}
+                    </DialogTitle>
+                    <DialogDescription>
+                      Add supplementary materials for "{chapterTitle}"
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4 py-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="resource-title">Title</Label>
+                      <Input
+                        id="resource-title"
+                        placeholder="e.g., Lecture Slides"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="resource-type">Type</Label>
+                      <Select value={resourceType} onValueChange={setResourceType}>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {resourceTypes.map((type) => (
+                            <SelectItem key={type.value} value={type.value}>
+                              <span className="flex items-center gap-2">
+                                <type.icon className="h-4 w-4" />
+                                {type.label}
+                              </span>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="resource-url">URL</Label>
+                      <Input
+                        id="resource-url"
+                        placeholder="https://..."
+                        value={url}
+                        onChange={(e) => setUrl(e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="resource-description">Description (optional)</Label>
+                      <Textarea
+                        id="resource-description"
+                        placeholder="Brief description of this resource"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        className="min-h-[80px]"
+                      />
+                    </div>
+                  </div>
+                  <DialogFooter>
+                    <Button variant="outline" onClick={() => setDialogOpen(false)}>
+                      Cancel
+                    </Button>
+                    <Button onClick={handleSubmit} disabled={isMutating}>
+                      {isMutating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                      {editingResource ? "Save Changes" : "Add Resource"}
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            </div>
           </>
         )}
       </CollapsibleContent>

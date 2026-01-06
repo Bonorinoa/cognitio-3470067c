@@ -239,16 +239,49 @@ export default function ThreadView({
             </CardContent>
           </Card>
         ) : (
-          replies.map((reply) => (
-            <ReplyCard
-              key={reply.id}
-              reply={reply}
-              userVote={userVotes[reply.id] || null}
-              isAuthenticated={isAuthenticated}
-              onVote={(vote) => handleVoteReply(reply.id, vote)}
-              t={t}
-            />
-          ))
+          (() => {
+            // Group replies: AI responses are linked to their parent prompts
+            const parentReplies = replies.filter((r) => !r.parent_reply_id);
+            const childRepliesMap = replies.reduce((acc, r) => {
+              if (r.parent_reply_id) {
+                acc[r.parent_reply_id] = r;
+              }
+              return acc;
+            }, {} as Record<string, DiscussionReply>);
+
+            return parentReplies.map((reply) => {
+              const aiChild = childRepliesMap[reply.id];
+              // If this reply has an AI child, render them as a unified card
+              if (aiChild) {
+                const combinedVoteCount = reply.upvote_count + aiChild.upvote_count;
+                // Vote on the AI reply (child) as the primary target
+                const effectiveVote = userVotes[aiChild.id] || userVotes[reply.id] || null;
+                return (
+                  <AIExchangeCard
+                    key={reply.id}
+                    promptReply={reply}
+                    aiReply={aiChild}
+                    combinedVoteCount={combinedVoteCount}
+                    userVote={effectiveVote}
+                    isAuthenticated={isAuthenticated}
+                    onVote={(vote) => handleVoteReply(aiChild.id, vote)}
+                    t={t}
+                  />
+                );
+              }
+              // Otherwise render as a regular reply
+              return (
+                <ReplyCard
+                  key={reply.id}
+                  reply={reply}
+                  userVote={userVotes[reply.id] || null}
+                  isAuthenticated={isAuthenticated}
+                  onVote={(vote) => handleVoteReply(reply.id, vote)}
+                  t={t}
+                />
+              );
+            });
+          })()
         )}
       </div>
 
@@ -334,6 +367,104 @@ function ReplyCard({
             <p className="text-sm text-muted-foreground whitespace-pre-wrap">
               {reply.content}
             </p>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+interface AIExchangeCardProps {
+  promptReply: DiscussionReply;
+  aiReply: DiscussionReply;
+  combinedVoteCount: number;
+  userVote: number | null;
+  isAuthenticated: boolean;
+  onVote: (vote: 1 | -1) => void;
+  t: (key: string) => string;
+}
+
+function AIExchangeCard({
+  promptReply,
+  aiReply,
+  combinedVoteCount,
+  userVote,
+  isAuthenticated,
+  onVote,
+  t,
+}: AIExchangeCardProps) {
+  return (
+    <Card className="border-primary/20 bg-primary/5">
+      <CardContent className="py-4">
+        <div className="flex items-start gap-4">
+          {/* Single voting control for the pair */}
+          <div className="flex flex-col items-center gap-1">
+            <Button
+              variant="ghost"
+              size="icon"
+              className={`h-7 w-7 ${userVote === 1 ? "text-primary" : ""}`}
+              onClick={() => onVote(1)}
+              disabled={!isAuthenticated}
+            >
+              <ArrowUp className="h-3 w-3" />
+            </Button>
+            <span className="text-xs font-medium">{combinedVoteCount}</span>
+            <Button
+              variant="ghost"
+              size="icon"
+              className={`h-7 w-7 ${userVote === -1 ? "text-destructive" : ""}`}
+              onClick={() => onVote(-1)}
+              disabled={!isAuthenticated}
+            >
+              <ArrowDown className="h-3 w-3" />
+            </Button>
+          </div>
+
+          {/* Content */}
+          <div className="flex-1 space-y-4">
+            {/* User's prompt */}
+            <div>
+              <div className="flex items-center gap-2 mb-2 flex-wrap">
+                <Avatar className="h-5 w-5">
+                  <AvatarImage src={promptReply.author?.avatar_url || undefined} />
+                  <AvatarFallback>
+                    {promptReply.author?.full_name?.charAt(0) || "?"}
+                  </AvatarFallback>
+                </Avatar>
+                <span className="text-sm font-medium">
+                  {promptReply.author?.full_name || t("discussion.anonymous")}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  {formatRelativeTime(promptReply.created_at)}
+                </span>
+              </div>
+              <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+                {promptReply.content}
+              </p>
+            </div>
+
+            {/* Divider */}
+            <div className="border-t border-border/50" />
+
+            {/* AI response */}
+            <div>
+              <div className="flex items-center gap-2 mb-2 flex-wrap">
+                <Avatar className="h-5 w-5 bg-primary/20">
+                  <AvatarFallback className="bg-primary/20 text-primary text-xs">AI</AvatarFallback>
+                </Avatar>
+                <span className="text-sm font-medium text-primary">CognitioAI</span>
+                <Badge variant="outline" className="gap-1 text-xs">
+                  <Bot className="h-3 w-3" />
+                  AI
+                </Badge>
+                <span className="text-xs text-muted-foreground">
+                  {formatRelativeTime(aiReply.created_at)}
+                </span>
+              </div>
+              <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+                {aiReply.content}
+              </p>
+            </div>
           </div>
         </div>
       </CardContent>

@@ -1,5 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   Dialog,
   DialogContent,
@@ -19,8 +21,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Loader2, AlertCircle } from "lucide-react";
+import { Loader2, AlertCircle, Upload } from "lucide-react";
 import { estimateTokens, formatTokenCount, TOKEN_LIMITS } from "@/lib/tokenUtils";
+import { toast } from "sonner";
+import { getErrorMessage } from "@/lib/errorUtils";
 import type { 
   DocumentFormData, 
   DocumentType, 
@@ -59,8 +63,11 @@ export default function DocumentEditor({
   isSaving,
 }: DocumentEditorProps) {
   const { t } = useTranslation();
+  const { user } = useAuth();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [formData, setFormData] = useState<DocumentFormData>(DEFAULT_FORM);
   const [error, setError] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
 
   const isEditing = !!document;
   const tokenCount = estimateTokens(formData.content);
@@ -89,6 +96,57 @@ export default function DocumentEditor({
       // Auto-suggest context role based on document type
       context_role: isEditing ? prev.context_role : getDefaultContextRole(value),
     }));
+  };
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file || !user) return;
+
+    // Validate file size (max 5MB for text files)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("File size must be less than 5MB");
+      return;
+    }
+
+    // Only accept text-based files
+    const textExtensions = [".txt", ".md", ".csv", ".json", ".xml", ".html", ".py", ".js", ".ts"];
+    const fileName = file.name.toLowerCase();
+    const isTextFile = textExtensions.some(ext => fileName.endsWith(ext));
+
+    if (!isTextFile && file.type !== "text/plain") {
+      toast.error("Please upload a text-based file (.txt, .md, .csv, etc.)");
+      return;
+    }
+
+    setIsUploading(true);
+    try {
+      // Read file content
+      const content = await file.text();
+      
+      // Auto-detect document type based on file extension
+      let detectedType: DocumentType = "other";
+      if (fileName.endsWith(".md")) detectedType = "writing_sample";
+      else if (fileName.endsWith(".py") || fileName.endsWith(".js") || fileName.endsWith(".ts")) detectedType = "methodology";
+      
+      // Pre-fill form with file content
+      setFormData(prev => ({
+        ...prev,
+        title: file.name.replace(/\.[^/.]+$/, ""), // Remove extension for title
+        content: content,
+        document_type: detectedType,
+        context_role: getDefaultContextRole(detectedType),
+      }));
+      
+      toast.success("File content loaded! Review and save the document.");
+    } catch (err) {
+      toast.error(getErrorMessage(err));
+    } finally {
+      setIsUploading(false);
+      // Reset file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }
   };
 
   const handleSubmit = async () => {
@@ -128,6 +186,36 @@ export default function DocumentEditor({
         </DialogHeader>
 
         <div className="space-y-4 py-4">
+          {/* File Upload Button */}
+          {!isEditing && (
+            <div className="flex items-center gap-2">
+              <input
+                ref={fileInputRef}
+                type="file"
+                className="hidden"
+                accept=".txt,.md,.csv,.json,.xml,.html,.py,.js,.ts"
+                onChange={handleFileUpload}
+              />
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={isUploading}
+                className="gap-2"
+              >
+                {isUploading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Upload className="h-4 w-4" />
+                )}
+                {t("knowledgeBase.uploadFile", "Upload Text File")}
+              </Button>
+              <span className="text-xs text-muted-foreground">
+                {t("knowledgeBase.uploadHint", "Supports .txt, .md, .csv, .json, .py, .js, .ts")}
+              </span>
+            </div>
+          )}
+
           {/* Title */}
           <div className="space-y-2">
             <Label htmlFor="doc-title">{t("knowledgeBase.docTitle")}</Label>
