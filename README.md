@@ -51,6 +51,9 @@ Cognitio no es un marketplace abierto. Es un "Instructor Studio" curado: LMS lig
 - Perfiles públicos de instructor con bio, credenciales, redes sociales
 - Analytics de instructor con métricas reales
 - Servicios de consultoría de instructor
+- **Sistema de Discusiones por Capítulo**: Preguntas, respuestas, upvoting/downvoting
+- **AI Tutor Integrado**: Límite de 5 llamadas por capítulo por usuario (independiente del rol)
+- **Recursos por Capítulo**: PDFs, enlaces externos, notebooks, videos adicionales
 - Sistema de diseño con tema claro cálido
 - Internacionalización completa (Español/Inglés)
 - Security audit complete: 0 vulnerabilidades críticas
