@@ -5,6 +5,26 @@ All notable changes to Cognitio will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.0.2] - 2026-01-06
+
+### Changed
+- **Course Visibility Simplified**: Removed "unlisted" visibility option
+  - UI now only shows "Public" and "Private" options
+  - Existing unlisted courses migrated to private
+  - RLS policies updated to remove unlisted references
+  - Simplified enrollment logic for private courses only
+
+### Fixed
+- **Subscription Tier Recognition**: `trialing` status now correctly recognized
+  - Updated `generate-content` and `refine-content` edge functions
+  - Users on trial subscriptions now get their full tier benefits
+
+### Added
+- **Subscription Tier Tests**: Automated tests for tier resolution logic
+  - Tests for active, trialing, canceled status handling
+  - Tests for tier limit alignment (Marketing: 200, Academic: 200, Pro: 500)
+  - Tests for instructor role fallback
+
 ## [4.0.1] - 2026-01-05
 
 ### Changed
