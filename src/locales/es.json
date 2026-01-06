@@ -358,7 +358,9 @@
     "errorTitle": "Por favor ingresa un título para el documento",
     "errorContent": "Por favor ingresa contenido del documento",
     "errorTokenLimit": "El documento excede el límite de tokens",
-    "errorSave": "Error al guardar el documento"
+    "errorSave": "Error al guardar documento",
+    "uploadFile": "Subir Archivo de Texto",
+    "uploadHint": "Soporta .txt, .md, .csv, .json, .py, .js, .ts"
   },
   "instructorDashboard": {
     "title": "Panel de Instructor",

@@ -220,21 +220,23 @@ Respond in a Socratic manner, guiding the student toward understanding. Use the 
     const aiContent = aiData.choices?.[0]?.message?.content || "I apologize, I couldn't generate a response.";
 
     // First, insert user's prompt as a regular reply (for transparency)
-    const { error: promptError } = await supabaseClient
+    const { data: promptReply, error: promptError } = await supabaseClient
       .from("discussion_replies")
       .insert({
         discussion_id,
         user_id: user.id,
         content: user_message,
         is_ai_generated: false,
-      });
+      })
+      .select()
+      .single();
 
     if (promptError) {
       console.error("Error inserting user prompt:", promptError);
-      // Continue anyway - the AI reply is more important
+      throw promptError;
     }
 
-    // Then insert AI reply
+    // Then insert AI reply with parent_reply_id pointing to user's prompt
     const { data: newReply, error: replyError } = await supabaseClient
       .from("discussion_replies")
       .insert({
@@ -242,6 +244,7 @@ Respond in a Socratic manner, guiding the student toward understanding. Use the 
         user_id: user.id,
         content: aiContent,
         is_ai_generated: true,
+        parent_reply_id: promptReply.id,
       })
       .select()
       .single();

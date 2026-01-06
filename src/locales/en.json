@@ -353,7 +353,9 @@
     "errorTitle": "Please enter a document title",
     "errorContent": "Please enter document content",
     "errorTokenLimit": "Document exceeds the token limit",
-    "errorSave": "Failed to save document"
+    "errorSave": "Failed to save document",
+    "uploadFile": "Upload Text File",
+    "uploadHint": "Supports .txt, .md, .csv, .json, .py, .js, .ts"
   },
   "instructorDashboard": {
     "title": "Instructor Dashboard",
