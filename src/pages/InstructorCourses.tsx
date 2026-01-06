@@ -20,7 +20,7 @@ interface Course {
   price: number;
   is_published: boolean;
   is_featured: boolean;
-  visibility: "public" | "private" | "unlisted";
+  visibility: "public" | "private";
   category: string | null;
   updated_at: string;
   chapter_count: number;
@@ -67,7 +67,7 @@ const InstructorCourses = () => {
           return {
             ...course,
             is_featured: course.is_featured || false,
-            visibility: course.visibility || "public",
+            visibility: (course.visibility === "unlisted" ? "private" : course.visibility) as "public" | "private",
             chapter_count: chapterCount || 0,
             student_count: studentCount || 0,
           };
@@ -214,12 +214,6 @@ const InstructorCourses = () => {
                         <Badge variant="outline" className="text-xs">
                           <Lock className="mr-1 h-3 w-3" />
                           {t("instructorCourses.private")}
-                        </Badge>
-                      )}
-                      {course.visibility === "unlisted" && (
-                        <Badge variant="outline" className="text-xs">
-                          <LinkIcon className="mr-1 h-3 w-3" />
-                          {t("instructorCourses.unlisted")}
                         </Badge>
                       )}
                       <Badge variant={course.is_published ? "default" : "secondary"}>

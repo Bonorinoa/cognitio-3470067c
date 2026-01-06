@@ -39,7 +39,7 @@ const CreateCourse = () => {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("");
-  const [visibility, setVisibility] = useState<"public" | "private" | "unlisted">("public");
+  const [visibility, setVisibility] = useState<"public" | "private">("public");
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>("");
   const [isUploadingImage, setIsUploadingImage] = useState(false);
@@ -316,7 +316,7 @@ const CreateCourse = () => {
                 </div>
                 <div className="space-y-2">
                   <Label>{t("createCourse.visibility")}</Label>
-                  <Select value={visibility} onValueChange={(value: "public" | "private" | "unlisted") => setVisibility(value)}>
+                  <Select value={visibility} onValueChange={(value: "public" | "private") => setVisibility(value)}>
                     <SelectTrigger className="bg-background border-border">
                       <SelectValue placeholder={t("createCourse.selectVisibility")} />
                     </SelectTrigger>
@@ -325,12 +325,6 @@ const CreateCourse = () => {
                         <div className="flex flex-col">
                           <span>{t("createCourse.public")}</span>
                           <span className="text-xs text-muted-foreground">{t("createCourse.publicDesc")}</span>
-                        </div>
-                      </SelectItem>
-                      <SelectItem value="unlisted">
-                        <div className="flex flex-col">
-                          <span>{t("createCourse.unlisted")}</span>
-                          <span className="text-xs text-muted-foreground">{t("createCourse.unlistedDesc")}</span>
                         </div>
                       </SelectItem>
                       <SelectItem value="private">
