@@ -1,4 +1,4 @@
-import { useState, forwardRef } from "react";
+import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
@@ -15,7 +15,7 @@ import {
 import { useUserRole } from "@/hooks/useUserRole";
 import { SlidingPillIndicator } from "@/components/ui/sliding-pill-indicator";
 
-const Navbar = forwardRef<HTMLElement, React.HTMLAttributes<HTMLElement>>((props, ref) => {
+const Navbar = () => {
   const { t } = useTranslation();
   const { user, signOut, isLoading } = useAuth();
   const { isInstructor, isAdmin } = useUserRole();
@@ -40,7 +40,7 @@ const Navbar = forwardRef<HTMLElement, React.HTMLAttributes<HTMLElement>>((props
   ];
 
   return (
-    <nav ref={ref} {...props} className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-card/95 backdrop-blur-sm">
+    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-card/95 backdrop-blur-sm">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2">
@@ -165,8 +165,6 @@ const Navbar = forwardRef<HTMLElement, React.HTMLAttributes<HTMLElement>>((props
       )}
     </nav>
   );
-});
-
-Navbar.displayName = "Navbar";
+};
 
 export default Navbar;
