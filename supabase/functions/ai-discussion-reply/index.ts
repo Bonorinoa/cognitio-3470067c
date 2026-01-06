@@ -45,7 +45,7 @@ serve(async (req) => {
     }
     log("User authenticated");
 
-    const { discussion_id, chapter_id, video_timestamp_seconds, user_message, stream, language } = await req.json();
+    const { discussion_id, chapter_id, video_timestamp_seconds, user_message, language } = await req.json();
 
     // Parallel fetch: settings, usage count, discussion, chapter, and recent replies
     log("Starting parallel DB queries");
@@ -204,132 +204,6 @@ Respond in a Socratic manner, guiding the student toward understanding. Use the 
       console.error("Error inserting user prompt:", promptError);
       throw promptError;
     }
-
-    // If streaming is requested, stream the response
-    if (stream) {
-      log("Starting streaming response");
-      
-      const encoder = new TextEncoder();
-      const readable = new ReadableStream({
-        async start(controller) {
-          try {
-            // Send initial event with prompt reply ID
-            controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: "start", promptReplyId: promptReply.id })}\n\n`));
-            
-            // Call AI with streaming
-            const aiResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-              method: "POST",
-              headers: {
-                Authorization: `Bearer ${lovableApiKey}`,
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                model,
-                messages: [{ role: "user", content: fullPrompt }],
-                temperature,
-                max_tokens: maxTokens,
-                stream: true,
-              }),
-            });
-
-            if (!aiResponse.ok) {
-              const errorText = await aiResponse.text();
-              console.error("AI Gateway error:", aiResponse.status, errorText);
-              controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: "error", error: "AI service error" })}\n\n`));
-              controller.close();
-              return;
-            }
-
-            const reader = aiResponse.body?.getReader();
-            if (!reader) {
-              controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: "error", error: "No response body" })}\n\n`));
-              controller.close();
-              return;
-            }
-
-            let fullContent = "";
-            const decoder = new TextDecoder();
-
-            while (true) {
-              const { done, value } = await reader.read();
-              if (done) break;
-
-              const chunk = decoder.decode(value);
-              const lines = chunk.split("\n");
-
-              for (const line of lines) {
-                if (line.startsWith("data: ")) {
-                  const data = line.slice(6);
-                  if (data === "[DONE]") continue;
-                  
-                  try {
-                    const parsed = JSON.parse(data);
-                    const delta = parsed.choices?.[0]?.delta?.content;
-                    if (delta) {
-                      fullContent += delta;
-                      controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: "delta", content: delta })}\n\n`));
-                    }
-                  } catch {
-                    // Skip invalid JSON lines
-                  }
-                }
-              }
-            }
-
-            log("Stream complete, saving AI reply");
-            
-            // Save the complete AI reply
-            const { data: newReply, error: replyError } = await supabaseClient
-              .from("discussion_replies")
-              .insert({
-                discussion_id,
-                user_id: user.id,
-                content: fullContent || "I apologize, I couldn't generate a response.",
-                is_ai_generated: true,
-                parent_reply_id: promptReply.id,
-              })
-              .select()
-              .single();
-
-            if (replyError) {
-              console.error("Error inserting AI reply:", replyError);
-            }
-
-            // Update flags and record usage
-            await Promise.all([
-              supabaseClient.from("discussions").update({ has_ai_response: true }).eq("id", discussion_id),
-              supabaseClient.from("ai_tutor_usage").insert({ user_id: user.id, chapter_id, discussion_id }),
-              supabaseClient.from("ai_usage_logs").insert({ user_id: user.id, content_type: "discussion_assist", model_used: model }),
-            ]);
-
-            // Send completion event
-            controller.enqueue(encoder.encode(`data: ${JSON.stringify({ 
-              type: "done", 
-              reply: newReply,
-              remaining: AI_TUTOR_LIMIT - usageCount - 1 
-            })}\n\n`));
-            
-            controller.close();
-            log("Streaming complete");
-          } catch (error) {
-            console.error("Streaming error:", error);
-            controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: "error", error: "Streaming failed" })}\n\n`));
-            controller.close();
-          }
-        },
-      });
-
-      return new Response(readable, {
-        headers: {
-          ...corsHeaders,
-          "Content-Type": "text/event-stream",
-          "Cache-Control": "no-cache",
-          "Connection": "keep-alive",
-        },
-      });
-    }
-
-    // Non-streaming path (original behavior)
     log("Calling AI gateway (non-streaming)");
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 30000);

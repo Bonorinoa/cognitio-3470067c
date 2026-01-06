@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { ArrowLeft, ArrowUp, ArrowDown, Clock, Bot, CheckCircle, Check, Loader2 } from "lucide-react";
+import { ArrowLeft, ArrowUp, ArrowDown, Clock, Bot, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -54,7 +54,7 @@ export default function ThreadView({
   const { vote } = useDiscussionVotes();
   const { settings: aiSettings } = useAITutorSettings();
   const { used, remaining, canUseAI } = useAITutorUsage(discussion.chapter_id);
-  const { generateReplyStreaming, streamingState, isGenerating } = useAITutorReply();
+  const { generateReply, isGenerating } = useAITutorReply();
   
   const [userVotes, setUserVotes] = useState<Record<string, number>>({});
   const [discussionVote, setDiscussionVote] = useState<number | null>(null);
@@ -128,8 +128,8 @@ export default function ThreadView({
 
   const handleReply = async (content: string, mentionsAI: boolean) => {
     if (mentionsAI && aiSettings.enabled && canUseAI) {
-      // Generate AI reply with streaming
-      await generateReplyStreaming({
+      // Generate AI reply (non-streaming)
+      await generateReply.mutateAsync({
         discussionId: discussion.id,
         chapterId: discussion.chapter_id,
         videoTimestampSeconds: discussion.video_timestamp_seconds || undefined,
@@ -232,7 +232,7 @@ export default function ThreadView({
               <Skeleton key={i} className="h-32 w-full" />
             ))}
           </div>
-        ) : replies.length === 0 && !streamingState.isStreaming ? (
+        ) : replies.length === 0 ? (
           <Card>
             <CardContent className="py-8 text-center text-muted-foreground">
               {t("discussion.noReplies")}
@@ -283,14 +283,6 @@ export default function ThreadView({
                 );
               });
             })()}
-            
-            {/* Streaming AI response */}
-            {streamingState.isStreaming && (
-              <StreamingAICard 
-                streamingContent={streamingState.streamingContent}
-                t={t}
-              />
-            )}
           </>
         )}
       </div>
@@ -475,55 +467,6 @@ function AIExchangeCard({
                 {aiReply.content}
               </p>
             </div>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
-
-interface StreamingAICardProps {
-  streamingContent: string;
-  t: (key: string) => string;
-}
-
-function StreamingAICard({ streamingContent, t }: StreamingAICardProps) {
-  return (
-    <Card className="border-primary/20 bg-primary/5 animate-pulse">
-      <CardContent className="py-4">
-        <div className="flex items-start gap-4">
-          {/* Placeholder vote area */}
-          <div className="flex flex-col items-center gap-1 opacity-50">
-            <div className="h-7 w-7" />
-            <span className="text-xs font-medium">—</span>
-            <div className="h-7 w-7" />
-          </div>
-
-          {/* Content */}
-          <div className="flex-1">
-            <div className="flex items-center gap-2 mb-2 flex-wrap">
-              <Avatar className="h-5 w-5 bg-primary/20">
-                <AvatarFallback className="bg-primary/20 text-primary text-xs">AI</AvatarFallback>
-              </Avatar>
-              <span className="text-sm font-medium text-primary">CognitioAI</span>
-              <Badge variant="outline" className="gap-1 text-xs">
-                <Bot className="h-3 w-3" />
-                AI
-              </Badge>
-              <Loader2 className="h-3 w-3 animate-spin text-primary" />
-            </div>
-            
-            {streamingContent ? (
-              <p className="text-sm text-muted-foreground whitespace-pre-wrap">
-                {streamingContent}
-                <span className="inline-block w-2 h-4 bg-primary/50 animate-pulse ml-0.5" />
-              </p>
-            ) : (
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Loader2 className="h-4 w-4 animate-spin" />
-                <span>{t("discussion.generatingAI")}</span>
-              </div>
-            )}
           </div>
         </div>
       </CardContent>
