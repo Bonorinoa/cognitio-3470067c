@@ -1,7 +1,4 @@
 {
-  "discussion": {
-    "aiTakesTime": "This may take a few seconds..."
-  },
   "nav": {
     "home": "Home",
     "courses": "Courses",
@@ -229,7 +226,8 @@
     "aiCallsRemaining": "{{count}} AI calls left",
     "aiWillRespond": "AI will respond",
     "aiLimitReached": "AI limit reached",
-    "generatingAI": "Generating AI response...",
+    "generatingAI": "CognitioAI is thinking...",
+    "aiTakesTime": "This may take a few seconds",
     "mentionHint": "Mention",
     "seekToTimestamp": "Jump to {{time}}"
   },
