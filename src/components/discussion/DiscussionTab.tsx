@@ -15,6 +15,7 @@ interface DiscussionTabProps {
   isAuthenticated: boolean;
   userId?: string;
   onSeekVideo?: (seconds: number) => void;
+  currentVideoTime?: number;
 }
 
 export default function DiscussionTab({
@@ -25,6 +26,7 @@ export default function DiscussionTab({
   isAuthenticated,
   userId,
   onSeekVideo,
+  currentVideoTime,
 }: DiscussionTabProps) {
   const { t } = useTranslation();
   const [selectedThread, setSelectedThread] = useState<Discussion | null>(null);
@@ -63,6 +65,7 @@ export default function DiscussionTab({
         hasAccess={hasAccess}
         isAuthenticated={isAuthenticated}
         onSelectThread={setSelectedThread}
+        currentVideoTime={currentVideoTime}
       />
     </div>
   );

@@ -231,7 +231,9 @@
     "aiCallsRemaining": "{{count}} llamadas IA restantes",
     "aiWillRespond": "IA responderá",
     "aiLimitReached": "Límite de IA alcanzado",
-    "generatingAI": "Generando respuesta IA..."
+    "generatingAI": "Generando respuesta IA...",
+    "mentionHint": "Mencionar",
+    "seekToTimestamp": "Ir a {{time}}"
   },
   "courseCard": {
     "chapters": "capítulos",

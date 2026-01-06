@@ -15,6 +15,7 @@ interface ThreadListProps {
   hasAccess: boolean;
   isAuthenticated: boolean;
   onSelectThread: (discussion: Discussion) => void;
+  currentVideoTime?: number;
 }
 
 function formatTimestamp(seconds: number): string {
@@ -43,6 +44,7 @@ export default function ThreadList({
   hasAccess,
   isAuthenticated,
   onSelectThread,
+  currentVideoTime,
 }: ThreadListProps) {
   const { t } = useTranslation();
   const [sortBy, setSortBy] = useState<SortOption>("new");
@@ -190,6 +192,7 @@ export default function ThreadList({
         onOpenChange={setIsCreateOpen}
         onSubmit={handleCreateThread}
         isSubmitting={createDiscussion.isPending}
+        currentVideoTime={currentVideoTime}
       />
     </div>
   );

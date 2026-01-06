@@ -225,7 +225,9 @@
     "aiCallsRemaining": "{{count}} AI calls left",
     "aiWillRespond": "AI will respond",
     "aiLimitReached": "AI limit reached",
-    "generatingAI": "Generating AI response..."
+    "generatingAI": "Generating AI response...",
+    "mentionHint": "Mention",
+    "seekToTimestamp": "Jump to {{time}}"
   },
   "courseCard": {
     "chapters": "chapters",
