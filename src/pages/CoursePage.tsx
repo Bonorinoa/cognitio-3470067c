@@ -1,27 +1,14 @@
-import { useState, useEffect, useRef, useCallback, lazy, Suspense } from "react";
-import { useParams, useSearchParams, Link, useNavigate } from "react-router-dom";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
-import ChapterList from "@/components/ChapterList";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import CourseOverview from "@/components/CourseOverview";
+import ChapterView from "@/components/ChapterView";
 import { Skeleton } from "@/components/ui/skeleton";
-import { BookOpen, Clock, Users, Star, Check, ShoppingCart, Loader2, LogIn } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
 import { getErrorMessage } from "@/lib/errorUtils";
-
-// Lazy load heavy Mux player component
-const VideoPlayer = lazy(() => import("@/components/VideoPlayer"));
-
-const VideoPlayerFallback = () => (
-  <div className="aspect-video w-full rounded-lg bg-muted flex items-center justify-center">
-    <Loader2 className="h-8 w-8 animate-spin text-primary" />
-  </div>
-);
 
 interface Chapter {
   id: string;
@@ -30,6 +17,7 @@ interface Chapter {
   is_free_preview: boolean | null;
   position: number;
   mux_playback_id: string | null;
+  description: string | null;
 }
 
 interface Course {
@@ -48,11 +36,14 @@ interface Course {
   };
 }
 
+type ViewMode = "overview" | "chapter";
+
 const CoursePage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const { user, session, isLoading: authLoading } = useAuth();
+  const [viewMode, setViewMode] = useState<ViewMode>("overview");
   const [currentChapterId, setCurrentChapterId] = useState<string | null>(null);
   const [isCheckoutLoading, setIsCheckoutLoading] = useState(false);
   const [isMarkingComplete, setIsMarkingComplete] = useState(false);
@@ -62,7 +53,7 @@ const CoursePage = () => {
   // Verify access with exponential backoff polling
   const verifyAccessWithRetry = useCallback(async () => {
     const maxAttempts = 5;
-    const baseDelay = 2000; // Start with 2 seconds
+    const baseDelay = 2000;
     
     setIsVerifyingAccess(true);
     verifyAttemptRef.current = 0;
@@ -72,14 +63,13 @@ const CoursePage = () => {
       const { data } = await refetchPurchase();
       
       if (data) {
-        return true; // Access confirmed
+        return true;
       }
       
       if (verifyAttemptRef.current >= maxAttempts) {
-        return false; // Max attempts reached
+        return false;
       }
       
-      // Exponential backoff: 2s, 4s, 8s, 16s
       const delay = baseDelay * Math.pow(2, verifyAttemptRef.current - 1);
       await new Promise(resolve => setTimeout(resolve, delay));
       return poll();
@@ -122,6 +112,7 @@ const CoursePage = () => {
           chapters (
             id,
             title,
+            description,
             duration_seconds,
             is_free_preview,
             position,
@@ -189,18 +180,15 @@ const CoursePage = () => {
     enabled: !!id && !!user && !!course,
   });
 
+  // Set initial chapter when entering chapter view
   useEffect(() => {
-    if (course?.chapters?.length && !currentChapterId) {
+    if (course?.chapters?.length && !currentChapterId && viewMode === "chapter") {
       setCurrentChapterId(course.chapters[0].id);
     }
-  }, [course, currentChapterId]);
+  }, [course, currentChapterId, viewMode]);
 
   const currentChapter = course?.chapters?.find((c) => c.id === currentChapterId);
-  
-  // Check if user is the course owner (instructor)
   const isOwner = user?.id === course?.instructor_id;
-  
-  // Check if current chapter is completed
   const isCurrentChapterCompleted = userProgress?.some(
     p => p.chapter_id === currentChapterId && p.is_completed
   ) ?? false;
@@ -226,14 +214,11 @@ const CoursePage = () => {
       if (error) throw error;
       
       if (data?.url) {
-        // Check if we're in an iframe (Lovable Preview)
         const inIframe = window.self !== window.top;
         
         if (inIframe) {
-          // In iframe: open in new tab to avoid navigation issues
           const newWindow = window.open(data.url, "_blank", "noopener,noreferrer");
           if (!newWindow) {
-            // Popup blocked, fall back to same-tab navigation
             toast.info("Opening checkout in same tab...");
             window.location.assign(data.url);
           } else {
@@ -241,7 +226,6 @@ const CoursePage = () => {
             setIsCheckoutLoading(false);
           }
         } else {
-          // Normal browser: use same-tab redirect
           window.location.assign(data.url);
         }
       } else {
@@ -293,22 +277,46 @@ const CoursePage = () => {
     return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
+  const handleStartLearning = () => {
+    if (course?.chapters?.length) {
+      setCurrentChapterId(course.chapters[0].id);
+      setViewMode("chapter");
+    }
+  };
+
+  const handleSelectChapter = (chapterId: string) => {
+    setCurrentChapterId(chapterId);
+    setViewMode("chapter");
+  };
+
+  const handleBackToOverview = () => {
+    setViewMode("overview");
+  };
+
+  // Calculate total duration
+  const totalDuration = course?.chapters?.reduce((acc, ch) => acc + (ch.duration_seconds || 0), 0) || 0;
+  const totalMinutes = Math.floor(totalDuration / 60);
+  const totalHours = Math.floor(totalMinutes / 60);
+  const remainingMinutes = totalMinutes % 60;
+  const formattedTotalDuration = totalHours > 0 
+    ? `${totalHours}h ${remainingMinutes}m` 
+    : `${totalMinutes}m`;
+
   if (courseLoading) {
     return (
       <div className="min-h-screen bg-background">
         <Navbar />
         <main className="pt-16">
-          <div className="bg-card border-b border-border">
-            <div className="container mx-auto px-4 py-6">
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="lg:col-span-2">
-                  <Skeleton className="aspect-video w-full rounded-lg" />
-                  <Skeleton className="h-8 w-3/4 mt-4" />
-                  <Skeleton className="h-4 w-1/2 mt-2" />
-                </div>
-                <div className="lg:col-span-1">
-                  <Skeleton className="h-64 w-full rounded-lg" />
-                </div>
+          <div className="container mx-auto px-4 py-8">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <div className="lg:col-span-2">
+                <Skeleton className="aspect-video w-full rounded-xl" />
+                <Skeleton className="h-10 w-3/4 mt-6" />
+                <Skeleton className="h-4 w-1/2 mt-4" />
+                <Skeleton className="h-32 w-full mt-8" />
+              </div>
+              <div className="lg:col-span-1">
+                <Skeleton className="h-80 w-full rounded-lg" />
               </div>
             </div>
           </div>
@@ -337,206 +345,46 @@ const CoursePage = () => {
     duration: formatDuration(ch.duration_seconds),
     isPreview: ch.is_free_preview || false,
     isCompleted: userProgress?.find(p => p.chapter_id === ch.id && p.is_completed) ? true : false,
+    mux_playback_id: ch.mux_playback_id,
+    description: ch.description,
   }));
-
-  const features = [
-    `${course.chapters.length} chapters of content`,
-    "Lifetime access",
-    "Certificate of completion",
-    "Mobile and TV access",
-  ];
 
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
 
       <main className="pt-16">
-        {/* Video Section */}
-        <div className="bg-card border-b border-border">
-          <div className="container mx-auto px-4 py-6">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Video Player */}
-              <div className="lg:col-span-2">
-                <Suspense fallback={<VideoPlayerFallback />}>
-                  <VideoPlayer
-                    playbackId={currentChapter?.mux_playback_id || undefined}
-                    poster={course.image_url || "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1200"}
-                    title={currentChapter?.title}
-                  />
-                </Suspense>
-                {/* Mark Complete Button - Only show if user has access and is not owner */}
-                {(hasPurchased && !isOwner) && currentChapter && (
-                  <div className="mt-4">
-                    <Button
-                      onClick={handleMarkComplete}
-                      disabled={isMarkingComplete || isCurrentChapterCompleted}
-                      variant={isCurrentChapterCompleted ? "outline" : "default"}
-                      className="w-full"
-                    >
-                      {isMarkingComplete ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Marking...
-                        </>
-                      ) : isCurrentChapterCompleted ? (
-                        <>
-                          <Check className="mr-2 h-4 w-4" />
-                          Completed
-                        </>
-                      ) : (
-                        <>
-                          <Check className="mr-2 h-4 w-4" />
-                          Mark as Complete
-                        </>
-                      )}
-                    </Button>
-                  </div>
-                )}
-                <div className="mt-4">
-                  <h1 className="text-2xl font-bold text-foreground mb-2">
-                    {course.title}
-                  </h1>
-                  <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
-                    <span className="flex items-center gap-1">
-                      <Star className="h-4 w-4 text-accent-foreground fill-accent-foreground" />
-                      4.8
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <BookOpen className="h-4 w-4" />
-                      {course.chapters.length} chapters
-                    </span>
-                    {course.category && (
-                      <Badge variant="secondary">{course.category}</Badge>
-                    )}
-                    <Link 
-                      to={`/instructor/profile/${course.instructor_id}`}
-                      className="hover:text-primary transition-colors underline-offset-2 hover:underline"
-                    >
-                      by {course.instructor?.full_name || course.instructor?.email || "Instructor"}
-                    </Link>
-                  </div>
-                </div>
-              </div>
-
-              {/* Sidebar */}
-              <div className="lg:col-span-1">
-                <Card className="sticky top-20 border-border bg-card">
-                  <CardContent className="p-6">
-                    {isOwner ? (
-                      <Badge className="w-full justify-center py-2 mb-6 bg-primary/20 text-primary border-primary/30">
-                        <Check className="mr-2 h-4 w-4" />
-                        Your Course
-                      </Badge>
-                    ) : !hasPurchased ? (
-                      <>
-                        <div className="text-center mb-6">
-                          <span className="text-4xl font-bold text-foreground">
-                            ${course.price}
-                          </span>
-                        </div>
-                        {isVerifyingAccess ? (
-                          <Button size="lg" className="w-full mb-4" disabled>
-                            <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                            Verifying access...
-                          </Button>
-                        ) : !user && !authLoading ? (
-                          <>
-                            <Button
-                              size="lg"
-                              className="w-full mb-4"
-                              onClick={() => navigate(`/auth?redirect=/course/${id}`)}
-                            >
-                              <LogIn className="mr-2 h-5 w-5" />
-                              Sign in to purchase
-                            </Button>
-                            <p className="text-sm text-muted-foreground text-center mb-6">
-                              Sign in or create an account to purchase
-                            </p>
-                          </>
-                        ) : (
-                          <>
-                            <Button
-                              size="lg"
-                              className="w-full mb-4"
-                              onClick={handlePurchase}
-                              disabled={isCheckoutLoading}
-                            >
-                              {isCheckoutLoading ? (
-                                <>
-                                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                                  Processing...
-                                </>
-                              ) : (
-                                <>
-                                  <ShoppingCart className="mr-2 h-5 w-5" />
-                                  Purchase Course
-                                </>
-                              )}
-                            </Button>
-                            <p className="text-sm text-muted-foreground text-center mb-6">
-                              30-day money-back guarantee
-                            </p>
-                          </>
-                        )}
-                        <Separator className="mb-6" />
-                      </>
-                    ) : (
-                      <Badge className="w-full justify-center py-2 mb-6 bg-accent/20 text-accent-foreground border-accent/30">
-                        <Check className="mr-2 h-4 w-4" />
-                        You have access to this course
-                      </Badge>
-                    )}
-
-                    <h3 className="font-semibold text-foreground mb-4">
-                      This course includes:
-                    </h3>
-                    <ul className="space-y-3">
-                      {features.map((feature, index) => (
-                        <li
-                          key={index}
-                          className="flex items-center gap-2 text-sm text-muted-foreground"
-                        >
-                          <Check className="h-4 w-4 text-accent-foreground" />
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Course Content */}
-        <div className="container mx-auto px-4 py-8">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Description */}
-            <div className="lg:col-span-2 space-y-8">
-              <div>
-                <h2 className="text-xl font-bold text-foreground mb-4">
-                  About this course
-                </h2>
-                <p className="text-muted-foreground leading-relaxed">
-                  {course.description || "No description available."}
-                </p>
-              </div>
-            </div>
-
-            {/* Chapters List */}
-            <div className="lg:col-span-1">
-              <h2 className="text-xl font-bold text-foreground mb-4">
-                Course Content
-              </h2>
-              <ChapterList
-                chapters={chaptersForList}
-                currentChapterId={currentChapterId || ""}
-                onSelectChapter={setCurrentChapterId}
-                hasAccess={hasPurchased || isOwner || false}
-              />
-            </div>
-          </div>
-        </div>
+        {viewMode === "overview" ? (
+          <CourseOverview
+            course={course}
+            chapters={chaptersForList}
+            totalDuration={formattedTotalDuration}
+            isOwner={isOwner}
+            hasPurchased={hasPurchased || false}
+            isVerifyingAccess={isVerifyingAccess}
+            isCheckoutLoading={isCheckoutLoading}
+            authLoading={authLoading}
+            user={user}
+            onPurchase={handlePurchase}
+            onStartLearning={handleStartLearning}
+            onSelectChapter={handleSelectChapter}
+            navigateToAuth={() => navigate(`/auth?redirect=/course/${id}`)}
+          />
+        ) : (
+          <ChapterView
+            course={course}
+            chapters={chaptersForList}
+            currentChapter={chaptersForList.find(ch => ch.id === currentChapterId)}
+            currentChapterId={currentChapterId || ""}
+            isOwner={isOwner}
+            hasPurchased={hasPurchased || false}
+            isMarkingComplete={isMarkingComplete}
+            isCurrentChapterCompleted={isCurrentChapterCompleted}
+            onSelectChapter={handleSelectChapter}
+            onMarkComplete={handleMarkComplete}
+            onBackToOverview={handleBackToOverview}
+          />
+        )}
       </main>
     </div>
   );

@@ -5,6 +5,19 @@ All notable changes to Cognitio will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.0.3] - 2026-01-06
+
+### Added
+- **Course Landing Page**: Refactored course viewing experience into two distinct views
+  - **Overview View** (default): Hero image, course description, curriculum list, pricing sidebar
+  - **Chapter View**: Video player, chapter-specific content, progress tracking
+  - New `CourseOverview.tsx` and `ChapterView.tsx` components
+  - Previous/Next chapter navigation with keyboard-friendly controls
+  - "Back to Overview" button for easy navigation
+  - Chapter descriptions now supported (using existing `description` field)
+  - Total course duration calculated and displayed
+  - Full i18n support (EN/ES) for all new labels
+
 ## [4.0.2] - 2026-01-06
 
 ### Changed
