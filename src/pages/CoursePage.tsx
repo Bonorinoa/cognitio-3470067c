@@ -383,6 +383,8 @@ const CoursePage = () => {
             onSelectChapter={handleSelectChapter}
             onMarkComplete={handleMarkComplete}
             onBackToOverview={handleBackToOverview}
+            userId={user?.id}
+            isAuthenticated={!!user}
           />
         )}
       </main>
