@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -109,6 +110,7 @@ export interface StreamingState {
 
 export function useAITutorReply() {
   const queryClient = useQueryClient();
+  const { i18n } = useTranslation();
   const [streamingState, setStreamingState] = useState<StreamingState>({
     isStreaming: false,
     streamingContent: "",
@@ -146,6 +148,7 @@ export function useAITutorReply() {
             video_timestamp_seconds: params.videoTimestampSeconds,
             user_message: params.userMessage,
             stream: true,
+            language: i18n.language,
           }),
         }
       );
@@ -214,7 +217,7 @@ export function useAITutorReply() {
         promptReplyId: null,
       });
     }
-  }, [queryClient]);
+  }, [queryClient, i18n.language]);
 
   // Keep the non-streaming version as fallback
   const generateReply = useMutation({
