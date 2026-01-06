@@ -57,7 +57,7 @@ interface CourseData {
   description: string | null;
   price: number;
   category: string | null;
-  visibility: "public" | "private" | "unlisted";
+  visibility: "public" | "private";
   is_published: boolean;
   image_url: string | null;
   instructor_id: string;
@@ -73,7 +73,7 @@ const EditCourse = () => {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("");
-  const [visibility, setVisibility] = useState<"public" | "private" | "unlisted">("public");
+  const [visibility, setVisibility] = useState<"public" | "private">("public");
   const [isPublished, setIsPublished] = useState(false);
   const [chapters, setChapters] = useState<Chapter[]>([]);
   const [isSaving, setIsSaving] = useState(false);
@@ -448,13 +448,12 @@ const EditCourse = () => {
                 </div>
                 <div className="space-y-2">
                   <Label>Course Visibility</Label>
-                  <Select value={visibility} onValueChange={(value: "public" | "private" | "unlisted") => setVisibility(value)}>
+                  <Select value={visibility} onValueChange={(value: "public" | "private") => setVisibility(value)}>
                     <SelectTrigger className="bg-background border-border">
                       <SelectValue placeholder="Select visibility" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="public">Public - Visible in catalog</SelectItem>
-                      <SelectItem value="unlisted">Unlisted - Direct link only</SelectItem>
                       <SelectItem value="private">Private - Enrolled students only</SelectItem>
                     </SelectContent>
                   </Select>
@@ -551,8 +550,8 @@ const EditCourse = () => {
 
           {/* Sidebar */}
           <div className="space-y-6">
-            {/* Student Enrollment - only for private/unlisted courses */}
-            {(visibility === "private" || visibility === "unlisted") && id && (
+            {/* Student Enrollment - only for private courses */}
+            {visibility === "private" && id && (
               <CourseMembershipManager courseId={id} />
             )}
 
