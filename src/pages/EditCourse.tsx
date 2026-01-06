@@ -36,6 +36,7 @@ import CourseMembershipManager from "@/components/CourseMembershipManager";
 
 // Lazy load heavy video upload component
 const VideoUpload = lazy(() => import("@/components/VideoUpload"));
+import ChapterResourceManager from "@/components/ChapterResourceManager";
 
 const VideoUploadFallback = () => (
   <div className="h-10 w-full bg-muted rounded animate-pulse" />
@@ -532,6 +533,11 @@ const EditCourse = () => {
                             currentPlaybackId={chapter.muxPlaybackId}
                           />
                         </Suspense>
+                        <ChapterResourceManager 
+                          chapterId={chapter.id}
+                          chapterTitle={chapter.title || `Chapter ${index + 1}`}
+                          isNewChapter={chapter.isNew}
+                        />
                       </div>
                       <Button
                         variant="ghost"
