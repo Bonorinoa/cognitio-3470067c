@@ -1,4 +1,7 @@
 {
+  "discussion": {
+    "aiTakesTime": "Esto puede tardar unos segundos..."
+  },
   "nav": {
     "home": "Inicio",
     "courses": "Cursos",

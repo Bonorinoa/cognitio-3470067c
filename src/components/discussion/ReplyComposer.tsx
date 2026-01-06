@@ -97,12 +97,15 @@ export default function ReplyComposer({
             size="sm"
           >
             {isSubmitting ? (
-              <>
+              <span className="flex items-center">
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                {mentionsAI && aiWillRespond
-                  ? t("discussion.generatingAI")
-                  : t("discussion.posting")}
-              </>
+                <span className="flex flex-col items-start text-left">
+                  <span>{mentionsAI && aiWillRespond ? t("discussion.generatingAI") : t("discussion.posting")}</span>
+                  {mentionsAI && aiWillRespond && (
+                    <span className="text-xs opacity-70">{t("discussion.aiTakesTime")}</span>
+                  )}
+                </span>
+              </span>
             ) : (
               <>
                 <Send className="h-4 w-4 mr-2" />
