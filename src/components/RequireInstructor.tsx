@@ -1,3 +1,4 @@
+import { forwardRef } from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useUserRole } from "@/hooks/useUserRole";
@@ -7,14 +8,14 @@ interface RequireInstructorProps {
   children: React.ReactNode;
 }
 
-const RequireInstructor = ({ children }: RequireInstructorProps) => {
+const RequireInstructor = forwardRef<HTMLDivElement, RequireInstructorProps>(({ children }, ref) => {
   const { user, isLoading: authLoading } = useAuth();
   const { isInstructor, isLoading: roleLoading } = useUserRole();
 
   // Show loading while checking auth and roles
   if (authLoading || roleLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-background">
+      <div ref={ref} className="flex items-center justify-center min-h-screen bg-background">
         <div className="text-center">
           <Loader2 className="h-8 w-8 animate-spin mx-auto text-primary" />
           <p className="mt-4 text-muted-foreground">Loading...</p>
@@ -33,7 +34,9 @@ const RequireInstructor = ({ children }: RequireInstructorProps) => {
     return <Navigate to="/dashboard" replace />;
   }
 
-  return <>{children}</>;
-};
+  return <div ref={ref}>{children}</div>;
+});
+
+RequireInstructor.displayName = "RequireInstructor";
 
 export default RequireInstructor;
