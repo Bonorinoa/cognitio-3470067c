@@ -92,6 +92,30 @@ Public-facing AI content platform with subscription monetization.
 
 ## ✅ Completado
 
+### v4.0.4 (MVP Readiness) - January 6, 2026
+
+#### Security
+- Removed `.env` file from repository and git tracking
+- Removed duplicate `bun.lockb` lockfile (using npm as primary package manager)
+- Added `bun.lockb` to `.gitignore`
+
+#### Bug Fixes
+- Fixed three upvoting logic bugs in discussion system:
+  - Changed vote state from `0` to `null` for "no vote" consistency
+  - Fixed rollback logic to preserve `null` instead of `0`
+  - Memoized `getUserVotes` with `useCallback` to prevent infinite re-renders
+- Updated translation keys for resources (Spanish and English)
+
+#### Content & Branding
+- Updated `index.html` meta tags with Cognitio branding (removed Lovable references)
+- Added proper Spanish description as default
+- Removed TODO comments from HTML
+
+#### Documentation
+- Added discussion features to README (upvoting, AI tutor, resources)
+- Added comprehensive test scenarios to TESTING.md for discussion features
+- Updated CHANGELOG with all MVP readiness changes
+
 ### v4.0.1 - January 5, 2026
 
 - Updated PricingSection to match DB limits (200/200/500)

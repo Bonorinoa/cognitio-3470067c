@@ -734,12 +734,12 @@
     "backToHome": "Back to Home"
   },
   "resources": {
-    "empty": "No resources for this chapter yet",
+    "empty": "No resources available for this chapter",
     "pdf": "PDF Document",
     "link": "External Link",
     "notebook": "Code Notebook",
-    "video": "Video",
-    "other": "Resource"
+    "video": "Additional Video",
+    "other": "Other Resource"
   },
   "common": {
     "soon": "Coming Soon",
