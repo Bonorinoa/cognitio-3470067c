@@ -1,10 +1,11 @@
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense, useState, useRef, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Loader2, Check, ArrowLeft, ChevronLeft, ChevronRight, MessageSquare } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import ChapterList from "@/components/ChapterList";
 import DiscussionTab from "@/components/discussion/DiscussionTab";
+import type { VideoPlayerHandle } from "@/components/VideoPlayer";
 
 const VideoPlayer = lazy(() => import("@/components/VideoPlayer"));
 
@@ -62,6 +63,8 @@ const ChapterView = ({
 }: ChapterViewProps) => {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState("content");
+  const [currentVideoTime, setCurrentVideoTime] = useState(0);
+  const videoRef = useRef<VideoPlayerHandle>(null);
 
   const hasAccess = hasPurchased || isOwner;
   const currentIndex = chapters.findIndex((ch) => ch.id === currentChapterId);
@@ -70,6 +73,18 @@ const ChapterView = ({
 
   const canAccessPrev = prevChapter && (hasAccess || prevChapter.isPreview);
   const canAccessNext = nextChapter && (hasAccess || nextChapter.isPreview);
+
+  const handleSeekVideo = useCallback((seconds: number) => {
+    if (videoRef.current) {
+      videoRef.current.seekTo(seconds);
+      // Switch to content tab to show video
+      setActiveTab("content");
+    }
+  }, []);
+
+  const handleTimeUpdate = useCallback((time: number) => {
+    setCurrentVideoTime(time);
+  }, []);
 
   return (
     <div className="container mx-auto px-4 py-6">
@@ -89,9 +104,11 @@ const ChapterView = ({
         <div className="lg:col-span-2 space-y-4">
           <Suspense fallback={<VideoPlayerFallback />}>
             <VideoPlayer
+              ref={videoRef}
               playbackId={currentChapter?.mux_playback_id || undefined}
               poster={course.image_url || "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1200"}
               title={currentChapter?.title}
+              onTimeUpdate={handleTimeUpdate}
             />
           </Suspense>
 
@@ -187,6 +204,8 @@ const ChapterView = ({
                 hasAccess={hasAccess}
                 isAuthenticated={isAuthenticated}
                 userId={userId}
+                onSeekVideo={handleSeekVideo}
+                currentVideoTime={currentVideoTime}
               />
             </TabsContent>
           </Tabs>

@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Bot, Loader2, Send, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import MentionInput from "./MentionInput";
 
 interface ReplyComposerProps {
   onSubmit: (content: string, mentionsAI: boolean) => Promise<void>;
@@ -52,16 +52,17 @@ export default function ReplyComposer({
       )}
 
       <div className="border rounded-lg p-3 space-y-3">
-        <Textarea
+        <MentionInput
           value={content}
-          onChange={(e) => setContent(e.target.value)}
+          onChange={setContent}
           placeholder={
             aiEnabled
               ? t("discussion.replyPlaceholderAI")
               : t("discussion.replyPlaceholder")
           }
           rows={3}
-          className="border-0 p-0 focus-visible:ring-0 resize-none"
+          aiEnabled={aiEnabled}
+          className="border-0 p-0 focus-visible:ring-0"
         />
 
         <div className="flex items-center justify-between">

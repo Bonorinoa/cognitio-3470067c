@@ -89,12 +89,43 @@ serve(async (req) => {
       .order("created_at", { ascending: false })
       .limit(5);
 
-    // Get chapter info
+    // Get chapter info with course data
     const { data: chapter } = await supabaseClient
       .from("chapters")
-      .select("title, description")
+      .select("title, description, course_id")
       .eq("id", chapter_id)
       .single();
+
+    // Get course info
+    let courseContext = "";
+    let instructorContext = "";
+    if (chapter?.course_id) {
+      const { data: course } = await supabaseClient
+        .from("courses")
+        .select("title, description, category, instructor_id")
+        .eq("id", chapter.course_id)
+        .single();
+
+      if (course) {
+        courseContext = `Course: "${course.title}"${course.category ? ` (${course.category})` : ""}`;
+        if (course.description) {
+          courseContext += `\nCourse Description: ${course.description.slice(0, 500)}`;
+        }
+
+        // Get instructor info
+        const { data: instructor } = await supabaseClient
+          .from("profiles")
+          .select("full_name, affiliation, headline")
+          .eq("id", course.instructor_id)
+          .single();
+
+        if (instructor) {
+          instructorContext = `Instructor: ${instructor.full_name || "Unknown"}`;
+          if (instructor.affiliation) instructorContext += `, ${instructor.affiliation}`;
+          if (instructor.headline) instructorContext += ` (${instructor.headline})`;
+        }
+      }
+    }
 
     // Get transcript excerpt if available
     let transcriptExcerpt = "";
@@ -111,7 +142,10 @@ serve(async (req) => {
       const relevant = segments.filter(
         (s) => s.start >= video_timestamp_seconds - 60 && s.start <= video_timestamp_seconds + 60
       );
-      transcriptExcerpt = relevant.map((s) => s.text).join(" ").slice(0, 1000);
+      if (relevant.length > 0) {
+        const formatTime = (s: number) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
+        transcriptExcerpt = relevant.map((s) => `[${formatTime(s.start)}] ${s.text}`).join("\n").slice(0, 1500);
+      }
     }
 
     // Get AI tutor settings
@@ -133,12 +167,14 @@ serve(async (req) => {
 
     // Build context
     const contextParts = [];
+    if (courseContext) contextParts.push(courseContext);
+    if (instructorContext) contextParts.push(instructorContext);
     if (chapter) {
       contextParts.push(`Chapter: ${chapter.title}`);
-      if (chapter.description) contextParts.push(`Description: ${chapter.description}`);
+      if (chapter.description) contextParts.push(`Chapter Description: ${chapter.description}`);
     }
     if (transcriptExcerpt) {
-      contextParts.push(`Relevant transcript: ${transcriptExcerpt}`);
+      contextParts.push(`\nRelevant Transcript (around the video timestamp the student is asking about):\n${transcriptExcerpt}`);
     }
 
     const conversationContext = recentReplies?.reverse().map((r) => 
@@ -154,7 +190,7 @@ ${discussion?.content}
 ${conversationContext ? `Recent Discussion:\n${conversationContext}\n` : ""}
 Student's message: ${user_message}
 
-Respond in a Socratic manner, guiding the student toward understanding.`;
+Respond in a Socratic manner, guiding the student toward understanding. Use the course and transcript context to provide relevant guidance.`;
 
     // Call Lovable AI
     const aiResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
