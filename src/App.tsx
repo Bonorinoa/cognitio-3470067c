@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, Component, ReactNode } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -6,7 +6,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import RequireInstructor from "@/components/RequireInstructor";
 import RequireAdmin from "@/components/RequireAdmin";
-import { Loader2 } from "lucide-react";
+import { Loader2, RefreshCw } from "lucide-react";
 import { COMING_SOON_FEATURES } from "@/lib/aiStudioRoutes";
 
 // Lazy-loaded layouts - only loaded when user navigates to protected routes
@@ -48,6 +48,47 @@ const PageLoader = () => (
   </div>
 );
 
+// Error boundary to handle stale chunk loading failures
+class ChunkErrorBoundary extends Component<{ children: ReactNode }, { hasError: boolean }> {
+  constructor(props: { children: ReactNode }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error: Error) {
+    // Check if this is a chunk loading error
+    if (error.message?.includes('Failed to fetch dynamically imported module')) {
+      return { hasError: true };
+    }
+    throw error;
+  }
+
+  handleRefresh = () => {
+    window.location.reload();
+  };
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="flex h-screen w-full flex-col items-center justify-center gap-4 p-4 text-center">
+          <RefreshCw className="h-12 w-12 text-muted-foreground" />
+          <h2 className="text-xl font-semibold">Update Available</h2>
+          <p className="text-muted-foreground max-w-md">
+            A new version is available. Please refresh to continue.
+          </p>
+          <button
+            onClick={this.handleRefresh}
+            className="mt-4 rounded-md bg-primary px-6 py-2 text-primary-foreground hover:bg-primary/90"
+          >
+            Refresh Page
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -56,8 +97,9 @@ const App = () => (
       <Toaster />
       <BrowserRouter>
         <AuthProvider>
-          <Suspense fallback={<PageLoader />}>
-            <Routes>
+          <ChunkErrorBoundary>
+            <Suspense fallback={<PageLoader />}>
+              <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/about" element={<Navigate to="/instructors" replace />} />
               <Route path="/instructors" element={<InstructorsPage />} />
@@ -115,9 +157,10 @@ const App = () => (
               <Route path="/teacher" element={<Navigate to="/instructor" replace />} />
               <Route path="/teacher/*" element={<Navigate to="/instructor" replace />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Suspense>
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Suspense>
+          </ChunkErrorBoundary>
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
