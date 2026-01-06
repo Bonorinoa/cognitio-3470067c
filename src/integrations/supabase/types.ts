@@ -145,6 +145,45 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_tutor_usage: {
+        Row: {
+          chapter_id: string
+          created_at: string | null
+          discussion_id: string | null
+          id: string
+          user_id: string
+        }
+        Insert: {
+          chapter_id: string
+          created_at?: string | null
+          discussion_id?: string | null
+          id?: string
+          user_id: string
+        }
+        Update: {
+          chapter_id?: string
+          created_at?: string | null
+          discussion_id?: string | null
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_tutor_usage_chapter_id_fkey"
+            columns: ["chapter_id"]
+            isOneToOne: false
+            referencedRelation: "chapters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ai_tutor_usage_discussion_id_fkey"
+            columns: ["discussion_id"]
+            isOneToOne: false
+            referencedRelation: "discussions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ai_usage_logs: {
         Row: {
           content_type: string
@@ -168,6 +207,50 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      chapter_transcripts: {
+        Row: {
+          chapter_id: string
+          created_at: string | null
+          error_message: string | null
+          id: string
+          language_code: string | null
+          status: string | null
+          transcript_json: Json | null
+          transcript_vtt: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          chapter_id: string
+          created_at?: string | null
+          error_message?: string | null
+          id?: string
+          language_code?: string | null
+          status?: string | null
+          transcript_json?: Json | null
+          transcript_vtt?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          chapter_id?: string
+          created_at?: string | null
+          error_message?: string | null
+          id?: string
+          language_code?: string | null
+          status?: string | null
+          transcript_json?: Json | null
+          transcript_vtt?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chapter_transcripts_chapter_id_fkey"
+            columns: ["chapter_id"]
+            isOneToOne: true
+            referencedRelation: "chapters"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       chapters: {
         Row: {
@@ -271,6 +354,7 @@ export type Database = {
           is_featured: boolean | null
           is_published: boolean | null
           price: number
+          show_transcript: boolean | null
           stripe_price_id: string | null
           stripe_product_id: string | null
           teacher_id: string
@@ -288,6 +372,7 @@ export type Database = {
           is_featured?: boolean | null
           is_published?: boolean | null
           price?: number
+          show_transcript?: boolean | null
           stripe_price_id?: string | null
           stripe_product_id?: string | null
           teacher_id: string
@@ -305,6 +390,7 @@ export type Database = {
           is_featured?: boolean | null
           is_published?: boolean | null
           price?: number
+          show_transcript?: boolean | null
           stripe_price_id?: string | null
           stripe_product_id?: string | null
           teacher_id?: string
@@ -313,6 +399,130 @@ export type Database = {
           visibility?: Database["public"]["Enums"]["course_visibility"] | null
         }
         Relationships: []
+      }
+      discussion_replies: {
+        Row: {
+          content: string
+          created_at: string | null
+          discussion_id: string
+          id: string
+          is_accepted_answer: boolean | null
+          is_ai_generated: boolean | null
+          upvote_count: number | null
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          discussion_id: string
+          id?: string
+          is_accepted_answer?: boolean | null
+          is_ai_generated?: boolean | null
+          upvote_count?: number | null
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          discussion_id?: string
+          id?: string
+          is_accepted_answer?: boolean | null
+          is_ai_generated?: boolean | null
+          upvote_count?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "discussion_replies_discussion_id_fkey"
+            columns: ["discussion_id"]
+            isOneToOne: false
+            referencedRelation: "discussions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      discussion_votes: {
+        Row: {
+          created_at: string | null
+          id: string
+          target_id: string
+          target_type: string
+          user_id: string
+          vote: number
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          target_id: string
+          target_type: string
+          user_id: string
+          vote: number
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          target_id?: string
+          target_type?: string
+          user_id?: string
+          vote?: number
+        }
+        Relationships: []
+      }
+      discussions: {
+        Row: {
+          chapter_id: string
+          content: string
+          course_id: string
+          created_at: string | null
+          has_ai_response: boolean | null
+          id: string
+          is_resolved: boolean | null
+          reply_count: number | null
+          title: string
+          updated_at: string | null
+          upvote_count: number | null
+          user_id: string
+          video_timestamp_seconds: number | null
+        }
+        Insert: {
+          chapter_id: string
+          content: string
+          course_id: string
+          created_at?: string | null
+          has_ai_response?: boolean | null
+          id?: string
+          is_resolved?: boolean | null
+          reply_count?: number | null
+          title: string
+          updated_at?: string | null
+          upvote_count?: number | null
+          user_id: string
+          video_timestamp_seconds?: number | null
+        }
+        Update: {
+          chapter_id?: string
+          content?: string
+          course_id?: string
+          created_at?: string | null
+          has_ai_response?: boolean | null
+          id?: string
+          is_resolved?: boolean | null
+          reply_count?: number | null
+          title?: string
+          updated_at?: string | null
+          upvote_count?: number | null
+          user_id?: string
+          video_timestamp_seconds?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "discussions_chapter_id_fkey"
+            columns: ["chapter_id"]
+            isOneToOne: false
+            referencedRelation: "chapters"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       instructor_services: {
         Row: {
@@ -357,6 +567,27 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      platform_settings: {
+        Row: {
+          key: string
+          updated_at: string | null
+          updated_by: string | null
+          value: Json
+        }
+        Insert: {
+          key: string
+          updated_at?: string | null
+          updated_by?: string | null
+          value: Json
+        }
+        Update: {
+          key?: string
+          updated_at?: string | null
+          updated_by?: string | null
+          value?: Json
+        }
+        Relationships: []
       }
       profiles: {
         Row: {
