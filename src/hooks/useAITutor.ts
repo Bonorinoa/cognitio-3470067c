@@ -102,124 +102,10 @@ export function useAITutorUsage(chapterId: string | undefined) {
   };
 }
 
-export interface StreamingState {
-  isStreaming: boolean;
-  streamingContent: string;
-  promptReplyId: string | null;
-}
-
 export function useAITutorReply() {
   const queryClient = useQueryClient();
   const { i18n } = useTranslation();
-  const [streamingState, setStreamingState] = useState<StreamingState>({
-    isStreaming: false,
-    streamingContent: "",
-    promptReplyId: null,
-  });
 
-  const generateReplyStreaming = useCallback(async (params: {
-    discussionId: string;
-    chapterId: string;
-    videoTimestampSeconds?: number;
-    userMessage: string;
-  }) => {
-    setStreamingState({
-      isStreaming: true,
-      streamingContent: "",
-      promptReplyId: null,
-    });
-
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) throw new Error("Not authenticated");
-
-      const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-discussion-reply`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${session.access_token}`,
-            "Content-Type": "application/json",
-            apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-          },
-          body: JSON.stringify({
-            discussion_id: params.discussionId,
-            chapter_id: params.chapterId,
-            video_timestamp_seconds: params.videoTimestampSeconds,
-            user_message: params.userMessage,
-            stream: true,
-            language: i18n.language,
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to generate AI response");
-      }
-
-      const reader = response.body?.getReader();
-      if (!reader) throw new Error("No response body");
-
-      const decoder = new TextDecoder();
-      let result = null;
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        const chunk = decoder.decode(value);
-        const lines = chunk.split("\n");
-
-        for (const line of lines) {
-          if (line.startsWith("data: ")) {
-            const data = line.slice(6);
-            if (data === "[DONE]") continue;
-
-            try {
-              const parsed = JSON.parse(data);
-              
-              if (parsed.type === "start") {
-                setStreamingState(prev => ({
-                  ...prev,
-                  promptReplyId: parsed.promptReplyId,
-                }));
-              } else if (parsed.type === "delta") {
-                setStreamingState(prev => ({
-                  ...prev,
-                  streamingContent: prev.streamingContent + parsed.content,
-                }));
-              } else if (parsed.type === "done") {
-                result = parsed;
-              } else if (parsed.type === "error") {
-                throw new Error(parsed.error);
-              }
-            } catch (e) {
-              // Skip invalid JSON
-              if (e instanceof Error && e.message !== "Unexpected end of JSON input") {
-                console.error("Parse error:", e);
-              }
-            }
-          }
-        }
-      }
-
-      // Invalidate queries to refresh the replies list
-      queryClient.invalidateQueries({ queryKey: ["discussion-replies", params.discussionId] });
-      queryClient.invalidateQueries({ queryKey: ["discussions"] });
-      queryClient.invalidateQueries({ queryKey: ["ai-tutor-usage"] });
-
-      return result;
-    } finally {
-      setStreamingState({
-        isStreaming: false,
-        streamingContent: "",
-        promptReplyId: null,
-      });
-    }
-  }, [queryClient, i18n.language]);
-
-  // Keep the non-streaming version as fallback
   const generateReply = useMutation({
     mutationFn: async (params: {
       discussionId: string;
@@ -233,6 +119,7 @@ export function useAITutorReply() {
           chapter_id: params.chapterId,
           video_timestamp_seconds: params.videoTimestampSeconds,
           user_message: params.userMessage,
+          language: i18n.language,
         },
       });
 
@@ -250,8 +137,6 @@ export function useAITutorReply() {
 
   return {
     generateReply,
-    generateReplyStreaming,
-    streamingState,
-    isGenerating: generateReply.isPending || streamingState.isStreaming,
+    isGenerating: generateReply.isPending,
   };
 }
