@@ -199,7 +199,8 @@
     "completed": "Completado",
     "nextChapter": "Siguiente Capítulo",
     "previousChapter": "Capítulo Anterior",
-    "discussionTab": "Discusión"
+    "discussionTab": "Discusión",
+    "resourcesTab": "Recursos"
   },
   "discussion": {
     "sortNew": "Más Reciente",
@@ -733,6 +734,14 @@
     "paperFormatter": "Formateador de Artículos",
     "paperEditor": "Editor de Artículos",
     "backToHome": "Volver al Inicio"
+  },
+  "resources": {
+    "empty": "Aún no hay recursos para este capítulo",
+    "pdf": "Documento PDF",
+    "link": "Enlace Externo",
+    "notebook": "Cuaderno de Código",
+    "video": "Video",
+    "other": "Recurso"
   },
   "common": {
     "soon": "Próximamente",

@@ -193,7 +193,8 @@
     "completed": "Completed",
     "nextChapter": "Next Chapter",
     "previousChapter": "Previous Chapter",
-    "discussionTab": "Discussion"
+    "discussionTab": "Discussion",
+    "resourcesTab": "Resources"
   },
   "discussion": {
     "sortNew": "Newest",
@@ -728,6 +729,14 @@
     "paperFormatter": "Paper Formatter",
     "paperEditor": "Paper Editor",
     "backToHome": "Back to Home"
+  },
+  "resources": {
+    "empty": "No resources for this chapter yet",
+    "pdf": "PDF Document",
+    "link": "External Link",
+    "notebook": "Code Notebook",
+    "video": "Video",
+    "other": "Resource"
   },
   "common": {
     "soon": "Coming Soon",

@@ -60,7 +60,6 @@ export default function ThreadView({
   const [discussionVote, setDiscussionVote] = useState<number | null>(null);
 
   const isDiscussionOwner = user?.id === discussion.user_id;
-  const canMarkAccepted = isDiscussionOwner || isInstructorOrOwner;
 
   // Load user votes
   const { getUserVotes } = useDiscussionVotes();
@@ -245,10 +244,8 @@ export default function ThreadView({
               key={reply.id}
               reply={reply}
               userVote={userVotes[reply.id] || null}
-              canMarkAccepted={canMarkAccepted}
               isAuthenticated={isAuthenticated}
               onVote={(vote) => handleVoteReply(reply.id, vote)}
-              onMarkAccepted={() => handleMarkAccepted(reply.id)}
               t={t}
             />
           ))
@@ -272,24 +269,20 @@ export default function ThreadView({
 interface ReplyCardProps {
   reply: DiscussionReply;
   userVote: number | null;
-  canMarkAccepted: boolean;
   isAuthenticated: boolean;
   onVote: (vote: 1 | -1) => void;
-  onMarkAccepted: () => void;
   t: (key: string) => string;
 }
 
 function ReplyCard({
   reply,
   userVote,
-  canMarkAccepted,
   isAuthenticated,
   onVote,
-  onMarkAccepted,
   t,
 }: ReplyCardProps) {
   return (
-    <Card className={reply.is_accepted_answer ? "border-primary/50 bg-primary/5" : ""}>
+    <Card>
       <CardContent className="py-4">
         <div className="flex items-start gap-4">
           {/* Vote buttons */}
@@ -333,12 +326,6 @@ function ReplyCard({
                   AI
                 </Badge>
               )}
-              {reply.is_accepted_answer && (
-                <Badge variant="default" className="gap-1">
-                  <Check className="h-3 w-3" />
-                  {t("discussion.acceptedAnswer")}
-                </Badge>
-              )}
               <span className="text-xs text-muted-foreground">
                 {formatRelativeTime(reply.created_at)}
               </span>
@@ -347,18 +334,6 @@ function ReplyCard({
             <p className="text-sm text-muted-foreground whitespace-pre-wrap">
               {reply.content}
             </p>
-
-            {canMarkAccepted && !reply.is_accepted_answer && (
-              <Button
-                variant="ghost"
-                size="sm"
-                className="mt-2 text-xs"
-                onClick={onMarkAccepted}
-              >
-                <CheckCircle className="h-3 w-3 mr-1" />
-                {t("discussion.markAsAccepted")}
-              </Button>
-            )}
           </div>
         </div>
       </CardContent>
