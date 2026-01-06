@@ -5,6 +5,7 @@ import { Loader2, Check, ArrowLeft, ChevronLeft, ChevronRight, MessageSquare } f
 import { useTranslation } from "react-i18next";
 import ChapterList from "@/components/ChapterList";
 import DiscussionTab from "@/components/discussion/DiscussionTab";
+import ResourcesTab from "@/components/ResourcesTab";
 import type { VideoPlayerHandle } from "@/components/VideoPlayer";
 
 const VideoPlayer = lazy(() => import("@/components/VideoPlayer"));
@@ -62,7 +63,7 @@ const ChapterView = ({
   isAuthenticated = false,
 }: ChapterViewProps) => {
   const { t } = useTranslation();
-  const [activeTab, setActiveTab] = useState("content");
+  const [activeTab, setActiveTab] = useState("discussion");
   const [currentVideoTime, setCurrentVideoTime] = useState(0);
   const videoRef = useRef<VideoPlayerHandle>(null);
 
@@ -171,30 +172,15 @@ const ChapterView = ({
             </Button>
           )}
 
-          {/* Tabs for Content / Discussion */}
+          {/* Tabs for Discussion / Resources */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-6">
             <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="content">{t("coursePage.aboutCourse")}</TabsTrigger>
               <TabsTrigger value="discussion" className="gap-2">
                 <MessageSquare className="h-4 w-4" />
                 {t("coursePage.discussionTab")}
               </TabsTrigger>
+              <TabsTrigger value="resources">{t("coursePage.resourcesTab")}</TabsTrigger>
             </TabsList>
-
-            <TabsContent value="content" className="mt-4">
-              {currentChapter?.description ? (
-                <div>
-                  <h3 className="font-semibold text-foreground mb-2">
-                    {t("coursePage.chapterDescription")}
-                  </h3>
-                  <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
-                    {currentChapter.description}
-                  </p>
-                </div>
-              ) : (
-                <p className="text-muted-foreground">{t("coursePage.noDescription")}</p>
-              )}
-            </TabsContent>
 
             <TabsContent value="discussion" className="mt-4">
               <DiscussionTab
@@ -207,6 +193,10 @@ const ChapterView = ({
                 onSeekVideo={handleSeekVideo}
                 currentVideoTime={currentVideoTime}
               />
+            </TabsContent>
+
+            <TabsContent value="resources" className="mt-4">
+              <ResourcesTab chapterId={currentChapterId} />
             </TabsContent>
           </Tabs>
         </div>

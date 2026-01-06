@@ -208,6 +208,47 @@ export type Database = {
         }
         Relationships: []
       }
+      chapter_resources: {
+        Row: {
+          chapter_id: string
+          created_at: string
+          description: string | null
+          id: string
+          order_index: number
+          resource_type: string
+          title: string
+          url: string
+        }
+        Insert: {
+          chapter_id: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          order_index?: number
+          resource_type?: string
+          title: string
+          url: string
+        }
+        Update: {
+          chapter_id?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          order_index?: number
+          resource_type?: string
+          title?: string
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chapter_resources_chapter_id_fkey"
+            columns: ["chapter_id"]
+            isOneToOne: false
+            referencedRelation: "chapters"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       chapter_transcripts: {
         Row: {
           chapter_id: string
