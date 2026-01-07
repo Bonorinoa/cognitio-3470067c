@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Bot, Loader2, Send, AlertCircle } from "lucide-react";
+import { Bot, Loader2, Send, AlertCircle, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -12,6 +12,13 @@ interface ReplyComposerProps {
   aiEnabled: boolean;
   aiRemaining: number;
   aiUsed: number;
+  currentVideoTime?: number;
+}
+
+function formatTimestamp(seconds: number): string {
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${mins}:${secs.toString().padStart(2, "0")}`;
 }
 
 export default function ReplyComposer({
@@ -20,6 +27,7 @@ export default function ReplyComposer({
   aiEnabled,
   aiRemaining,
   aiUsed,
+  currentVideoTime,
 }: ReplyComposerProps) {
   const { t } = useTranslation();
   const [content, setContent] = useState("");
@@ -71,6 +79,13 @@ export default function ReplyComposer({
               <Badge variant={aiRemaining > 0 ? "outline" : "secondary"} className="gap-1">
                 <Bot className="h-3 w-3" />
                 {t("discussion.aiCallsRemaining", { count: aiRemaining })}
+              </Badge>
+            )}
+
+            {mentionsAI && aiEnabled && aiWillRespond && currentVideoTime !== undefined && currentVideoTime > 0 && (
+              <Badge variant="outline" className="gap-1 text-xs">
+                <Clock className="h-3 w-3" />
+                {t("discussion.aiContextAt", { time: formatTimestamp(currentVideoTime) })}
               </Badge>
             )}
 

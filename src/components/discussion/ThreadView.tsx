@@ -18,6 +18,7 @@ interface ThreadViewProps {
   isInstructorOrOwner: boolean;
   onBack: () => void;
   onSeekVideo?: (seconds: number) => void;
+  currentVideoTime?: number;
 }
 
 function formatTimestamp(seconds: number): string {
@@ -47,6 +48,7 @@ export default function ThreadView({
   isInstructorOrOwner,
   onBack,
   onSeekVideo,
+  currentVideoTime,
 }: ThreadViewProps) {
   const { t } = useTranslation();
   const { user } = useAuth();
@@ -128,11 +130,11 @@ export default function ThreadView({
 
   const handleReply = async (content: string, mentionsAI: boolean) => {
     if (mentionsAI && aiSettings.enabled && canUseAI) {
-      // Generate AI reply (non-streaming)
+      // Generate AI reply (non-streaming) - use current video time for context
       await generateReply.mutateAsync({
         discussionId: discussion.id,
         chapterId: discussion.chapter_id,
-        videoTimestampSeconds: discussion.video_timestamp_seconds || undefined,
+        videoTimestampSeconds: currentVideoTime ?? discussion.video_timestamp_seconds ?? undefined,
         userMessage: content,
       });
     } else {
@@ -295,6 +297,7 @@ export default function ThreadView({
           aiEnabled={aiSettings.enabled}
           aiRemaining={remaining}
           aiUsed={used}
+          currentVideoTime={currentVideoTime}
         />
       )}
     </div>
