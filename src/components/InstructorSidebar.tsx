@@ -42,25 +42,35 @@ const InstructorSidebar = ({ collapsed = false, onCollapsedChange }: InstructorS
       isCollapsed ? "w-16" : "w-64"
     )}>
       {/* Header with Logo */}
-      <div className="flex h-16 items-center gap-3 border-b border-border px-4">
-        <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity min-w-0">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary shadow-sm shrink-0">
-            <span className="text-lg font-bold text-primary-foreground">C</span>
-          </div>
-          {!isCollapsed && (
-            <div className="flex flex-col min-w-0">
-              <span className="text-lg font-bold text-foreground leading-tight">Cognitio</span>
-              <span className="text-xs text-muted-foreground leading-tight truncate">
-                {t("instructorSidebar.portal")}
-              </span>
-            </div>
-          )}
-        </Link>
-        <SidebarCollapseButton
-          collapsed={isCollapsed}
-          onToggle={() => setIsCollapsed(!isCollapsed)}
-          className={cn("ml-auto", isCollapsed && "mx-auto")}
-        />
+      <div className={cn(
+        "flex h-16 items-center border-b border-border",
+        isCollapsed ? "justify-center px-2" : "gap-3 px-4"
+      )}>
+        {isCollapsed ? (
+          <SidebarCollapseButton
+            collapsed={isCollapsed}
+            onToggle={() => setIsCollapsed(!isCollapsed)}
+          />
+        ) : (
+          <>
+            <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity min-w-0">
+              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary shadow-sm shrink-0">
+                <span className="text-lg font-bold text-primary-foreground">C</span>
+              </div>
+              <div className="flex flex-col min-w-0">
+                <span className="text-lg font-bold text-foreground leading-tight">Cognitio</span>
+                <span className="text-xs text-muted-foreground leading-tight truncate">
+                  {t("instructorSidebar.portal")}
+                </span>
+              </div>
+            </Link>
+            <SidebarCollapseButton
+              collapsed={isCollapsed}
+              onToggle={() => setIsCollapsed(!isCollapsed)}
+              className="ml-auto"
+            />
+          </>
+        )}
       </div>
 
       {/* Navigation */}
