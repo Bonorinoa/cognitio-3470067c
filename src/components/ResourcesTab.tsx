@@ -1,9 +1,11 @@
+import React from "react";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { FileText, Link as LinkIcon, Code, Video, File, ExternalLink } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from "sonner";
 
 interface ResourcesTabProps {
   chapterId: string;
@@ -68,7 +70,7 @@ export default function ResourcesTab({ chapterId }: ResourcesTabProps) {
   // Generate the appropriate URL for a resource
   const getResourceUrl = (resource: ChapterResource): string => {
     // For Supabase storage files, use the download proxy to bypass ad blockers
-    const isStorageUrl = resource.url.includes('supabase.co/storage');
+    const isStorageUrl = resource.url.includes("supabase.co/storage");
     if (isStorageUrl) {
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
       return `${supabaseUrl}/functions/v1/download-resource?id=${resource.id}`;
@@ -76,20 +78,47 @@ export default function ResourcesTab({ chapterId }: ResourcesTabProps) {
     return resource.url;
   };
 
+  const handleOpenResource = async (resource: ChapterResource) => {
+    const resourceUrl = getResourceUrl(resource);
+
+    // External links can be opened normally
+    if (resource.resource_type === "link") {
+      window.open(resourceUrl, "_blank", "noopener,noreferrer");
+      return;
+    }
+
+    // For PDFs/files: fetch as a Blob and open via a blob: URL.
+    // This prevents the browser from navigating directly to a blocked domain.
+    try {
+      const res = await fetch(resourceUrl, { method: "GET" });
+      if (!res.ok) throw new Error(`Failed to fetch resource: ${res.status}`);
+
+      const blob = await res.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      window.open(blobUrl, "_blank", "noopener,noreferrer");
+
+      // Give the new tab a moment to load before revoking
+      window.setTimeout(() => URL.revokeObjectURL(blobUrl), 60_000);
+    } catch (e) {
+      console.error("Resource open failed", e);
+      toast.error(t("common.error"), {
+        description: t("resources.openBlockedHelp"),
+      });
+    }
+  };
+
   return (
     <div className="space-y-3">
       {resources.map((resource) => {
         const Icon = resourceIcons[resource.resource_type] || File;
-        const resourceUrl = getResourceUrl(resource);
-        
+
         return (
           <Card key={resource.id} className="hover:bg-accent/50 transition-colors">
             <CardContent className="py-4">
-              <a
-                href={resourceUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-start gap-4 group"
+              <button
+                type="button"
+                onClick={() => void handleOpenResource(resource)}
+                className="flex w-full items-start gap-4 group text-left"
               >
                 <div className="p-2 bg-primary/10 rounded-lg">
                   <Icon className="h-5 w-5 text-primary" />
@@ -102,15 +131,13 @@ export default function ResourcesTab({ chapterId }: ResourcesTabProps) {
                     <ExternalLink className="h-3 w-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
                   </div>
                   {resource.description && (
-                    <p className="text-sm text-muted-foreground mt-1">
-                      {resource.description}
-                    </p>
+                    <p className="text-sm text-muted-foreground mt-1">{resource.description}</p>
                   )}
                   <span className="text-xs text-muted-foreground mt-1 inline-block">
                     {t(`resources.${resource.resource_type}`)}
                   </span>
                 </div>
-              </a>
+              </button>
             </CardContent>
           </Card>
         );

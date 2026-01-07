@@ -230,6 +230,7 @@
     "fileSizeError": "El archivo debe ser menor a 20MB",
     "fileUploaded": "¡Archivo subido! Completa el formulario para agregar el recurso.",
     "titleUrlRequired": "El título y la URL son requeridos",
+    "openBlockedHelp": "Si sigue fallando, permite este sitio en tu bloqueador/extensión de privacidad.",
     "empty": "Aún no hay recursos para este capítulo",
     "pdf": "Documento PDF",
     "link": "Enlace Externo",
@@ -779,6 +780,7 @@
     "edit": "Editar",
     "cancel": "Cancelar",
     "delete": "Eliminar",
-    "deleting": "Eliminando..."
+    "deleting": "Eliminando...",
+    "error": "Algo salió mal"
   }
 }
