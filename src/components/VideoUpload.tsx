@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
+import { HelpTooltip } from "@/components/ui/help-tooltip";
 
 interface VideoUploadProps {
   chapterId?: string;
@@ -14,6 +16,7 @@ interface VideoUploadProps {
 type UploadStatus = "idle" | "uploading" | "processing" | "ready" | "error";
 
 const VideoUpload = ({ chapterId, onUploadComplete, currentPlaybackId }: VideoUploadProps) => {
+  const { t } = useTranslation();
   const [status, setStatus] = useState<UploadStatus>(currentPlaybackId ? "ready" : "idle");
   const [progress, setProgress] = useState(0);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -158,15 +161,18 @@ const VideoUpload = ({ chapterId, onUploadComplete, currentPlaybackId }: VideoUp
       />
 
       {status === "idle" && (
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => fileInputRef.current?.click()}
-          className="w-full"
-        >
-          <Upload className="h-4 w-4 mr-2" />
-          Upload Video
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => fileInputRef.current?.click()}
+            className="flex-1"
+          >
+            <Upload className="h-4 w-4 mr-2" />
+            Upload Video
+          </Button>
+          <HelpTooltip content={t("help.videoUpload.helpTooltip")} />
+        </div>
       )}
 
       {status === "uploading" && (

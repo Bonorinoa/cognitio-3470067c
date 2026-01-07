@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { UserPlus, Trash2, Loader2, Users } from "lucide-react";
+import { HelpTooltip } from "@/components/ui/help-tooltip";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -167,10 +168,13 @@ const CourseMembershipManager = ({ courseId }: CourseMembershipManagerProps) => 
   return (
     <Card className="border-border bg-card">
       <CardHeader>
-        <CardTitle className="text-foreground flex items-center gap-2">
-          <Users className="h-5 w-5" />
-          {t("membership.title")}
-        </CardTitle>
+        <div className="flex items-center gap-2">
+          <CardTitle className="text-foreground flex items-center gap-2">
+            <Users className="h-5 w-5" />
+            {t("membership.title")}
+          </CardTitle>
+          <HelpTooltip content={t("help.membership.helpDesc")} />
+        </div>
         <CardDescription>
           {t("membership.description")}
         </CardDescription>
