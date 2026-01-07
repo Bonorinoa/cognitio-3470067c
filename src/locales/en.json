@@ -866,6 +866,14 @@
       "priceTitle": "Course Price",
       "priceDesc": "Free courses are great for building an audience. Paid courses process payments securely through Stripe. You'll receive funds directly to your account."
     },
+    "courseEditing": {
+      "chaptersTitle": "Chapter Management",
+      "chaptersDesc": "Organize your course content into chapters. Each chapter can have a video and downloadable resources. Keep videos between 5-15 minutes for better retention.",
+      "freePreviewTitle": "Free Preview",
+      "freePreviewDesc": "Mark chapters as 'Free Preview' so visitors can watch them without purchasing. This helps showcase your content quality and increase conversions.",
+      "reorderTitle": "Reorder Chapters",
+      "reorderDesc": "Chapter order is saved based on their position in the list. To change the order, remove and recreate chapters in the desired sequence."
+    },
     "videoUpload": {
       "title": "Upload Video",
       "formatsLabel": "Formats",

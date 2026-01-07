@@ -27,7 +27,9 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Plus, Trash2, GripVertical, Save, ArrowLeft, Loader2, Eye, EyeOff, Upload, ImageIcon } from "lucide-react";
+import { Plus, Trash2, GripVertical, Save, ArrowLeft, Loader2, Eye, EyeOff, Upload, ImageIcon, HelpCircle } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { HelpTooltip } from "@/components/ui/help-tooltip";
 import { getErrorMessage } from "@/lib/errorUtils";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -69,6 +71,7 @@ const EditCourse = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { user } = useAuth();
+  const { t } = useTranslation();
   
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -536,11 +539,14 @@ const EditCourse = () => {
             <Card className="border-border bg-card">
               <CardHeader>
                 <div className="flex items-center justify-between">
-                  <div>
-                    <CardTitle className="text-foreground">Course Chapters</CardTitle>
-                    <CardDescription>
-                      Manage your course content
-                    </CardDescription>
+                  <div className="flex items-center gap-2">
+                    <div>
+                      <CardTitle className="text-foreground">Course Chapters</CardTitle>
+                      <CardDescription>
+                        Manage your course content
+                      </CardDescription>
+                    </div>
+                    <HelpTooltip content={t("help.courseEditing.chaptersDesc")} />
                   </div>
                   <Button variant="outline" size="sm" onClick={addChapter}>
                     <Plus className="mr-2 h-4 w-4" />
@@ -560,7 +566,8 @@ const EditCourse = () => {
                       className="flex gap-3 p-4 rounded-lg border border-border bg-muted/30"
                     >
                       <div className="flex items-center">
-                        <GripVertical className="h-5 w-5 text-muted-foreground cursor-grab" />
+                        <GripVertical className="h-5 w-5 text-muted-foreground" />
+                        <HelpTooltip content={t("help.courseEditing.reorderDesc")} side="right" />
                       </div>
                       <div className="flex-1 min-w-0 space-y-3">
                         <div className="flex items-center gap-3">
@@ -577,6 +584,7 @@ const EditCourse = () => {
                             >
                               Free Preview
                             </Label>
+                            <HelpTooltip content={t("help.courseEditing.freePreviewDesc")} />
                             <Switch
                               id={`preview-${chapter.id}`}
                               checked={chapter.isFreePreview}

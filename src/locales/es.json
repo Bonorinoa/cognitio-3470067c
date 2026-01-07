@@ -873,6 +873,14 @@
       "priceTitle": "Precio del Curso",
       "priceDesc": "Los cursos gratuitos son excelentes para construir audiencia. Los cursos de pago procesan pagos de forma segura a través de Stripe. Recibirás los fondos directamente en tu cuenta."
     },
+    "courseEditing": {
+      "chaptersTitle": "Gestión de Capítulos",
+      "chaptersDesc": "Organiza el contenido de tu curso en capítulos. Cada capítulo puede tener un video y recursos descargables. Mantén los videos entre 5-15 minutos para mejor retención.",
+      "freePreviewTitle": "Vista Previa Gratuita",
+      "freePreviewDesc": "Marca capítulos como 'Vista Previa Gratuita' para que los visitantes puedan verlos sin comprar el curso. Esto ayuda a demostrar la calidad de tu contenido y aumentar conversiones.",
+      "reorderTitle": "Reordenar Capítulos",
+      "reorderDesc": "El orden de los capítulos se guarda según su posición en la lista. Para cambiar el orden, elimina y recrea los capítulos en la secuencia deseada."
+    },
     "videoUpload": {
       "title": "Subir Video",
       "formatsLabel": "Formatos",
