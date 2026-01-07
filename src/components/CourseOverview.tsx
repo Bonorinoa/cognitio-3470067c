@@ -107,7 +107,7 @@ const CourseOverview = ({
             <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-4">
               {course.average_rating && (
                 <span className="flex items-center gap-1">
-                  <Star className="h-4 w-4 text-accent-foreground fill-accent-foreground" />
+                  <Star className="h-4 w-4 text-primary fill-primary" />
                   {course.average_rating}
                   {course.rating_count && course.rating_count > 0 && (
                     <span className="text-muted-foreground">({course.rating_count})</span>

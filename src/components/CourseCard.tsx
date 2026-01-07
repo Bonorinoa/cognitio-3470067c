@@ -91,7 +91,7 @@ const CourseCard = ({
             )}
             {averageRating && (
               <span className="flex items-center gap-1">
-                <Star className="h-4 w-4 text-accent-foreground fill-accent-foreground" />
+                <Star className="h-4 w-4 text-primary fill-primary" />
                 {averageRating}
                 {ratingCount > 0 && <span>({ratingCount})</span>}
               </span>

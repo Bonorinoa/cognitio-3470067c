@@ -28,9 +28,9 @@ export default function CourseReviewsList({
           key={star}
           className={cn(
             "h-4 w-4",
-            star <= rating
-              ? "text-accent-foreground fill-accent-foreground"
-              : "text-muted-foreground"
+          star <= rating
+            ? "text-primary fill-primary"
+            : "text-muted-foreground"
           )}
         />
       ))}
