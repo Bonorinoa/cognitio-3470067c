@@ -79,8 +79,6 @@ const ChapterView = ({
   const handleSeekVideo = useCallback((seconds: number) => {
     if (videoRef.current) {
       videoRef.current.seekTo(seconds);
-      // Switch to content tab to show video
-      setActiveTab("content");
     }
   }, []);
 
