@@ -96,7 +96,7 @@ export default function CourseRatingCard({ courseId, hasAccess }: CourseRatingCa
                     className={cn(
                       "h-6 w-6 transition-colors",
                       star <= displayRating
-                        ? "text-accent-foreground fill-accent-foreground"
+                        ? "text-primary fill-primary"
                         : "text-muted-foreground"
                     )}
                   />
@@ -139,7 +139,7 @@ export default function CourseRatingCard({ courseId, hasAccess }: CourseRatingCa
                   className={cn(
                     "h-5 w-5",
                     star <= selectedRating
-                      ? "text-accent-foreground fill-accent-foreground"
+                      ? "text-primary fill-primary"
                       : "text-muted-foreground"
                   )}
                 />

@@ -29,6 +29,8 @@ interface Course {
   category: string | null;
   instructor_id: string;
   stripe_price_id: string | null;
+  average_rating: number | null;
+  rating_count: number | null;
   chapters: Chapter[];
   instructor?: {
     full_name: string | null;
