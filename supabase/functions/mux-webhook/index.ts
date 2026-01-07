@@ -104,8 +104,8 @@ serve(async (req) => {
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Handle video.track.ready - fired when a track (like subtitles) is ready
-    if (type === "video.track.ready") {
+    // Handle video.asset.track.ready - fired when a track (like subtitles) is ready
+    if (type === "video.asset.track.ready") {
       const track = data;
       const assetId = track.asset_id;
       
