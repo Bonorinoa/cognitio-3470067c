@@ -48,6 +48,7 @@ export default function DiscussionTab({
         isInstructorOrOwner={isInstructorOrOwner}
         onBack={() => setSelectedThread(null)}
         onSeekVideo={onSeekVideo}
+        currentVideoTime={currentVideoTime}
       />
     );
   }

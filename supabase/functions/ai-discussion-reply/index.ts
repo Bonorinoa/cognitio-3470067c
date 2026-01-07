@@ -126,14 +126,27 @@ serve(async (req) => {
         }
       }
 
-      if (transcriptResult.data?.transcript_json && video_timestamp_seconds) {
+      // Always include full transcript when available
+      if (transcriptResult.data?.transcript_json) {
         const segments = transcriptResult.data.transcript_json as Array<{ start: number; text: string }>;
-        const relevant = segments.filter(
-          (s) => s.start >= video_timestamp_seconds - 60 && s.start <= video_timestamp_seconds + 60
-        );
-        if (relevant.length > 0) {
+        if (segments.length > 0) {
           const formatTime = (s: number) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
-          transcriptExcerpt = relevant.map((s) => `[${formatTime(s.start)}] ${s.text}`).join("\n").slice(0, 1500);
+          const totalDuration = segments[segments.length - 1].start;
+          
+          // Format full transcript with timestamps
+          const fullTranscript = segments
+            .map((s) => `[${formatTime(s.start)}] ${s.text}`)
+            .join("\n");
+          
+          // Build transcript context with position awareness
+          transcriptExcerpt = `VIDEO TRANSCRIPT (Duration: ${formatTime(totalDuration)})\n`;
+          
+          if (video_timestamp_seconds !== undefined && video_timestamp_seconds !== null && video_timestamp_seconds > 0) {
+            transcriptExcerpt += `Student's current position in video: ${formatTime(video_timestamp_seconds)}\n`;
+            transcriptExcerpt += `(The student may be asking about content around this timestamp)\n\n`;
+          }
+          
+          transcriptExcerpt += fullTranscript;
         }
       }
     }
@@ -160,10 +173,10 @@ serve(async (req) => {
       if (chapter.description) contextParts.push(`Chapter Description: ${chapter.description}`);
     }
     if (transcriptExcerpt) {
-      contextParts.push(`\nRelevant Transcript (around the video timestamp the student is asking about):\n${transcriptExcerpt}`);
+      contextParts.push(`\n${transcriptExcerpt}`);
     }
 
-    const conversationContext = recentReplies?.reverse().map((r) => 
+    const conversationContext = recentReplies?.reverse().map((r) =>
       `${r.is_ai_generated ? "AI" : "Student"}: ${r.content}`
     ).join("\n") || "";
 
@@ -185,7 +198,7 @@ ${discussion?.content}
 ${conversationContext ? `Recent Discussion:\n${conversationContext}\n` : ""}
 Student's message: ${user_message}
 
-Respond in a Socratic manner, guiding the student toward understanding. Use the course and transcript context to provide relevant guidance.`;
+IMPORTANT: You have access to the complete video transcript above with timestamps. If the student asks about a specific moment (e.g., "at 4:13" or "what does this mean here"), refer to their current position timestamp to understand what they're watching. You can reference and connect concepts from different parts of the lecture. When referencing specific moments, include the timestamp so the student can navigate there.`;
 
     // Insert user's prompt first
     log("Inserting user prompt to DB");

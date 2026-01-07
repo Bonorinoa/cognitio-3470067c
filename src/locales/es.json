@@ -273,6 +273,7 @@
     "aiCallsRemaining": "{{count}} llamadas IA restantes",
     "aiWillRespond": "IA responderá",
     "aiLimitReached": "Límite de IA alcanzado",
+    "aiContextAt": "Contexto: {{time}}",
     "generatingAI": "CognitioAI está pensando...",
     "aiTakesTime": "Esto puede tardar unos segundos",
     "mentionHint": "Mencionar",
