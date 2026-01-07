@@ -231,6 +231,7 @@
     "fileUploaded": "¡Archivo subido! Completa el formulario para agregar el recurso.",
     "titleUrlRequired": "El título y la URL son requeridos",
     "openBlockedHelp": "Si sigue fallando, permite este sitio en tu bloqueador/extensión de privacidad.",
+    "downloadFailed": "Error al descargar el recurso. Inténtalo de nuevo.",
     "empty": "Aún no hay recursos para este capítulo",
     "pdf": "Documento PDF",
     "link": "Enlace Externo",
