@@ -484,7 +484,23 @@
     "unfeaturedDesc": "The course has been removed from featured.",
     "errorLoad": "Failed to load courses",
     "errorDelete": "Failed to delete course",
-    "errorFeatured": "Failed to update featured status"
+    "errorFeatured": "Failed to update featured status",
+    "featuredLimitTitle": "Featured limit reached",
+    "featuredLimitDesc": "You can feature up to 3 courses. Unfeature another course first."
+  },
+  "rating": {
+    "title": "Rate This Course",
+    "selectRating": "Please select a rating",
+    "reviewPlaceholder": "Share your experience with this course (optional)...",
+    "submit": "Submit Rating",
+    "submitting": "Submitting...",
+    "submitted": "Rating submitted!",
+    "edit": "Edit Rating",
+    "delete": "Remove",
+    "deleted": "Rating removed",
+    "cancel": "Cancel",
+    "errorSubmit": "Failed to submit rating",
+    "errorDelete": "Failed to delete rating"
   },
   "membership": {
     "title": "Enrolled Students",
