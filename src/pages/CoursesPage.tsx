@@ -89,6 +89,12 @@ const CoursesPage = () => {
   // Sort courses
   const sortedCourses = [...filteredCourses].sort((a, b) => {
     switch (sortBy) {
+      case "rating":
+        // Sort by rating (highest first), then by rating count for tiebreaker
+        const ratingA = a.averageRating ?? 0;
+        const ratingB = b.averageRating ?? 0;
+        if (ratingB !== ratingA) return ratingB - ratingA;
+        return (b.ratingCount ?? 0) - (a.ratingCount ?? 0);
       case "price-low":
         return a.price - b.price;
       case "price-high":
@@ -130,6 +136,7 @@ const CoursesPage = () => {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="popular">Más Popular</SelectItem>
+                <SelectItem value="rating">Mejor Valorados</SelectItem>
                 <SelectItem value="newest">Más Reciente</SelectItem>
                 <SelectItem value="price-low">Precio: Menor a Mayor</SelectItem>
                 <SelectItem value="price-high">Precio: Mayor a Menor</SelectItem>
