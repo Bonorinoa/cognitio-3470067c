@@ -49,6 +49,8 @@ const CoursesPage = () => {
           category,
           visibility,
           is_featured,
+          average_rating,
+          rating_count,
           chapters (id, duration_seconds)
         `)
         .eq("is_published", true)
@@ -68,6 +70,8 @@ const CoursesPage = () => {
           category: course.category || "Development",
           totalDurationSeconds: totalDuration,
           isFeatured: course.is_featured || false,
+          averageRating: course.average_rating,
+          ratingCount: course.rating_count,
         };
       });
     },

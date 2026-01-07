@@ -12,6 +12,13 @@ interface CourseRating {
   updated_at: string;
 }
 
+interface CourseReviewWithProfile extends CourseRating {
+  profiles: {
+    full_name: string | null;
+    avatar_url: string | null;
+  } | null;
+}
+
 export function useCourseRating(courseId: string | undefined) {
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -39,6 +46,40 @@ export function useCourseRating(courseId: string | undefined) {
     enabled: !!courseId && !!user,
   });
 
+  // Get all reviews for this course
+  const { data: allReviews = [], isLoading: isLoadingReviews } = useQuery({
+    queryKey: ["course-reviews", courseId],
+    queryFn: async () => {
+      if (!courseId) return [];
+
+      // First get the ratings
+      const { data: ratings, error: ratingsError } = await supabase
+        .from("course_ratings")
+        .select("*")
+        .eq("course_id", courseId)
+        .order("created_at", { ascending: false });
+
+      if (ratingsError) {
+        console.error("Error fetching reviews:", ratingsError);
+        return [];
+      }
+
+      // Then get the profiles for each rating
+      const userIds = ratings.map(r => r.user_id);
+      const { data: profiles } = await supabase
+        .from("profiles")
+        .select("id, full_name, avatar_url")
+        .in("id", userIds);
+
+      // Combine them
+      return ratings.map(rating => ({
+        ...rating,
+        profiles: profiles?.find(p => p.id === rating.user_id) || null,
+      })) as CourseReviewWithProfile[];
+    },
+    enabled: !!courseId,
+  });
+
   // Submit or update rating
   const submitRating = useMutation({
     mutationFn: async ({ rating, review }: { rating: number; review?: string }) => {
@@ -64,6 +105,7 @@ export function useCourseRating(courseId: string | undefined) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["course-rating", courseId] });
+      queryClient.invalidateQueries({ queryKey: ["course-reviews", courseId] });
       queryClient.invalidateQueries({ queryKey: ["course", courseId] });
     },
   });
@@ -83,6 +125,7 @@ export function useCourseRating(courseId: string | undefined) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["course-rating", courseId] });
+      queryClient.invalidateQueries({ queryKey: ["course-reviews", courseId] });
       queryClient.invalidateQueries({ queryKey: ["course", courseId] });
     },
   });
@@ -90,6 +133,8 @@ export function useCourseRating(courseId: string | undefined) {
   return {
     userRating,
     isLoadingUserRating,
+    allReviews,
+    isLoadingReviews,
     submitRating,
     deleteRating,
   };

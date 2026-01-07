@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -17,18 +17,22 @@ export default function CourseRatingCard({ courseId, hasAccess }: CourseRatingCa
   const { t } = useTranslation();
   const { userRating, submitRating, deleteRating } = useCourseRating(courseId);
   const [hoveredStar, setHoveredStar] = useState<number | null>(null);
-  const [selectedRating, setSelectedRating] = useState<number>(userRating?.rating || 0);
-  const [review, setReview] = useState(userRating?.review || "");
-  const [isEditing, setIsEditing] = useState(!userRating);
+  const [selectedRating, setSelectedRating] = useState<number>(0);
+  const [review, setReview] = useState("");
+  const [isEditing, setIsEditing] = useState(true);
 
   // Update local state when userRating changes
-  useState(() => {
+  useEffect(() => {
     if (userRating) {
       setSelectedRating(userRating.rating);
       setReview(userRating.review || "");
       setIsEditing(false);
+    } else {
+      setSelectedRating(0);
+      setReview("");
+      setIsEditing(true);
     }
-  });
+  }, [userRating]);
 
   if (!hasAccess) return null;
 
