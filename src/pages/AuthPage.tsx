@@ -239,13 +239,13 @@ const AuthPage = () => {
 
         <p className="text-center text-sm text-muted-foreground mt-6">
           {t("auth.termsText")}{" "}
-          <Button type="button" variant="link" className="p-0 h-auto text-primary">
+          <Link to="/terms" className="text-primary hover:underline">
             {t("auth.termsOfService")}
-          </Button>{" "}
+          </Link>{" "}
           {t("auth.and")}{" "}
-          <Button type="button" variant="link" className="p-0 h-auto text-primary">
+          <Link to="/privacy" className="text-primary hover:underline">
             {t("auth.privacyPolicy")}
-          </Button>
+          </Link>
         </p>
       </div>
     </div>
