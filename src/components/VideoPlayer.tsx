@@ -44,12 +44,16 @@ const VideoPlayer = React.forwardRef<VideoPlayerHandle, VideoPlayerProps>(
       );
     }
 
+    // Use Mux thumbnail when available, fall back to provided poster
+    const muxThumbnail = `https://image.mux.com/${playbackId}/thumbnail.jpg?time=0`;
+    const posterUrl = muxThumbnail || poster;
+
     return (
       <div className="relative aspect-video w-full overflow-hidden rounded-lg">
         <MuxPlayer
           ref={playerRef}
           playbackId={playbackId}
-          poster={poster}
+          poster={posterUrl}
           metadata={{
             video_title: title || "Video",
           }}

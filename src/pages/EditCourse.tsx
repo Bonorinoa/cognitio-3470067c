@@ -27,7 +27,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Plus, Trash2, GripVertical, Save, ArrowLeft, Loader2, Eye, EyeOff } from "lucide-react";
+import { Plus, Trash2, GripVertical, Save, ArrowLeft, Loader2, Eye, EyeOff, Upload, ImageIcon } from "lucide-react";
 import { getErrorMessage } from "@/lib/errorUtils";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -79,6 +79,9 @@ const EditCourse = () => {
   const [chapters, setChapters] = useState<Chapter[]>([]);
   const [isSaving, setIsSaving] = useState(false);
   const [chaptersToDelete, setChaptersToDelete] = useState<string[]>([]);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>("");
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
 
   // Fetch course data
   const { data: course, isLoading: courseLoading } = useQuery({
@@ -121,8 +124,65 @@ const EditCourse = () => {
       setCategory(course.category || "");
       setVisibility(course.visibility || "public");
       setIsPublished(course.is_published || false);
+      setImagePreview(course.image_url || "");
     }
   }, [course]);
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (!file.type.startsWith('image/')) {
+        toast.error("Please select a valid image file");
+        return;
+      }
+      
+      if (file.size > 2 * 1024 * 1024) {
+        toast.error("Image size should be less than 2MB");
+        return;
+      }
+      
+      setImageFile(file);
+      
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const uploadImage = async (): Promise<string | null> => {
+    if (!imageFile || !user) return null;
+    
+    setIsUploadingImage(true);
+    
+    try {
+      const fileExt = imageFile.name.split('.').pop();
+      const fileName = `${Date.now()}.${fileExt}`;
+      const filePath = `${user.id}/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('course-images')
+        .upload(filePath, imageFile, {
+          cacheControl: '3600',
+          upsert: false
+        });
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('course-images')
+        .getPublicUrl(filePath);
+
+      return publicUrl;
+    } catch (error: unknown) {
+      console.error('Error uploading image:', error);
+      toast.error(getErrorMessage(error));
+      return null;
+    } finally {
+      setIsUploadingImage(false);
+    }
+  };
 
   useEffect(() => {
     if (existingChapters) {
@@ -199,6 +259,15 @@ const EditCourse = () => {
     setIsSaving(true);
 
     try {
+      // Upload new image if provided
+      let imageUrl = course?.image_url;
+      if (imageFile) {
+        const uploadedUrl = await uploadImage();
+        if (uploadedUrl) {
+          imageUrl = uploadedUrl;
+        }
+      }
+
       // Update course details
       const { error: courseError } = await supabase
         .from("courses")
@@ -209,6 +278,7 @@ const EditCourse = () => {
           category: category || "Development",
           visibility: visibility,
           is_published: isPublished,
+          image_url: imageUrl,
         })
         .eq("id", id);
 
@@ -556,6 +626,55 @@ const EditCourse = () => {
 
           {/* Sidebar */}
           <div className="space-y-6">
+            {/* Course Cover Image */}
+            <Card className="border-border bg-card">
+              <CardHeader>
+                <CardTitle className="text-foreground">Cover Image</CardTitle>
+                <CardDescription>
+                  Update your course thumbnail
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <input
+                  type="file"
+                  id="course-image"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="hidden"
+                />
+                <label
+                  htmlFor="course-image"
+                  className="border-2 border-dashed border-border rounded-lg p-4 text-center hover:border-primary/50 transition-colors cursor-pointer block"
+                >
+                  {imagePreview ? (
+                    <div className="space-y-3">
+                      <img 
+                        src={imagePreview} 
+                        alt="Course preview" 
+                        className="mx-auto h-32 w-auto rounded-lg object-cover"
+                      />
+                      <p className="text-sm text-muted-foreground">
+                        Click to change image
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      <ImageIcon className="mx-auto h-8 w-8 text-muted-foreground" />
+                      <p className="text-sm text-muted-foreground">
+                        Click to upload image
+                      </p>
+                    </div>
+                  )}
+                </label>
+                {isUploadingImage && (
+                  <p className="text-sm text-muted-foreground mt-2 text-center">
+                    <Loader2 className="inline h-4 w-4 animate-spin mr-1" />
+                    Uploading...
+                  </p>
+                )}
+              </CardContent>
+            </Card>
+
             {/* Student Enrollment - only for private courses */}
             {visibility === "private" && id && (
               <CourseMembershipManager courseId={id} />
