@@ -73,6 +73,13 @@ serve(async (req) => {
           new_asset_settings: {
             playback_policy: ["public"],
             encoding_tier: "baseline",
+            // Request auto-generated English subtitles for transcription
+            input: [{
+              generated_subtitles: [{
+                language_code: "en",
+                name: "English (auto-generated)"
+              }]
+            }]
           },
           cors_origin: "*",
         }),
