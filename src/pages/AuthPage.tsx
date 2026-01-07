@@ -164,7 +164,7 @@ const AuthPage = () => {
                   </div>
                   <div className="flex items-center justify-end">
                     <Link to="/forgot-password">
-                      <Button variant="link" className="p-0 h-auto text-primary">
+                      <Button type="button" variant="link" className="p-0 h-auto text-primary">
                         {t("auth.forgotPassword")}
                       </Button>
                     </Link>
@@ -239,11 +239,11 @@ const AuthPage = () => {
 
         <p className="text-center text-sm text-muted-foreground mt-6">
           {t("auth.termsText")}{" "}
-          <Button variant="link" className="p-0 h-auto text-primary">
+          <Button type="button" variant="link" className="p-0 h-auto text-primary">
             {t("auth.termsOfService")}
           </Button>{" "}
           {t("auth.and")}{" "}
-          <Button variant="link" className="p-0 h-auto text-primary">
+          <Button type="button" variant="link" className="p-0 h-auto text-primary">
             {t("auth.privacyPolicy")}
           </Button>
         </p>
