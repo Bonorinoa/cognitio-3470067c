@@ -344,6 +344,7 @@
     "analytics": "Analíticas",
     "settings": "Configuración",
     "aiStudio": "Estudio IA",
+    "guide": "Guía",
     "signOut": "Cerrar Sesión"
   },
   "knowledgeBase": {
@@ -800,6 +801,40 @@
     "delete": "Eliminar",
     "deleting": "Eliminando...",
     "error": "Algo salió mal"
+  },
+  "guide": {
+    "title": "Guía del Instructor",
+    "subtitle": "Todo lo que necesitas saber para crear y gestionar tus cursos exitosamente",
+    "sections": {
+      "gettingStarted": {
+        "title": "Primeros Pasos",
+        "description": "Sigue estos pasos para configurar tu presencia en Cognitio"
+      },
+      "profile": {
+        "title": "Tu Perfil",
+        "description": "Un perfil completo genera más confianza con tus estudiantes"
+      },
+      "resources": {
+        "title": "Recursos de Capítulo",
+        "description": "Añade materiales complementarios a cada capítulo de tu curso",
+        "pdf": "Documentos, presentaciones y guías de estudio",
+        "link": "Enlaces a recursos externos, artículos o herramientas",
+        "notebook": "Jupyter notebooks, código fuente o ejercicios prácticos",
+        "video": "Videos complementarios o contenido adicional",
+        "helpTooltip": "Agrega materiales como PDFs, enlaces o notebooks. Los archivos se suben directamente y los estudiantes pueden descargarlos."
+      },
+      "videoUpload": {
+        "description": "Sube videos de alta calidad para cada lección de tu curso"
+      },
+      "aiStudio": {
+        "title": "AI Studio",
+        "description": "Usa inteligencia artificial para crear contenido de marketing y académico"
+      }
+    },
+    "contact": {
+      "title": "¿Necesitas ayuda adicional?",
+      "description": "Contacta a los fundadores para solicitar funciones personalizadas o resolver dudas"
+    }
   },
   "help": {
     "menu": {

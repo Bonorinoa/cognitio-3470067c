@@ -339,6 +339,7 @@
     "knowledgeBase": "Knowledge Base",
     "aiStudio": "AI Studio",
     "settings": "Settings",
+    "guide": "Guide",
     "signOut": "Sign Out"
   },
   "knowledgeBase": {
@@ -793,6 +794,40 @@
     "delete": "Delete",
     "deleting": "Deleting...",
     "error": "Something went wrong"
+  },
+  "guide": {
+    "title": "Instructor Guide",
+    "subtitle": "Everything you need to know to create and manage your courses successfully",
+    "sections": {
+      "gettingStarted": {
+        "title": "Getting Started",
+        "description": "Follow these steps to set up your presence on Cognitio"
+      },
+      "profile": {
+        "title": "Your Profile",
+        "description": "A complete profile builds more trust with your students"
+      },
+      "resources": {
+        "title": "Chapter Resources",
+        "description": "Add supplementary materials to each chapter of your course",
+        "pdf": "Documents, presentations, and study guides",
+        "link": "Links to external resources, articles, or tools",
+        "notebook": "Jupyter notebooks, source code, or hands-on exercises",
+        "video": "Supplementary videos or additional content",
+        "helpTooltip": "Add materials like PDFs, links, or notebooks. Files are uploaded directly and students can download them."
+      },
+      "videoUpload": {
+        "description": "Upload high-quality videos for each lesson in your course"
+      },
+      "aiStudio": {
+        "title": "AI Studio",
+        "description": "Use artificial intelligence to create marketing and academic content"
+      }
+    },
+    "contact": {
+      "title": "Need additional help?",
+      "description": "Contact the founders to request custom features or resolve questions"
+    }
   },
   "help": {
     "menu": {
