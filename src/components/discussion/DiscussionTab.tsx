@@ -6,6 +6,7 @@ import ThreadView from "./ThreadView";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { AITutorOnboardingCard } from "@/components/help/AITutorOnboardingCard";
 
 interface DiscussionTabProps {
   chapterId: string;
@@ -55,6 +56,11 @@ export default function DiscussionTab({
 
   return (
     <div className="space-y-4">
+      {/* AI Tutor Onboarding Card for students */}
+      {aiSettings.enabled && isAuthenticated && !isInstructorOrOwner && (
+        <AITutorOnboardingCard />
+      )}
+
       {/* AI tutor disabled banner for admins/instructors */}
       {!aiSettings.enabled && isInstructorOrOwner && (
         <Alert>

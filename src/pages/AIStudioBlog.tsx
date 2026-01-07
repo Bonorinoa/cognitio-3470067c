@@ -19,6 +19,7 @@ import { Badge } from "@/components/ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { EmptyState } from "@/components/EmptyState";
+import { HelpTooltip } from "@/components/ui/help-tooltip";
 import { toast } from "sonner";
 import { useKnowledgeBase } from "@/hooks/useKnowledgeBase";
 import { useContentGeneration } from "@/hooks/useContentGeneration";
@@ -394,7 +395,12 @@ export default function AIStudioBlog() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="topic">{t("aiStudio.topic", "Topic")} *</Label>
+                <div className="flex items-center gap-2">
+                  <Label htmlFor="topic">{t("aiStudio.topic", "Topic")} *</Label>
+                  <HelpTooltip 
+                    content={t("aiStudio.topicHelp", "Be specific about your topic. Include the angle or perspective you want to explore.")}
+                  />
+                </div>
                 <Input
                   id="topic"
                   placeholder={t("aiStudio.topicPlaceholder", "e.g., The future of AI in education")}
@@ -404,9 +410,14 @@ export default function AIStudioBlog() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="instructions">
-                  {t("aiStudio.additionalInstructions", "Additional Instructions")}
-                </Label>
+                <div className="flex items-center gap-2">
+                  <Label htmlFor="instructions">
+                    {t("aiStudio.additionalInstructions", "Additional Instructions")}
+                  </Label>
+                  <HelpTooltip 
+                    content={t("aiStudio.instructionsHelp", "Add specific requirements: target audience, tone, key points to include, or things to avoid.")}
+                  />
+                </div>
                 <Textarea
                   id="instructions"
                   placeholder={t(
