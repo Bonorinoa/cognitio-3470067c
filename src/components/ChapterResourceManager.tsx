@@ -364,7 +364,7 @@ export default function ChapterResourceManager({
               return (
                 <div
                   key={resource.id}
-                  className="flex items-center gap-2 p-2 rounded border border-border bg-background/50 text-sm group"
+                  className="flex items-center gap-2 p-2 rounded border border-border bg-background/50 text-sm group min-w-0 overflow-hidden"
                 >
                   <div className="flex flex-col gap-0.5">
                     <button
