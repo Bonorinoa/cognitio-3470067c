@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import BundleCard from "@/components/ai-studio/BundleCard";
 import PricingSection from "@/components/ai-studio/PricingSection";
 import { useAISubscription } from "@/hooks/useAISubscription";
+import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import {
   Sparkles,
@@ -20,7 +21,8 @@ import {
 export default function AIStudioLanding() {
   const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { invalidateSubscription } = useAISubscription();
+  const { invalidateSubscription, hasActiveSubscription, isLoading: subscriptionLoading } = useAISubscription();
+  const { user } = useAuth();
 
   // Handle checkout success
   useEffect(() => {
@@ -60,12 +62,23 @@ export default function AIStudioLanding() {
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-          <Link to="/ai-studio/marketing">
-            <Button size="lg" className="gap-2">
-              {t("aiStudio.tryFree", "Try Free - 10 generations/day")}
-              <ArrowRight className="h-4 w-4" />
-            </Button>
-          </Link>
+          {subscriptionLoading ? (
+            <div className="h-12 w-48 bg-muted animate-pulse rounded-lg" />
+          ) : hasActiveSubscription ? (
+            <Link to="/ai-studio/marketing/blog">
+              <Button size="lg" className="gap-2">
+                {t("aiStudio.goToTools", "Go to Marketing Tools")}
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </Link>
+          ) : (
+            <Link to={user ? "/ai-studio/marketing/blog" : "/auth"}>
+              <Button size="lg" className="gap-2">
+                {t("aiStudio.tryFree", "Try Free - 10 generations/day")}
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </Link>
+          )}
           <Button
             size="lg"
             variant="outline"
