@@ -223,7 +223,13 @@
     "save": "Save",
     "fileSizeError": "File size must be less than 20MB",
     "fileUploaded": "File uploaded! Complete the form to add the resource.",
-    "titleUrlRequired": "Title and URL are required"
+    "titleUrlRequired": "Title and URL are required",
+    "empty": "No resources for this chapter yet",
+    "pdf": "PDF Document",
+    "link": "External Link",
+    "notebook": "Code Notebook",
+    "video": "Video",
+    "other": "Resource"
   },
   "discussion": {
     "sortNew": "Newest",
@@ -385,7 +391,8 @@
     "errorTokenLimit": "Document exceeds the token limit",
     "errorSave": "Failed to save document",
     "uploadFile": "Upload Text File",
-    "uploadHint": "Supports .txt, .md, .csv, .json, .py, .js, .ts"
+    "uploadHint": "Supports .txt, .md, .csv, .json, .py, .js, .ts",
+    "pdfNotSupported": "PDFs are not supported. Please copy and paste the text content directly."
   },
   "instructorDashboard": {
     "title": "Instructor Dashboard",
@@ -761,14 +768,6 @@
     "paperFormatter": "Paper Formatter",
     "paperEditor": "Paper Editor",
     "backToHome": "Back to Home"
-  },
-  "resources": {
-    "empty": "No resources for this chapter yet",
-    "pdf": "PDF Document",
-    "link": "External Link",
-    "notebook": "Code Notebook",
-    "video": "Video",
-    "other": "Resource"
   },
   "common": {
     "soon": "Coming Soon",

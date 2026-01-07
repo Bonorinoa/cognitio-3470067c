@@ -65,15 +65,28 @@ export default function ResourcesTab({ chapterId }: ResourcesTabProps) {
     );
   }
 
+  // Generate the appropriate URL for a resource
+  const getResourceUrl = (resource: ChapterResource): string => {
+    // For Supabase storage files, use the download proxy to bypass ad blockers
+    const isStorageUrl = resource.url.includes('supabase.co/storage');
+    if (isStorageUrl) {
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      return `${supabaseUrl}/functions/v1/download-resource?id=${resource.id}`;
+    }
+    return resource.url;
+  };
+
   return (
     <div className="space-y-3">
       {resources.map((resource) => {
         const Icon = resourceIcons[resource.resource_type] || File;
+        const resourceUrl = getResourceUrl(resource);
+        
         return (
           <Card key={resource.id} className="hover:bg-accent/50 transition-colors">
             <CardContent className="py-4">
               <a
-                href={resource.url}
+                href={resourceUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-start gap-4 group"

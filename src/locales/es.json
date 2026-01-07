@@ -229,7 +229,13 @@
     "save": "Guardar",
     "fileSizeError": "El archivo debe ser menor a 20MB",
     "fileUploaded": "¡Archivo subido! Completa el formulario para agregar el recurso.",
-    "titleUrlRequired": "El título y la URL son requeridos"
+    "titleUrlRequired": "El título y la URL son requeridos",
+    "empty": "Aún no hay recursos para este capítulo",
+    "pdf": "Documento PDF",
+    "link": "Enlace Externo",
+    "notebook": "Cuaderno de Código",
+    "video": "Video",
+    "other": "Recurso"
   },
   "discussion": {
     "sortNew": "Más Reciente",
@@ -390,7 +396,8 @@
     "errorTokenLimit": "El documento excede el límite de tokens",
     "errorSave": "Error al guardar documento",
     "uploadFile": "Subir Archivo de Texto",
-    "uploadHint": "Soporta .txt, .md, .csv, .json, .py, .js, .ts"
+    "uploadHint": "Soporta .txt, .md, .csv, .json, .py, .js, .ts",
+    "pdfNotSupported": "Los PDFs no están soportados. Por favor, copia y pega el texto directamente."
   },
   "instructorDashboard": {
     "title": "Panel de Instructor",
@@ -766,14 +773,6 @@
     "paperFormatter": "Formateador de Artículos",
     "paperEditor": "Editor de Artículos",
     "backToHome": "Volver al Inicio"
-  },
-  "resources": {
-    "empty": "Aún no hay recursos para este capítulo",
-    "pdf": "Documento PDF",
-    "link": "Enlace Externo",
-    "notebook": "Cuaderno de Código",
-    "video": "Video",
-    "other": "Recurso"
   },
   "common": {
     "soon": "Próximamente",
