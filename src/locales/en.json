@@ -855,6 +855,27 @@
       "processing": "May take a few minutes depending on file size",
       "qualityLabel": "Recommended quality",
       "quality": "1080p (Full HD) for best experience"
+    },
+    "aiStudio": {
+      "tokenBudgetTitle": "Token Budget",
+      "tokenBudgetDesc": "Tokens measure the amount of text in your documents. A larger budget allows the AI to use more context from your knowledge base to generate more accurate and personalized content.",
+      "documentTypesTitle": "Document Types",
+      "documentTypesDesc": "Each type helps the AI understand how to use your content: 'Writing Samples' define your style, 'Academic Papers' provide subject expertise, and 'CV/Bio' establishes your credentials.",
+      "contextRolesTitle": "Context Roles",
+      "contextRolesDesc": "'Style Reference' to mimic your voice, 'Topic Source' for factual information, 'Background Context' for general knowledge about you.",
+      "refineTitle": "Text Refinement",
+      "refineDesc": "Select any text in the editor and use 'Refine' to improve it with AI. You can ask to make it more concise, change the tone, add examples, or any other specific improvement."
+    },
+    "aiTutor": {
+      "title": "CognitioAI - Your AI Tutor",
+      "intro": "CognitioAI is an integrated AI assistant that can help you better understand the course content.",
+      "howToUse": "How to use it",
+      "howToUseDesc": "Type @CognitioAI in any reply to invoke the tutor. The AI will read your question and respond based on the video content.",
+      "capabilities": "Capabilities",
+      "capabilitiesDesc": "CognitioAI has access to the complete video transcript and knows what timestamp you're watching. It can explain concepts, resolve doubts, and dive deeper into specific topics.",
+      "limits": "Daily Limits",
+      "limitsDesc": "You have a limited number of AI calls per day to ensure quality service for all students.",
+      "dismiss": "Got it"
     }
   }
 }

@@ -37,6 +37,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { formatTokenCount, getBudgetDisplayInfo } from "@/lib/tokenUtils";
+import { HelpPopover } from "@/components/ui/help-popover";
 import type { KnowledgeBaseDocument, DocumentFormData, DocumentType, ContextRole } from "@/types/aiStudio";
 
 // Icons for document types
@@ -153,7 +154,12 @@ export default function AIStudioKnowledge() {
       <Card>
         <CardContent className="py-4">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium">{t("knowledgeBase.tokenBudget")}</span>
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-medium">{t("knowledgeBase.tokenBudget")}</span>
+              <HelpPopover title={t("help.aiStudio.tokenBudgetTitle")}>
+                <p>{t("help.aiStudio.tokenBudgetDesc")}</p>
+              </HelpPopover>
+            </div>
             <span className={`text-sm ${budgetInfo.statusColor}`}>
               {formatTokenCount(totalTokens)} / {formatTokenCount(budgetInfo.totalBudget)} tokens
             </span>

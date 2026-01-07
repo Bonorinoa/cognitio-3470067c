@@ -860,6 +860,27 @@
       "processing": "Puede tomar unos minutos dependiendo del tamaño del archivo",
       "qualityLabel": "Calidad recomendada",
       "quality": "1080p (Full HD) para mejor experiencia"
+    },
+    "aiStudio": {
+      "tokenBudgetTitle": "Presupuesto de Tokens",
+      "tokenBudgetDesc": "Los tokens miden la cantidad de texto en tus documentos. Un mayor presupuesto permite que la IA use más contexto de tu base de conocimiento para generar contenido más preciso y personalizado.",
+      "documentTypesTitle": "Tipos de Documento",
+      "documentTypesDesc": "Cada tipo ayuda a la IA a entender cómo usar tu contenido: las 'Muestras de Escritura' definen tu estilo, los 'Artículos Académicos' proveen experiencia temática, y 'CV/Bio' establece tus credenciales.",
+      "contextRolesTitle": "Roles de Contexto",
+      "contextRolesDesc": "'Referencia de Estilo' para imitar tu voz, 'Fuente de Tema' para información factual, 'Contexto de Fondo' para conocimiento general sobre ti.",
+      "refineTitle": "Refinamiento de Texto",
+      "refineDesc": "Selecciona cualquier texto en el editor y usa 'Refinar' para mejorarlo con IA. Puedes pedir que sea más conciso, cambie el tono, agregue ejemplos, o cualquier otra mejora específica."
+    },
+    "aiTutor": {
+      "title": "CognitioAI - Tu Tutor de IA",
+      "intro": "CognitioAI es un asistente de IA integrado que puede ayudarte a entender mejor el contenido del curso.",
+      "howToUse": "Cómo usarlo",
+      "howToUseDesc": "Escribe @CognitioAI en cualquier respuesta para invocar al tutor. La IA leerá tu pregunta y responderá basándose en el contenido del video.",
+      "capabilities": "Capacidades",
+      "capabilitiesDesc": "CognitioAI tiene acceso a la transcripción completa del video y sabe en qué momento estás viendo. Puede explicar conceptos, resolver dudas y profundizar en temas específicos.",
+      "limits": "Límites Diarios",
+      "limitsDesc": "Tienes un número limitado de llamadas de IA por día para asegurar un servicio de calidad para todos los estudiantes.",
+      "dismiss": "Entendido"
     }
   }
 }
