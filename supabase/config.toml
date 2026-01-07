@@ -32,3 +32,6 @@ verify_jwt = false
 
 [functions.ai-discussion-reply]
 verify_jwt = true
+
+[functions.download-resource]
+verify_jwt = false

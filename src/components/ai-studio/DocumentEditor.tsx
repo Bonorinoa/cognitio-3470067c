@@ -208,13 +208,16 @@ export default function DocumentEditor({
                 ) : (
                   <Upload className="h-4 w-4" />
                 )}
-                {t("knowledgeBase.uploadFile", "Upload Text File")}
+                {t("knowledgeBase.uploadFile")}
               </Button>
               <span className="text-xs text-muted-foreground">
-                {t("knowledgeBase.uploadHint", "Supports .txt, .md, .csv, .json, .py, .js, .ts")}
+                {t("knowledgeBase.uploadHint")}
               </span>
             </div>
           )}
+          <p className="text-xs text-muted-foreground -mt-2">
+            {t("knowledgeBase.pdfNotSupported")}
+          </p>
 
           {/* Title */}
           <div className="space-y-2">
