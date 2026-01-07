@@ -1,9 +1,11 @@
+import { useTranslation } from "react-i18next";
 import { useInstructorAnalytics, exportAnalyticsCSV } from "@/hooks/useInstructorAnalytics";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { HelpTooltip } from "@/components/ui/help-tooltip";
 import {
   Table,
   TableBody,
@@ -37,6 +39,7 @@ import {
 } from "recharts";
 
 const InstructorAnalytics = () => {
+  const { t } = useTranslation();
   const { data, isLoading, error } = useInstructorAnalytics();
 
   const handleExport = () => {
@@ -76,30 +79,34 @@ const InstructorAnalytics = () => {
           {/* Summary Cards - More compact */}
           <div className="grid gap-3 grid-cols-2 lg:grid-cols-4 mb-6">
             <SummaryCard
-              title="Ingresos Totales"
+              title={t("help.topics.analytics.totalRevenueTitle", "Ingresos Totales")}
               value={`$${data.summary.totalRevenue.toLocaleString()}`}
-              subtitle={`$${data.summary.revenueThisMonth.toLocaleString()} este mes`}
+              subtitle={`$${data.summary.revenueThisMonth.toLocaleString()} ${t("instructorAnalytics.thisMonth", "este mes")}`}
               icon={<DollarSign className="h-4 w-4" />}
               trend={data.summary.revenueGrowth}
+              helpText={t("help.topics.analytics.totalRevenueDesc")}
             />
             <SummaryCard
-              title="Total Estudiantes"
+              title={t("help.topics.analytics.totalStudentsTitle", "Total Estudiantes")}
               value={data.summary.totalStudents.toLocaleString()}
-              subtitle={`${data.summary.studentsThisMonth} nuevos este mes`}
+              subtitle={`${data.summary.studentsThisMonth} ${t("instructorAnalytics.newThisMonth", "nuevos este mes")}`}
               icon={<Users className="h-4 w-4" />}
               trend={data.summary.studentGrowth}
+              helpText={t("help.topics.analytics.totalStudentsDesc")}
             />
             <SummaryCard
-              title="Cursos Publicados"
+              title={t("help.topics.analytics.publishedCoursesTitle", "Cursos Publicados")}
               value={data.summary.publishedCourses.toString()}
-              subtitle={`de ${data.summary.totalCourses} total`}
+              subtitle={`${t("instructorAnalytics.of", "de")} ${data.summary.totalCourses} total`}
               icon={<BookOpen className="h-4 w-4" />}
+              helpText={t("help.topics.analytics.publishedCoursesDesc")}
             />
             <SummaryCard
-              title="Tasa de Finalización"
+              title={t("help.topics.analytics.completionRateTitle", "Tasa de Finalización")}
               value={`${data.summary.avgCompletionRate}%`}
-              subtitle="promedio de cursos"
+              subtitle={t("instructorAnalytics.avgCourses", "promedio de cursos")}
               icon={<CheckCircle2 className="h-4 w-4" />}
+              helpText={t("help.topics.analytics.completionRateDesc")}
             />
           </div>
 
@@ -320,14 +327,18 @@ interface SummaryCardProps {
   subtitle: string;
   icon: React.ReactNode;
   trend?: number;
+  helpText?: string;
 }
 
-const SummaryCard = ({ title, value, subtitle, icon, trend }: SummaryCardProps) => (
+const SummaryCard = ({ title, value, subtitle, icon, trend, helpText }: SummaryCardProps) => (
   <Card>
     <CardHeader className="flex flex-row items-center justify-between pb-1 pt-4 px-4">
-      <CardTitle className="text-xs font-medium text-muted-foreground">
-        {title}
-      </CardTitle>
+      <div className="flex items-center gap-1">
+        <CardTitle className="text-xs font-medium text-muted-foreground">
+          {title}
+        </CardTitle>
+        {helpText && <HelpTooltip content={helpText} />}
+      </div>
       <div className="text-muted-foreground">{icon}</div>
     </CardHeader>
     <CardContent className="pb-4 px-4">

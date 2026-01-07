@@ -428,6 +428,12 @@
     "hoursAgo": "{{count}} hours ago",
     "daysAgo": "{{count}} days ago"
   },
+  "instructorAnalytics": {
+    "thisMonth": "this month",
+    "newThisMonth": "new this month",
+    "of": "of",
+    "avgCourses": "avg across courses"
+  },
   "passwordChange": {
     "title": "Change Password",
     "subtitle": "Update your password to keep your account secure",
@@ -567,6 +573,9 @@
   "styleProfile": {
     "title": "AI Writing Style",
     "subtitle": "Configure how AI generates content for you. These preferences shape your unique voice.",
+    "helpTitle": "About Style Profile",
+    "helpDescription": "These settings personalize how AI generates content for you. The tone defines formality, the target audience helps adapt complexity level, and custom instructions let you specify unique preferences (like avoiding certain jargon or always including your research methodology).",
+    "helpCustomization": "Need additional customization parameters? Contact us directly at contact@cognitio.education and we'll be happy to help you configure advanced options.",
     "setupComplete": "Style preferences configured",
     "tone": "Writing Tone",
     "toneDesc": "Select the overall tone for your AI-generated content",
@@ -837,6 +846,16 @@
         "students": "Total number of unique students enrolled in your courses",
         "revenue": "Total revenue generated from course sales",
         "completion": "Average percentage of chapters completed by students"
+      },
+      "analytics": {
+        "totalRevenueTitle": "Total Revenue",
+        "totalRevenueDesc": "Sum of all course sales, including growth vs. previous month.",
+        "totalStudentsTitle": "Total Students",
+        "totalStudentsDesc": "Number of unique students enrolled across all your courses.",
+        "publishedCoursesTitle": "Published Courses",
+        "publishedCoursesDesc": "Active courses visible to students vs. total courses created.",
+        "completionRateTitle": "Completion Rate",
+        "completionRateDesc": "Average percentage of chapters completed by students across all your courses. A high rate indicates engaging content."
       }
     },
     "courseCreation": {
