@@ -433,6 +433,12 @@
     "hoursAgo": "hace {{count}} horas",
     "daysAgo": "hace {{count}} días"
   },
+  "instructorAnalytics": {
+    "thisMonth": "este mes",
+    "newThisMonth": "nuevos este mes",
+    "of": "de",
+    "avgCourses": "promedio de cursos"
+  },
   "passwordChange": {
     "title": "Cambiar Contraseña",
     "subtitle": "Actualiza tu contraseña para mantener tu cuenta segura",
@@ -572,6 +578,9 @@
   "styleProfile": {
     "title": "Estilo de Escritura IA",
     "subtitle": "Configura cómo la IA genera contenido para ti. Estas preferencias dan forma a tu voz única.",
+    "helpTitle": "Acerca del Perfil de Estilo",
+    "helpDescription": "Estas configuraciones personalizan cómo la IA genera contenido para ti. El tono define la formalidad, la audiencia objetivo ayuda a adaptar el nivel de complejidad, y las instrucciones personalizadas te permiten especificar preferencias únicas (como evitar cierta jerga o incluir siempre tu metodología de investigación).",
+    "helpCustomization": "¿Necesitas parámetros adicionales de personalización? Contáctanos directamente en contacto@cognitio.education y estaremos encantados de ayudarte a configurar opciones avanzadas.",
     "setupComplete": "Preferencias de estilo configuradas",
     "tone": "Tono de Escritura",
     "toneDesc": "Selecciona el tono general para tu contenido generado por IA",
@@ -642,8 +651,10 @@
     "topicTitle": "Tema e Instrucciones",
     "topic": "Tema",
     "topicPlaceholder": "ej., El futuro de la IA en educación",
+    "topicHelp": "Sé específico sobre tu tema. Incluye el ángulo o perspectiva que quieres explorar.",
     "additionalInstructions": "Instrucciones Adicionales",
     "instructionsPlaceholder": "Puntos específicos a cubrir, ajustes de tono, etc.",
+    "instructionsHelp": "Agrega requisitos específicos: audiencia objetivo, tono, puntos clave a incluir, o cosas a evitar.",
     "selectDocuments": "Documentos de Contexto",
     "selectDocsDesc": "Selecciona documentos para incluir como contexto en la generación",
     "noDocuments": "Aún no hay documentos en tu base de conocimiento.",
@@ -842,6 +853,16 @@
         "students": "Número total de estudiantes únicos inscritos en tus cursos",
         "revenue": "Ingresos totales generados por ventas de cursos",
         "completion": "Porcentaje promedio de capítulos completados por estudiantes"
+      },
+      "analytics": {
+        "totalRevenueTitle": "Ingresos Totales",
+        "totalRevenueDesc": "Suma de todas las ventas de cursos, incluyendo el crecimiento vs. el mes anterior.",
+        "totalStudentsTitle": "Total de Estudiantes",
+        "totalStudentsDesc": "Número de estudiantes únicos inscritos en todos tus cursos.",
+        "publishedCoursesTitle": "Cursos Publicados",
+        "publishedCoursesDesc": "Cursos activos visibles para estudiantes vs. total de cursos creados.",
+        "completionRateTitle": "Tasa de Finalización",
+        "completionRateDesc": "Porcentaje promedio de capítulos completados por estudiantes en todos tus cursos. Una tasa alta indica contenido atractivo."
       }
     },
     "courseCreation": {

@@ -6,7 +6,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Loader2, Sparkles, Check } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Loader2, Sparkles, Check, Info, Mail } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { useStyleProfile } from "@/hooks/useStyleProfile";
 import type { 
@@ -99,6 +100,18 @@ export default function StyleProfileForm({ embedded = false }: StyleProfileFormP
 
   const content = (
     <div className="space-y-6">
+        {/* Info Alert */}
+        <Alert className="border-primary/30 bg-primary/5">
+          <Info className="h-4 w-4 text-primary" />
+          <AlertDescription className="text-sm">
+            <p className="mb-2">{t("styleProfile.helpDescription")}</p>
+            <p className="flex items-center gap-1 text-muted-foreground">
+              <Mail className="h-3 w-3" />
+              {t("styleProfile.helpCustomization")}
+            </p>
+          </AlertDescription>
+        </Alert>
+
         {/* Writing Tone */}
         <div className="space-y-3">
           <Label className="text-base font-medium">{t("styleProfile.tone")}</Label>
