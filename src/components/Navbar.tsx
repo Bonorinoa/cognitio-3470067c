@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { LayoutDashboard, LogOut, BookOpen, Shield, Menu, X } from "lucide-react";
@@ -21,9 +21,11 @@ const Navbar = () => {
   const { isInstructor, isAdmin } = useUserRole();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const handleSignOut = async () => {
     await signOut();
+    navigate('/');
   };
 
   const getUserInitials = () => {
