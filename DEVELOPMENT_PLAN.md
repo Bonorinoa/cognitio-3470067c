@@ -1,7 +1,7 @@
 # Cognitio Development Plan
 
-**Current Version:** v4.0.1  
-**Last Updated:** January 5, 2026
+**Current Version:** v4.0.4  
+**Last Updated:** January 6, 2026
 
 ---
 
@@ -87,10 +87,34 @@ Public-facing AI content platform with subscription monetization.
 |---------|-------|------------------|--------|
 | v4.0 | Commercialization | Public landing, bundles, Stripe subscriptions, tier limits | ✅ |
 | v4.0.1 | Cleanup | Tier alignment, notification removal, doc consolidation | ✅ |
+| v4.0.2 | Discussion System | Chapter threads, upvoting, @mentions, timestamps | ✅ |
+| v4.0.3 | AI Tutor | CognitioAI with 5 calls/day limit, context-aware responses | ✅ |
+| v4.0.4 | Resources & Transcripts | Chapter resources, transcript tab, i18n completion | ✅ |
 
 ---
 
 ## ✅ Completado
+
+### v4.0.4 - January 6, 2026
+
+- Added Transcript tab to ChapterView with click-to-seek functionality
+- Completed Spanish i18n for ChapterResourceManager
+- Updated documentation (README, TESTING, DEVELOPMENT_PLAN)
+- Fixed upvoting system verification (triggers already exist)
+
+### v4.0.3 - January 6, 2026
+
+- Implemented CognitioAI tutor with @mention trigger
+- Added 5 calls/day rate limit per chapter
+- Language-aware responses (respects user's i18n setting)
+- Non-streaming response for reliability
+
+### v4.0.2 - January 6, 2026
+
+- Created Discussion feature with chapter-level threads
+- Upvoting system with database triggers for count sync
+- Video timestamp linking in questions
+- Reply composer with @mention suggestions
 
 ### v4.0.1 - January 5, 2026
 

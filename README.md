@@ -31,9 +31,9 @@ Cognitio no es un marketplace abierto. Es un "Instructor Studio" curado: LMS lig
 
 ---
 
-## 📍 Estado Actual: v4.0.1
+## 📍 Estado Actual: v4.0.4
 
-**Última Actualización:** Enero 5, 2026
+**Última Actualización:** Enero 6, 2026
 
 ### ✅ Funcionalidades Completas
 
@@ -54,6 +54,14 @@ Cognitio no es un marketplace abierto. Es un "Instructor Studio" curado: LMS lig
 - Sistema de diseño con tema claro cálido
 - Internacionalización completa (Español/Inglés)
 - Security audit complete: 0 vulnerabilidades críticas
+
+#### Course Learning Experience (v4.0.2 - v4.0.4) ✅
+
+- **Discussion Threads**: Chapter-level Q&A with upvoting, timestamps, @mentions
+- **AI Tutor (CognitioAI)**: Socratic mentorship with 5 calls/day limit per chapter
+- **Resources Tab**: Chapter-specific PDFs, links, notebooks with instructor management
+- **Transcript Tab**: Auto-generated video transcripts with click-to-seek
+- **Video Player**: Mux-powered with chapter navigation and progress tracking
 
 #### AI Studio - Public Content Platform (v4.0) ✅
 
@@ -93,7 +101,6 @@ Cognitio **NO** es y **NO** construirá:
 
 - LMS complejo (quizzes, gradebooks, SCORM)
 - Funcionalidades enterprise (SAML SSO, integraciones HR)
-- Foros de discusión pesados
 - Calificación basada en IA
 - Signup abierto de instructores
 
@@ -368,4 +375,4 @@ Parte del ecosistema Lovable. Ver términos de licencia de Lovable.
 
 ---
 
-_Última actualización: Enero 2026 | Versión: 4.0.1_
+_Última actualización: Enero 2026 | Versión: 4.0.4_

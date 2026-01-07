@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -84,6 +85,7 @@ export default function ChapterResourceManager({
   isNewChapter = false 
 }: ChapterResourceManagerProps) {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -134,7 +136,7 @@ export default function ChapterResourceManager({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["chapter-resources", chapterId] });
-      toast.success("Resource added");
+      toast.success(t("resources.resourceAdded"));
       resetForm();
       setDialogOpen(false);
     },
@@ -163,7 +165,7 @@ export default function ChapterResourceManager({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["chapter-resources", chapterId] });
-      toast.success("Resource updated");
+      toast.success(t("resources.resourceUpdated"));
       resetForm();
       setDialogOpen(false);
     },
@@ -183,7 +185,7 @@ export default function ChapterResourceManager({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["chapter-resources", chapterId] });
-      toast.success("Resource deleted");
+      toast.success(t("resources.resourceDeleted"));
     },
     onError: (error) => {
       toast.error(getErrorMessage(error));
@@ -234,7 +236,7 @@ export default function ChapterResourceManager({
 
     // Validate file size (max 20MB)
     if (file.size > 20 * 1024 * 1024) {
-      toast.error("File size must be less than 20MB");
+      toast.error(t("resources.fileSizeError"));
       return;
     }
 
@@ -268,7 +270,7 @@ export default function ChapterResourceManager({
       setResourceType(detectedType);
       setDialogOpen(true);
       
-      toast.success("File uploaded! Complete the form to add the resource.");
+      toast.success(t("resources.fileUploaded"));
     } catch (error) {
       toast.error(getErrorMessage(error));
     } finally {
@@ -282,7 +284,7 @@ export default function ChapterResourceManager({
 
   const handleSubmit = () => {
     if (!title.trim() || !url.trim()) {
-      toast.error("Title and URL are required");
+      toast.error(t("resources.titleUrlRequired"));
       return;
     }
 
@@ -328,7 +330,7 @@ export default function ChapterResourceManager({
   if (isNewChapter) {
     return (
       <div className="text-xs text-muted-foreground italic pl-1">
-        Save chapter to add resources
+        {t("resources.saveChapterFirst")}
       </div>
     );
   }
@@ -421,7 +423,7 @@ export default function ChapterResourceManager({
                 ) : (
                   <Upload className="h-3 w-3 mr-1" />
                 )}
-                Upload File
+                {t("resources.uploadFile")}
               </Button>
               <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                 <DialogTrigger asChild>
@@ -432,30 +434,30 @@ export default function ChapterResourceManager({
                     onClick={() => handleOpenDialog()}
                   >
                     <Plus className="h-3 w-3 mr-1" />
-                    Add Link
+                    {t("resources.addLink")}
                   </Button>
                 </DialogTrigger>
                 <DialogContent>
                   <DialogHeader>
                     <DialogTitle>
-                      {editingResource ? "Edit Resource" : "Add Resource"}
+                      {editingResource ? t("resources.editResource") : t("resources.addResource")}
                     </DialogTitle>
                     <DialogDescription>
-                      Add supplementary materials for "{chapterTitle}"
+                      {t("resources.addMaterials")} "{chapterTitle}"
                     </DialogDescription>
                   </DialogHeader>
                   <div className="space-y-4 py-4">
                     <div className="space-y-2">
-                      <Label htmlFor="resource-title">Title</Label>
+                      <Label htmlFor="resource-title">{t("resources.title")}</Label>
                       <Input
                         id="resource-title"
-                        placeholder="e.g., Lecture Slides"
+                        placeholder={t("resources.titlePlaceholder")}
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="resource-type">Type</Label>
+                      <Label htmlFor="resource-type">{t("resources.type")}</Label>
                       <Select value={resourceType} onValueChange={setResourceType}>
                         <SelectTrigger>
                           <SelectValue />
@@ -473,7 +475,7 @@ export default function ChapterResourceManager({
                       </Select>
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="resource-url">URL</Label>
+                      <Label htmlFor="resource-url">{t("resources.url")}</Label>
                       <Input
                         id="resource-url"
                         placeholder="https://..."
@@ -482,10 +484,10 @@ export default function ChapterResourceManager({
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="resource-description">Description (optional)</Label>
+                      <Label htmlFor="resource-description">{t("resources.description")}</Label>
                       <Textarea
                         id="resource-description"
-                        placeholder="Brief description of this resource"
+                        placeholder={t("resources.descriptionPlaceholder")}
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
                         className="min-h-[80px]"
@@ -494,11 +496,11 @@ export default function ChapterResourceManager({
                   </div>
                   <DialogFooter>
                     <Button variant="outline" onClick={() => setDialogOpen(false)}>
-                      Cancel
+                      {t("resources.cancel")}
                     </Button>
                     <Button onClick={handleSubmit} disabled={isMutating}>
                       {isMutating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                      {editingResource ? "Save Changes" : "Add Resource"}
+                      {editingResource ? t("resources.save") : t("resources.addResource")}
                     </Button>
                   </DialogFooter>
                 </DialogContent>
