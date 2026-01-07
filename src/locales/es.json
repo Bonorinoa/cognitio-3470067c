@@ -3,7 +3,7 @@
     "home": "Inicio",
     "courses": "Cursos",
     "instructors": "Instructores",
-    "services": "Servicios",
+    "services": "Consultorías",
     "about": "Sobre Nosotros",
     "login": "Iniciar Sesión",
     "myLearning": "Mi Aprendizaje",
@@ -13,7 +13,7 @@
     "aiStudio": "AI Studio"
   },
   "services": {
-    "title": "Servicios de Consultoría",
+    "title": "Consultorías",
     "subtitle": "Conecta directamente con nuestros instructores para consultoría personalizada, coaching y mentoría",
     "noServices": "Aún no hay servicios disponibles.",
     "unknownInstructor": "Instructor",
@@ -404,7 +404,7 @@
     "errorSave": "Error al guardar documento",
     "uploadFile": "Subir Archivo de Texto",
     "uploadHint": "Soporta .txt, .md, .csv, .json, .py, .js, .ts",
-    "pdfNotSupported": "Los PDFs no están soportados. Por favor, copia y pega el texto directamente."
+    "pdfNotSupported": "¡Pronto soportaremos PDFs! Por ahora, convierte tu PDF a Markdown gratis en pdf2md.morethan.io y sube el archivo .md."
   },
   "instructorDashboard": {
     "title": "Panel de Instructor",
