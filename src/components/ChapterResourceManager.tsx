@@ -45,6 +45,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/lib/errorUtils";
+import { TruncatedText } from "@/components/ui/truncated-text";
 
 interface ChapterResourceManagerProps {
   chapterId: string;
@@ -383,7 +384,7 @@ export default function ChapterResourceManager({
                     </button>
                   </div>
                   <Icon className="h-4 w-4 text-primary flex-shrink-0" />
-                  <span className="flex-1 min-w-0 truncate">{resource.title}</span>
+                  <TruncatedText className="flex-1 text-sm">{resource.title}</TruncatedText>
                   <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                     <Button
                       variant="ghost"
