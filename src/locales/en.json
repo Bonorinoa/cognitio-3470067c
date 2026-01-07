@@ -229,6 +229,8 @@
     "downloading": "Downloading...",
     "downloadComplete": "Download complete",
     "empty": "No resources for this chapter yet",
+    "file": "File",
+    "fileUploadedSuccess": "File uploaded successfully",
     "pdf": "PDF Document",
     "link": "External Link",
     "notebook": "Code Notebook",
