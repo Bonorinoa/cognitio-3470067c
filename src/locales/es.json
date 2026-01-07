@@ -232,6 +232,8 @@
     "titleUrlRequired": "El título y la URL son requeridos",
     "openBlockedHelp": "Si sigue fallando, permite este sitio en tu bloqueador/extensión de privacidad.",
     "downloadFailed": "Error al descargar el recurso. Inténtalo de nuevo.",
+    "downloading": "Descargando...",
+    "downloadComplete": "Descarga completa",
     "empty": "Aún no hay recursos para este capítulo",
     "pdf": "Documento PDF",
     "link": "Enlace Externo",

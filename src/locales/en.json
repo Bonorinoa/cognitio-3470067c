@@ -226,6 +226,8 @@
     "titleUrlRequired": "Title and URL are required",
     "openBlockedHelp": "If this keeps failing, please allow this site in your blocker/privacy extension.",
     "downloadFailed": "Failed to download resource. Please try again.",
+    "downloading": "Downloading...",
+    "downloadComplete": "Download complete",
     "empty": "No resources for this chapter yet",
     "pdf": "PDF Document",
     "link": "External Link",
