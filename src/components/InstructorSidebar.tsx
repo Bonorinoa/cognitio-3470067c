@@ -9,7 +9,7 @@ import {
   BarChart3,
   Settings,
   Sparkles,
-  HelpCircle,
+  GraduationCap,
 } from "lucide-react";
 import { LayoutGroup } from "framer-motion";
 import { SidebarHeader, SidebarUserDropdown, SidebarNavItem, SidebarCollapseButton } from "@/components/sidebar";
@@ -35,6 +35,7 @@ const InstructorSidebar = ({ collapsed = false, onCollapsedChange }: InstructorS
     { icon: BookOpen, label: t("instructorSidebar.courses"), href: "/instructor/courses" },
     { icon: PlusCircle, label: t("instructorSidebar.createCourse"), href: "/instructor/create" },
     { icon: BarChart3, label: t("instructorSidebar.analytics"), href: "/instructor/analytics" },
+    { icon: GraduationCap, label: t("instructorSidebar.guide"), href: "/instructor/guide" },
     { icon: Settings, label: t("instructorSidebar.settings"), href: "/instructor/settings" },
   ];
 

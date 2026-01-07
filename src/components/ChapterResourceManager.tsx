@@ -46,6 +46,7 @@ import {
 import { toast } from "sonner";
 import { getErrorMessage } from "@/lib/errorUtils";
 import { TruncatedText } from "@/components/ui/truncated-text";
+import { HelpTooltip } from "@/components/ui/help-tooltip";
 
 interface ChapterResourceManagerProps {
   chapterId: string;
@@ -349,6 +350,7 @@ export default function ChapterResourceManager({
           <span className="flex items-center gap-2">
             <FolderOpen className="h-3.5 w-3.5" />
             <span className="text-xs">Resources ({resources.length})</span>
+            <HelpTooltip content={t("guide.sections.resources.helpTooltip")} />
           </span>
           <ChevronDown className={`h-3.5 w-3.5 transition-transform ${isOpen ? "rotate-180" : ""}`} />
         </Button>

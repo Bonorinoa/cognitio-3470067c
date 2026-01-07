@@ -24,6 +24,7 @@ const InstructorDashboard = lazy(() => import("./pages/InstructorDashboard"));
 const InstructorCourses = lazy(() => import("./pages/InstructorCourses"));
 const InstructorAnalytics = lazy(() => import("./pages/InstructorAnalytics"));
 const InstructorSettings = lazy(() => import("./pages/InstructorSettings"));
+const InstructorGuide = lazy(() => import("./pages/InstructorGuide"));
 const AIStudioLanding = lazy(() => import("./pages/AIStudioLanding"));
 const AIStudioSettings = lazy(() => import("./pages/AIStudioSettings"));
 const AIStudioKnowledge = lazy(() => import("./pages/AIStudioKnowledge"));
@@ -72,6 +73,7 @@ const App = () => (
                 <Route path="courses" element={<InstructorCourses />} />
                 <Route path="create" element={<CreateCourse />} />
                 <Route path="analytics" element={<InstructorAnalytics />} />
+                <Route path="guide" element={<InstructorGuide />} />
                 <Route path="settings" element={<InstructorSettings />} />
                 <Route path="edit/:id" element={<EditCourse />} />
               </Route>
