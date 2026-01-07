@@ -888,7 +888,12 @@
       "processingLabel": "Procesamiento",
       "processing": "Puede tomar unos minutos dependiendo del tamaño del archivo",
       "qualityLabel": "Calidad recomendada",
-      "quality": "1080p (Full HD) para mejor experiencia"
+      "quality": "1080p (Full HD) para mejor experiencia",
+      "helpTooltip": "Formatos: MP4, MOV, WebM. Procesamiento: puede tomar unos minutos. Recomendación: 1080p para mejor calidad."
+    },
+    "membership": {
+      "helpTitle": "Inscripción de Estudiantes",
+      "helpDesc": "Agrega estudiantes por email para darles acceso al curso. El estudiante debe tener una cuenta registrada en la plataforma. Puedes remover estudiantes en cualquier momento."
     },
     "aiStudio": {
       "tokenBudgetTitle": "Presupuesto de Tokens",
