@@ -27,70 +27,72 @@ Cognitio no es un marketplace abierto. Es un "Instructor Studio" curado: LMS lig
 
 - **Públicos**: Visibles en catálogo, comprables vía Stripe
 - **Privados**: Solo para cohortes específicas (ej: estudiantes universitarios), inscripción manual
-- **Unlisted**: Accesibles solo por link directo
 
 ---
 
-## 📍 Estado Actual: v4.0.4
+## 📍 Estado Actual: v4.0.5
 
-**Última Actualización:** Enero 6, 2026
+**Última Actualización:** 7 de Enero, 2026  
+**Estado:** MVP listo para testers iniciales 🚀
 
 ### ✅ Funcionalidades Completas
 
-#### Core Platform (v1.0 - v2.9.4)
+#### Plataforma Core (v1.0 - v2.9.4)
 
 - Autenticación de usuarios (registro/inicio de sesión/recuperación de contraseña)
 - Sistema de roles (admin/instructor/student)
 - Creación y edición de cursos con carga de video Mux
 - Gestión de capítulos con ordenamiento y vista previa gratuita
 - Integración de pagos con Stripe
-- Navegación y filtrado de cursos (por categoría, búsqueda, ordenamiento, destacados)
+- Navegación y filtrado de cursos (categoría, búsqueda, ordenamiento, destacados, valoración)
 - Dashboards de estudiantes e instructores
-- Sistema de visibilidad de cursos (public/private/unlisted)
-- Gestión de inscripciones para cursos privados/unlisted
+- Sistema de visibilidad de cursos (public/private)
+- Gestión de inscripciones para cursos privados
 - Perfiles públicos de instructor con bio, credenciales, redes sociales
 - Analytics de instructor con métricas reales
 - Servicios de consultoría de instructor
 - Sistema de diseño con tema claro cálido
 - Internacionalización completa (Español/Inglés)
-- Security audit complete: 0 vulnerabilidades críticas
+- Auditoría de seguridad completada: 0 vulnerabilidades críticas
 
-#### Course Learning Experience (v4.0.2 - v4.0.4) ✅
+#### Experiencia de Aprendizaje (v4.0.2 - v4.0.5) ✅
 
-- **Discussion Threads**: Chapter-level Q&A with upvoting, timestamps, @mentions
-- **AI Tutor (CognitioAI)**: Socratic mentorship with 5 calls/day limit per chapter
-- **Resources Tab**: Chapter-specific PDFs, links, notebooks with instructor management
-- **Transcript Tab**: Auto-generated video transcripts with click-to-seek
-- **Video Player**: Mux-powered with chapter navigation and progress tracking
+- **Sistema de Valoraciones**: Calificaciones 1-5 estrellas con reseñas, promedio visible en catálogo
+- **Ordenar por Valoración**: Filtro "Mejor Valorados" en el catálogo de cursos
+- **Discussion Threads**: Q&A por capítulo con upvoting, timestamps, @menciones
+- **AI Tutor (CognitioAI)**: Mentoría socrática con límite de 5 llamadas/día por capítulo
+- **Pestaña Recursos**: PDFs, links, notebooks por capítulo con gestión de instructor
+- **Pestaña Transcripción**: Transcripciones automáticas de video con click-to-seek
+- **Reproductor de Video**: Mux-powered con navegación de capítulos y seguimiento de progreso
 
-#### AI Studio - Public Content Platform (v4.0) ✅
+#### AI Studio - Plataforma de Contenido Pública (v4.0) ✅
 
-- **Public Landing Page**: Hero, bundles showcase, how it works, pricing
-- **Bundle-Based Architecture**: Marketing and Academic bundles with separate routes
-- **Knowledge Base**: Global document management with types and context roles
-- **Style Settings**: Simplified configuration (tone, audience, language, custom instructions)
-- **Blog Generator**: Content generation with streaming, editing, and refinement
-- **Rich Editor**: Preview/edit modes with ReactMarkdown
-- **Content Refinement**: Inline editing with AI instructions
-- **Generation History**: Save, load, and manage generations (FIFO 10 items)
-- **Subscription System**: Stripe integration with Marketing ($19/mo), Academic ($19/mo), and Pro ($29/mo) bundles
-- **Dynamic Tier Limits**: 
-  - Free: 10 generations/day
-  - Instructor perk: 50 generations/day
-  - Marketing/Academic: 200 generations/day
-  - Pro: 500 generations/day
-- **Export Options**: Download content as Markdown or TXT
-- **Mobile Navigation**: Responsive sidebar and tab navigation
-- **Lovable AI Integration**: Gemini 2.5 Flash via AI Gateway
+- **Landing Page Pública**: Hero, showcase de bundles, cómo funciona, pricing
+- **Arquitectura por Bundles**: Bundles Marketing y Académico con rutas separadas
+- **Base de Conocimiento**: Gestión global de documentos con tipos y roles de contexto
+- **Configuración de Estilo**: Configuración simplificada (tono, audiencia, idioma, instrucciones)
+- **Generador de Blog**: Generación con streaming, edición y refinamiento
+- **Editor Rico**: Modos preview/edit con ReactMarkdown
+- **Refinamiento de Contenido**: Edición inline con instrucciones de IA
+- **Historial de Generaciones**: Guardar, cargar y gestionar generaciones (FIFO 10 items)
+- **Sistema de Suscripciones**: Integración Stripe con Marketing ($19/mes), Academic ($19/mes), y Pro ($29/mes)
+- **Límites Dinámicos por Tier**: 
+  - Free: 10 generaciones/día
+  - Instructor perk: 50 generaciones/día
+  - Marketing/Academic: 200 generaciones/día
+  - Pro: 500 generaciones/día
+- **Opciones de Exportación**: Descargar contenido como Markdown o TXT
+- **Navegación Móvil**: Sidebar y navegación responsiva
+- **Integración Lovable AI**: Gemini 2.5 Flash vía AI Gateway
 
 ### 🚧 Próximo: v4.1+
 
-- LinkedIn Post Generator (v4.1)
-- X/Twitter Generator (v4.2)
-- Newsletter Generator (v4.3)
-- Academic Bundle Features (v5.0+)
+- Generador de Posts para LinkedIn (v4.1)
+- Generador para X/Twitter (v4.2)
+- Generador de Newsletter (v4.3)
+- Funcionalidades del Bundle Académico (v5.0+)
 
-Consulta **[DEVELOPMENT_PLAN.md](./DEVELOPMENT_PLAN.md)** para el roadmap completo.
+Consulta **[DEVELOPMENT_PLAN.md](./DEVELOPMENT_PLAN.md)** para el roadmap completo.  
 Consulta **[CHANGELOG.md](./CHANGELOG.md)** para el historial de cambios.
 
 ---
@@ -221,6 +223,7 @@ npx playwright test  # Ejecutar tests E2E
 | `/instructor/create`      | Crear nuevo curso             |
 | `/instructor/edit/:id`    | Editar curso                  |
 | `/instructor/analytics`   | Analytics                     |
+| `/instructor/guide`       | Guía del instructor           |
 | `/instructor/settings`    | Configuración y perfil        |
 | `/instructor/profile/:id` | Perfil público del instructor |
 
@@ -254,7 +257,9 @@ cognitio/
 │   ├── components/        # Componentes reutilizables
 │   │   ├── ui/            # shadcn/ui
 │   │   ├── ai-studio/     # Componentes AI Studio
-│   │   └── ...
+│   │   ├── discussion/    # Sistema de discusiones
+│   │   ├── help/          # Componentes de ayuda/onboarding
+│   │   └── sidebar/       # Componentes de sidebar
 │   ├── pages/             # Componentes de página
 │   ├── contexts/          # React Context (Auth)
 │   ├── hooks/             # Hooks personalizados
@@ -375,4 +380,4 @@ Parte del ecosistema Lovable. Ver términos de licencia de Lovable.
 
 ---
 
-_Última actualización: Enero 2026 | Versión: 4.0.4_
+_Última actualización: 7 de Enero 2026 | Versión: 4.0.5_

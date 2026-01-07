@@ -1,298 +1,341 @@
 # Changelog
 
-All notable changes to Cognitio will be documented in this file.
+Todos los cambios notables de Cognitio serán documentados en este archivo.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [4.0.5] - 2026-01-07
+
+### 🚀 Checkpoint: MVP listo para testers iniciales
+
+### Agregado
+- **Sistema de Valoraciones**: Calificaciones 1-5 estrellas con reseñas para cursos
+  - Promedio y conteo visible en `CourseCard` y `CourseOverview`
+  - Iconos de estrella con color primario (coral) para consistencia visual
+  - `CourseRatingCard` para que estudiantes envíen valoraciones
+  - `CourseReviewsList` mostrando todas las reseñas del curso
+  - Política RLS para asegurar que solo usuarios con acceso puedan valorar
+
+- **Filtro Mejor Valorados**: Nueva opción "Mejor Valorados" en el catálogo de cursos
+  - Ordena por promedio de valoración (mayor primero)
+  - Usa conteo de valoraciones como desempate
+
+### Cambiado
+- **Edge Functions**: Migrados todos los imports de `esm.sh` a `npm:` specifiers
+  - Resuelve errores HTTP 522 (timeout Cloudflare) con esm.sh
+  - Afecta: ai-discussion-reply, create-ai-subscription, create-course-checkout, stripe-webhook, record-purchase, delete-account, download-resource, generate-content, get-user-tier, mux-upload, mux-webhook, refine-content
+
+### Eliminado
+- **Código no utilizado**: `src/lib/emailValidation.ts` (no estaba siendo importado)
+
+### Documentación
+- README.md completamente en español para testers hispanohablantes
+- DEVELOPMENT_PLAN.md actualizado con estado v4.0.5
+- CHANGELOG.md consolidado con historial completo
+
+## [4.0.4] - 2026-01-06
+
+### Agregado
+- **Pestaña Transcripción**: Transcripciones automáticas de video en ChapterView
+  - Click-to-seek: hacer click en texto salta al timestamp del video
+  - Integración con reproductor Mux existente
+
+### Cambiado
+- i18n español completado para ChapterResourceManager
+- Documentación actualizada (README, TESTING, DEVELOPMENT_PLAN)
+
+### Verificado
+- Sistema upvoting funciona correctamente (triggers ya existían)
 
 ## [4.0.3] - 2026-01-06
 
-### Added
-- **Course Landing Page**: Refactored course viewing experience into two distinct views
-  - **Overview View** (default): Hero image, course description, curriculum list, pricing sidebar
-  - **Chapter View**: Video player, chapter-specific content, progress tracking
-  - New `CourseOverview.tsx` and `ChapterView.tsx` components
-  - Previous/Next chapter navigation with keyboard-friendly controls
-  - "Back to Overview" button for easy navigation
-  - Chapter descriptions now supported (using existing `description` field)
-  - Total course duration calculated and displayed
-  - Full i18n support (EN/ES) for all new labels
+### Agregado
+- **Course Landing Page**: Experiencia de vista de curso refactorizada en dos vistas
+  - **Vista Overview** (default): Imagen hero, descripción, listado curriculum, sidebar pricing
+  - **Vista Chapter**: Reproductor video, contenido específico capítulo, seguimiento progreso
+  - Componentes `CourseOverview.tsx` y `ChapterView.tsx`
+  - Navegación Previous/Next capítulo con controles keyboard-friendly
+  - Botón "Volver al Overview" para navegación fácil
+  - Descripciones de capítulo soportadas
+  - Duración total del curso calculada y mostrada
+  - Soporte i18n completo (EN/ES)
 
 ## [4.0.2] - 2026-01-06
 
-### Changed
-- **Course Visibility Simplified**: Removed "unlisted" visibility option
-  - UI now only shows "Public" and "Private" options
-  - Existing unlisted courses migrated to private
-  - RLS policies updated to remove unlisted references
-  - Simplified enrollment logic for private courses only
+### Cambiado
+- **Visibilidad Curso Simplificada**: Eliminada opción "unlisted"
+  - UI ahora solo muestra "Public" y "Private"
+  - Cursos unlisted existentes migrados a private
+  - Políticas RLS actualizadas
+  - Lógica inscripción simplificada solo para cursos privados
 
-### Fixed
-- **Subscription Tier Recognition**: `trialing` status now correctly recognized
-  - Updated `generate-content` and `refine-content` edge functions
-  - Users on trial subscriptions now get their full tier benefits
+### Corregido
+- **Reconocimiento Tier Suscripción**: Status `trialing` ahora reconocido correctamente
+  - Edge functions generate-content y refine-content actualizadas
+  - Usuarios en trial ahora obtienen beneficios completos de su tier
 
-### Added
-- **Subscription Tier Tests**: Automated tests for tier resolution logic
-  - Tests for active, trialing, canceled status handling
-  - Tests for tier limit alignment (Marketing: 200, Academic: 200, Pro: 500)
-  - Tests for instructor role fallback
+### Agregado
+- **Tests Tier Suscripción**: Tests automatizados para lógica resolución tier
+  - Tests para manejo status active, trialing, canceled
+  - Tests para alineación límites tier (Marketing: 200, Academic: 200, Pro: 500)
+  - Tests para fallback rol instructor
 
 ## [4.0.1] - 2026-01-05
 
-### Changed
-- **Tier Limits Alignment**: Updated PricingSection copy to match database limits
-  - Marketing/Academic: 200 generations/day (was incorrectly showing 100)
-  - Pro: 500 generations/day (was incorrectly showing "Unlimited")
+### Cambiado
+- **Alineación Límites Tier**: PricingSection actualizado para coincidir con límites DB
+  - Marketing/Academic: 200 generaciones/día (antes mostraba 100 incorrectamente)
+  - Pro: 500 generaciones/día (antes mostraba "Unlimited" incorrectamente)
 
-### Removed
-- **Notification Features Deferred**: Removed all "Notify Me" functionality from codebase
-  - Deleted `NotifyMeModal.tsx` component
-  - Removed notification buttons from `MarketingBundleHub.tsx` and `AcademicBundleHub.tsx`
-  - Simplified `ComingSoonFeature.tsx` (removed email form)
-  - Coming soon features now show "Coming Soon" badge without notification signup
+### Eliminado
+- **Features Notificación Diferidas**: Eliminada toda funcionalidad "Notify Me"
+  - Componente `NotifyMeModal.tsx` eliminado
+  - Botones notificación eliminados de `MarketingBundleHub.tsx` y `AcademicBundleHub.tsx`
+  - `ComingSoonFeature.tsx` simplificado (eliminado formulario email)
+  - Features coming soon ahora muestran badge sin signup notificación
 
-### Documentation
-- **Consolidated Documentation**: Reduced documentation footprint
-  - Deleted `FEATURES.md` (content merged into README and DEVELOPMENT_PLAN)
-  - Deleted `TECHNOLOGY_STACK.md` (content in README)
-  - Deleted `TEST_COVERAGE_SUMMARY.md` (content in TESTING.md)
-  - Updated README.md to v4.0.1 with current tier limits
-  - Updated DEVELOPMENT_PLAN.md with accurate roadmap
+### Documentación
+- **Consolidación Documentación**: Reducido footprint documentación
+  - `FEATURES.md` eliminado (contenido fusionado en README y DEVELOPMENT_PLAN)
+  - `TECHNOLOGY_STACK.md` eliminado (contenido en README)
+  - `TEST_COVERAGE_SUMMARY.md` eliminado (contenido en TESTING.md)
+  - README.md actualizado a v4.0.1 con límites tier actuales
+  - DEVELOPMENT_PLAN.md actualizado con roadmap preciso
 
 ## [4.0.0] - 2026-01-05
 
-### Added
-- **AI Studio Commercialization**: Complete public-facing AI content platform
-  - Public landing page with hero, bundles showcase, and pricing
-  - Bundle-based architecture (Marketing and Academic)
-  - Stripe subscription integration for paid tiers
-  - Dynamic tier limits: Free (10), Instructor (50), Marketing/Academic (200), Pro (500)
-  - `create-ai-subscription` edge function for Stripe Checkout
-  - `get-user-tier` edge function for tier resolution
-  - Subscription management UI in AIStudioSettings
+### Agregado
+- **Comercialización AI Studio**: Plataforma contenido IA pública completa
+  - Landing page pública con hero, showcase bundles, y pricing
+  - Arquitectura basada en bundles (Marketing y Academic)
+  - Integración suscripciones Stripe para tiers pagos
+  - Límites tier dinámicos: Free (10), Instructor (50), Marketing/Academic (200), Pro (500)
+  - Edge function `create-ai-subscription` para Stripe Checkout
+  - Edge function `get-user-tier` para resolución tier
+  - UI gestión suscripciones en AIStudioSettings
 
-### Changed
-- **Database Schema**: Renamed instructor_* tables to user_* for broader access
-- **Navigation**: AI Studio now visible in main navbar to all visitors
-- **Auth Flow**: Feature-level auth guards instead of route-level protection
-- **Settings**: Simplified style settings (removed content length preferences)
+### Cambiado
+- **Schema DB**: Tablas instructor_* renombradas a user_* para acceso más amplio
+- **Navegación**: AI Studio ahora visible en navbar principal para todos los visitantes
+- **Flujo Auth**: Guards auth a nivel feature en lugar de protección a nivel ruta
+- **Settings**: Configuración estilo simplificada (eliminadas preferencias longitud contenido)
 
 ## [3.9.1] - 2026-01-03
 
-### Changed
-- **Toast System Unified**: Migrated all components to Sonner, removed shadcn Toaster
-  - VideoUpload.tsx migrated from useToast to Sonner
-  - AIStudioBlog.tsx migrated from useToast to Sonner
-  - Removed shadcn Toaster from App.tsx
+### Cambiado
+- **Sistema Toast Unificado**: Todos los componentes migrados a Sonner, eliminado Toaster shadcn
+  - VideoUpload.tsx migrado de useToast a Sonner
+  - AIStudioBlog.tsx migrado de useToast a Sonner
+  - Toaster shadcn eliminado de App.tsx
 
-### Removed
-- **Dead Code Cleanup**:
-  - Removed deprecated `isTeacher` alias from useUserRole hook
-  - Removed unused `__aiStudioBlogHandlers` window assignment
+### Eliminado
+- **Cleanup Código Muerto**:
+  - Alias `isTeacher` deprecado eliminado de hook useUserRole
+  - Asignación window `__aiStudioBlogHandlers` no utilizada eliminada
   
-### Technical
-- **TypeScript Improvements**: Created `getErrorMessage` utility in `src/lib/errorUtils.ts`
-  - Replaced 12 instances of `catch (error: any)` with type-safe error handling
-  - Consistent error message extraction across edge functions and hooks
+### Técnico
+- **Mejoras TypeScript**: Utilidad `getErrorMessage` creada en `src/lib/errorUtils.ts`
+  - 12 instancias de `catch (error: any)` reemplazadas con manejo error type-safe
+  - Extracción mensaje error consistente en edge functions y hooks
 
 ## [3.9.0] - 2026-01-02
 
-### Added
-- **AI Studio Dashboard**: New landing page at `/ai-studio` with:
-  - Quick action cards for Blog Generator and Newsletter (coming soon)
-  - Recent generations list with load buttons
-  - 4 analytics cards: Documents count, Style status, Generations today, Total generations
-  - Responsive design matching platform design system
+### Agregado
+- **Dashboard AI Studio**: Nueva landing page en `/ai-studio` con:
+  - Cards acción rápida para Blog Generator y Newsletter (coming soon)
+  - Lista generaciones recientes con botones cargar
+  - 4 cards analytics: Conteo Documentos, Status Estilo, Generaciones hoy, Total generaciones
+  - Diseño responsive matching sistema diseño plataforma
 
-- **`is_active` Column**: Database migration adding soft-delete capability to `ai_generation_history`
-  - Enables accurate daily usage tracking independent of history display limit
-  - Index added for performance: `idx_ai_generation_history_active`
+- **Columna `is_active`**: Migración DB agregando capacidad soft-delete a `ai_generation_history`
+  - Habilita tracking uso diario preciso independiente del límite display historial
+  - Índice agregado para performance: `idx_ai_generation_history_active`
 
-### Changed
-- **`useGenerationHistory`**: Updated to use soft-delete (set `is_active = false`) instead of hard-delete when reaching 10-item history limit
-- **`useGenerationUsage`**: Now counts ALL generations created today regardless of `is_active` status, ensuring accurate quota tracking
-- **AI Studio Sidebar**: Dashboard added as first menu item, improved active link detection
-- **Routing**: `/ai-studio` now shows Dashboard, Knowledge Base moved to `/ai-studio/knowledge`
+### Cambiado
+- **`useGenerationHistory`**: Actualizado para usar soft-delete (set `is_active = false`) en lugar de hard-delete al alcanzar límite 10 items
+- **`useGenerationUsage`**: Ahora cuenta TODAS las generaciones creadas hoy sin importar status `is_active`, asegurando tracking quota preciso
+- **Sidebar AI Studio**: Dashboard agregado como primer item menú, detección link activo mejorada
+- **Routing**: `/ai-studio` ahora muestra Dashboard, Base Conocimiento movida a `/ai-studio/knowledge`
 
-### Fixed
-- **Usage Counter Bug**: Previously showed incorrect count when history hit 10-item limit; now accurately tracks daily usage
+### Corregido
+- **Bug Contador Uso**: Antes mostraba conteo incorrecto cuando historial llegaba a límite 10 items; ahora trackea uso diario precisamente
 
 ## [3.8.0] - 2026-01-02
 
-### Added
-- **Generation History**: Full CRUD for saved generations
-  - Save to History button for new generations
-  - Update existing history items
-  - Load history items back into editor
-  - Delete with confirmation dialog
-  - FIFO queue (10 items max)
+### Agregado
+- **Historial Generaciones**: CRUD completo para generaciones guardadas
+  - Botón Save to History para nuevas generaciones
+  - Actualizar items historial existentes
+  - Cargar items historial de vuelta al editor
+  - Eliminar con diálogo confirmación
+  - Cola FIFO (10 items máx)
 
-- **History Sidebar**: Collapsible list in AI Studio sidebar
-  - Shows recent generations with relative timestamps
-  - Quick-load buttons
-  - Delete icons with AlertDialog confirmation
+- **Sidebar Historial**: Lista colapsable en sidebar AI Studio
+  - Muestra generaciones recientes con timestamps relativos
+  - Botones quick-load
+  - Iconos eliminar con confirmación AlertDialog
 
-### Technical
-- RLS policy for DELETE operation on `ai_generation_history`
+### Técnico
+- Política RLS para operación DELETE en `ai_generation_history`
 
 ## [3.7.0] - 2026-01-01
 
-### Added
-- **Inline Refinement**: AI-powered text editing
-  - `refine-content` edge function for targeted text refinement
-  - Text selection triggers "Refine with AI" floating button
-  - Refinement dialog with custom instructions input
-  - Quick actions: Shorten, Expand, Simplify, Formalize
-  - Side-by-side diff view for accepting/rejecting changes
+### Agregado
+- **Refinamiento Inline**: Edición texto powered by IA
+  - Edge function `refine-content` para refinamiento texto dirigido
+  - Selección texto dispara botón flotante "Refine with AI"
+  - Diálogo refinamiento con input instrucciones custom
+  - Acciones rápidas: Shorten, Expand, Simplify, Formalize
+  - Vista diff lado a lado para aceptar/rechazar cambios
 
-- **Export Options**: Multiple export formats
-  - Export as .txt (strips markdown formatting)
-  - Export as .md (preserves markdown)
-  - Dropdown menu for format selection
+- **Opciones Exportación**: Múltiples formatos exportación
+  - Exportar como .txt (strip formato markdown)
+  - Exportar como .md (preserva markdown)
+  - Menú dropdown para selección formato
 
-### Changed
-- Editor now tracks `editableContent` separately for manual edits
-- Export uses edited content, not original generation
+### Cambiado
+- Editor ahora trackea `editableContent` separadamente para ediciones manuales
+- Exportación usa contenido editado, no generación original
 
 ## [3.6.0] - 2026-01-01
 
-### Added
-- **Rich Editor**: Dual-mode content editing
-  - Preview mode with ReactMarkdown rendering
-  - Edit mode with Textarea for direct markdown editing
-  - Toggle button to switch between modes
-  - Editable content state for manual modifications
+### Agregado
+- **Editor Rico**: Edición contenido dual-mode
+  - Modo preview con renderizado ReactMarkdown
+  - Modo edit con Textarea para edición markdown directa
+  - Botón toggle para cambiar entre modos
+  - Estado contenido editable para modificaciones manuales
 
-### Technical
-- Integrated `react-markdown` for proper content rendering
-- System prompt enforces strict "content-only" output rules
+### Técnico
+- `react-markdown` integrado para renderizado contenido apropiado
+- System prompt enforce reglas estrictas output "content-only"
 
 ## [3.5.0] - 2026-01-01
 
-### Added
-- **Progress Bar Visualization**: Added visual progress bar for generation quota in AI Studio sidebar
-  - Desktop sidebar shows progress bar below generation count
-  - Mobile header includes compact progress bar
-  - Real-time updates as generations are used
+### Agregado
+- **Visualización Barra Progreso**: Barra progreso visual para quota generación en sidebar AI Studio
+  - Sidebar desktop muestra barra progreso debajo conteo generaciones
+  - Header móvil incluye barra progreso compacta
+  - Actualizaciones real-time mientras generaciones se usan
 
 ## [3.4.0] - 2026-01-01
 
-### Added
-- **Usage Tracking**: Implemented daily generation limits for AI Studio
-  - `useGenerationUsage` hook for tracking daily usage
-  - 10 generations per day limit per instructor
-  - Counter displayed in AI Studio sidebar
-  - Queries `ai_generation_history` for completed generations today
+### Agregado
+- **Tracking Uso**: Límites generación diarios implementados para AI Studio
+  - Hook `useGenerationUsage` para tracking uso diario
+  - Límite 10 generaciones por día por instructor
+  - Contador mostrado en sidebar AI Studio
+  - Queries `ai_generation_history` para generaciones completadas hoy
 
 ## [3.3.0] - 2026-01-01
 
-### Added
-- **Blog Generator**: Full blog generation workflow
-  - `generate-content` edge function using Lovable AI Gateway
-  - Gemini 2.5 Flash model integration
-  - Streaming markdown output
-  - `useContentGeneration` hook with abort support
-  - Topic input with document selection
-  - Real-time content preview
+### Agregado
+- **Generador Blog**: Workflow generación blog completo
+  - Edge function `generate-content` usando Lovable AI Gateway
+  - Integración modelo Gemini 2.5 Flash
+  - Output markdown streaming
+  - Hook `useContentGeneration` con soporte abort
+  - Input topic con selección documentos
+  - Preview contenido real-time
 
-### Technical
-- Context Window Stuffing strategy (no RAG needed)
-- 100K token context budget
-- Strategic document placement by `context_role`
+### Técnico
+- Estrategia Context Window Stuffing (sin RAG necesario)
+- Budget contexto 100K tokens
+- Placement documento estratégico por `context_role`
 
 ## [3.2.0] - 2026-01-01
 
-### Added
-- **Style Profiles**: Instructor writing preferences
-  - `StyleProfileForm` component with collapsible UI
-  - `useStyleProfile` hook for CRUD operations
-  - Preferences: tone, length, language, audience
-  - Custom instructions support
-  - Setup completion tracking
+### Agregado
+- **Perfiles Estilo**: Preferencias escritura instructor
+  - Componente `StyleProfileForm` con UI colapsable
+  - Hook `useStyleProfile` para operaciones CRUD
+  - Preferencias: tono, longitud, idioma, audiencia
+  - Soporte instrucciones custom
+  - Tracking completación setup
 
 ### Database
-- `instructor_style_profile` table with all preference fields
+- Tabla `instructor_style_profile` con todos los campos preferencia
 
 ## [3.1.0] - 2026-01-01
 
-### Added
-- **Knowledge Base**: Document management for AI context
-  - `DocumentEditor` component for creating/editing documents
-  - `useKnowledgeBase` hook for CRUD operations
-  - Document types: academic_paper, cv_bio, methodology, writing_sample, syllabus, other
-  - Context roles: style_reference, topic_source, background_context
-  - Token counting for budget tracking
-  - Tag support for organization
+### Agregado
+- **Base Conocimiento**: Gestión documentos para contexto IA
+  - Componente `DocumentEditor` para crear/editar documentos
+  - Hook `useKnowledgeBase` para operaciones CRUD
+  - Tipos documento: academic_paper, cv_bio, methodology, writing_sample, syllabus, other
+  - Roles contexto: style_reference, topic_source, background_context
+  - Conteo tokens para tracking budget
+  - Soporte tags para organización
 
 ### Database
-- `instructor_knowledge_base` table with full schema
+- Tabla `instructor_knowledge_base` con schema completo
 
 ## [3.0.0] - 2026-01-01
 
-### Added
-- **AI Content Studio Foundation**
-  - `AIStudioLayout` component with sidebar
-  - `AIStudioSidebar` with navigation and usage display
-  - `AIStudioKnowledge` page for knowledge base management
-  - `AIStudioBlog` page for blog generation
-  - Mobile tab bar with `SlidingPillIndicator`
-  - Routes: `/ai-studio`, `/ai-studio/knowledge`, `/ai-studio/blog`
-  - Navbar dropdown link to AI Studio
+### Agregado
+- **Fundación AI Content Studio**
+  - Componente `AIStudioLayout` con sidebar
+  - `AIStudioSidebar` con navegación y display uso
+  - Página `AIStudioKnowledge` para gestión base conocimiento
+  - Página `AIStudioBlog` para generación blog
+  - Tab bar móvil con `SlidingPillIndicator`
+  - Rutas: `/ai-studio`, `/ai-studio/knowledge`, `/ai-studio/blog`
+  - Link dropdown navbar a AI Studio
 
 ### Database
-- New tables: `instructor_knowledge_base`, `instructor_style_profile`, `ai_generation_history`
-- New enums: `content_type`, `context_role`, `document_type`, `generation_status`, `language_preference`, `length_preference`, `writing_tone`
+- Nuevas tablas: `instructor_knowledge_base`, `instructor_style_profile`, `ai_generation_history`
+- Nuevos enums: `content_type`, `context_role`, `document_type`, `generation_status`, `language_preference`, `length_preference`, `writing_tone`
 
-### Technical
-- New edge function: `generate-content`
-- Lovable AI Gateway integration
-- 4 new custom hooks for AI functionality
+### Técnico
+- Nueva edge function: `generate-content`
+- Integración Lovable AI Gateway
+- 4 nuevos custom hooks para funcionalidad IA
 
 ## [2.9.4] - 2025-12-31
 
-### Fixed
-- **Test Suite**: Fixed i18n-related test failures
-  - Added i18n mock to test setup for consistent English translations in tests
-  - Updated CourseCard tests to match component's Spanish strings
-  - All unit tests now pass consistently
+### Corregido
+- **Suite Tests**: Corregidos fallos tests relacionados con i18n
+  - Mock i18n agregado a setup tests para traducciones inglés consistentes
+  - Tests CourseCard actualizados para coincidir con strings español del componente
+  - Todos los unit tests ahora pasan consistentemente
 
 ## [2.9.3] - 2025-12-30
 
-### Fixed
-- **Code Quality**: Fixed 4 ESLint `prefer-const` errors
+### Corregido
+- **Calidad Código**: Corregidos 4 errores ESLint `prefer-const`
 
 ## [2.9.2] - 2025-12-30
 
-### Added
-- **CourseMembershipManager**: Instructors can now enroll students in private/unlisted courses
-- **Dashboard Course Access**: Student dashboard now shows courses from BOTH purchases AND memberships
-- **studentDashboard i18n**: Full Spanish translation for student dashboard
-- **AvatarUpload Improvements**: 10MB limit, client-side compression, "Remove Photo" functionality
+### Agregado
+- **CourseMembershipManager**: Instructores ahora pueden inscribir estudiantes en cursos privados
+- **Acceso Cursos Dashboard**: Dashboard estudiante ahora muestra cursos de AMBOS purchases Y memberships
+- **i18n studentDashboard**: Traducción español completa para dashboard estudiante
+- **Mejoras AvatarUpload**: Límite 10MB, compresión client-side, funcionalidad "Remove Photo"
 
-### Deprecated
-- **InstructorContactForm**: Removed in favor of direct email links on instructor profiles
+### Deprecado
+- **InstructorContactForm**: Eliminado en favor de links email directos en perfiles instructor
 
 ## [2.9.1] - 2025-12-30
 
-### Fixed
-- **InstructorSidebar**: Fixed alignment and sticky positioning issues
-- **FoundersStorySection**: Fixed animation and scroll behavior bugs
-- **ProgressCard**: Standardized hover effects
+### Corregido
+- **InstructorSidebar**: Corregidos issues alineación y posicionamiento sticky
+- **FoundersStorySection**: Corregidos bugs animación y scroll behavior
+- **ProgressCard**: Efectos hover estandarizados
 
-### Security
-- Added `.env` files to `.gitignore` as best practice
-- Completed security audit: 0 vulnerabilities found
+### Seguridad
+- Archivos `.env` agregados a `.gitignore` como best practice
+- Auditoría seguridad completada: 0 vulnerabilidades encontradas
 
 ## [2.9.0] - 2025-12-30
 
-### Added
-- Responsive mobile navigation with hamburger menu
-- Design system with warm coral/salmon color palette
-- Hero background with animated blobs
-- Framer Motion animations throughout the UI
-- Standardized card components with consistent styling
+### Agregado
+- Navegación móvil responsive con menú hamburguesa
+- Sistema diseño con paleta colores coral/salmon cálida
+- Hero background con blobs animados
+- Animaciones Framer Motion en toda la UI
+- Componentes card estandarizados con styling consistente
 
-## [Earlier Versions]
+## [Versiones Anteriores]
 
-See `DEVELOPMENT_PLAN.md` for details on v1.0 - v2.8 releases.
+Ver `DEVELOPMENT_PLAN.md` para detalles de releases v1.0 - v2.8.

@@ -1,223 +1,238 @@
-# Cognitio Development Plan
+# Plan de Desarrollo Cognitio
 
-**Current Version:** v4.0.4  
-**Last Updated:** January 6, 2026
-
----
-
-## Vision
-
-Cognitio is an invite-only, instructor-first academic ecosystem. It prioritizes instructor autonomy and revenue retention over marketplace scale. Core features: course creation (public/private/unlisted), Stripe payments, progress tracking, and AI Content Studio for marketing assistance.
-
-**Tech Stack:** React + Vite + TypeScript + Tailwind + shadcn/ui + Supabase + Stripe + Mux + Lovable AI  
-**Roles:** Admin (platform management) → Instructor (content creation + AI tools) → Student (learning)
+**Versión Actual:** v4.0.5  
+**Última Actualización:** 7 de Enero, 2026  
+**Estado:** MVP listo para testers iniciales 🚀
 
 ---
 
-## Version History
+## Visión
 
-### v0.x–v1.x: Foundation & Core Features
+Cognitio es un ecosistema académico exclusivo por invitación, centrado en el instructor. Prioriza la autonomía del instructor y la retención de ingresos sobre la escala del marketplace. Funcionalidades core: creación de cursos (public/private), pagos con Stripe, seguimiento de progreso, y AI Content Studio para asistencia de marketing.
 
-Initial MVP through complete instructor platform with payments, analytics, and services.
-
-| Version | Focus | Key Deliverables | Status |
-|---------|-------|------------------|--------|
-| v1.0 | MVP | Auth, course CRUD, Stripe checkout, Mux video, progress tracking | ✅ |
-| v1.1 | Terminology | Frontend refactor: "teacher" → "instructor" | ✅ |
-| v1.2 | DB Migration | `instructor_id` column, RLS policy updates, `app_role` enum | ✅ |
-| v1.3 | Visibility | `course_visibility` enum (public/private/unlisted), catalog filtering | ✅ |
-| v1.4 | Admin Panel | Role management UI, user table with role assignment | ✅ |
-| v1.5 | Instructor Profiles | Public profiles, credentials, social links, affiliation | ✅ |
-| v1.6 | Course Editing | Edit existing courses, chapter reordering, video replacement | ✅ |
-| v1.7 | User Management | Account deletion, password change, profile settings | ✅ |
-| v1.8 | Analytics | Instructor dashboard with revenue, enrollments, completion rates | ✅ |
-| v1.9 | Services | `instructor_services` table, service cards, public display | ✅ |
-| v1.9.1 | Polish | Avatar upload improvements, i18n for dashboard | ✅ |
+**Stack Tecnológico:** React + Vite + TypeScript + Tailwind + shadcn/ui + Supabase + Stripe + Mux + Lovable AI  
+**Roles:** Admin (gestión de plataforma) → Instructor (creación de contenido + herramientas IA) → Student (aprendizaje)
 
 ---
 
-### v2.x: Design System & UI Polish
+## Historial de Versiones
 
-Complete UI/UX overhaul with warm color palette, glassmorphism, and animations.
+### v0.x–v1.x: Fundación y Funcionalidades Core
 
-| Version | Focus | Key Deliverables | Status |
-|---------|-------|------------------|--------|
-| v2.0 | Design Tokens | HSL color system, CSS variables, Tailwind config | ✅ |
-| v2.1 | Typography | Font hierarchy, heading styles, body text optimization | ✅ |
-| v2.2 | Component Library | Button variants, card styles, form inputs | ✅ |
-| v2.3 | Dark Mode | Theme toggle, dark palette, contrast validation | ✅ |
-| v2.4 | Warm Theme | Coral/salmon accent, cream backgrounds, soft shadows | ✅ |
-| v2.5 | Glassmorphism | Navbar blur, card transparency, modal overlays | ✅ |
-| v2.6 | Hero Section | Animated blob background, gradient overlays | ✅ |
-| v2.7 | Framer Motion | Page transitions, card hover effects, scroll animations | ✅ |
-| v2.8 | Card System | Standardized hover states, consistent spacing | ✅ |
-| v2.9.0 | Responsive | Mobile navigation, hamburger menu, touch targets | ✅ |
-| v2.9.1 | Bug Fixes | Sidebar alignment, animation performance, scroll behavior | ✅ |
-| v2.9.2 | Membership | `CourseMembershipManager`, dashboard course fetching fix | ✅ |
-| v2.9.3 | Cleanup | Deprecated code removal, documentation consolidation | ✅ |
-| v2.9.4 | Testing | i18n test fixes, ESLint prefer-const fixes | ✅ |
+MVP inicial hasta plataforma completa de instructor con pagos, analytics y servicios.
+
+| Versión | Enfoque | Entregables Clave | Estado |
+|---------|---------|-------------------|--------|
+| v1.0 | MVP | Auth, CRUD cursos, checkout Stripe, video Mux, seguimiento progreso | ✅ |
+| v1.1 | Terminología | Refactor frontend: "teacher" → "instructor" | ✅ |
+| v1.2 | Migración DB | Columna `instructor_id`, actualizaciones RLS, enum `app_role` | ✅ |
+| v1.3 | Visibilidad | Enum `course_visibility` (public/private/unlisted), filtrado catálogo | ✅ |
+| v1.4 | Panel Admin | UI gestión roles, tabla usuarios con asignación de roles | ✅ |
+| v1.5 | Perfiles Instructor | Perfiles públicos, credenciales, links sociales, afiliación | ✅ |
+| v1.6 | Edición Cursos | Editar cursos existentes, reordenar capítulos, reemplazo video | ✅ |
+| v1.7 | Gestión Usuarios | Eliminación cuenta, cambio contraseña, configuración perfil | ✅ |
+| v1.8 | Analytics | Dashboard instructor con ingresos, inscripciones, tasas completación | ✅ |
+| v1.9 | Servicios | Tabla `instructor_services`, cards servicios, display público | ✅ |
+| v1.9.1 | Pulido | Mejoras avatar upload, i18n para dashboard | ✅ |
+
+---
+
+### v2.x: Sistema de Diseño y Pulido UI
+
+Rediseño completo UI/UX con paleta de colores cálidos, glassmorphism y animaciones.
+
+| Versión | Enfoque | Entregables Clave | Estado |
+|---------|---------|-------------------|--------|
+| v2.0 | Tokens de Diseño | Sistema de colores HSL, variables CSS, config Tailwind | ✅ |
+| v2.1 | Tipografía | Jerarquía de fuentes, estilos headings, optimización body text | ✅ |
+| v2.2 | Librería Componentes | Variantes button, estilos card, inputs formulario | ✅ |
+| v2.3 | Modo Oscuro | Toggle tema, paleta oscura, validación contraste | ✅ |
+| v2.4 | Tema Cálido | Acento coral/salmon, fondos crema, sombras suaves | ✅ |
+| v2.5 | Glassmorphism | Blur navbar, transparencia cards, overlays modal | ✅ |
+| v2.6 | Sección Hero | Background con blobs animados, overlays gradiente | ✅ |
+| v2.7 | Framer Motion | Transiciones página, efectos hover cards, animaciones scroll | ✅ |
+| v2.8 | Sistema Cards | Estados hover estandarizados, espaciado consistente | ✅ |
+| v2.9.0 | Responsive | Navegación móvil, menú hamburguesa, touch targets | ✅ |
+| v2.9.1 | Bug Fixes | Alineación sidebar, performance animaciones, scroll behavior | ✅ |
+| v2.9.2 | Membership | `CourseMembershipManager`, fix fetching cursos dashboard | ✅ |
+| v2.9.3 | Cleanup | Eliminación código deprecado, consolidación documentación | ✅ |
+| v2.9.4 | Testing | Fixes tests i18n, fixes ESLint prefer-const | ✅ |
 
 ---
 
 ### v3.x: AI Content Studio
 
-AI-powered content generation to help instructors create marketing materials from their expertise.
+Generación de contenido con IA para ayudar a instructores a crear materiales de marketing desde su expertise.
 
-| Version | Focus | Key Deliverables | Status |
-|---------|-------|------------------|--------|
-| v3.0 | Foundation | Database schema, enums, types | ✅ |
-| v3.1 | Knowledge Base | Document CRUD, `useKnowledgeBase` hook | ✅ |
-| v3.2 | Style Profiles | `StyleProfileForm`, tone/length/audience preferences | ✅ |
-| v3.3 | Blog Generator | `generate-content` edge function, streaming markdown UI | ✅ |
-| v3.4 | Usage Tracking | `useGenerationUsage` hook, daily limits, sidebar counter | ✅ |
-| v3.5 | Mobile & Polish | Tab bar navigation, progress bar visualization | ✅ |
-| v3.6 | Rich Editor | Preview/Edit toggle, markdown rendering | ✅ |
-| v3.7 | Refinement | `refine-content` edge function, inline text selection, diff view | ✅ |
-| v3.8 | History | Save/Update/Delete generations, FIFO 10-item limit | ✅ |
-| v3.9 | Dashboard | AI Studio Dashboard landing page, `is_active` soft-delete | ✅ |
-| v3.9.1 | Stabilization | Toast unification (Sonner), TypeScript improvements | ✅ |
+| Versión | Enfoque | Entregables Clave | Estado |
+|---------|---------|-------------------|--------|
+| v3.0 | Fundación | Schema DB, enums, types | ✅ |
+| v3.1 | Base Conocimiento | CRUD documentos, hook `useKnowledgeBase` | ✅ |
+| v3.2 | Perfiles Estilo | `StyleProfileForm`, preferencias tono/longitud/audiencia | ✅ |
+| v3.3 | Generador Blog | Edge function `generate-content`, streaming markdown UI | ✅ |
+| v3.4 | Tracking Uso | Hook `useGenerationUsage`, límites diarios, contador sidebar | ✅ |
+| v3.5 | Mobile y Pulido | Navegación tab bar, visualización barra progreso | ✅ |
+| v3.6 | Editor Rico | Toggle Preview/Edit, renderizado markdown | ✅ |
+| v3.7 | Refinamiento | Edge function `refine-content`, selección texto inline, diff view | ✅ |
+| v3.8 | Historial | Guardar/Actualizar/Eliminar generaciones, límite FIFO 10 items | ✅ |
+| v3.9 | Dashboard | Landing page AI Studio Dashboard, soft-delete `is_active` | ✅ |
+| v3.9.1 | Estabilización | Unificación toasts (Sonner), mejoras TypeScript | ✅ |
 
 ---
 
-### v4.x: AI Studio Commercialization
+### v4.x: Comercialización AI Studio
 
-Public-facing AI content platform with subscription monetization.
+Plataforma de contenido IA pública con monetización por suscripción.
 
-| Version | Focus | Key Deliverables | Status |
-|---------|-------|------------------|--------|
-| v4.0 | Commercialization | Public landing, bundles, Stripe subscriptions, tier limits | ✅ |
-| v4.0.1 | Cleanup | Tier alignment, notification removal, doc consolidation | ✅ |
-| v4.0.2 | Discussion System | Chapter threads, upvoting, @mentions, timestamps | ✅ |
-| v4.0.3 | AI Tutor | CognitioAI with 5 calls/day limit, context-aware responses | ✅ |
-| v4.0.4 | Resources & Transcripts | Chapter resources, transcript tab, i18n completion | ✅ |
+| Versión | Enfoque | Entregables Clave | Estado |
+|---------|---------|-------------------|--------|
+| v4.0 | Comercialización | Landing pública, bundles, suscripciones Stripe, límites tier | ✅ |
+| v4.0.1 | Cleanup | Alineación tiers, eliminación notificaciones, consolidación docs | ✅ |
+| v4.0.2 | Sistema Discusiones | Threads por capítulo, upvoting, @menciones, timestamps | ✅ |
+| v4.0.3 | AI Tutor | CognitioAI con límite 5 llamadas/día, respuestas context-aware | ✅ |
+| v4.0.4 | Recursos y Transcripts | Recursos por capítulo, pestaña transcript, i18n completado | ✅ |
+| v4.0.5 | Valoraciones y Cleanup | Sistema 1-5 estrellas, ordenar por valoración, cleanup codebase | ✅ |
 
 ---
 
 ## ✅ Completado
 
-### v4.0.4 - January 6, 2026
+### v4.0.5 - 7 de Enero, 2026
 
-- Added Transcript tab to ChapterView with click-to-seek functionality
-- Completed Spanish i18n for ChapterResourceManager
-- Updated documentation (README, TESTING, DEVELOPMENT_PLAN)
-- Fixed upvoting system verification (triggers already exist)
+**Checkpoint: MVP listo para testers iniciales**
 
-### v4.0.3 - January 6, 2026
+- Sistema de valoraciones de cursos (1-5 estrellas con reseñas)
+- Filtro "Mejor Valorados" en catálogo de cursos
+- Política RLS para valoraciones (solo usuarios con acceso pueden valorar)
+- Promedio y conteo de valoraciones visible en cards de cursos
+- Migración imports edge functions a npm: specifiers (fix esm.sh 522)
+- Documentación actualizada a español
+- Eliminación código no utilizado (`emailValidation.ts`)
+- Consolidación DEVELOPMENT_PLAN.md y CHANGELOG.md
 
-- Implemented CognitioAI tutor with @mention trigger
-- Added 5 calls/day rate limit per chapter
-- Language-aware responses (respects user's i18n setting)
-- Non-streaming response for reliability
+### v4.0.4 - 6 de Enero, 2026
 
-### v4.0.2 - January 6, 2026
+- Pestaña Transcripción en ChapterView con click-to-seek
+- i18n español completado para ChapterResourceManager
+- Documentación actualizada (README, TESTING, DEVELOPMENT_PLAN)
+- Verificación sistema upvoting (triggers existentes)
 
-- Created Discussion feature with chapter-level threads
-- Upvoting system with database triggers for count sync
-- Video timestamp linking in questions
-- Reply composer with @mention suggestions
+### v4.0.3 - 6 de Enero, 2026
 
-### v4.0.1 - January 5, 2026
+- CognitioAI tutor con trigger @mention
+- Límite 5 llamadas/día por capítulo
+- Respuestas conscientes del idioma (respeta i18n del usuario)
+- Respuesta no-streaming para confiabilidad
 
-- Updated PricingSection to match DB limits (200/200/500)
-- Removed all notification features (deferred)
-- Consolidated documentation (deleted FEATURES.md, TECHNOLOGY_STACK.md, TEST_COVERAGE_SUMMARY.md)
+### v4.0.2 - 6 de Enero, 2026
 
-### v4.0 - AI Studio Commercialization
+- Feature Discusiones con threads a nivel capítulo
+- Sistema upvoting con triggers DB para sync conteo
+- Video timestamp linking en preguntas
+- Compositor respuestas con sugerencias @mention
 
-#### Phase 1: Database Schema ✅
-- Renamed instructor_* tables to user_*
-- Created ai_bundle and subscription_status enums
-- Created ai_subscriptions and ai_tier_limits tables
+### v4.0.1 - 5 de Enero, 2026
 
-#### Phase 2: Backend Updates ✅
-- Updated generate-content with dynamic tier limits
-- Updated refine-content with dynamic tier limits
-- Created get-user-tier edge function
-- Created create-ai-subscription edge function
+- PricingSection actualizado para coincidir con límites DB (200/200/500)
+- Eliminadas todas las features de notificación (diferidas)
+- Consolidación documentación (eliminados FEATURES.md, TECHNOLOGY_STACK.md, TEST_COVERAGE_SUMMARY.md)
 
-#### Phase 3: Public Navigation ✅
-- Added AI Studio to main navbar
-- Removed RequireInstructor wrapper from routes
-- Implemented auth guards at feature level
+### v4.0 - Comercialización AI Studio
 
-#### Phase 4: Landing & Bundles ✅
-- Created public landing page with pricing
-- Implemented bundle-based routing
-- Created Marketing and Academic bundle hub pages
-- Simplified style settings
+#### Fase 1: Schema DB ✅
+- Tablas instructor_* renombradas a user_*
+- Creados enums ai_bundle y subscription_status
+- Creadas tablas ai_subscriptions y ai_tier_limits
+
+#### Fase 2: Actualizaciones Backend ✅
+- generate-content con límites tier dinámicos
+- refine-content con límites tier dinámicos
+- Edge function get-user-tier
+- Edge function create-ai-subscription
+
+#### Fase 3: Navegación Pública ✅
+- AI Studio en navbar principal
+- Eliminado wrapper RequireInstructor de rutas
+- Guards auth a nivel feature
+
+#### Fase 4: Landing y Bundles ✅
+- Landing page pública con pricing
+- Routing basado en bundles
+- Páginas hub para bundles Marketing y Académico
+- Configuración estilo simplificada
 
 ---
 
-## Roadmap: v4.1+ Next Steps
+## Roadmap: v4.1+ Próximos Pasos
 
 ### 🔜 Próximo
 
-#### Phase 5: Marketing Bundle Features (v4.1-v4.3)
-- [ ] LinkedIn Post Generator (v4.1)
-- [ ] X/Twitter Generator with threads support (v4.2)
-- [ ] Newsletter Generator (v4.3)
+#### Fase 5: Features Bundle Marketing (v4.1-v4.3)
+- [ ] Generador Posts LinkedIn (v4.1)
+- [ ] Generador X/Twitter con soporte threads (v4.2)
+- [ ] Generador Newsletter (v4.3)
 
-#### Phase 6: Academic Bundle (v5.0+)
-- [ ] Literature Review Generator
-- [ ] Paper Formatter (journal styles)
-- [ ] Paper Editor
-- [ ] Citation Generator
+#### Fase 6: Bundle Académico (v5.0+)
+- [ ] Generador Literature Review
+- [ ] Formateador Papers (estilos journal)
+- [ ] Editor Papers
+- [ ] Generador Citas
 
-### Next Priorities
+### Próximas Prioridades
 
-| Focus | Planned Deliverables | Priority |
-|-------|---------------------|----------|
-| Marketing Features | LinkedIn, Twitter, Newsletter generators | 🔴 High |
-| Test Coverage | Increase unit test coverage for AI hooks | 🟡 Medium |
-| Performance | Lighthouse analysis, Core Web Vitals | 🟡 Medium |
+| Enfoque | Entregables Planificados | Prioridad |
+|---------|--------------------------|-----------|
+| Features Marketing | Generadores LinkedIn, Twitter, Newsletter | 🔴 Alta |
+| Cobertura Tests | Aumentar cobertura unit tests para hooks IA | 🟡 Media |
+| Performance | Análisis Lighthouse, Core Web Vitals | 🟡 Media |
 
 ---
 
-## Future Roadmap
+## Roadmap Futuro
 
-### v5.0+: Advanced Features (Future)
+### v5.0+: Features Avanzadas (Futuro)
 
-| Focus | Planned Features |
-|-------|-----------------|
-| Analytics | Advanced student analytics, cohort tracking |
-| AI Studio | Multi-language generation, course outline generator |
-| Platform | Webhooks for integrations, public API |
-| Enrollment | Invite links for private courses, bulk CSV enrollment |
+| Enfoque | Features Planificadas |
+|---------|----------------------|
+| Analytics | Analytics estudiante avanzadas, tracking cohortes |
+| AI Studio | Generación multi-idioma, generador outlines curso |
+| Plataforma | Webhooks para integraciones, API pública |
+| Inscripción | Links invitación cursos privados, inscripción CSV masiva |
 
 ---
 
 ## Non-Goals
 
-These features are explicitly out of scope:
+Estas features están explícitamente fuera de alcance:
 
-- Complex LMS features (assignments, quizzes, gradebooks, SCORM)
-- Enterprise features (SAML SSO, HR integrations, org hierarchies)
-- AI-based grading or automated student evaluation
-- Heavy discussion forums or moderation systems
-- Open instructor signups (invite-only by design)
-- RAG/vector search for AI (using context window stuffing instead)
+- Features LMS complejas (assignments, quizzes, gradebooks, SCORM)
+- Features enterprise (SAML SSO, integraciones HR, jerarquías org)
+- Calificación basada en IA o evaluación automática estudiantes
+- Foros de discusión pesados o sistemas moderación
+- Signup abierto de instructores (por diseño es solo invitación)
+- RAG/búsqueda vectorial para IA (usando context window stuffing)
 
 ---
 
-## AI Studio Architecture
+## Arquitectura AI Studio
 
-### Context Window Strategy
-Instead of RAG (Retrieval Augmented Generation), we use "Context Window Stuffing":
-- Gemini 2.5 Flash supports 1M+ tokens
-- All selected documents fit in single context
-- Simpler architecture, no vector database needed
-- Documents tagged with `context_role` for strategic prompt placement
+### Estrategia Context Window
+En lugar de RAG (Retrieval Augmented Generation), usamos "Context Window Stuffing":
+- Gemini 2.5 Flash soporta 1M+ tokens
+- Todos los documentos seleccionados caben en contexto único
+- Arquitectura más simple, sin necesidad de base de datos vectorial
+- Documentos etiquetados con `context_role` para placement estratégico en prompt
 
-### Document Roles
-| Role | Purpose |
-|------|---------|
-| `style_reference` | Writing samples to inform voice/tone |
-| `topic_source` | Main subject matter for generation |
-| `background_context` | Expertise and credentials |
+### Roles de Documento
+| Rol | Propósito |
+|-----|-----------|
+| `style_reference` | Muestras de escritura para informar voz/tono |
+| `topic_source` | Tema principal para generación |
+| `background_context` | Expertise y credenciales |
 
-### Usage Limits by Tier
-| Tier | Daily Limit | Rate Limit |
-|------|-------------|------------|
+### Límites de Uso por Tier
+| Tier | Límite Diario | Rate Limit |
+|------|---------------|------------|
 | Free | 10 | 5/min |
 | Instructor | 50 | 10/min |
 | Marketing/Academic | 200 | 15/min |
@@ -225,8 +240,8 @@ Instead of RAG (Retrieval Augmented Generation), we use "Context Window Stuffing
 
 ---
 
-## References
+## Referencias
 
-- **Detailed Changes:** See [CHANGELOG.md](./CHANGELOG.md)
-- **Testing Guide:** See [TESTING.md](./TESTING.md)
-- **E2E Testing:** See [E2E_TESTING.md](./E2E_TESTING.md)
+- **Cambios Detallados:** Ver [CHANGELOG.md](./CHANGELOG.md)
+- **Guía Testing:** Ver [TESTING.md](./TESTING.md)
+- **Testing E2E:** Ver [E2E_TESTING.md](./E2E_TESTING.md)
