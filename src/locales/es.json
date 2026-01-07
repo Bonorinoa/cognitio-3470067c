@@ -789,5 +789,77 @@
     "delete": "Eliminar",
     "deleting": "Eliminando...",
     "error": "Algo salió mal"
+  },
+  "help": {
+    "menu": {
+      "title": "Centro de Ayuda",
+      "description": "Guías y consejos para aprovechar la plataforma",
+      "selectTopic": "Selecciona un tema para ver la guía",
+      "showAllTips": "Mostrar todas las guías"
+    },
+    "categories": {
+      "gettingStarted": "Primeros Pasos",
+      "courses": "Cursos",
+      "video": "Video",
+      "analytics": "Analíticas"
+    },
+    "gettingStarted": {
+      "title": "¡Bienvenido a tu Panel de Instructor!",
+      "step1Title": "Completa tu perfil",
+      "step1Desc": "Agrega tu foto, biografía y credenciales para generar confianza con tus estudiantes",
+      "step2Title": "Crea tu primer curso",
+      "step2Desc": "Define el título, descripción y estructura de capítulos",
+      "step3Title": "Sube contenido de video",
+      "step3Desc": "Nuestro sistema procesa y optimiza tus videos automáticamente",
+      "step4Title": "Publica y comparte",
+      "step4Desc": "Configura el precio y visibilidad para comenzar a vender",
+      "stepsCompleted": "completados",
+      "dismiss": "Entendido, ocultar esta guía"
+    },
+    "topics": {
+      "firstSteps": {
+        "title": "Primeros Pasos como Instructor",
+        "intro": "Sigue estos pasos para configurar tu presencia en Cognitio:"
+      },
+      "profileTips": {
+        "title": "Consejos para tu Perfil",
+        "intro": "Un perfil completo genera más confianza:",
+        "tip1": "Usa una foto profesional y bien iluminada",
+        "tip2": "Escribe una biografía que destaque tu experiencia y logros",
+        "tip3": "Agrega tus credenciales académicas y certificaciones",
+        "tip4": "Incluye enlaces a tu sitio web y redes profesionales"
+      },
+      "chapters": {
+        "title": "Gestión de Capítulos",
+        "intro": "Organiza tu curso para maximizar el aprendizaje:",
+        "tip1": "Mantén los capítulos entre 5-15 minutos para mejor retención",
+        "tip2": "Ofrece un capítulo gratuito como vista previa para atraer estudiantes",
+        "tip3": "Arrastra para reordenar los capítulos según el flujo lógico"
+      },
+      "metrics": {
+        "title": "Entendiendo tus Métricas",
+        "intro": "Estas métricas te ayudan a evaluar el rendimiento:",
+        "students": "Número total de estudiantes únicos inscritos en tus cursos",
+        "revenue": "Ingresos totales generados por ventas de cursos",
+        "completion": "Porcentaje promedio de capítulos completados por estudiantes"
+      }
+    },
+    "courseCreation": {
+      "visibilityTitle": "Visibilidad del Curso",
+      "visibilityIntro": "Elige quién puede ver y acceder a tu curso:",
+      "visibilityPublic": "Aparece en el catálogo público y cualquier persona puede comprarlo",
+      "visibilityPrivate": "Solo visible para estudiantes que invites manualmente (ideal para cursos universitarios)",
+      "priceTitle": "Precio del Curso",
+      "priceDesc": "Los cursos gratuitos son excelentes para construir audiencia. Los cursos de pago procesan pagos de forma segura a través de Stripe. Recibirás los fondos directamente en tu cuenta."
+    },
+    "videoUpload": {
+      "title": "Subir Video",
+      "formatsLabel": "Formatos",
+      "formats": "MP4, MOV, WebM",
+      "processingLabel": "Procesamiento",
+      "processing": "Puede tomar unos minutos dependiendo del tamaño del archivo",
+      "qualityLabel": "Calidad recomendada",
+      "quality": "1080p (Full HD) para mejor experiencia"
+    }
   }
 }

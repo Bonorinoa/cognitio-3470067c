@@ -9,9 +9,12 @@ import {
   BarChart3,
   Settings,
   Sparkles,
+  HelpCircle,
 } from "lucide-react";
 import { LayoutGroup } from "framer-motion";
 import { SidebarHeader, SidebarUserDropdown, SidebarNavItem, SidebarCollapseButton } from "@/components/sidebar";
+import { HelpDrawer } from "@/components/ui/help-drawer";
+import { useInstructorHelpContent } from "@/components/help/InstructorHelpContent";
 
 interface InstructorSidebarProps {
   collapsed?: boolean;
@@ -22,6 +25,7 @@ const InstructorSidebar = ({ collapsed = false, onCollapsedChange }: InstructorS
   const { t } = useTranslation();
   const location = useLocation();
   const [internalCollapsed, setInternalCollapsed] = useState(collapsed);
+  const helpCategories = useInstructorHelpContent();
   
   const isCollapsed = onCollapsedChange ? collapsed : internalCollapsed;
   const setIsCollapsed = onCollapsedChange || setInternalCollapsed;
@@ -106,6 +110,13 @@ const InstructorSidebar = ({ collapsed = false, onCollapsedChange }: InstructorS
             <aiStudioLink.icon className="h-5 w-5 shrink-0" />
             {!isCollapsed && <span className="font-medium">{aiStudioLink.label}</span>}
           </Link>
+          
+          {/* Help Menu */}
+          <HelpDrawer
+            categories={helpCategories}
+            triggerLabel={t("help.menu.title")}
+            collapsed={isCollapsed}
+          />
         </div>
       </nav>
 

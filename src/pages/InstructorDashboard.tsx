@@ -25,6 +25,7 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Skeleton } from "@/components/ui/skeleton";
+import { InstructorGettingStartedCard } from "@/components/help/InstructorGettingStartedCard";
 
 interface CourseWithStats {
   id: string;
@@ -49,6 +50,7 @@ const InstructorDashboard = () => {
   const [courses, setCourses] = useState<CourseWithStats[]>([]);
   const [recentEnrollments, setRecentEnrollments] = useState<RecentEnrollment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [hasProfile, setHasProfile] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -60,6 +62,15 @@ const InstructorDashboard = () => {
     if (!user) return;
 
     try {
+      // Check if profile is complete (has bio or avatar)
+      const { data: profileData } = await supabase
+        .from("profiles")
+        .select("bio, avatar_url, full_name")
+        .eq("id", user.id)
+        .single();
+      
+      setHasProfile(Boolean(profileData?.bio || profileData?.avatar_url));
+
       // Fetch courses with chapter counts
       const { data: coursesData, error: coursesError } = await supabase
         .from("courses")
@@ -174,8 +185,21 @@ const InstructorDashboard = () => {
   const totalRevenue = courses.reduce((acc, c) => acc + c.revenue, 0);
   const publishedCourses = courses.filter((c) => c.is_published).length;
 
+  // Compute onboarding progress
+  const hasCourses = courses.length > 0;
+  const hasVideos = courses.some(c => c.chapters > 0);
+  const hasPublished = publishedCourses > 0;
+
   return (
     <>
+      {/* Getting Started Card for new instructors */}
+      <InstructorGettingStartedCard
+        hasProfile={hasProfile}
+        hasCourses={hasCourses}
+        hasVideos={hasVideos}
+        hasPublished={hasPublished}
+      />
+
       {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
