@@ -19,6 +19,7 @@ export function useAIStudioContext() {
 }
 
 export default function AIStudioLayout() {
+  const [collapsed, setCollapsed] = useState(false);
   const [handlers, setHandlers] = useState<{
     onLoadHistory: (item: GenerationHistoryItem) => void;
     onDeleteHistory: (id: string) => void;
@@ -36,12 +37,16 @@ export default function AIStudioLayout() {
   return (
     <AIStudioContext.Provider value={contextValue}>
       <div className="min-h-screen bg-background">
-        <div className="flex">
+        <div className="flex w-full">
           <AIStudioSidebar 
             onLoadHistory={handlers.onLoadHistory}
             onDeleteHistory={handlers.onDeleteHistory}
+            collapsed={collapsed}
+            onCollapsedChange={setCollapsed}
           />
-          <main className="flex-1 p-6 lg:p-8 pt-28 lg:pt-8 lg:ml-64">
+          <main className={`flex-1 p-6 lg:p-8 pt-28 lg:pt-8 transition-all duration-300 ${
+            collapsed ? "lg:ml-16" : "lg:ml-64"
+          }`}>
             <Outlet />
           </main>
         </div>
