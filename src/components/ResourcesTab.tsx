@@ -88,6 +88,7 @@ export default function ResourcesTab({ chapterId }: ResourcesTabProps) {
     }
 
     // For files: download directly to bypass ad blockers
+    const toastId = toast.loading(t("resources.downloading"));
     try {
       const res = await fetch(resourceUrl, { method: "GET" });
       if (!res.ok) throw new Error(`Failed to fetch resource: ${res.status}`);
@@ -103,9 +104,12 @@ export default function ResourcesTab({ chapterId }: ResourcesTabProps) {
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(blobUrl);
+      
+      toast.success(t("resources.downloadComplete"), { id: toastId });
     } catch (e) {
       console.error("Resource download failed", e);
       toast.error(t("common.error"), {
+        id: toastId,
         description: t("resources.downloadFailed"),
       });
     }
