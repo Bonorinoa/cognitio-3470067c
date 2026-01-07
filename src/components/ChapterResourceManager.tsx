@@ -383,7 +383,7 @@ export default function ChapterResourceManager({
                     </button>
                   </div>
                   <Icon className="h-4 w-4 text-primary flex-shrink-0" />
-                  <span className="flex-1 truncate">{resource.title}</span>
+                  <span className="flex-1 min-w-0 truncate">{resource.title}</span>
                   <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                     <Button
                       variant="ghost"
