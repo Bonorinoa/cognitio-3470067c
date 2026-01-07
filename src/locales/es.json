@@ -489,7 +489,23 @@
     "unfeaturedDesc": "El curso ha sido removido de destacados.",
     "errorLoad": "Error al cargar los cursos",
     "errorDelete": "Error al eliminar el curso",
-    "errorFeatured": "Error al actualizar el estado destacado"
+    "errorFeatured": "Error al actualizar el estado destacado",
+    "featuredLimitTitle": "Límite de destacados alcanzado",
+    "featuredLimitDesc": "Puedes destacar hasta 3 cursos. Primero quita el destacado de otro curso."
+  },
+  "rating": {
+    "title": "Califica Este Curso",
+    "selectRating": "Por favor selecciona una calificación",
+    "reviewPlaceholder": "Comparte tu experiencia con este curso (opcional)...",
+    "submit": "Enviar Calificación",
+    "submitting": "Enviando...",
+    "submitted": "¡Calificación enviada!",
+    "edit": "Editar Calificación",
+    "delete": "Eliminar",
+    "deleted": "Calificación eliminada",
+    "cancel": "Cancelar",
+    "errorSubmit": "Error al enviar calificación",
+    "errorDelete": "Error al eliminar calificación"
   },
   "membership": {
     "title": "Estudiantes Inscritos",

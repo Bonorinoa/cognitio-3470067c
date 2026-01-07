@@ -1,4 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -325,6 +326,26 @@ export function useDiscussionVotes() {
       queryClient.invalidateQueries({ queryKey: ["user-votes"] });
     },
   });
+
+  // Subscribe to vote changes for real-time updates
+  useEffect(() => {
+    const channel = supabase
+      .channel("discussion-votes-realtime")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "discussion_votes" },
+        () => {
+          // Invalidate queries when votes change
+          queryClient.invalidateQueries({ queryKey: ["discussions"] });
+          queryClient.invalidateQueries({ queryKey: ["discussion-replies"] });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [queryClient]);
 
   return {
     getUserVotes,

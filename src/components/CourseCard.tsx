@@ -14,6 +14,8 @@ interface CourseCardProps {
   category?: string;
   totalDurationSeconds?: number;
   isFeatured?: boolean;
+  averageRating?: number | null;
+  ratingCount?: number;
 }
 
 const CourseCard = ({
@@ -27,6 +29,8 @@ const CourseCard = ({
   category = "Development",
   totalDurationSeconds = 0,
   isFeatured = false,
+  averageRating,
+  ratingCount = 0,
 }: CourseCardProps) => {
   const formatTotalDuration = (seconds: number) => {
     if (seconds === 0) return null;
@@ -83,6 +87,13 @@ const CourseCard = ({
               <span className="flex items-center gap-1">
                 <Clock className="h-4 w-4" />
                 {durationDisplay}
+              </span>
+            )}
+            {averageRating && (
+              <span className="flex items-center gap-1">
+                <Star className="h-4 w-4 text-accent-foreground fill-accent-foreground" />
+                {averageRating}
+                {ratingCount > 0 && <span>({ratingCount})</span>}
               </span>
             )}
           </div>

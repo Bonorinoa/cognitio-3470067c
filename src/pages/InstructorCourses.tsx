@@ -114,13 +114,37 @@ const InstructorCourses = () => {
   };
 
   const handleToggleFeatured = async (courseId: string, currentFeatured: boolean) => {
+    // Check limit before featuring
+    if (!currentFeatured) {
+      const featuredCount = courses.filter(c => c.is_featured && c.id !== courseId).length;
+      if (featuredCount >= 3) {
+        toast({
+          title: t("instructorCourses.featuredLimitTitle"),
+          description: t("instructorCourses.featuredLimitDesc"),
+          variant: "destructive",
+        });
+        return;
+      }
+    }
+
     try {
       const { error } = await supabase
         .from("courses")
         .update({ is_featured: !currentFeatured })
         .eq("id", courseId);
 
-      if (error) throw error;
+      if (error) {
+        // Handle database constraint error
+        if (error.message?.includes("Maximum of 3 featured courses")) {
+          toast({
+            title: t("instructorCourses.featuredLimitTitle"),
+            description: t("instructorCourses.featuredLimitDesc"),
+            variant: "destructive",
+          });
+          return;
+        }
+        throw error;
+      }
 
       setCourses(courses.map(c => 
         c.id === courseId ? { ...c, is_featured: !currentFeatured } : c
@@ -143,6 +167,8 @@ const InstructorCourses = () => {
       });
     }
   };
+
+  const featuredCount = courses.filter(c => c.is_featured).length;
 
   return (
     <>
@@ -248,11 +274,14 @@ const InstructorCourses = () => {
                     <div className="flex items-center justify-between rounded-lg bg-muted/20 p-3">
                       <div className="flex items-center gap-2 text-sm">
                         <Star className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-muted-foreground">{t("instructorCourses.featured")}</span>
+                        <span className="text-muted-foreground">
+                          {t("instructorCourses.featured")} ({featuredCount}/3)
+                        </span>
                       </div>
                       <Switch
                         checked={course.is_featured}
                         onCheckedChange={() => handleToggleFeatured(course.id, course.is_featured)}
+                        disabled={!course.is_featured && featuredCount >= 3}
                       />
                     </div>
                   )}

@@ -256,15 +256,15 @@ export default function ThreadView({
                 const aiChild = childRepliesMap[reply.id];
                 // If this reply has an AI child, render them as a unified card
                 if (aiChild) {
-                  const combinedVoteCount = reply.upvote_count + aiChild.upvote_count;
-                  // Vote on the AI reply (child) as the primary target
-                  const effectiveVote = userVotes[aiChild.id] || userVotes[reply.id] || null;
+                  // Only count the AI reply votes (the target of user voting)
+                  const voteCount = aiChild.upvote_count;
+                  const effectiveVote = userVotes[aiChild.id] || null;
                   return (
                     <AIExchangeCard
                       key={reply.id}
                       promptReply={reply}
                       aiReply={aiChild}
-                      combinedVoteCount={combinedVoteCount}
+                      voteCount={voteCount}
                       userVote={effectiveVote}
                       isAuthenticated={isAuthenticated}
                       onVote={(vote) => handleVoteReply(aiChild.id, vote)}
@@ -382,7 +382,7 @@ function ReplyCard({
 interface AIExchangeCardProps {
   promptReply: DiscussionReply;
   aiReply: DiscussionReply;
-  combinedVoteCount: number;
+  voteCount: number;
   userVote: number | null;
   isAuthenticated: boolean;
   onVote: (vote: 1 | -1) => void;
@@ -392,7 +392,7 @@ interface AIExchangeCardProps {
 function AIExchangeCard({
   promptReply,
   aiReply,
-  combinedVoteCount,
+  voteCount,
   userVote,
   isAuthenticated,
   onVote,
@@ -402,7 +402,7 @@ function AIExchangeCard({
     <Card className="border-primary/20 bg-primary/5">
       <CardContent className="py-4">
         <div className="flex items-start gap-4">
-          {/* Single voting control for the pair */}
+          {/* Single voting control for the AI reply */}
           <div className="flex flex-col items-center gap-1">
             <Button
               variant="ghost"
@@ -413,7 +413,7 @@ function AIExchangeCard({
             >
               <ArrowUp className="h-3 w-3" />
             </Button>
-            <span className="text-xs font-medium">{combinedVoteCount}</span>
+            <span className="text-xs font-medium">{voteCount}</span>
             <Button
               variant="ghost"
               size="icon"
