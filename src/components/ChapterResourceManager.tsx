@@ -98,6 +98,7 @@ export default function ChapterResourceManager({
   const [description, setDescription] = useState("");
   const [resourceType, setResourceType] = useState("link");
   const [url, setUrl] = useState("");
+  const [isUploadedFile, setIsUploadedFile] = useState(false);
 
   const { data: resources = [], isLoading } = useQuery({
     queryKey: ["chapter-resources", chapterId],
@@ -215,6 +216,7 @@ export default function ChapterResourceManager({
     setResourceType("link");
     setUrl("");
     setEditingResource(null);
+    setIsUploadedFile(false);
   };
 
   const handleOpenDialog = (resource?: ChapterResource) => {
@@ -224,6 +226,9 @@ export default function ChapterResourceManager({
       setDescription(resource.description || "");
       setResourceType(resource.resource_type);
       setUrl(resource.url);
+      // Detect if it's an uploaded file by checking if URL contains storage domain
+      const isStorageUrl = resource.url.includes('supabase.co/storage');
+      setIsUploadedFile(isStorageUrl);
     } else {
       resetForm();
     }
@@ -268,6 +273,7 @@ export default function ChapterResourceManager({
       setTitle(file.name.replace(/\.[^/.]+$/, "")); // Remove extension for title
       setUrl(urlData.publicUrl);
       setResourceType(detectedType);
+      setIsUploadedFile(true);
       setDialogOpen(true);
       
       toast.success(t("resources.fileUploaded"));
@@ -474,15 +480,25 @@ export default function ChapterResourceManager({
                         </SelectContent>
                       </Select>
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="resource-url">{t("resources.url")}</Label>
-                      <Input
-                        id="resource-url"
-                        placeholder="https://..."
-                        value={url}
-                        onChange={(e) => setUrl(e.target.value)}
-                      />
-                    </div>
+                    {isUploadedFile ? (
+                      <div className="space-y-2">
+                        <Label>{t("resources.file")}</Label>
+                        <div className="flex items-center gap-2 p-3 rounded-md bg-muted/50 border text-sm text-muted-foreground">
+                          <FileText className="h-4 w-4 text-primary" />
+                          <span>{t("resources.fileUploadedSuccess")}</span>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="space-y-2">
+                        <Label htmlFor="resource-url">{t("resources.url")}</Label>
+                        <Input
+                          id="resource-url"
+                          placeholder="https://..."
+                          value={url}
+                          onChange={(e) => setUrl(e.target.value)}
+                        />
+                      </div>
+                    )}
                     <div className="space-y-2">
                       <Label htmlFor="resource-description">{t("resources.description")}</Label>
                       <Textarea

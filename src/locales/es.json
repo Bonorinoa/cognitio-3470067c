@@ -235,6 +235,8 @@
     "downloading": "Descargando...",
     "downloadComplete": "Descarga completa",
     "empty": "Aún no hay recursos para este capítulo",
+    "file": "Archivo",
+    "fileUploadedSuccess": "Archivo subido exitosamente",
     "pdf": "Documento PDF",
     "link": "Enlace Externo",
     "notebook": "Cuaderno de Código",
