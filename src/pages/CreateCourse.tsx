@@ -21,6 +21,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { getErrorMessage } from "@/lib/errorUtils";
 import { useAuth } from "@/contexts/AuthContext";
 import VideoUpload from "@/components/VideoUpload";
+import ChapterResourceManager from "@/components/ChapterResourceManager";
 
 interface Chapter {
   id: string;
@@ -404,6 +405,11 @@ const CreateCourse = () => {
                         onUploadComplete={(playbackId, assetId) =>
                           handleVideoUpload(chapter.id, playbackId, assetId)
                         }
+                      />
+                      <ChapterResourceManager 
+                        chapterId={chapter.id}
+                        chapterTitle={chapter.title || `${t("createCourse.chapter")} ${index + 1}`}
+                        isNewChapter={true}
                       />
                     </div>
                     <Button
