@@ -389,7 +389,7 @@ const EditCourse = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Content */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2 space-y-6 min-w-0">
             {/* Basic Info */}
             <Card className="border-border bg-card">
               <CardHeader>
@@ -492,7 +492,7 @@ const EditCourse = () => {
                       <div className="flex items-center">
                         <GripVertical className="h-5 w-5 text-muted-foreground cursor-grab" />
                       </div>
-                      <div className="flex-1 space-y-3">
+                      <div className="flex-1 min-w-0 space-y-3">
                         <div className="flex items-center gap-3">
                           <span className="text-sm font-medium text-muted-foreground">
                             Chapter {index + 1}
