@@ -784,5 +784,77 @@
     "delete": "Delete",
     "deleting": "Deleting...",
     "error": "Something went wrong"
+  },
+  "help": {
+    "menu": {
+      "title": "Help Center",
+      "description": "Guides and tips to get the most out of the platform",
+      "selectTopic": "Select a topic to view the guide",
+      "showAllTips": "Show all tips again"
+    },
+    "categories": {
+      "gettingStarted": "Getting Started",
+      "courses": "Courses",
+      "video": "Video",
+      "analytics": "Analytics"
+    },
+    "gettingStarted": {
+      "title": "Welcome to your Instructor Dashboard!",
+      "step1Title": "Complete your profile",
+      "step1Desc": "Add your photo, bio, and credentials to build trust with your students",
+      "step2Title": "Create your first course",
+      "step2Desc": "Define the title, description, and chapter structure",
+      "step3Title": "Upload video content",
+      "step3Desc": "Our system automatically processes and optimizes your videos",
+      "step4Title": "Publish and share",
+      "step4Desc": "Set the price and visibility to start selling",
+      "stepsCompleted": "completed",
+      "dismiss": "Got it, hide this guide"
+    },
+    "topics": {
+      "firstSteps": {
+        "title": "First Steps as an Instructor",
+        "intro": "Follow these steps to set up your presence on Cognitio:"
+      },
+      "profileTips": {
+        "title": "Profile Tips",
+        "intro": "A complete profile builds more trust:",
+        "tip1": "Use a professional, well-lit photo",
+        "tip2": "Write a bio that highlights your experience and achievements",
+        "tip3": "Add your academic credentials and certifications",
+        "tip4": "Include links to your website and professional networks"
+      },
+      "chapters": {
+        "title": "Chapter Management",
+        "intro": "Organize your course to maximize learning:",
+        "tip1": "Keep chapters between 5-15 minutes for better retention",
+        "tip2": "Offer a free chapter as a preview to attract students",
+        "tip3": "Drag to reorder chapters according to logical flow"
+      },
+      "metrics": {
+        "title": "Understanding Your Metrics",
+        "intro": "These metrics help you evaluate performance:",
+        "students": "Total number of unique students enrolled in your courses",
+        "revenue": "Total revenue generated from course sales",
+        "completion": "Average percentage of chapters completed by students"
+      }
+    },
+    "courseCreation": {
+      "visibilityTitle": "Course Visibility",
+      "visibilityIntro": "Choose who can see and access your course:",
+      "visibilityPublic": "Appears in the public catalog and anyone can purchase it",
+      "visibilityPrivate": "Only visible to students you manually invite (ideal for university courses)",
+      "priceTitle": "Course Price",
+      "priceDesc": "Free courses are great for building an audience. Paid courses process payments securely through Stripe. You'll receive funds directly to your account."
+    },
+    "videoUpload": {
+      "title": "Upload Video",
+      "formatsLabel": "Formats",
+      "formats": "MP4, MOV, WebM",
+      "processingLabel": "Processing",
+      "processing": "May take a few minutes depending on file size",
+      "qualityLabel": "Recommended quality",
+      "quality": "1080p (Full HD) for best experience"
+    }
   }
 }

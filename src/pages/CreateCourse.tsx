@@ -22,6 +22,7 @@ import { getErrorMessage } from "@/lib/errorUtils";
 import { useAuth } from "@/contexts/AuthContext";
 import VideoUpload from "@/components/VideoUpload";
 import ChapterResourceManager from "@/components/ChapterResourceManager";
+import { HelpPopover } from "@/components/ui/help-popover";
 
 interface Chapter {
   id: string;
@@ -289,7 +290,12 @@ const CreateCourse = () => {
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="price">{t("createCourse.price")}</Label>
+                    <div className="flex items-center gap-2">
+                      <Label htmlFor="price">{t("createCourse.price")}</Label>
+                      <HelpPopover title={t("help.courseCreation.priceTitle")}>
+                        <p>{t("help.courseCreation.priceDesc")}</p>
+                      </HelpPopover>
+                    </div>
                     <Input
                       id="price"
                       type="number"
@@ -316,7 +322,16 @@ const CreateCourse = () => {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label>{t("createCourse.visibility")}</Label>
+                  <div className="flex items-center gap-2">
+                    <Label>{t("createCourse.visibility")}</Label>
+                    <HelpPopover title={t("help.courseCreation.visibilityTitle")}>
+                      <p className="mb-2">{t("help.courseCreation.visibilityIntro")}</p>
+                      <ul className="space-y-1 text-sm">
+                        <li><strong>{t("createCourse.public")}:</strong> {t("help.courseCreation.visibilityPublic")}</li>
+                        <li><strong>{t("createCourse.private")}:</strong> {t("help.courseCreation.visibilityPrivate")}</li>
+                      </ul>
+                    </HelpPopover>
+                  </div>
                   <Select value={visibility} onValueChange={(value: "public" | "private") => setVisibility(value)}>
                     <SelectTrigger className="bg-background border-border">
                       <SelectValue placeholder={t("createCourse.selectVisibility")} />
