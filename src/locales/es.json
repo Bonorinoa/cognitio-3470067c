@@ -507,6 +507,11 @@
     "errorSubmit": "Error al enviar calificación",
     "errorDelete": "Error al eliminar calificación"
   },
+  "reviews": {
+    "title": "Reseñas de Estudiantes",
+    "noReviews": "Aún no hay reseñas. ¡Sé el primero en compartir tu experiencia!",
+    "anonymous": "Anónimo"
+  },
   "membership": {
     "title": "Estudiantes Inscritos",
     "description": "Gestiona quién tiene acceso a este curso",

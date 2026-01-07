@@ -5,6 +5,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { BookOpen, Clock, Star, Check, ShoppingCart, Loader2, LogIn, Play } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import CourseRatingCard from "@/components/CourseRatingCard";
+import CourseReviewsList from "@/components/CourseReviewsList";
 
 interface Chapter {
   id: string;
@@ -24,7 +26,7 @@ interface CourseOverviewProps {
     category: string | null;
     instructor_id: string;
     average_rating?: number | null;
-    rating_count?: number;
+    rating_count?: number | null;
     instructor?: {
       full_name: string | null;
       email: string | null;
@@ -69,7 +71,8 @@ const CourseOverview = ({
   ];
 
   const hasAccess = hasPurchased || isOwner;
-
+  const allChaptersCompleted = chapters.length > 0 && chapters.every(ch => ch.isCompleted);
+  const canRate = hasPurchased && allChaptersCompleted;
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -188,6 +191,18 @@ const CourseOverview = ({
               ))}
             </div>
           </div>
+
+          {/* Rating Card - shown to enrolled students who completed the course */}
+          {canRate && (
+            <CourseRatingCard courseId={course.id} hasAccess={canRate} />
+          )}
+
+          {/* Reviews List - shown to everyone */}
+          <CourseReviewsList 
+            courseId={course.id} 
+            averageRating={course.average_rating}
+            ratingCount={course.rating_count}
+          />
         </div>
 
         {/* Sidebar */}
