@@ -18,27 +18,24 @@ const COMPRESSION_THRESHOLD = 2 * 1024 * 1024; // 2MB
 const MAX_DIMENSION = 1200;
 const COMPRESSION_QUALITY = 0.8;
 
-// Compress image using Canvas API
+// Compress and crop image to square using Canvas API
 const compressImage = async (file: File): Promise<Blob> => {
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.onload = () => {
-      let { width, height } = img;
+      const { width, height } = img;
       
-      // Calculate new dimensions maintaining aspect ratio
-      if (width > MAX_DIMENSION || height > MAX_DIMENSION) {
-        if (width > height) {
-          height = Math.round((height * MAX_DIMENSION) / width);
-          width = MAX_DIMENSION;
-        } else {
-          width = Math.round((width * MAX_DIMENSION) / height);
-          height = MAX_DIMENSION;
-        }
-      }
+      // Calculate square crop (center-weighted)
+      const size = Math.min(width, height);
+      const cropX = (width - size) / 2;
+      const cropY = (height - size) / 2;
+      
+      // Determine output size (max MAX_DIMENSION, but square)
+      const outputSize = Math.min(size, MAX_DIMENSION);
       
       const canvas = document.createElement("canvas");
-      canvas.width = width;
-      canvas.height = height;
+      canvas.width = outputSize;
+      canvas.height = outputSize;
       
       const ctx = canvas.getContext("2d");
       if (!ctx) {
@@ -46,7 +43,12 @@ const compressImage = async (file: File): Promise<Blob> => {
         return;
       }
       
-      ctx.drawImage(img, 0, 0, width, height);
+      // Draw cropped square image
+      ctx.drawImage(
+        img,
+        cropX, cropY, size, size, // Source: center square crop
+        0, 0, outputSize, outputSize // Dest: fill canvas
+      );
       
       canvas.toBlob(
         (blob) => {

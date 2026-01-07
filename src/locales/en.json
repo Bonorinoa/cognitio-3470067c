@@ -13,7 +13,7 @@
     "aiStudio": "AI Studio"
   },
   "services": {
-    "title": "Consulting Services",
+    "title": "Consulting",
     "subtitle": "Connect directly with our instructors for personalized consulting, coaching, and mentorship",
     "noServices": "No services available yet.",
     "unknownInstructor": "Instructor"
@@ -399,7 +399,7 @@
     "errorSave": "Failed to save document",
     "uploadFile": "Upload Text File",
     "uploadHint": "Supports .txt, .md, .csv, .json, .py, .js, .ts",
-    "pdfNotSupported": "PDFs are not supported. Please copy and paste the text content directly."
+    "pdfNotSupported": "PDF support coming soon! For now, convert your PDF to Markdown free at pdf2md.morethan.io and upload the .md file."
   },
   "instructorDashboard": {
     "title": "Instructor Dashboard",
