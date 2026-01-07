@@ -200,7 +200,36 @@
     "nextChapter": "Siguiente Capítulo",
     "previousChapter": "Capítulo Anterior",
     "discussionTab": "Discusión",
-    "resourcesTab": "Recursos"
+    "resourcesTab": "Recursos",
+    "transcriptTab": "Transcripción"
+  },
+  "transcript": {
+    "notAvailable": "Transcripción no disponible",
+    "notAvailableHint": "La transcripción se generará automáticamente cuando el video esté procesado",
+    "disabled": "Las transcripciones están deshabilitadas para este curso",
+    "errorLoading": "Error al cargar la transcripción"
+  },
+  "resources": {
+    "saveChapterFirst": "Guarda el capítulo para agregar recursos",
+    "resourceAdded": "Recurso agregado",
+    "resourceUpdated": "Recurso actualizado",
+    "resourceDeleted": "Recurso eliminado",
+    "uploadFile": "Subir Archivo",
+    "addLink": "Agregar Enlace",
+    "editResource": "Editar Recurso",
+    "addResource": "Agregar Recurso",
+    "addMaterials": "Agrega materiales complementarios para",
+    "title": "Título",
+    "titlePlaceholder": "ej., Diapositivas de la Clase",
+    "type": "Tipo",
+    "url": "URL",
+    "description": "Descripción (opcional)",
+    "descriptionPlaceholder": "Breve descripción de este recurso",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "fileSizeError": "El archivo debe ser menor a 20MB",
+    "fileUploaded": "¡Archivo subido! Completa el formulario para agregar el recurso.",
+    "titleUrlRequired": "El título y la URL son requeridos"
   },
   "discussion": {
     "sortNew": "Más Reciente",

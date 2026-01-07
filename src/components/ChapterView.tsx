@@ -1,11 +1,12 @@
 import { lazy, Suspense, useState, useRef, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Loader2, Check, ArrowLeft, ChevronLeft, ChevronRight, MessageSquare } from "lucide-react";
+import { Loader2, Check, ArrowLeft, ChevronLeft, ChevronRight, MessageSquare, FileText } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import ChapterList from "@/components/ChapterList";
 import DiscussionTab from "@/components/discussion/DiscussionTab";
 import ResourcesTab from "@/components/ResourcesTab";
+import TranscriptTab from "@/components/TranscriptTab";
 import type { VideoPlayerHandle } from "@/components/VideoPlayer";
 
 const VideoPlayer = lazy(() => import("@/components/VideoPlayer"));
@@ -172,14 +173,18 @@ const ChapterView = ({
             </Button>
           )}
 
-          {/* Tabs for Discussion / Resources */}
+          {/* Tabs for Discussion / Resources / Transcript */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-6">
-            <TabsList className="grid w-full grid-cols-2">
+            <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="discussion" className="gap-2">
                 <MessageSquare className="h-4 w-4" />
                 {t("coursePage.discussionTab")}
               </TabsTrigger>
               <TabsTrigger value="resources">{t("coursePage.resourcesTab")}</TabsTrigger>
+              <TabsTrigger value="transcript" className="gap-2">
+                <FileText className="h-4 w-4" />
+                {t("coursePage.transcriptTab")}
+              </TabsTrigger>
             </TabsList>
 
             <TabsContent value="discussion" className="mt-4">
@@ -197,6 +202,14 @@ const ChapterView = ({
 
             <TabsContent value="resources" className="mt-4">
               <ResourcesTab chapterId={currentChapterId} />
+            </TabsContent>
+
+            <TabsContent value="transcript" className="mt-4">
+              <TranscriptTab
+                chapterId={currentChapterId}
+                courseId={course.id}
+                onSeekVideo={handleSeekVideo}
+              />
             </TabsContent>
           </Tabs>
         </div>

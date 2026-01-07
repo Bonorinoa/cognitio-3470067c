@@ -194,7 +194,36 @@
     "nextChapter": "Next Chapter",
     "previousChapter": "Previous Chapter",
     "discussionTab": "Discussion",
-    "resourcesTab": "Resources"
+    "resourcesTab": "Resources",
+    "transcriptTab": "Transcript"
+  },
+  "transcript": {
+    "notAvailable": "Transcript not available",
+    "notAvailableHint": "Transcript will be auto-generated when video processing is complete",
+    "disabled": "Transcripts are disabled for this course",
+    "errorLoading": "Failed to load transcript"
+  },
+  "resources": {
+    "saveChapterFirst": "Save chapter to add resources",
+    "resourceAdded": "Resource added",
+    "resourceUpdated": "Resource updated",
+    "resourceDeleted": "Resource deleted",
+    "uploadFile": "Upload File",
+    "addLink": "Add Link",
+    "editResource": "Edit Resource",
+    "addResource": "Add Resource",
+    "addMaterials": "Add supplementary materials for",
+    "title": "Title",
+    "titlePlaceholder": "e.g., Lecture Slides",
+    "type": "Type",
+    "url": "URL",
+    "description": "Description (optional)",
+    "descriptionPlaceholder": "Brief description of this resource",
+    "cancel": "Cancel",
+    "save": "Save",
+    "fileSizeError": "File size must be less than 20MB",
+    "fileUploaded": "File uploaded! Complete the form to add the resource.",
+    "titleUrlRequired": "Title and URL are required"
   },
   "discussion": {
     "sortNew": "Newest",

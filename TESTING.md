@@ -107,8 +107,8 @@ src/
 ├── pages/
 │   ├── Dashboard.tsx
 │   ├── Dashboard.test.tsx
-│   ├── TeacherDashboard.tsx
-│   └── TeacherDashboard.test.tsx
+│   ├── InstructorDashboard.tsx
+│   └── InstructorDashboard.test.tsx
 └── test/
     ├── setup.ts
     ├── utils.tsx
@@ -166,8 +166,8 @@ import { render, screen, waitFor, userEvent } from '@/test/utils';
    - ✅ Shows stats cards
    - ✅ Has search input
 
-5. **TeacherDashboard.test.tsx** (9 tests - 5 passing, 4 failing)
-   - ✅ Renders teacher dashboard
+5. **InstructorDashboard.test.tsx** (9 tests - 5 passing, 4 failing)
+   - ✅ Renders instructor dashboard
    - ❌ Shows Create Course button (timeout issue)
    - ✅ Shows stats cards
    - ✅ Shows Your Courses section
@@ -384,6 +384,8 @@ describe('YourComponent', () => {
 3. **Hooks**
    - use-toast
    - use-mobile
+   - useDiscussions
+   - useAITutor
 
 4. **Context**
    - AuthContext edge cases
@@ -393,6 +395,8 @@ describe('YourComponent', () => {
    - Course creation and publishing
    - Video playback and progress
    - Payment flow
+   - Discussion thread creation and voting
+   - AI Tutor invocation and rate limiting
 
 ## Debugging Tests
 
