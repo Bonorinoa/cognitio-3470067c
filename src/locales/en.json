@@ -280,7 +280,9 @@
     "enroll": "Enroll"
   },
   "footer": {
-    "rights": "All rights reserved."
+    "rights": "All rights reserved.",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy"
   },
   "auth": {
     "backToHome": "Back to home",
