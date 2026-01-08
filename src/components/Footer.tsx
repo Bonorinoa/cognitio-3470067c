@@ -45,6 +45,22 @@ const Footer = () => {
             </Link>
           </nav>
 
+          {/* Legal links */}
+          <nav className="flex items-center gap-4 text-sm">
+            <Link 
+              to="/terms" 
+              className="text-muted-foreground hover:text-foreground transition-colors"
+            >
+              {t("footer.terms")}
+            </Link>
+            <Link 
+              to="/privacy" 
+              className="text-muted-foreground hover:text-foreground transition-colors"
+            >
+              {t("footer.privacy")}
+            </Link>
+          </nav>
+
           {/* Copyright */}
           <p className="text-sm text-muted-foreground">
             &copy; {currentYear} Cognitio. {t("footer.rights")}

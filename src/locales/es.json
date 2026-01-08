@@ -286,7 +286,9 @@
     "enroll": "Inscribirse"
   },
   "footer": {
-    "rights": "Todos los derechos reservados."
+    "rights": "Todos los derechos reservados.",
+    "terms": "Términos de Servicio",
+    "privacy": "Política de Privacidad"
   },
   "auth": {
     "backToHome": "Volver al inicio",
