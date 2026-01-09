@@ -43,6 +43,7 @@ const ResetPasswordPage = lazy(() => import("./pages/ResetPasswordPage"));
 const UserSettings = lazy(() => import("./pages/UserSettings"));
 const TermsOfService = lazy(() => import("./pages/TermsOfService"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
+const FAQPage = lazy(() => import("./pages/FAQPage"));
 
 // Loading fallback component
 const PageLoader = () => (
@@ -116,6 +117,7 @@ const App = () => (
               <Route path="/settings" element={<UserSettings />} />
               <Route path="/terms" element={<TermsOfService />} />
               <Route path="/privacy" element={<PrivacyPolicy />} />
+              <Route path="/faq" element={<FAQPage />} />
               <Route path="/admin" element={<RequireAdmin><AdminPanel /></RequireAdmin>} />
               {/* Legacy route redirects for backward compatibility */}
               <Route path="/teacher" element={<Navigate to="/instructor" replace />} />

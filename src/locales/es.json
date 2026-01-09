@@ -288,7 +288,60 @@
   "footer": {
     "rights": "Todos los derechos reservados.",
     "terms": "Términos de Servicio",
-    "privacy": "Política de Privacidad"
+    "privacy": "Política de Privacidad",
+    "faq": "Preguntas Frecuentes"
+  },
+  "faq": {
+    "title": "Preguntas Frecuentes",
+    "subtitle": "Respuestas a las dudas más comunes sobre Cognitio",
+    "backHome": "Volver al Inicio",
+    "students": {
+      "title": "Para Estudiantes",
+      "q1": "¿Cómo me registro en la plataforma?",
+      "a1": "Haz clic en \"Iniciar Sesión\" en la barra de navegación y selecciona \"Registrarse\". Completa el formulario con tu nombre, email y contraseña. Tu cuenta se activará inmediatamente.",
+      "q2": "¿Cómo compro un curso?",
+      "a2": "Navega al curso que te interesa y haz clic en \"Comprar Curso\". Serás redirigido a una página de pago segura de Stripe. Una vez completado el pago, tendrás acceso inmediato al contenido.",
+      "q3": "¿Puedo ver el contenido antes de comprar?",
+      "a3": "Sí, cada curso muestra una descripción detallada, el contenido del temario y algunos capítulos marcados como \"Vista Previa Gratis\" que puedes ver sin comprar.",
+      "q4": "¿Los cursos tienen fecha de expiración?",
+      "a4": "No. Una vez que compras un curso, tienes acceso de por vida. Puedes volver a ver el contenido cuantas veces quieras.",
+      "q5": "¿Cómo accedo a los materiales del curso?",
+      "a5": "Dentro de cada capítulo hay una pestaña de \"Recursos\" donde puedes ver y descargar archivos complementarios como PDFs, presentaciones o enlaces externos.",
+      "q6": "¿Puedo pedir un reembolso?",
+      "a6": "Sí, ofrecemos reembolsos dentro de los 14 días posteriores a la compra. Contacta a soporte@cognitio.lat con tu solicitud.",
+      "q7": "¿Qué es el Tutor IA en las discusiones?",
+      "a7": "Es un asistente de inteligencia artificial que puede responder tus preguntas sobre el contenido del curso. Menciona @CognitioAI en las discusiones para obtener ayuda inmediata."
+    },
+    "instructors": {
+      "title": "Para Instructores",
+      "q1": "¿Cómo me convierto en instructor?",
+      "a1": "Cognitio es una plataforma por invitación. No hay registro público de instructores. Si deseas unirte, contacta al equipo en soporte@cognitio.lat.",
+      "q2": "¿Qué porcentaje de las ventas retengo?",
+      "a2": "Nuestro modelo está diseñado para maximizar tus ingresos. Los detalles específicos se discuten durante el proceso de incorporación.",
+      "q3": "¿Qué formatos de video son soportados?",
+      "a3": "Aceptamos MP4, MOV y WebM. Los videos se procesan automáticamente para optimizar la reproducción en diferentes dispositivos.",
+      "q4": "¿Qué es un curso privado?",
+      "a4": "Es un curso visible solo para estudiantes que tú inscribes manualmente. Ideal para cohortes universitarias o capacitaciones empresariales. No aparece en el catálogo público.",
+      "q5": "¿Cómo funcionan las transcripciones automáticas?",
+      "a5": "Después de subir un video, el sistema genera automáticamente una transcripción que los estudiantes pueden leer. Puedes activar o desactivar esta función por curso.",
+      "q6": "¿Qué es AI Studio?",
+      "a6": "Es un conjunto de herramientas de inteligencia artificial para ayudarte a crear contenido de marketing: posts de blog, newsletters, textos para redes sociales, etc."
+    },
+    "general": {
+      "title": "General",
+      "q1": "¿Es segura la plataforma?",
+      "a1": "Sí. Usamos autenticación segura y todos los pagos se procesan a través de Stripe, un proveedor certificado PCI. Nunca almacenamos datos de tarjetas de crédito.",
+      "q2": "¿Cómo elimino mi cuenta?",
+      "a2": "Ve a Configuración → Cuenta y haz clic en \"Eliminar Cuenta\". Esta acción es irreversible y eliminará todos tus datos personales.",
+      "q3": "¿En qué idiomas está disponible la plataforma?",
+      "a3": "La plataforma está disponible en español e inglés. El contenido de los cursos depende del instructor.",
+      "q4": "¿Cómo contacto al soporte?",
+      "a4": "Envía un email a soporte@cognitio.lat. Respondemos en un plazo de 24-48 horas hábiles."
+    },
+    "contact": {
+      "title": "¿Tienes otra pregunta?",
+      "description": "No dudes en contactarnos"
+    }
   },
   "auth": {
     "backToHome": "Volver al inicio",

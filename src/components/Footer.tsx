@@ -48,6 +48,12 @@ const Footer = () => {
           {/* Legal links */}
           <nav className="flex items-center gap-4 text-sm">
             <Link 
+              to="/faq" 
+              className="text-muted-foreground hover:text-foreground transition-colors"
+            >
+              {t("footer.faq")}
+            </Link>
+            <Link 
               to="/terms" 
               className="text-muted-foreground hover:text-foreground transition-colors"
             >
