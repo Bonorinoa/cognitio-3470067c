@@ -170,10 +170,7 @@ const Index = () => {
                 las maneja, gana tiempo para lo que importa: pensar, dialogar, acompañar.
               </p>
               <p>
-                Cognitio es nuestro intento de poner esas herramientas en manos de quien enseña.
-                La plataforma es gratuita para instructores y estudiantes; los proyectos a medida
-                con instituciones y empresas son los que la sostienen. Es un modelo simple —
-                quienes pueden pagar, financian el acceso de quienes no.
+                Cognitio es nuestro intento de poner esas herramientas en manos de quien enseña.&nbsp;
               </p>
             </div>
           </div>
