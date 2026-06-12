@@ -3,7 +3,13 @@ import { render, screen } from '@/test/utils';
 import PasswordChangeForm from './PasswordChangeForm';
 
 vi.mock('@/integrations/supabase/client', () => ({
-  supabase: { auth: { updateUser: vi.fn(() => Promise.resolve({ data: {}, error: null })) } },
+  supabase: {
+    auth: {
+      updateUser: vi.fn(() => Promise.resolve({ data: {}, error: null })),
+      onAuthStateChange: vi.fn(() => ({ data: { subscription: { unsubscribe: vi.fn() } } })),
+      getSession: vi.fn(() => Promise.resolve({ data: { session: null }, error: null })),
+    },
+  },
 }));
 
 describe('PasswordChangeForm', () => {
