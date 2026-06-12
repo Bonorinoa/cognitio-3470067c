@@ -1,12 +1,18 @@
-# Phase C — Status
+# Phase C — Status (Complete)
 
 - ✅ Batch 1: categories, AnimatedTabsTrigger, founder IDs in DB
 - ✅ Batch 2: backend lockdown (RLS tightened, SECURITY DEFINER scoped, `resources` bucket private + access-checked)
-- ⏭️ Batch 3: decompose mega-files (AIStudioBlog → EditCourse/CreateCourse → AdminPanel/ChapterResourceManager)
+- ✅ Batch 3: mega-file decomposition
+  - `AIStudioBlog`: 848 → 291 (+ 5 modules in `components/ai-studio/blog/`)
+  - `EditCourse`: 731 → 348 (+ 5 modules in `components/instructor/course-edit/`)
+  - `CreateCourse`: 510 → 201 (+ 3 modules in `components/instructor/course-create/`, shares image hook)
+  - `AdminPanel`: 456 → 28 (+ 2 cards in `components/admin/`)
+  - `ChapterResourceManager`: 533 → 201 (+ 5 modules in `components/chapters/resources/`)
 
 ---
 
 ## Original plan (kept for reference)
+
 
 
 ---
