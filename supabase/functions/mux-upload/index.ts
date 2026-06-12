@@ -26,18 +26,18 @@ serve(async (req) => {
   const origin = req.headers.get("origin");
   const corsHeaders = getCorsHeaders(origin);
   
+  // Handle CORS preflight requests
+  if (req.method === "OPTIONS") {
+    return new Response(null, { headers: corsHeaders });
+  }
+
   // Validate origin for non-OPTIONS requests
-  if (req.method !== "OPTIONS" && origin && !isOriginAllowed(origin)) {
+  if (origin && !isOriginAllowed(origin)) {
     console.error("BLOCKED - Origin not allowed:", origin);
     return new Response(JSON.stringify({ error: "Origin not allowed" }), {
       status: 403,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
-  }
-
-  // Handle CORS preflight requests
-  if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
   }
 
   try {
@@ -49,13 +49,48 @@ serve(async (req) => {
       throw new Error("Mux credentials not configured");
     }
 
-    const { action, chapterId, assetId, uploadId } = await req.json();
-    console.log(`Mux upload action: ${action}, chapterId: ${chapterId}`);
-
     // Create Supabase client for database operations
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+    // Require JWT auth
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const token = authHeader.replace("Bearer ", "");
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    if (authError || !user) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const { action, chapterId, assetId, uploadId } = await req.json();
+    console.log(`Mux upload action: ${action}, chapterId: ${chapterId}, user: ${user.id}`);
+
+    // For chapter-bound actions, verify ownership
+    if (chapterId) {
+      const { data: chapterRow, error: chapterErr } = await supabase
+        .from("chapters")
+        .select("id, courses!inner(instructor_id)")
+        .eq("id", chapterId)
+        .single();
+      // deno-lint-ignore no-explicit-any
+      const instructorId = (chapterRow as any)?.courses?.instructor_id;
+      if (chapterErr || instructorId !== user.id) {
+        return new Response(JSON.stringify({ error: "Forbidden" }), {
+          status: 403,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+    }
+
 
     const muxAuth = btoa(`${MUX_TOKEN_ID}:${MUX_TOKEN_SECRET}`);
 
