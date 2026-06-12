@@ -1,78 +1,122 @@
-# Phase C — Status (Complete)
 
-- ✅ Batch 1: categories, AnimatedTabsTrigger, founder IDs in DB
-- ✅ Batch 2: backend lockdown (RLS tightened, SECURITY DEFINER scoped, `resources` bucket private + access-checked)
-- ✅ Batch 3: mega-file decomposition
-  - `AIStudioBlog`: 848 → 291 (+ 5 modules in `components/ai-studio/blog/`)
-  - `EditCourse`: 731 → 348 (+ 5 modules in `components/instructor/course-edit/`)
-  - `CreateCourse`: 510 → 201 (+ 3 modules in `components/instructor/course-create/`, shares image hook)
-  - `AdminPanel`: 456 → 28 (+ 2 cards in `components/admin/`)
-  - `ChapterResourceManager`: 533 → 201 (+ 5 modules in `components/chapters/resources/`)
+# Cognitio Positioning, Pricing & Copy Rewrite Plan
 
----
+## 1. Positioning (the thesis)
 
-## Original plan (kept for reference)
+**One-line pitch (ES):** *Tecnología educativa con IA, diseñada para que instructores enseñen mejor y ganen más — no para reemplazarlos.*
 
+**One-line pitch (EN):** *Ed-tech with AI, built so instructors teach better and earn more — not to replace them.*
 
+**What Cognitio is:** An ed-tech studio specializing in AI-augmented learning. We build and operate a light, innovative LMS that complements institutional platforms (Canvas, Moodle), with thoughtful AI features baked in. The LMS is the showcase; add-ons, bundles, and custom work extend it.
 
----
+**Audiences (dual, no split home page):**
+- **Instructors & academics** — self-serve, mostly free, optional paid add-ons.
+- **Institutions, programs, small businesses** — contact us for custom solutions; their fees subsidize instructor features.
 
-## Batch 1 — Centralize categories, hoist `AnimatedTabsTrigger`, move founder IDs to DB
+## 2. Pricing model
 
-Smallest, safest, highest UX leverage. Lands the architectural papercuts and unblocks future work.
+A **Core + Add-ons + Tiers + Custom** structure. Three surfaces:
 
-**Centralized categories**
-- New `src/lib/courseCategories.ts`: single source of truth — array of `{ slug, dbValue, labelKey }` objects, with helpers `getCategoryLabel(t, slug)` and `mapSlugToDbValue(slug)`.
-- Refactor `CoursesPage.tsx`, `CreateCourse.tsx`, `EditCourse.tsx` to import from it. No more hardcoded Spanish array + duplicated mapping object.
-- Labels go through `t()` so EN/ES both work; remove hardcoded "Todos / Destacados / Desarrollo…".
+### A. Free Core (always free for verified instructors and their students)
+The "public good" baseline. Showcases our craft.
+- Light LMS: courses, chapters, video (Mux), resources, progress, discussions
+- Student–instructor messaging
+- Basic AI features that are *education-specific* (not generic copywriting):
+  - **AI Tutor** in chapters (already built) — limited daily questions
+  - **AI-generated transcripts & chapter summaries** (already built via Mux webhook)
+  - **AI study guide / flashcards from a chapter** (new, small)
+- Instructor public profile + course catalog listing
 
-**Hoist `AnimatedTabsTrigger`**
-- Move the inline forwardRef from `Dashboard.tsx` (lines 22-83) → `src/components/ui/animated-tabs.tsx`.
-- Re-export and update `Dashboard.tsx` to import. Future tab UIs reuse it.
+### B. Paid Add-ons (à la carte, one-time or low monthly)
+For instructors who want more reach or revenue.
+- **Consultorías marketplace listing** — small monthly fee or revenue share (enforce: all consultants must be instructors)
+- **AI Studio · Marketing bundle** ($19/mo) — Blog (live), LinkedIn, Twitter, Newsletter (keep as Coming Soon, ship next)
+- **AI Studio · Academic bundle** ($19/mo) — Lit review, paper formatter, editor (Coming Soon)
+- **AI Studio · Pro** ($29/mo) — both bundles
 
-**Founder IDs in DB**
-- New `platform_settings` row already exists (table is there). Add a `founder_user_ids` JSONB key — array of UUIDs.
-- New hook `useFounderIds()` (TanStack Query, cached 10min) reads from `platform_settings`.
-- Replace hardcoded references in `Index.tsx`, `InstructorsPage.tsx`, `InstructorCatalogCard.tsx`, `FoundersStorySection.tsx` with the hook.
-- Seed migration inserts the current founder UUIDs (Gustavo, Augusto, Liliana) — I'll pull current values from the locale files / code before writing the migration.
+Keeps the existing Stripe subscription plumbing; just reframes it as add-ons to a free core instead of the whole product.
 
----
+### C. Institutional / Custom (contact form)
+A single **"Para Instituciones"** page with a short intake form:
+- White-label LMS deployment
+- Custom AI workflows (grading assistants, curriculum tools, cohort analytics)
+- Private cohort hosting (the existing `private` course visibility)
+- Training & integration with Canvas/Moodle
 
-## Batch 2 — Backend lockdown (SECURITY DEFINER audit, RLS, buckets)
+Pricing: "Desde $X" anchor, real number quoted after the form. These fees explicitly subsidize the free core — we say this on the page.
 
-**SECURITY DEFINER audit**
-- Review each of the 11 functions. Confirm every one (a) has `SET search_path = public`, (b) does not return data the caller's RLS would otherwise forbid, (c) cannot be abused by a logged-in non-admin.
-- `get_instructor_catalog` and `get_public_profile` are intentionally public-facing → keep but verify they only expose non-sensitive columns (they currently expose `email` via `get_public_profile` — that should likely be gated or removed).
-- Triggers (`update_*_count`, `handle_new_user`) — verify they cannot be invoked directly with crafted input.
+## 3. Information architecture changes
 
-**Two permissive RLS policies**
-- I will list the two flagged policies from the linter and tighten them (the survey called them out but didn't name them; I'll run `supabase--linter` first to get the exact policy names and table).
+Current nav: Home, Courses, Instructores, Consultorías, AI Studio.
 
-**Bucket exposure**
-- `avatars`, `resources`, `course-images` are public. Public listing was flagged enumerable.
-- Lock down: switch `resources` to private (signed URLs via existing edge function pattern) since it holds course-paid content. Keep `avatars` and `course-images` public (marketing surface) but document why in `security-memory`.
-- Update any client code that read `resources` via public URL to use signed URLs.
+Proposed nav: **Home, Plataforma, Cursos, Instructores, Consultorías, Para Instituciones, AI Studio.**
 
----
+- **/** (Home) — rewritten around the thesis, not the founders' bios
+- **/plataforma** (new) — what the LMS does, AI features, free for instructors
+- **/courses** — unchanged structurally, lighter copy
+- **/instructores** — unchanged, add "Solicitar invitación" subtle CTA
+- **/consultorias** — clarify these are services by enrolled instructors
+- **/instituciones** (new) — custom solutions + contact form
+- **/ai-studio** — reframed as one of several add-ons to the free core
+- **Founders' Story** — demoted from home hero to an "Equipo" section lower on home, or moved to `/about`
 
-## Batch 3 — Decompose remaining mega-files
+## 4. Home page rewrite (structure)
 
-Apply the `InstructorServicesManager` template to:
+```text
+[Hero]
+  H1: Tecnología educativa con IA, hecha para instructores.
+  Sub: Una plataforma ligera que complementa Canvas y Moodle,
+       con IA pensada para enseñar mejor — no para reemplazar.
+  CTAs: [Explorar la plataforma]  [Soy una institución]
 
-1. **`AIStudioBlog.tsx` (848 lines)** — highest leverage. Split into `features/ai-studio/blog/`: `BlogDraftList`, `BlogEditorPanel`, `BlogRefinePanel`, `BlogPublishDialog` + hooks `useBlogDrafts`, `useGenerateBlog`, `useRefineBlog`.
-2. **`EditCourse.tsx` (731)** — split into `features/courses/edit/`: `CourseDetailsForm`, `CoursePricingForm`, `CourseVisibilityForm`, `CourseDangerZone` + `useCourseEditor` hook.
-3. **`CreateCourse.tsx` (510)** — mirror EditCourse pieces (share form components).
-4. **`AdminPanel.tsx` (456)** — split into `features/admin/`: `RolesTab`, `InstructorInvitesTab`, `PlatformSettingsTab`.
-5. **`ChapterResourceManager.tsx` (533)** — split into `features/chapters/resources/`: `ResourceList`, `ResourceUploadDialog`, `ResourceEditDialog` + `useChapterResources` hook.
+[Three pillars — what we do]
+  1. Plataforma LMS gratuita para instructores
+  2. AI Studio: herramientas de contenido y publicación
+  3. Soluciones a medida para instituciones
 
-No behavior change. Each file becomes a thin orchestrator. Tests stay green.
+[Por qué existimos] — short manifesto (the thesis, 2 paragraphs)
 
----
+[Producto en acción] — 3 screenshots/clips of LMS + AI Tutor + Transcripts
 
-## Order & checkpoints
+[Add-ons disponibles] — compact grid: Marketing, Academic, Consultorías marketplace
+  with "Próximamente" badges intact
 
-1. Ship Batch 1 → you preview → green-light.
-2. Ship Batch 2 (migration requires your approval anyway) → you preview → green-light.
-3. Ship Batch 3 in two passes (AIStudioBlog + EditCourse/CreateCourse first; AdminPanel + ChapterResourceManager second) so PRs stay reviewable.
+[Quiénes somos] — Founders' Story (demoted, condensed to 2 cards + link to /about)
 
-I'll start with Batch 1 the moment you approve.
+[CTA institucional] — "¿Representas a una institución?" → /instituciones
+```
+
+## 5. Copy rewrite scope
+
+Rewrite the visible copy on these pages in both `es.json` and `en.json` (Spanish primary):
+- `Index.tsx` (home) — full rewrite
+- `CoursesPage.tsx` — tighten hero, add "Cursos públicos de instructores Cognitio" framing
+- `InstructorsPage.tsx` — keep, add invite-only note
+- `ServicesPage.tsx` (Consultorías) — clarify "ofrecidas por instructores Cognitio"
+- `AIStudioLanding.tsx` — reframe as add-on, not standalone product; keep Coming Soon
+- `PricingSection.tsx` — add a "Free Core" tier at the front; keep Marketing/Academic/Pro
+- **New:** `PlatformPage.tsx` at `/plataforma`
+- **New:** `InstitutionsPage.tsx` at `/instituciones` with intake form
+- `Navbar.tsx` and `Footer.tsx` — new links
+- `FoundersStorySection.tsx` — keep component, move off home hero
+
+No business logic, Stripe, or schema changes in this pass except:
+- One new table `institution_inquiries` (name, email, organization, message, created_at) for the contact form, with RLS allowing anonymous insert + admin read.
+
+## 6. What we are NOT doing in this pass
+- Not shipping LinkedIn/Twitter/Newsletter/Academic tools yet — they stay Coming Soon as you requested (separate plan after this).
+- Not changing existing Stripe products or subscription tiers.
+- Not removing the Founders' Story — just demoting it.
+- Not building white-label deployment infra — that's sold via the contact form, delivered as consulting.
+
+## 7. Order of execution (once you approve)
+1. Update `es.json` / `en.json` with the new copy keys (Spanish first, English mirror).
+2. Rewrite `Index.tsx` around the new structure; demote Founders' Story.
+3. Build `PlatformPage.tsx` and `InstitutionsPage.tsx` + route them in `App.tsx`.
+4. Update `Navbar.tsx` + `Footer.tsx`.
+5. Rewrite copy on Courses, Instructores, Consultorías, AI Studio Landing, Pricing.
+6. Migration: `institution_inquiries` table + RLS + GRANTs; wire the form.
+7. QA: visit each page in preview, verify ES/EN parity, verify Coming Soon badges still render.
+
+## 8. Open question before I implement
+**Spanish brand voice:** should the home manifesto read more **academic & sober** (matches the founders' bios) or **warm & accessible** (matches the coral palette and "para instructores no técnicos" persona)? I'll default to **warm & accessible** unless you say otherwise — easier for non-technical instructors to feel invited.

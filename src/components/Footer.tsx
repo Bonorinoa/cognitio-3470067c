@@ -26,24 +26,24 @@ const Footer = () => {
             </div>
 
             {/* Navigation links */}
-            <nav className="flex items-center gap-6 text-sm">
-              <Link 
-                to="/courses" 
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              >
+            <nav className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm">
+              <Link to="/plataforma" className="text-muted-foreground hover:text-foreground transition-colors">
+                {t("nav.platform", "Plataforma")}
+              </Link>
+              <Link to="/courses" className="text-muted-foreground hover:text-foreground transition-colors">
                 {t("nav.courses")}
               </Link>
-              <Link 
-                to="/instructors" 
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              >
+              <Link to="/instructors" className="text-muted-foreground hover:text-foreground transition-colors">
                 {t("nav.instructors")}
               </Link>
-              <Link 
-                to="/services" 
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              >
+              <Link to="/services" className="text-muted-foreground hover:text-foreground transition-colors">
                 {t("nav.services")}
+              </Link>
+              <Link to="/ai-studio" className="text-muted-foreground hover:text-foreground transition-colors">
+                AI Studio
+              </Link>
+              <Link to="/instituciones" className="text-muted-foreground hover:text-foreground transition-colors">
+                {t("nav.institutions", "Instituciones")}
               </Link>
             </nav>
           </div>

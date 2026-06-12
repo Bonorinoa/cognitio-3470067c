@@ -15,6 +15,8 @@ const AIStudioLayout = lazy(() => import("./components/AIStudioLayout"));
 
 // Lazy-loaded page components - only loaded when user navigates to them
 const Index = lazy(() => import("./pages/Index"));
+const PlatformPage = lazy(() => import("./pages/PlatformPage"));
+const InstitutionsPage = lazy(() => import("./pages/InstitutionsPage"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const CoursesPage = lazy(() => import("./pages/CoursesPage"));
 const CoursePage = lazy(() => import("./pages/CoursePage"));
@@ -63,6 +65,10 @@ const App = () => (
           <Suspense fallback={<PageLoader />}>
             <Routes>
               <Route path="/" element={<Index />} />
+              <Route path="/plataforma" element={<PlatformPage />} />
+              <Route path="/platform" element={<Navigate to="/plataforma" replace />} />
+              <Route path="/instituciones" element={<InstitutionsPage />} />
+              <Route path="/institutions" element={<Navigate to="/instituciones" replace />} />
               <Route path="/about" element={<Navigate to="/instructors" replace />} />
               <Route path="/instructors" element={<InstructorsPage />} />
               <Route path="/services" element={<ServicesPage />} />

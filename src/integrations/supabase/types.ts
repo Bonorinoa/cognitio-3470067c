@@ -619,6 +619,45 @@ export type Database = {
           },
         ]
       }
+      institution_inquiries: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          inquiry_type: string
+          message: string
+          name: string
+          organization: string
+          role: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          inquiry_type?: string
+          message: string
+          name: string
+          organization: string
+          role?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          inquiry_type?: string
+          message?: string
+          name?: string
+          organization?: string
+          role?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       instructor_services: {
         Row: {
           created_at: string
