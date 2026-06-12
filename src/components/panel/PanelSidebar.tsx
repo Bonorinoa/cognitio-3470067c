@@ -29,10 +29,13 @@ export default function PanelSidebar({
   const isItemActive = (href: string, exact?: boolean) =>
     exact ? location.pathname === href : location.pathname.startsWith(href);
 
+  const isAIStudio = nav.layoutId === "ai-studio-panel-indicator";
+
   return (
     <div
       className={cn(
-        "flex h-full flex-col border-r border-border bg-sidebar transition-all duration-300",
+        "flex h-full flex-col border-r border-border transition-all duration-300",
+        isAIStudio ? "bg-background" : "bg-sidebar",
         isCollapsed ? "w-16" : "w-64"
       )}
     >
@@ -54,14 +57,25 @@ export default function PanelSidebar({
               to="/"
               className="flex min-w-0 items-center gap-3 transition-opacity hover:opacity-80"
             >
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary shadow-sm">
+              <div className={cn(
+                "flex h-9 w-9 shrink-0 items-center justify-center shadow-sm",
+                isAIStudio ? "bg-primary rounded-sm" : "bg-primary rounded-lg"
+              )}>
                 <span className="text-lg font-bold text-primary-foreground">C</span>
               </div>
               <div className="flex min-w-0 flex-col">
-                <span className="text-lg font-bold leading-tight text-foreground">
+                <span className={cn(
+                  "leading-tight text-foreground",
+                  isAIStudio ? "text-lg font-light" : "text-lg font-bold"
+                )}>
                   Cognitio
                 </span>
-                <span className="truncate text-xs leading-tight text-muted-foreground">
+                <span className={cn(
+                  "truncate text-xs leading-tight",
+                  isAIStudio
+                    ? "text-primary uppercase tracking-[0.15em] font-semibold"
+                    : "text-muted-foreground"
+                )}>
                   {nav.roleLabel}
                 </span>
               </div>
@@ -92,7 +106,10 @@ export default function PanelSidebar({
           {nav.sections.map((section, sectionIdx) => (
             <div key={section.label ?? `section-${sectionIdx}`} className="space-y-1">
               {section.label && !isCollapsed && (
-                <p className="px-3 pb-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/70">
+                <p className={cn(
+                  "px-3 pb-1 text-[10px] font-semibold uppercase tracking-[0.15em]",
+                  isAIStudio ? "text-primary/70" : "text-muted-foreground/70"
+                )}>
                   {section.label}
                 </p>
               )}

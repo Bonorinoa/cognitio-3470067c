@@ -7,6 +7,7 @@ import { useAISubscription } from "@/hooks/useAISubscription";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { Megaphone, GraduationCap, ArrowRight, Clock } from "lucide-react";
+import WaitlistForm from "@/components/ai-studio/WaitlistForm";
 
 export default function AIStudioLanding() {
   const { t } = useTranslation();
@@ -195,9 +196,12 @@ export default function AIStudioLanding() {
                 </li>
               ))}
             </ul>
-            <span className="mt-auto text-sm font-bold tracking-[0.2em] uppercase text-muted-foreground/60">
-              {t("aiStudio.waitlistCTA", "Lista de Espera")}
-            </span>
+            <div className="mt-auto pt-2 border-t border-border">
+              <p className="text-xs uppercase tracking-[0.2em] font-semibold text-primary mb-3">
+                {t("aiStudio.waitlistCTA", "Lista de Espera")}
+              </p>
+              <WaitlistForm bundle="academic" variant="compact" />
+            </div>
           </div>
         </div>
       </section>

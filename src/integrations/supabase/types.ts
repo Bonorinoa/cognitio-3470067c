@@ -14,6 +14,41 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_bundle_waitlist: {
+        Row: {
+          bundle: string
+          created_at: string
+          email: string
+          id: string
+          notes: string | null
+          user_id: string | null
+        }
+        Insert: {
+          bundle: string
+          created_at?: string
+          email: string
+          id?: string
+          notes?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          bundle?: string
+          created_at?: string
+          email?: string
+          id?: string
+          notes?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_bundle_waitlist_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ai_generation_history: {
         Row: {
           additional_instructions: string | null
@@ -26,6 +61,7 @@ export type Database = {
           is_active: boolean | null
           model_used: string | null
           output_tokens: number | null
+          pinned: boolean
           selected_document_ids: string[] | null
           status: Database["public"]["Enums"]["generation_status"]
           topic: string
@@ -44,6 +80,7 @@ export type Database = {
           is_active?: boolean | null
           model_used?: string | null
           output_tokens?: number | null
+          pinned?: boolean
           selected_document_ids?: string[] | null
           status?: Database["public"]["Enums"]["generation_status"]
           topic: string
@@ -62,6 +99,7 @@ export type Database = {
           is_active?: boolean | null
           model_used?: string | null
           output_tokens?: number | null
+          pinned?: boolean
           selected_document_ids?: string[] | null
           status?: Database["public"]["Enums"]["generation_status"]
           topic?: string
