@@ -78,9 +78,13 @@ const App = () => (
               <Route path="/instructors/directory" element={<InstructorsDirectoryPage />} />
               <Route path="/services" element={<ServicesPage />} />
               <Route path="/services/catalog" element={<ServicesCatalogPage />} />
-              <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/courses" element={<CoursesPage />} />
               <Route path="/course/:id" element={<CoursePage />} />
+
+              {/* Student panel with shared layout */}
+              <Route path="/dashboard" element={<RequireAuth><PanelLayout nav={studentNav} /></RequireAuth>}>
+                <Route index element={<Dashboard />} />
+              </Route>
               
               {/* Instructor routes with shared layout */}
               <Route path="/instructor" element={<RequireInstructor><PanelLayout nav={instructorNav} /></RequireInstructor>}>
@@ -130,7 +134,11 @@ const App = () => (
               <Route path="/terms" element={<TermsOfService />} />
               <Route path="/privacy" element={<PrivacyPolicy />} />
               <Route path="/faq" element={<FAQPage />} />
-              <Route path="/admin" element={<RequireAdmin><AdminPanel /></RequireAdmin>} />
+              {/* Admin panel with shared layout */}
+              <Route path="/admin" element={<RequireAdmin><PanelLayout nav={adminNav} /></RequireAdmin>}>
+                <Route index element={<AdminUsers />} />
+                <Route path="ai-tutor" element={<AdminAITutor />} />
+              </Route>
               {/* Legacy route redirects for backward compatibility */}
               <Route path="/teacher" element={<Navigate to="/instructor" replace />} />
               <Route path="/teacher/*" element={<Navigate to="/instructor" replace />} />
