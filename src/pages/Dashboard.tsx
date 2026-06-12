@@ -214,13 +214,13 @@ const StudentDashboard = () => {
           <Tabs defaultValue="all" className="space-y-6">
             <LayoutGroup id="dashboard-tabs">
               <TabsList className="bg-card border border-border">
-                <AnimatedTabsTrigger value="all">
+                <AnimatedTabsTrigger value="all" layoutId="dashboard-tabs-indicator">
                   {t("studentDashboard.allCourses")} ({enrolledCourses.length})
                 </AnimatedTabsTrigger>
-                <AnimatedTabsTrigger value="in-progress">
+                <AnimatedTabsTrigger value="in-progress" layoutId="dashboard-tabs-indicator">
                   {t("studentDashboard.inProgress")} ({inProgressCourses.length})
                 </AnimatedTabsTrigger>
-                <AnimatedTabsTrigger value="completed">
+                <AnimatedTabsTrigger value="completed" layoutId="dashboard-tabs-indicator">
                   {t("studentDashboard.completed")} ({completedCourses.length})
                 </AnimatedTabsTrigger>
               </TabsList>
