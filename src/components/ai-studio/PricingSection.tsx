@@ -193,7 +193,7 @@ export default function PricingSection() {
                   {tier.price !== null ? (
                     <div className="flex items-baseline gap-1">
                       <span className="text-3xl font-bold">${tier.price}</span>
-                      <span className="text-muted-foreground">/mo</span>
+                      <span className="text-muted-foreground">{t("aiStudio.perMonth", "/mo")}</span>
                     </div>
                   ) : (
                     <span className="text-3xl font-bold">{t("aiStudio.freePrice", "Free")}</span>
