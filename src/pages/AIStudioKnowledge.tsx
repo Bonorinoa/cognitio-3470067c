@@ -38,7 +38,7 @@ import {
 import { toast } from "sonner";
 import { formatTokenCount, getBudgetDisplayInfo } from "@/lib/tokenUtils";
 import { HelpPopover } from "@/components/ui/help-popover";
-import type { KnowledgeBaseDocument, DocumentFormData, DocumentType, ContextRole } from "@/types/aiStudio";
+import type { KnowledgeBaseDocument, DocumentFormData, DocumentType } from "@/types/aiStudio";
 
 // Icons for document types
 const DOC_TYPE_ICONS: Record<DocumentType, React.ElementType> = {
