@@ -32,6 +32,7 @@ const InstructorGuide = lazy(() => import("./pages/InstructorGuide"));
 const AIStudioLanding = lazy(() => import("./pages/AIStudioLanding"));
 const AIStudioSettings = lazy(() => import("./pages/AIStudioSettings"));
 const AIStudioKnowledge = lazy(() => import("./pages/AIStudioKnowledge"));
+const AIStudioDrafts = lazy(() => import("./pages/AIStudioDrafts"));
 const AIStudioBlog = lazy(() => import("./pages/AIStudioBlog"));
 const MarketingBundleHub = lazy(() => import("./pages/MarketingBundleHub"));
 const AcademicBundleHub = lazy(() => import("./pages/AcademicBundleHub"));
@@ -101,7 +102,9 @@ const App = () => (
               <Route path="/ai-studio" element={<PanelLayout nav={aiStudioNav} />}>
                 <Route index element={<AIStudioLanding />} />
                 <Route path="knowledge" element={<AIStudioKnowledge />} />
+                <Route path="drafts" element={<AIStudioDrafts />} />
                 <Route path="settings" element={<AIStudioSettings />} />
+                
                 
                 {/* Marketing Bundle */}
                 <Route path="marketing">

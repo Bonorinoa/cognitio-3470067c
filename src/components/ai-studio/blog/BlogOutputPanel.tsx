@@ -6,11 +6,9 @@ import {
   AlertCircle, Check, Copy, Download, Eye, FileCode, FileText, Pencil, RefreshCw, Save, Sparkles, Wand2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Badge } from "@/components/ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 interface BlogOutputPanelProps {
@@ -63,86 +61,78 @@ export function BlogOutputPanel({
   const { t } = useTranslation();
 
   return (
-    <Card className="lg:sticky lg:top-6 h-fit">
-      <CardHeader className="flex-row items-center justify-between">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <CardTitle className="text-lg">{t("aiStudio.output", "Generated Content")}</CardTitle>
+    <div className="lg:sticky lg:top-6 h-fit border border-border rounded-sm bg-card/30">
+      {/* Header */}
+      <div className="flex flex-wrap items-start justify-between gap-3 p-6 border-b border-border">
+        <div className="space-y-1">
+          <div className="flex items-center gap-3">
+            <span className="text-xs uppercase tracking-[0.2em] font-semibold text-primary">
+              {t("aiStudio.output", "Resultado")}
+            </span>
             {hasContent && (
-              <Badge variant="secondary" className="text-xs">
-                <Sparkles className="h-3 w-3 mr-1" />
-                {loadedHistoryId ? t("aiStudio.saved", "Saved") : t("aiStudio.aiDraft", "AI Draft")}
-              </Badge>
+              <span className="inline-flex items-center gap-1 text-[10px] uppercase tracking-[0.15em] text-muted-foreground font-semibold">
+                <Sparkles className="h-2.5 w-2.5" />
+                {loadedHistoryId ? t("aiStudio.saved", "Guardado") : t("aiStudio.aiDraft", "Borrador IA")}
+              </span>
             )}
             {hasUnsavedChanges && loadedHistoryId && (
-              <Badge variant="outline" className="text-xs text-muted-foreground">
-                {t("aiStudio.unsaved", "Unsaved")}
-              </Badge>
+              <span className="text-[10px] uppercase tracking-[0.15em] text-destructive font-semibold">
+                {t("aiStudio.unsaved", "Sin guardar")}
+              </span>
             )}
           </div>
-          <CardDescription>
+          <p className="text-xs text-muted-foreground font-light">
             {hasContent
-              ? t("aiStudio.outputReady", "Your content is ready to copy")
-              : t("aiStudio.outputEmpty", "Content will appear here")}
-          </CardDescription>
+              ? t("aiStudio.outputReady", "Su contenido está listo para revisar.")
+              : t("aiStudio.outputEmpty", "El contenido aparecerá aquí.")}
+          </p>
         </div>
         {hasContent && (
-          <div className="flex gap-2 flex-wrap">
+          <div className="flex gap-1.5 flex-wrap">
             {loadedHistoryId ? (
-              <Button variant="outline" size="sm" onClick={onUpdate} disabled={!hasUnsavedChanges || isSaving}>
-                {isSaving ? <RefreshCw className="h-4 w-4 mr-1 animate-spin" /> : <Save className="h-4 w-4 mr-1" />}
-                {t("aiStudio.update", "Update")}
+              <Button variant="outline" size="sm" className="rounded-sm h-8" onClick={onUpdate} disabled={!hasUnsavedChanges || isSaving}>
+                {isSaving ? <RefreshCw className="h-3.5 w-3.5 mr-1 animate-spin" /> : <Save className="h-3.5 w-3.5 mr-1" />}
+                {t("aiStudio.update", "Actualizar")}
               </Button>
             ) : (
-              <Button variant="outline" size="sm" onClick={onSave} disabled={isSaving}>
-                {isSaving ? <RefreshCw className="h-4 w-4 mr-1 animate-spin" /> : <Save className="h-4 w-4 mr-1" />}
-                {t("aiStudio.saveToHistory", "Save")}
+              <Button variant="outline" size="sm" className="rounded-sm h-8" onClick={onSave} disabled={isSaving}>
+                {isSaving ? <RefreshCw className="h-3.5 w-3.5 mr-1 animate-spin" /> : <Save className="h-3.5 w-3.5 mr-1" />}
+                {t("aiStudio.saveToHistory", "Guardar")}
               </Button>
             )}
             <Button
               variant="ghost"
               size="sm"
+              className="rounded-sm h-8"
               onClick={() => {
                 setIsEditMode(!isEditMode);
                 onResetSelection();
               }}
             >
               {isEditMode ? (
-                <>
-                  <Eye className="h-4 w-4 mr-1" />
-                  {t("aiStudio.preview", "Preview")}
-                </>
+                <><Eye className="h-3.5 w-3.5 mr-1" />{t("aiStudio.preview", "Vista")}</>
               ) : (
-                <>
-                  <Pencil className="h-4 w-4 mr-1" />
-                  {t("aiStudio.edit", "Edit")}
-                </>
+                <><Pencil className="h-3.5 w-3.5 mr-1" />{t("aiStudio.edit", "Editar")}</>
               )}
             </Button>
-            <Button variant="outline" size="sm" onClick={onCopy}>
+            <Button variant="outline" size="sm" className="rounded-sm h-8" onClick={onCopy}>
               {copied ? (
-                <>
-                  <Check className="h-4 w-4 mr-1" />
-                  {t("aiStudio.copied", "Copied")}
-                </>
+                <><Check className="h-3.5 w-3.5 mr-1" />{t("aiStudio.copied", "Copiado")}</>
               ) : (
-                <>
-                  <Copy className="h-4 w-4 mr-1" />
-                  {t("aiStudio.copy", "Copy")}
-                </>
+                <><Copy className="h-3.5 w-3.5 mr-1" />{t("aiStudio.copy", "Copiar")}</>
               )}
             </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm">
-                  <Download className="h-4 w-4 mr-1" />
-                  {t("aiStudio.export", "Export")}
+                <Button variant="outline" size="sm" className="rounded-sm h-8">
+                  <Download className="h-3.5 w-3.5 mr-1" />
+                  {t("aiStudio.export", "Exportar")}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={onExportTxt}>
                   <FileText className="h-4 w-4 mr-2" />
-                  {t("aiStudio.exportTxt", "Plain Text (.txt)")}
+                  {t("aiStudio.exportTxt", "Texto plano (.txt)")}
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={onExportMd}>
                   <FileCode className="h-4 w-4 mr-2" />
@@ -152,12 +142,14 @@ export function BlogOutputPanel({
             </DropdownMenu>
           </div>
         )}
-      </CardHeader>
-      <CardContent>
+      </div>
+
+      {/* Body */}
+      <div className="p-6">
         <AnimatePresence mode="wait">
           {error ? (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-              <Alert variant="destructive" className="flex items-start gap-3">
+              <Alert variant="destructive" className="flex items-start gap-3 rounded-sm">
                 <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" />
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
@@ -170,9 +162,9 @@ export function BlogOutputPanel({
                   animate={{ opacity: 1, y: 0 }}
                   className="absolute -top-2 left-1/2 -translate-x-1/2 z-10"
                 >
-                  <Button size="sm" onClick={onOpenRefine} className="shadow-lg">
-                    <Wand2 className="h-4 w-4 mr-1" />
-                    {t("aiStudio.refineWithAI", "Refine with AI")}
+                  <Button size="sm" onClick={onOpenRefine} className="shadow-lg rounded-sm">
+                    <Wand2 className="h-3.5 w-3.5 mr-1" />
+                    {t("aiStudio.refineWithAI", "Refinar con IA")}
                   </Button>
                 </motion.div>
               )}
@@ -184,17 +176,13 @@ export function BlogOutputPanel({
                   onChange={(e) => onContentChange(e.target.value)}
                   onMouseUp={onSelectionChange}
                   onKeyUp={onSelectionChange}
-                  className="h-[500px] font-mono text-sm resize-none"
-                  placeholder={t("aiStudio.editPlaceholder", "Edit your content here…")}
+                  className="h-[500px] font-mono text-sm resize-none rounded-sm border-border bg-transparent"
+                  placeholder={t("aiStudio.editPlaceholder", "Edite su contenido aquí…")}
                 />
               ) : (
                 <ScrollArea className="h-[500px]">
                   <article className="prose prose-sm dark:prose-invert max-w-none">
-                    <ReactMarkdown
-                      components={{
-                        p: ({ children }) => <p>{children}</p>,
-                      }}
-                    >
+                    <ReactMarkdown components={{ p: ({ children }) => <p>{children}</p> }}>
                       {editableContent || generatedContent}
                     </ReactMarkdown>
                   </article>
@@ -208,14 +196,16 @@ export function BlogOutputPanel({
               exit={{ opacity: 0 }}
               className="h-[500px] flex items-center justify-center"
             >
-              <div className="text-center text-muted-foreground">
-                <Sparkles className="h-12 w-12 mx-auto mb-4 opacity-20" />
-                <p>{t("aiStudio.startPrompt", "Enter a topic and click Generate to create content")}</p>
+              <div className="text-center text-muted-foreground space-y-3">
+                <Sparkles className="h-8 w-8 mx-auto opacity-30" strokeWidth={1.5} />
+                <p className="font-light text-sm max-w-xs">
+                  {t("aiStudio.startPrompt", "Ingrese un tema y haga clic en Generar para crear contenido.")}
+                </p>
               </div>
             </motion.div>
           )}
         </AnimatePresence>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }

@@ -19,6 +19,7 @@ import {
   Twitter,
   Mail,
   Quote,
+  Archive,
   type LucideIcon,
 } from "lucide-react";
 
@@ -154,6 +155,7 @@ export const aiStudioNav: PanelNavConfig = {
       items: [
         { href: "/ai-studio", icon: LayoutDashboard, label: "Resumen", exact: true },
         { href: "/ai-studio/knowledge", icon: Database, label: "Conocimiento" },
+        { href: "/ai-studio/drafts", icon: Archive, label: "Borradores" },
         { href: "/ai-studio/settings", icon: Settings, label: "Ajustes" },
       ],
     },
