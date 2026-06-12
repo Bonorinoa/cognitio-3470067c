@@ -1,4 +1,3 @@
-import { lazy, Suspense } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
@@ -15,17 +14,6 @@ import {
   FileText,
   Heart,
 } from "lucide-react";
-
-// Lazy load heavy scroll-animated component
-const FoundersStorySection = lazy(() => import("@/components/FoundersStorySection"));
-
-const FoundersStorySkeleton = () => (
-  <div className="space-y-6">
-    {[1, 2, 3].map((i) => (
-      <div key={i} className="bg-primary/10 rounded-2xl h-48 animate-pulse" />
-    ))}
-  </div>
-);
 
 // Founder images (kept, condensed cards below)
 import gusLooking from "@/assets/founders/gus-looking.jpg";
