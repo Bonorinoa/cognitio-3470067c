@@ -74,12 +74,12 @@ const Index = () => {
             <Sparkles className="h-3.5 w-3.5" />
             Ed-tech con IA, hecha para instructores
           </div>
-          <h1 className="mb-6 text-4xl font-bold leading-tight text-foreground sm:text-5xl md:text-6xl">
-            Tecnología educativa que <span className="text-primary">aumenta</span> al instructor — no lo reemplaza.
+          <h1 className="mb-6 text-4xl font-bold leading-[1.1] tracking-tight text-foreground sm:text-5xl md:text-6xl">
+            IA que <span className="text-primary">aumenta</span> al instructor.
           </h1>
           <p className="mx-auto mb-8 max-w-2xl text-lg text-muted-foreground sm:text-xl">
             Una plataforma ligera que complementa Canvas y Moodle, con IA pensada para enseñar mejor.
-            Gratis para instructores y sus estudiantes. Sostenida por instituciones que invierten en mejor educación.
+            Gratis para instructores y estudiantes — sostenida por las instituciones que apuestan por mejor educación.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link to="/plataforma">
