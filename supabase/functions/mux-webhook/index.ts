@@ -78,22 +78,74 @@ serve(async (req) => {
     const MUX_TOKEN_ID = Deno.env.get("MUX_TOKEN_ID");
     const MUX_TOKEN_SECRET = Deno.env.get("MUX_TOKEN_SECRET");
     
-    // Verify webhook signature if secret is configured
-    if (MUX_WEBHOOK_SECRET) {
-      const signature = req.headers.get("mux-signature");
-      if (!signature) {
-        console.error("Missing Mux webhook signature");
-        return new Response(JSON.stringify({ error: "Missing signature" }), {
-          status: 401,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-      // Note: Full signature verification would require crypto library
-      // For now, we verify the signature header exists
-      console.log("Mux webhook signature present");
+    const rawBody = await req.text();
+
+    // Verify HMAC signature (required)
+    if (!MUX_WEBHOOK_SECRET) {
+      console.error("MUX_WEBHOOK_SECRET not configured");
+      return new Response(JSON.stringify({ error: "Server misconfigured" }), {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const sigHeader = req.headers.get("mux-signature");
+    if (!sigHeader) {
+      return new Response(JSON.stringify({ error: "Missing signature" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const parts = Object.fromEntries(
+      sigHeader.split(",").map((p) => {
+        const idx = p.indexOf("=");
+        return [p.slice(0, idx).trim(), p.slice(idx + 1).trim()];
+      })
+    );
+    const timestamp = parts["t"];
+    const expected = parts["v1"];
+    if (!timestamp || !expected) {
+      return new Response(JSON.stringify({ error: "Malformed signature" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const enc = new TextEncoder();
+    const key = await crypto.subtle.importKey(
+      "raw",
+      enc.encode(MUX_WEBHOOK_SECRET),
+      { name: "HMAC", hash: "SHA-256" },
+      false,
+      ["sign"]
+    );
+    const sigBytes = await crypto.subtle.sign("HMAC", key, enc.encode(`${timestamp}.${rawBody}`));
+    const computed = Array.from(new Uint8Array(sigBytes))
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
+    // Constant-time compare
+    if (computed.length !== expected.length) {
+      return new Response(JSON.stringify({ error: "Invalid signature" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    let diff = 0;
+    for (let i = 0; i < computed.length; i++) diff |= computed.charCodeAt(i) ^ expected.charCodeAt(i);
+    if (diff !== 0) {
+      return new Response(JSON.stringify({ error: "Invalid signature" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    // Reject events older than 5 minutes to prevent replay
+    const tsNum = parseInt(timestamp, 10);
+    if (!Number.isFinite(tsNum) || Math.abs(Date.now() / 1000 - tsNum) > 300) {
+      return new Response(JSON.stringify({ error: "Stale signature" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
-    const body = await req.json();
+    const body = JSON.parse(rawBody);
     const { type, data } = body;
     
     console.log(`Mux webhook received: ${type}`);
