@@ -56,16 +56,16 @@ vi.mock('react-i18next', () => ({
 // --- @mux/mux-player(-react) mock ------------------------------------------
 // The real web-component crashes inside jsdom's disconnectedCallback. Replace
 // with inert stubs so tests can assert on the surrounding UI.
-vi.mock('@mux/mux-player-react', () => ({
-  default: (props: Record<string, unknown>) => {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const React = require('react');
-    return React.createElement('div', {
-      'data-testid': 'mux-player',
-      'data-playback-id': props.playbackId,
-    });
-  },
-}));
+vi.mock('@mux/mux-player-react', async () => {
+  const React = await import('react');
+  return {
+    default: (props: Record<string, unknown>) =>
+      React.createElement('div', {
+        'data-testid': 'mux-player',
+        'data-playback-id': props.playbackId,
+      }),
+  };
+});
 vi.mock('@mux/mux-player', () => ({ default: class {} }));
 
 // Establish API mocking before all tests
