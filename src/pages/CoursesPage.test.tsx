@@ -92,15 +92,14 @@ describe('CoursesPage', () => {
   it('filters courses by search query', async () => {
     render(<CoursesPage />);
     const user = userEvent.setup();
-    
+
     await waitFor(() => {
       expect(screen.getByText(/Web Development Bootcamp/i)).toBeInTheDocument();
     });
-    
-    const searchInput = screen.getByPlaceholderText(/search/i);
+
+    const searchInput = screen.getByPlaceholderText(/buscar/i);
     await user.type(searchInput, 'React');
-    
-    // Should filter to show only React courses
+
     await waitFor(() => {
       expect(screen.getByText(/React Masterclass/i)).toBeInTheDocument();
     });
