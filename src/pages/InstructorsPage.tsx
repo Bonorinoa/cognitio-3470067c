@@ -6,13 +6,8 @@ import Footer from "@/components/Footer";
 import InstructorCatalogCard from "@/components/InstructorCatalogCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/integrations/supabase/client";
+import { useFounderIds } from "@/hooks/queries/useFounderIds";
 
-// Hardcoded founder IDs - these will always be the founders
-const FOUNDER_IDS = [
-  "1c52c631-c5dc-4f45-9a61-b7b6ca6dc96c", // Gustavo
-  "dfd5e06a-2598-4d7b-9e93-bb24652ebb25", // Augusto
-  "4bb7aa32-e336-4000-b390-078199334dc7", // Liliana
-];
 
 interface InstructorProfile {
   id: string;
@@ -24,9 +19,10 @@ interface InstructorProfile {
 
 const InstructorsPage = () => {
   const { t } = useTranslation();
+  const { data: founderIds = [] } = useFounderIds();
 
   const { data: instructors, isLoading } = useQuery({
-    queryKey: ["instructors-catalog"],
+    queryKey: ["instructors-catalog", founderIds],
     queryFn: async () => {
       // Use secure RPC function to get instructor profiles
       // This prevents bulk enumeration of all profiles
@@ -34,26 +30,25 @@ const InstructorsPage = () => {
 
       if (error) throw error;
 
-      // Sort: founders first, then alphabetically
+      // Sort: founders first (in configured order), then alphabetically
       const sorted = (profiles || []).sort((a, b) => {
-        const aIsFounder = FOUNDER_IDS.includes(a.id);
-        const bIsFounder = FOUNDER_IDS.includes(b.id);
+        const aIsFounder = founderIds.includes(a.id);
+        const bIsFounder = founderIds.includes(b.id);
 
         if (aIsFounder && !bIsFounder) return -1;
         if (!aIsFounder && bIsFounder) return 1;
 
-        // Within founders, keep Gustavo first, then Augusto
         if (aIsFounder && bIsFounder) {
-          return FOUNDER_IDS.indexOf(a.id) - FOUNDER_IDS.indexOf(b.id);
+          return founderIds.indexOf(a.id) - founderIds.indexOf(b.id);
         }
 
-        // Alphabetically for non-founders
         return (a.full_name || "").localeCompare(b.full_name || "");
       });
 
       return sorted as InstructorProfile[];
     },
   });
+
 
   return (
     <div className="min-h-screen bg-background">
@@ -103,7 +98,7 @@ const InstructorsPage = () => {
                 headline={instructor.headline}
                 avatarUrl={instructor.avatar_url}
                 credentials={instructor.credentials}
-                isFounder={FOUNDER_IDS.includes(instructor.id)}
+                isFounder={founderIds.includes(instructor.id)}
                 index={index}
               />
             ))}
