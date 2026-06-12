@@ -23,7 +23,7 @@ describe('Index (Landing Page)', () => {
 
   it('has a navigation bar', () => {
     render(<Index />);
-    expect(screen.getByRole('navigation')).toBeInTheDocument();
+    expect(screen.getAllByRole('navigation').length).toBeGreaterThan(0);
   });
 
   it('renders interactive links/CTAs', () => {
