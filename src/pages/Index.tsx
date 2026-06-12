@@ -4,9 +4,17 @@ import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import HeroBackground from "@/components/HeroBackground";
-import { Skeleton } from "@/components/ui/skeleton";
 import heroImage from "@/assets/hero-bg.jpg";
-import { ArrowRight, GraduationCap, Users, Lightbulb, Target } from "lucide-react";
+import {
+  ArrowRight,
+  GraduationCap,
+  Sparkles,
+  Building2,
+  BookOpen,
+  MessageCircleQuestion,
+  FileText,
+  Heart,
+} from "lucide-react";
 
 // Lazy load heavy scroll-animated component
 const FoundersStorySection = lazy(() => import("@/components/FoundersStorySection"));
@@ -19,55 +27,25 @@ const FoundersStorySkeleton = () => (
   </div>
 );
 
-// Founder images
+// Founder images (kept, condensed cards below)
 import gusLooking from "@/assets/founders/gus-looking.jpg";
-import gusReading from "@/assets/founders/gus-reading.jpg";
-import gusHorse from "@/assets/founders/gus-horse.jpg";
-import fatherAndSon from "@/assets/founders/father-and-son.jpg";
 import bonoConference from "@/assets/founders/bono-conference.jpg";
-import bonoClassroom from "@/assets/founders/bono-classroom.jpg";
-import bonoPeople from "@/assets/founders/bono-people.jpg";
 import fatherAndSon3 from "@/assets/founders/father-and-son-3.jpg";
 
 const founderCards = [
   {
     name: "Gustavo Gonzalez Bonorino",
-    bio: "Mi formación profesional es en las Ciencias de la Tierra y Ambientales (M.Sc. y Ph.D., Canadá). De este amplio campo me enfoqué en la evaluación y mitigación de los riesgos derivados de fenómenos naturales (inundaciones, terremotos, deslizamientos).",
+    bio: "Ph.D. en Ciencias de la Tierra (Canadá). Especialista en evaluación y mitigación de riesgos naturales mediante análisis geoespacial y modelado probabilístico.",
     image: gusLooking,
   },
   {
-    name: "Gustavo Gonzalez Bonorino",
-    bio: "Debido al impacto significativo de estos eventos en personas y bienes materiales, es esencial evaluar su potencial de daño y probabilidad de ocurrencia de manera cuantitativa y rigurosa para que los resultados sean útiles en la formulación de políticas públicas confiables. Para cumplir con estos requisitos, he incorporado técnicas de análisis geoespacial, modelado físico/probabilístico y simulación computacional.",
-    image: gusReading,
-  },
-  {
-    name: "Gustavo Gonzalez Bonorino",
-    bio: "Como deporte practiqué rugby, con algunos triunfos de campeonatos en Argentina y Chile. Actualmente, la lectura es mi transporte favorito para explorar escenarios de ciencia ficción y aventuras.",
-    image: gusHorse,
-  },
-  {
-    name: "Gustavo Gonzalez Bonorino",
-    bio: "Cognitio es el lugar donde confluyen mi experiencia, conocimientos y pasión, ofrecidos a ustedes a través de los Cursos. Cada Curso los desafiará a incorporar nuevas habilidades para extender y fortalecer sus aspiraciones en un mercado laboral cada día más competitivo.",
-    image: fatherAndSon,
-  },
-  {
     name: "Augusto Gonzalez Bonorino",
-    bio: "Mi educación superior se concentra en Econometría y Ciencias de Datos Aplicados. Logré el M.Sc en Economía Cuantitativa de Claremont Graduate University, California, donde lidero el laboratorio de investigación EconLLM, enfocado en el diseño y desarrollo de sistemas inteligentes para la economía experimental.",
+    bio: "M.Sc. en Economía Cuantitativa (Claremont, CA). Lidera el laboratorio EconLLM en la intersección de NLP y economía del comportamiento. Profesor adjunto en Pomona College.",
     image: bonoConference,
   },
   {
-    name: "Augusto Gonzalez Bonorino",
-    bio: "Desde 2020, mi investigación y experiencia laboral se enfocan en la intersección entre Procesamiento de Lenguaje Natural (NLP) y economía del comportamiento, aplicando enfoques interdisciplinarios a problemas microeconómicos mediante la computación. Actualmente, soy profesor adjunto de estadística y macroeconomía en Pomona College, CA.",
-    image: bonoClassroom,
-  },
-  {
-    name: "Augusto Gonzalez Bonorino",
-    bio: "Argentina, con sus marcadas asimetrías sociales y desafíos desde la Economía, me impulsa a concentrar esfuerzos para descifrar estas complejidades a través de estrategias computacionales, simulaciones, y la lente de la teoría de la información.",
-    image: bonoPeople,
-  },
-  {
-    name: "Augusto Gonzalez Bonorino",
-    bio: "Cognitio es el lugar donde mis experiencias convergen con las de mi padre, donde combinamos métodos clásicos y modernos. El poder enseñar junto a mi padre es un privilegio y juntos les ofrecemos educación relevante, de alta calidad, y a un costo razonable, en idioma español para impulsarlos hacia un mercado laboral global.",
+    name: "Padre e Hijo",
+    bio: "Cognitio nació de la convicción de que la mejor tecnología educativa la diseñan quienes enseñan. Combinamos métodos clásicos con herramientas modernas para multiplicar el alcance de cada instructor.",
     image: fatherAndSon3,
   },
 ];
@@ -77,7 +55,7 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
 
-      {/* Hero Section */}
+      {/* Hero */}
       <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden pt-16">
         <div className="absolute inset-0">
           <img
@@ -91,109 +69,175 @@ const Index = () => {
           <HeroBackground />
         </div>
 
-        <div className="container relative z-10 mx-auto px-4 py-20 text-center">
+        <div className="container relative z-10 mx-auto px-4 py-20 text-center max-w-4xl">
+          <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/5 px-4 py-1.5 mb-6 text-sm text-primary">
+            <Sparkles className="h-3.5 w-3.5" />
+            Ed-tech con IA, hecha para instructores
+          </div>
           <h1 className="mb-6 text-4xl font-bold leading-tight text-foreground sm:text-5xl md:text-6xl">
-            Bienvenido a{" "}
-            <span className="text-primary">Cognitio</span>
+            Tecnología educativa que <span className="text-primary">aumenta</span> al instructor — no lo reemplaza.
           </h1>
           <p className="mx-auto mb-8 max-w-2xl text-lg text-muted-foreground sm:text-xl">
-            Aprende de expertos con cursos diseñados para transformar tu carrera 
-            y expandir tus conocimientos.
+            Una plataforma ligera que complementa Canvas y Moodle, con IA pensada para enseñar mejor.
+            Gratis para instructores y sus estudiantes. Sostenida por instituciones que invierten en mejor educación.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link to="/courses">
-              <Button size="lg" className="min-w-[180px]">
-                Explorar Cursos
+            <Link to="/plataforma">
+              <Button size="lg" className="min-w-[200px]">
+                Explorar la plataforma
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
-            <Link to="/services">
-              <Button size="lg" variant="outline" className="min-w-[180px]">
-                Ver Servicios
+            <Link to="/instituciones">
+              <Button size="lg" variant="outline" className="min-w-[200px]">
+                <Building2 className="mr-2 h-5 w-5" />
+                Soy una institución
               </Button>
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Vision Section */}
-      <section className="py-20 bg-secondary/30">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center">
-            <Lightbulb className="h-12 w-12 text-primary mx-auto mb-6" />
-            <h2 className="text-3xl font-bold text-foreground mb-6">Nuestra Visión</h2>
-            <p className="text-lg text-muted-foreground leading-relaxed">
-              Creemos que el conocimiento de calidad debe ser accesible para todos. 
-              En Cognitio, cada curso está cuidadosamente diseñado por expertos 
-              comprometidos con tu éxito. No somos una plataforma masiva — somos 
-              una comunidad de aprendizaje donde cada estudiante importa.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* What We Offer Section */}
+      {/* Three pillars */}
       <section className="py-20">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-foreground text-center mb-12">
-            Lo Que Ofrecemos
-          </h2>
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {/* For Students */}
-            <div className="bg-card rounded-2xl p-8 border border-border shadow-sm">
-              <GraduationCap className="h-10 w-10 text-primary mb-4" />
-              <h3 className="text-xl font-semibold text-foreground mb-3">
-                Para Estudiantes
-              </h3>
-              <ul className="space-y-2 text-muted-foreground">
-                <li className="flex items-start gap-2">
-                  <Target className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
-                  Cursos diseñados por expertos en su campo
-                </li>
-                <li className="flex items-start gap-2">
-                  <Target className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
-                  Aprende a tu propio ritmo, desde cualquier lugar
-                </li>
-                <li className="flex items-start gap-2">
-                  <Target className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
-                  Contenido actualizado y relevante
-                </li>
-                <li className="flex items-start gap-2">
-                  <Target className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
-                  Seguimiento de tu progreso
-                </li>
-              </ul>
-            </div>
+          <div className="max-w-3xl mx-auto text-center mb-12">
+            <h2 className="text-3xl font-bold text-foreground mb-4">Lo que hacemos</h2>
+            <p className="text-lg text-muted-foreground">
+              Tres frentes, un mismo objetivo: que el instructor — y la educación — ganen.
+            </p>
+          </div>
 
-            {/* For Instructors */}
-            <div className="bg-card rounded-2xl p-8 border border-border shadow-sm">
-              <Users className="h-10 w-10 text-primary mb-4" />
-              <h3 className="text-xl font-semibold text-foreground mb-3">
-                Para Instructores
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            <Link
+              to="/plataforma"
+              className="group bg-card rounded-2xl p-6 border border-border hover:border-primary/40 hover:shadow-lg transition-all"
+            >
+              <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+                <BookOpen className="h-6 w-6 text-primary" />
+              </div>
+              <h3 className="text-lg font-semibold text-foreground mb-2">
+                Plataforma LMS gratuita
               </h3>
-              <p className="text-muted-foreground mb-4">
-                Cognitio trabaja con instructores cuidadosamente seleccionados. 
-                No somos una plataforma abierta — cada instructor es invitado 
-                para garantizar la más alta calidad.
+              <p className="text-sm text-muted-foreground mb-4">
+                Cursos, videos con transcripción automática, tutor IA por capítulo, discusiones.
+                Sin costo para instructores invitados y sus estudiantes.
               </p>
-              <p className="text-sm text-muted-foreground">
-                ¿Eres un experto interesado en enseñar? Contáctanos para explorar 
-                oportunidades de colaboración.
+              <span className="text-sm text-primary font-medium inline-flex items-center gap-1 group-hover:gap-2 transition-all">
+                Conocer la plataforma <ArrowRight className="h-3.5 w-3.5" />
+              </span>
+            </Link>
+
+            <Link
+              to="/ai-studio"
+              className="group bg-card rounded-2xl p-6 border border-border hover:border-primary/40 hover:shadow-lg transition-all"
+            >
+              <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+                <Sparkles className="h-6 w-6 text-primary" />
+              </div>
+              <h3 className="text-lg font-semibold text-foreground mb-2">
+                AI Studio (add-ons)
+              </h3>
+              <p className="text-sm text-muted-foreground mb-4">
+                Herramientas opcionales para publicar blogs, newsletters y contenido académico
+                con la voz de cada instructor.
+              </p>
+              <span className="text-sm text-primary font-medium inline-flex items-center gap-1 group-hover:gap-2 transition-all">
+                Ver herramientas <ArrowRight className="h-3.5 w-3.5" />
+              </span>
+            </Link>
+
+            <Link
+              to="/instituciones"
+              className="group bg-card rounded-2xl p-6 border border-border hover:border-primary/40 hover:shadow-lg transition-all"
+            >
+              <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+                <Building2 className="h-6 w-6 text-primary" />
+              </div>
+              <h3 className="text-lg font-semibold text-foreground mb-2">
+                Soluciones a medida
+              </h3>
+              <p className="text-sm text-muted-foreground mb-4">
+                Para universidades, programas y empresas: despliegues white-label, flujos de IA
+                a la medida e integraciones con su LMS actual.
+              </p>
+              <span className="text-sm text-primary font-medium inline-flex items-center gap-1 group-hover:gap-2 transition-all">
+                Hablemos <ArrowRight className="h-3.5 w-3.5" />
+              </span>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Manifesto */}
+      <section className="py-20 bg-secondary/30">
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl mx-auto">
+            <Heart className="h-10 w-10 text-primary mb-6" />
+            <h2 className="text-3xl font-bold text-foreground mb-6">Por qué existimos</h2>
+            <div className="space-y-4 text-lg text-muted-foreground leading-relaxed">
+              <p>
+                La IA puede hacer dos cosas con la educación: vaciarla, o hacerla más humana.
+                Creemos que la diferencia está en quién tiene las herramientas. Cuando el instructor
+                las maneja, gana tiempo para lo que importa: pensar, dialogar, acompañar.
+              </p>
+              <p>
+                Cognitio es nuestro intento de poner esas herramientas en manos de quien enseña.
+                La plataforma es gratuita para instructores y estudiantes; los proyectos a medida
+                con instituciones y empresas son los que la sostienen. Es un modelo simple —
+                quienes pueden pagar, financian el acceso de quienes no.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Founders Story Section */}
+      {/* Product in action — what's built */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl mx-auto text-center mb-12">
+            <h2 className="text-3xl font-bold text-foreground mb-4">Lo que ya funciona</h2>
+            <p className="text-muted-foreground">
+              Funciones de IA diseñadas para enseñar — no para automatizar el aula.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            <div className="bg-card rounded-2xl p-6 border border-border">
+              <MessageCircleQuestion className="h-8 w-8 text-primary mb-3" />
+              <h3 className="font-semibold text-foreground mb-2">Tutor IA por capítulo</h3>
+              <p className="text-sm text-muted-foreground">
+                Cada estudiante hace preguntas y recibe respuestas anclados al contenido del capítulo,
+                con citas al minuto exacto del video.
+              </p>
+            </div>
+            <div className="bg-card rounded-2xl p-6 border border-border">
+              <FileText className="h-8 w-8 text-primary mb-3" />
+              <h3 className="font-semibold text-foreground mb-2">Transcripciones automáticas</h3>
+              <p className="text-sm text-muted-foreground">
+                Los videos se transcriben con marcas de tiempo, indexados para búsqueda y referenciados
+                por el tutor IA y las discusiones.
+              </p>
+            </div>
+            <div className="bg-card rounded-2xl p-6 border border-border">
+              <GraduationCap className="h-8 w-8 text-primary mb-3" />
+              <h3 className="font-semibold text-foreground mb-2">Discusiones con contexto</h3>
+              <p className="text-sm text-muted-foreground">
+                Foros por curso y por capítulo, con enlace directo al momento del video que se discute.
+                Sin distracciones de un foro genérico.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Founders — demoted */}
       <section className="py-20 bg-secondary/30">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-foreground mb-4">
-              Conoce a Nuestros Fundadores
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Padre e hijo unidos por la pasión de enseñar
+          <div className="text-center mb-12 max-w-3xl mx-auto">
+            <h2 className="text-3xl font-bold text-foreground mb-4">Quiénes somos</h2>
+            <p className="text-muted-foreground">
+              Padre e hijo. Geociencias y econometría / IA. Una década enseñando — y rediseñando cómo se enseña.
             </p>
           </div>
           <Suspense fallback={<FoundersStorySkeleton />}>
@@ -202,25 +246,23 @@ const Index = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* Institutional CTA */}
       <section className="py-20">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold text-foreground mb-4">
-            ¿Listo para Aprender?
-          </h2>
-          <p className="text-lg text-muted-foreground mb-8 max-w-xl mx-auto">
-            Explora nuestro catálogo de cursos y servicios de consultoría
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link to="/courses">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto rounded-3xl border border-primary/30 bg-gradient-to-br from-primary/5 to-primary/10 p-10 text-center">
+            <Building2 className="h-10 w-10 text-primary mx-auto mb-4" />
+            <h2 className="text-3xl font-bold text-foreground mb-4">
+              ¿Representás a una institución?
+            </h2>
+            <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
+              Construimos integraciones con Canvas y Moodle, despliegues privados, y flujos de IA a medida
+              para universidades, programas y empresas. Cada proyecto financia el acceso gratuito de
+              instructores independientes.
+            </p>
+            <Link to="/instituciones">
               <Button size="lg">
-                Ver Cursos
+                Conversemos
                 <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
-            <Link to="/instructors">
-              <Button size="lg" variant="outline">
-                Conocer Instructores
               </Button>
             </Link>
           </div>
