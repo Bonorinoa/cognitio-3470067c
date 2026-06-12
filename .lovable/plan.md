@@ -1,88 +1,120 @@
-## AI Studio — Audit
+# Sprint: AI Studio — Product Surface Polish & Drafts
 
-Scoped to `/ai-studio` and the routes it owns: Landing (`/ai-studio`), Knowledge Base (`/knowledge`), Settings (`/settings`), Marketing Hub (`/marketing`), Blog tool (`/marketing/blog`), Academic Hub (`/academic`), Coming-soon stubs, and the AI Studio sidebar/layout.
+A focused sprint that levels up the *working* product surfaces (Marketing hub + Blog Generator), introduces the missing Drafts library, captures demand for the Academic bundle, and finishes the visual consistency pass started on the landing / Conocimiento / Ajustes pages.
 
-Findings are grouped by theme. Each item is tagged **[Visual]**, **[Copy]**, or **[Feature]** so you can pick threads to pursue. Severity: 🔴 high · 🟡 medium · 🟢 polish.
-
----
-
-### 1. Shell & navigation
-
-- 🔴 **[Visual]** AI Studio uses its **own sidebar shell** (`AIStudioLayout` + `AIStudioSidebar`) that pre-dates the new `PanelLayout`. It diverges from Instructor/Student/Admin in spacing, header treatment, mobile pattern (separate mobile header bar), section dividers, and "Soon" badge style. The platform now has a unified shell — AI Studio is the odd one out.
-- 🟡 **[Visual]** No topbar breadcrumbs. Users in a deep route (e.g. `/marketing/blog`) lose orientation; the other panels now show `Panel → Section`.
-- 🟡 **[Feature]** The sidebar's "Recent" history list is hard-coded to the Blog tool. When LinkedIn/Newsletter ship, history will need to be tool-scoped — current design doesn't anticipate it.
-- 🟢 **[Visual]** Sidebar still uses `Sparkles` next to the "AI Studio" wordmark; the rest of the product uses warmer, more editorial accents.
-
-### 2. Landing page (`/ai-studio`)
-
-- 🔴 **[Copy]** Mixed language: hero is Spanish ("Add-on de publicación con IA — con tu voz"), but CTAs and section headings drop into English ("Choose Your Bundle", "Try Free - 10 generations/day", "Go to Marketing Tools"). Project core rule is Spanish-first, fully bilingual.
-- 🔴 **[Visual]** Hero is generic AI-product centered stack (icon + bold title + subtitle + two CTAs). No editorial typography, no warm coral accent, no anchor to Cognitio's instructor-first story.
-- 🟡 **[Copy]** Headline ("Add-on de publicación con IA") leads with a category label, not a benefit. The product positioning per project knowledge is "AI as content/marketing co-pilot for instructors" — the headline should reflect that.
-- 🟡 **[Visual]** "How It Works" is three centered, equally-weighted cards — visually predictable. No motion, no instructor voice, no example output.
-- 🟡 **[Feature]** Landing CTA "Try Free - 10 generations/day" routes to `/ai-studio/marketing/blog` regardless of whether the user has set up a Style Profile or Knowledge Base, leading to the in-tool setup alert. The flow could route first-timers to Knowledge → Settings → Tool.
-- 🟢 **[Visual]** `PricingSection` uses pure shadcn defaults: 4 equal cards, generic check-marks, no editorial hierarchy. The "Pro" highlight is a 2% scale bump — easy to miss.
-- 🟢 **[Copy]** "Best Value" / "Current" badges, "Switch Plan" microcopy are all untranslated English literals living next to Spanish hero copy.
-
-### 3. Marketing Bundle Hub (`/ai-studio/marketing`)
-
-- 🟡 **[Copy]** English-first ("Marketing Bundle", "Blog Posts", "Start →"). Should mirror Spanish-first convention.
-- 🟢 **[Visual]** Generic 3-column grid of `FeatureCard`s; available vs coming-soon look almost identical (just opacity 60 vs 100). Hard to draw the eye to the one usable feature (Blog).
-- 🟢 **[Feature]** No "what's coming next / vote for what we build" hook on the disabled cards — wasted product-roadmap signal.
-
-### 4. Academic Bundle Hub (`/ai-studio/academic`)
-
-- 🟡 **[Visual]** The whole bundle is coming-soon, but the hub still renders four near-identical placeholder cards inside a muted hero — feels empty/unresolved.
-- 🟡 **[Feature]** No way for an interested user to register interest or get notified when academic tools launch.
-
-### 5. Knowledge Base (`/ai-studio/knowledge`)
-
-- 🟡 **[Visual]** Page header uses bold-icon-next-to-h1 pattern; mismatched with the new editorial welcome strips in Instructor/Student/Admin panels.
-- 🟡 **[Visual]** Context-role badges use raw Tailwind colors (`bg-purple-100`, `bg-blue-100`, `bg-green-100`) — bypasses the semantic token system and breaks the warm coral palette.
-- 🟡 **[Copy]** Mixed languages in the same view: title/badges Spanish, but "tokens" label and token-budget hint are English-tinged.
-- 🟢 **[Feature]** Document content preview is `doc.content.slice(0, 150) + "..."`. We have a `TruncatedText` primitive (per memory) that should be used.
-- 🟢 **[Feature]** No file upload — users must paste content into a textarea. Most instructors will have PDFs/Docx; manual paste is friction. (Per memory, PDF handling exists in AI Studio features — worth verifying this entry point.)
-- 🟢 **[Feature]** No search/filter or sort once a user has more than ~10 documents. Activate/deactivate is the only triage tool.
-
-### 6. Settings (`/ai-studio/settings`)
-
-- 🟡 **[Visual]** Same out-of-system header treatment (`icon-in-tinted-box + h1`). No welcome strip.
-- 🟡 **[Copy]** "Global Settings", "Billing & Subscription", "Style Settings", "Current Plan:", "Manage Subscription", "Upgrade Plan" — all English. The activation-polling toasts also mix languages.
-- 🟢 **[Feature]** "Upgrade Plan" CTA links to `/ai-studio#pricing` which scrolls only if you're already on Landing — from `/settings` it just navigates and may not scroll reliably depending on hash handling.
-
-### 7. Blog Generator (`/ai-studio/marketing/blog`)
-
-This is the workhorse — most impactful surface to refine.
-
-- 🔴 **[Visual]** Two-up grid (Config left, Output right) with three stacked cards on the left. It works at desktop but feels like a settings form, not a creative tool. No sense of "draft → refine → ship" momentum.
-- 🔴 **[Copy]** Default copy is English: "Topic & Instructions", "Context Documents", "Generate Content", "Generated Content", "AI Draft", "Save", "Update", "Refine with AI". Spanish fallbacks exist but the source-of-truth strings are English.
-- 🟡 **[Visual]** Output panel uses a fixed `h-[500px]` ScrollArea/Textarea — clunky for long drafts; no responsive growth.
-- 🟡 **[Feature]** No streaming feedback while generating — just a spinner labelled "Generating...". For 30-60s LLM calls, a shimmer/typing affordance dramatically improves perceived performance.
-- 🟡 **[Feature]** History lives only in the sidebar Collapsible, capped at 10. No way to search, rename, or pin generations. No way to compare versions before/after a Refine.
-- 🟡 **[Feature]** "Refine with AI" appears on text selection but the dialog is modal-only — no inline diff in-place. (Memory note: refinement diff view exists in AI Studio — worth checking it's actually wired here.)
-- 🟢 **[Feature]** No way to seed a generation from an existing course (chapter titles, descriptions). This is the most natural "instructor-first" hook into the AI Studio and it's missing.
-- 🟢 **[Feature]** No prompt templates / quick starts ("Turn this lecture into a newsletter", "Write a launch blog for course X"). New users face an empty topic field.
-
-### 8. Coming-soon feature pages (LinkedIn, Twitter, Newsletter, Academic tools)
-
-- 🟢 **[Visual]** Each renders via `ComingSoonFeature` — fine as a holding pattern. Not reviewed in depth since the broader hub redesign will affect them.
-
-### 9. Pricing & subscription UX (cross-cutting)
-
-- 🟡 **[Copy]** Currency hard-coded to `$` USD. Per project audience (LatAm + global academics), worth noting whether ARS/MXN/local pricing is part of the roadmap.
-- 🟡 **[Copy]** "Free" tier copy ("10 generations/day", "Basic style settings") undersells what's actually included (Blog generation + full Style Profile + Knowledge Base up to budget).
-- 🟢 **[Feature]** Instructor perk ("50 generaciones diarias") is buried in a footnote under the pricing grid — should be a visible badge on the Free tier card for logged-in instructors.
+Throughout the sprint, two cross-cutting concerns guide every decision:
+- **Consistency** — every page uses the editorial system (serif italic accents, hairline borders, coral eyebrows, `rounded-sm`, light weights, no colored icon chips).
+- **Data management** — generation history becomes a first-class entity with proper retention rules, not a hidden 10-item rolling list.
 
 ---
 
-## Suggested next moves (no implementation yet)
+## Phase 1 — Marketing Bundle Hub redesign
 
-Roughly in priority order:
+**Goal:** Replace the boilerplate "icon chip + 4 cards" hub with an editorial workshop entry point.
 
-1. **Unify AI Studio onto the new `PanelLayout` shell** with a dedicated `aiStudioNav` config — gets breadcrumbs, consistent sidebar, consistent collapse state, and removes the parallel mobile header. *(Visual + Feature)*
-2. **Rewrite all AI Studio copy in Spanish-first** with full `en.json` parity, matching the "Servicios / Instructor" tone already set elsewhere. *(Copy, fast win)*
-3. **Redesign the Landing** with an editorial welcome strip ("Tu voz, multiplicada"), an instructor-anchored value prop, and a first-time flow that routes through Knowledge → Style → Tool. *(Visual + Copy)*
-4. **Redesign the Blog Generator workspace**: streaming feedback, full-height composer, prompt quick-starts seeded from the instructor's own courses, and a richer history panel. *(Feature + Visual, biggest user impact)*
-5. **Polish Knowledge Base & Settings** with welcome strips, semantic-token badges, optional file upload audit. *(Visual + Feature)*
-6. **Marketing/Academic hubs** — visual differentiation between available vs coming-soon, plus "notify me" capture on disabled tiles. *(Visual + Feature)*
+- Replace the `Megaphone`-in-a-chip header with the editorial header pattern: coral eyebrow (`DIVULGACIÓN`), light serif-accented title ("Su voz, *multiplicada.*"), short value-prop paragraph.
+- Convert the 4 `FeatureCard`s into a single hairline-bordered grid:
+  - **Blog** — live, primary CTA, coral arrow.
+  - **LinkedIn / X / Newsletter** — muted, `Clock` icon, single-line "Próximamente · Avisame" link that feeds the same waitlist (Phase 4).
+- Add a slim "Continuar trabajando" strip above the grid showing the last 1–2 drafts for the bundle (sourced from the Drafts hook). Empty state collapses gracefully.
+- Show the generations-remaining indicator inline so users feel the budget before clicking into a tool.
 
-I'd suggest tackling **#1 + #2 together** as one phase (foundation + copy), then **#3 (Landing)** as a design-direction round, then **#4 (Blog tool)** as its own substantial phase. Want me to plan phase 1 in detail, or would you rather pick a different starting thread?
+## Phase 2 — Blog Generator polish
+
+**Goal:** Bring the only working tool fully into the editorial system and fix a few UX rough edges.
+
+- Editorial header (kicker `BLOG · DIVULGACIÓN`, serif-accented title, hairline divider). Drop the `FileEdit` chip.
+- Restyle the "generations remaining" pill to match the hairline aesthetic (no rounded-full coral pill).
+- Restyle the setup-required Alert as a hairline coral strip, not a tinted card.
+- Tighten the two-panel layout: hairline borders on `BlogConfigPanel` and `BlogOutputPanel`, light section labels, coral-on-hover for active doc rows.
+- Replace the in-page Collapsible "Generaciones recientes" with a single discreet link: *"Ver todos los borradores →"* pointing to the new Drafts page (Phase 3). This collapses duplication and unifies the entry point.
+- Improve the "Style Profile not configured" CTA to deep-link to `/ai-studio/settings` (currently sends to `/ai-studio` landing).
+
+## Phase 3 — Drafts library (new surface)
+
+**Goal:** Promote `ai_generation_history` to a real workspace section, replacing the hidden 10-item rolling cap.
+
+**Data changes (single migration):**
+- The table and RLS policies already exist. Two additions:
+  1. Add a `pinned boolean default false` column. Pinned items are exempt from the auto-archive cap.
+  2. Add an index on `(user_id, content_type, is_active, created_at DESC)` to support filtered listings.
+- *(No new tables.)*
+
+**Code changes:**
+- Add route `/ai-studio/drafts` (page `AIStudioDrafts.tsx`).
+- Promote `useGenerationHistory` to a shared hook with:
+  - `useDrafts({ contentType?, includeArchived?, search? })` — paginated query.
+  - `pinDraft / unpinDraft` mutations.
+  - `restoreDraft` (sets `is_active = true`).
+  - Raise the soft-archive cap from 10 → 25, and skip pinned rows when archiving.
+- Drafts page UI (editorial): coral eyebrow `BORRADORES`, hairline-segmented filter row (`Todos · Blog · LinkedIn (próx.)`), search input, list rows showing topic, content-type tag, relative time, pin / open / duplicate / delete actions.
+- Add Drafts to `aiStudioNav` under the **Studio** section, between Conocimiento and Ajustes.
+- The Blog Generator's `?load=<id>` deep-link continues to work and becomes the canonical "open" action from the Drafts page.
+
+## Phase 4 — Academic waitlist
+
+**Goal:** Turn the dead "Lista de Espera" label into actual demand capture.
+
+**Data changes (single migration):**
+- New table `public.ai_bundle_waitlist`:
+  - `bundle text not null` (`'academic'` for now; future-proofs other bundles),
+  - `email text not null`,
+  - `user_id uuid` (nullable for logged-out signups),
+  - `notes text` (optional free-text "what would you use it for?"),
+  - `created_at timestamptz default now()`,
+  - unique `(bundle, lower(email))`.
+- Required GRANTs (`anon` + `authenticated` INSERT, `service_role` ALL, admin SELECT via `has_role`).
+- RLS: anyone can insert (rate-limited at the edge function if needed later); only admins can read.
+
+**Code changes:**
+- Tiny inline form on the AI Studio landing's Academic card + on the Marketing hub's coming-soon items: email field → success toast → row stored.
+- Pre-fill email when logged in. Auth not required.
+
+## Phase 5 — Panel chrome consistency pass
+
+**Goal:** Make the AI Studio sidebar/topbar visually agree with the restyled pages.
+
+- `PanelSidebar` (only when the active nav is `aiStudioNav`):
+  - Swap the rounded coral "C" logo block for the editorial wordmark variant used elsewhere on the AI Studio surface.
+  - Replace `bg-sidebar` tint with the off-white surface.
+  - Use light font weight for the role label.
+  - Section labels stay uppercase tracked, but coral instead of muted.
+- `PanelTopbar`: remove the heavy `backdrop-blur`, use hairline border + neutral background to match Conocimiento / Ajustes headers.
+- Add the new **Borradores** nav entry (Phase 3).
+- Add a "Generaciones restantes" inline indicator in the topbar's `actions` slot for any AI Studio route, so users see budget across every tool, not just Blog.
+
+Scope guard: changes only apply when `nav.layoutId === "ai-studio-panel-indicator"`. Instructor / Student / Admin panels stay untouched in this sprint.
+
+## Phase 6 — Translation + verification sweep
+
+- Add all new keys to `es.json` and `en.json` with full parity (hub eyebrows, drafts strings, waitlist copy, empty states).
+- Manual smoke pass on each touched route (landing → hub → blog → drafts → settings → knowledge) at 1280px and 768px to confirm visual consistency.
+- Verify the soft-archive logic with a quick local script: insert 26 rows for a user, confirm one is archived and pinned rows are never touched.
+
+---
+
+## Out of scope (explicitly deferred)
+
+- Implementing LinkedIn / X / Newsletter generators (waitlist captures demand first).
+- Onboarding tour ("Primeros pasos" 3-step path) — better tackled once Drafts exists, so the tour can end on a real saved draft.
+- Académico tool implementation.
+- Stripe price/tier changes.
+
+## Technical notes
+
+- **Migrations:** two total — `add_pinned_to_ai_generation_history` and `create_ai_bundle_waitlist`. Both follow the four-step grant pattern.
+- **Hook surface:** `useGenerationHistory` is renamed to `useDrafts` with a back-compat re-export to avoid touching every caller in one PR.
+- **No new dependencies.**
+- **Routing:** one new route (`/ai-studio/drafts`); the existing `?load=<id>` query param contract is preserved.
+- **Edge functions:** none added. Waitlist insert goes through PostgREST with RLS.
+
+```text
+AI Studio surface after sprint
+──────────────────────────────
+/ai-studio                  landing (editorial, slim pricing)        ✓ done
+/ai-studio/knowledge        Conocimiento (editorial)                 ✓ done
+/ai-studio/settings         Ajustes + billing (editorial)            ✓ done
+/ai-studio/drafts           Borradores (NEW)                         Phase 3
+/ai-studio/marketing        Hub (redesigned)                         Phase 1
+/ai-studio/marketing/blog   Blog Generator (polished)                Phase 2
+```
