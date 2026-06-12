@@ -6,9 +6,10 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import RequireInstructor from "@/components/RequireInstructor";
 import RequireAdmin from "@/components/RequireAdmin";
+import RequireAuth from "@/components/RequireAuth";
 import { Loader2 } from "lucide-react";
 import { COMING_SOON_FEATURES } from "@/lib/aiStudioRoutes";
-import { instructorNav } from "@/config/panelNav";
+import { instructorNav, studentNav, adminNav } from "@/config/panelNav";
 
 // Lazy-loaded layouts - only loaded when user navigates to protected routes
 const PanelLayout = lazy(() => import("./components/panel/PanelLayout"));
