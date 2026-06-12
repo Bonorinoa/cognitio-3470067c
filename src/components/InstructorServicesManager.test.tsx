@@ -56,6 +56,6 @@ describe('InstructorServicesManager', () => {
 
   it('displays service duration', () => {
     render(<InstructorServicesManager />);
-    expect(screen.getByText(/60 min/)).toBeInTheDocument();
+    expect(screen.getByText(/1h/)).toBeInTheDocument();
   });
 });
