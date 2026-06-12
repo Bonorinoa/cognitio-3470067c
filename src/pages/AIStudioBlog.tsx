@@ -304,7 +304,8 @@ export default function AIStudioBlog() {
         onAccept={handleAcceptRefinement}
         onReject={refine.rejectRefinement}
       />
-      </div>
+
+
 
       {/* In-page generation history */}
       <Collapsible defaultOpen={history.length > 0}>
