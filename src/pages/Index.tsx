@@ -228,7 +228,7 @@ const Index = () => {
               Padre e hijo. Geociencias y econometría / IA. Una década enseñando — y rediseñando cómo se enseña.
             </p>
           </div>
-          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto mb-10">
             {founderCards.map((c) => (
               <article
                 key={c.name}
@@ -249,6 +249,14 @@ const Index = () => {
               </article>
             ))}
           </div>
+          <div className="text-center">
+            <Link to="/about">
+              <Button variant="outline" size="lg" className="group">
+                Leer nuestra historia completa
+                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -265,7 +273,7 @@ const Index = () => {
               para universidades, programas y empresas. Cada proyecto financia el acceso gratuito de
               instructores independientes.
             </p>
-            <Link to="/instituciones">
+            <Link to="/services#contacto">
               <Button size="lg">
                 Conversemos
                 <ArrowRight className="ml-2 h-5 w-5" />
