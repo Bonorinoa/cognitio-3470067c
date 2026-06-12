@@ -34,12 +34,10 @@ const Navbar = () => {
   };
 
   const navLinks = [
-    { to: "/", label: t("nav.home") },
     { to: "/plataforma", label: t("nav.platform", "Plataforma") },
     { to: "/courses", label: t("nav.courses") },
     { to: "/instructors", label: t("nav.instructors") },
     { to: "/services", label: t("nav.services") },
-    { to: "/ai-studio", label: t("nav.aiStudio", "AI Studio") },
     { to: "/instituciones", label: t("nav.institutions", "Instituciones") },
   ];
 
