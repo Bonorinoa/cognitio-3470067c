@@ -92,8 +92,8 @@ Cognitio no es un marketplace abierto. Es un "Instructor Studio" curado: LMS lig
 - Generador de Newsletter (v4.3)
 - Funcionalidades del Bundle Académico (v5.0+)
 
-Consulta **[DEVELOPMENT_PLAN.md](./DEVELOPMENT_PLAN.md)** para el roadmap completo.  
-Consulta **[CHANGELOG.md](./CHANGELOG.md)** para el historial de cambios.
+> Roadmap histórico y changelog v1–v4 archivados en [`docs/history/`](./docs/history/).
+> A partir de v4.1 el roadmap se discute directamente con el agente de Lovable.
 
 ---
 
@@ -110,12 +110,14 @@ Cognitio **NO** es y **NO** construirá:
 
 ## 📚 Documentación
 
-| Documento                                    | Contenido                                               |
-| -------------------------------------------- | ------------------------------------------------------- |
-| [DEVELOPMENT_PLAN.md](./DEVELOPMENT_PLAN.md) | Roadmap v1.x-v4.x, versiones completadas y planificadas |
-| [TESTING.md](./TESTING.md)                   | Infraestructura y guías de testing unitario             |
-| [E2E_TESTING.md](./E2E_TESTING.md)           | Guía completa de tests End-to-End con Playwright        |
-| [CHANGELOG.md](./CHANGELOG.md)               | Historial de cambios y versiones                        |
+| Documento                                            | Contenido                                                   |
+| ---------------------------------------------------- | ----------------------------------------------------------- |
+| [CONTRIBUTING.md](./CONTRIBUTING.md)                 | Guía para admins no-técnicos (invitar instructor, refunds…) |
+| [TESTING.md](./TESTING.md)                           | Infraestructura y guías de testing unitario                 |
+| [E2E_TESTING.md](./E2E_TESTING.md)                   | Guía completa de tests End-to-End con Playwright            |
+| [src/hooks/queries/README.md](./src/hooks/queries/README.md) | Patrón de acceso a datos (developers)                |
+| [docs/history/](./docs/history/)                     | Roadmap y changelog histórico (archivado)                   |
+
 
 ---
 
