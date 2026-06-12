@@ -8,79 +8,14 @@ import { StatsCardSkeleton } from "@/components/StatsCardSkeleton";
 import { EmptyState } from "@/components/EmptyState";
 import ProgressCard from "@/components/ProgressCard";
 import { Tabs, TabsContent, TabsList } from "@/components/ui/tabs";
-import { SlidingPillIndicator } from "@/components/ui/sliding-pill-indicator";
+import { AnimatedTabsTrigger } from "@/components/ui/animated-tabs";
 import { Input } from "@/components/ui/input";
 import { Search, BookOpen } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import * as TabsPrimitive from "@radix-ui/react-tabs";
-import { cn } from "@/lib/utils";
-import * as React from "react";
 import { LayoutGroup } from "framer-motion";
 
-// Custom AnimatedTabsTrigger component with sliding pill indicator
-// This wraps the TabsTrigger and conditionally renders the sliding pill based on data-state
-const AnimatedTabsTrigger = React.forwardRef<
-  React.ElementRef<typeof TabsPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
->(({ className, children, ...props }, ref) => {
-  const internalRef = React.useRef<HTMLButtonElement | null>(null);
-  const [isActive, setIsActive] = React.useState(false);
-
-  // Merge refs - set both internal ref and forwarded ref
-  const mergedRef = React.useCallback(
-    (node: HTMLButtonElement | null) => {
-      internalRef.current = node;
-      if (typeof ref === "function") {
-        ref(node);
-      } else if (ref) {
-        ref.current = node;
-      }
-    },
-    [ref]
-  );
-
-  React.useEffect(() => {
-    const trigger = internalRef.current;
-    if (!trigger) return;
-
-    // Check initial state
-    setIsActive(trigger.getAttribute("data-state") === "active");
-
-    // Use MutationObserver to watch for data-state changes
-    const observer = new MutationObserver(() => {
-      setIsActive(trigger.getAttribute("data-state") === "active");
-    });
-
-    observer.observe(trigger, {
-      attributes: true,
-      attributeFilter: ["data-state"],
-    });
-
-    return () => observer.disconnect();
-  }, []);
-
-  return (
-    <TabsPrimitive.Trigger
-      ref={mergedRef}
-      className={cn(
-        "relative inline-flex items-center justify-center whitespace-nowrap rounded-full px-3 py-1.5 text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-muted-foreground data-[state=active]:text-foreground",
-        className
-      )}
-      {...props}
-    >
-      {isActive && (
-        <SlidingPillIndicator
-          layoutId="dashboard-tabs-indicator"
-          borderRadius="rounded-full"
-        />
-      )}
-      <span className="relative z-10">{children}</span>
-    </TabsPrimitive.Trigger>
-  );
-});
-AnimatedTabsTrigger.displayName = "AnimatedTabsTrigger";
 
 interface EnrolledCourse {
   id: string;
@@ -279,13 +214,13 @@ const StudentDashboard = () => {
           <Tabs defaultValue="all" className="space-y-6">
             <LayoutGroup id="dashboard-tabs">
               <TabsList className="bg-card border border-border">
-                <AnimatedTabsTrigger value="all">
+                <AnimatedTabsTrigger value="all" layoutId="dashboard-tabs-indicator">
                   {t("studentDashboard.allCourses")} ({enrolledCourses.length})
                 </AnimatedTabsTrigger>
-                <AnimatedTabsTrigger value="in-progress">
+                <AnimatedTabsTrigger value="in-progress" layoutId="dashboard-tabs-indicator">
                   {t("studentDashboard.inProgress")} ({inProgressCourses.length})
                 </AnimatedTabsTrigger>
-                <AnimatedTabsTrigger value="completed">
+                <AnimatedTabsTrigger value="completed" layoutId="dashboard-tabs-indicator">
                   {t("studentDashboard.completed")} ({completedCourses.length})
                 </AnimatedTabsTrigger>
               </TabsList>

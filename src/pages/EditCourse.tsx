@@ -35,6 +35,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import CourseMembershipManager from "@/components/CourseMembershipManager";
+import { COURSE_CATEGORIES } from "@/lib/courseCategories";
 
 // Lazy load heavy video upload component
 const VideoUpload = lazy(() => import("@/components/VideoUpload"));
@@ -505,17 +506,17 @@ const EditCourse = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Category</Label>
+                    <Label>{t("createCourse.category")}</Label>
                     <Select value={category} onValueChange={setCategory}>
                       <SelectTrigger className="bg-background border-border">
-                        <SelectValue placeholder="Select category" />
+                        <SelectValue placeholder={t("createCourse.selectCategory")} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Development">Development</SelectItem>
-                        <SelectItem value="Design">Design</SelectItem>
-                        <SelectItem value="AI & ML">AI & ML</SelectItem>
-                        <SelectItem value="Data Science">Data Science</SelectItem>
-                        <SelectItem value="Mobile">Mobile</SelectItem>
+                        {COURSE_CATEGORIES.map((cat) => (
+                          <SelectItem key={cat.slug} value={cat.dbValue}>
+                            {t(cat.labelKey)}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </div>

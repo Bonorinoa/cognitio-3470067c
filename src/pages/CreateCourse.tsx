@@ -23,6 +23,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import VideoUpload from "@/components/VideoUpload";
 import ChapterResourceManager from "@/components/ChapterResourceManager";
 import { HelpPopover } from "@/components/ui/help-popover";
+import { COURSE_CATEGORIES } from "@/lib/courseCategories";
 
 interface Chapter {
   id: string;
@@ -312,11 +313,11 @@ const CreateCourse = () => {
                         <SelectValue placeholder={t("createCourse.selectCategory")} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Development">Desarrollo</SelectItem>
-                        <SelectItem value="Design">Diseño</SelectItem>
-                        <SelectItem value="AI & ML">IA & ML</SelectItem>
-                        <SelectItem value="Data Science">Ciencia de Datos</SelectItem>
-                        <SelectItem value="Mobile">Móvil</SelectItem>
+                        {COURSE_CATEGORIES.map((cat) => (
+                          <SelectItem key={cat.slug} value={cat.dbValue}>
+                            {t(cat.labelKey)}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </div>

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CourseCard from "@/components/CourseCard";
@@ -16,23 +17,14 @@ import {
 import { Search, Filter, BookOpen } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-
-const categories = ["Todos", "Destacados", "Desarrollo", "IA & ML", "Diseño", "Ciencia de Datos", "Móvil", "Negocios"];
-
-// Map Spanish UI labels to English database values
-const categoryMapping: Record<string, string> = {
-  "Desarrollo": "Development",
-  "IA & ML": "AI & ML",
-  "Diseño": "Design",
-  "Ciencia de Datos": "Data Science",
-  "Móvil": "Mobile",
-  "Negocios": "Business"
-};
+import { COURSE_FILTER_SLUGS, slugToDbValue } from "@/lib/courseCategories";
 
 const CoursesPage = () => {
+  const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("Todos");
+  const [selectedSlug, setSelectedSlug] = useState<string>("all");
   const [sortBy, setSortBy] = useState("popular");
+
 
   // Fetch published courses from database
   const { data: courses = [], isLoading } = useQuery({
@@ -79,10 +71,10 @@ const CoursesPage = () => {
 
   const filteredCourses = courses.filter((course) => {
     const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase());
-    const dbCategory = categoryMapping[selectedCategory];
+    const dbCategory = slugToDbValue(selectedSlug);
     const matchesCategory =
-      selectedCategory === "Todos" || 
-      (selectedCategory === "Destacados" ? course.isFeatured : course.category === dbCategory);
+      selectedSlug === "all" ||
+      (selectedSlug === "featured" ? course.isFeatured : course.category === dbCategory);
     return matchesSearch && matchesCategory;
   });
 
@@ -147,18 +139,18 @@ const CoursesPage = () => {
 
         {/* Categories */}
         <div className="flex flex-wrap gap-2 mb-8">
-          {categories.map((category) => (
+          {COURSE_FILTER_SLUGS.map((filter) => (
             <Badge
-              key={category}
-              variant={selectedCategory === category ? "default" : "outline"}
+              key={filter.slug}
+              variant={selectedSlug === filter.slug ? "default" : "outline"}
               className={`cursor-pointer transition-colors ${
-                selectedCategory === category
+                selectedSlug === filter.slug
                   ? "bg-primary text-primary-foreground"
                   : "border-border text-muted-foreground hover:border-primary hover:text-foreground"
               }`}
-              onClick={() => setSelectedCategory(category)}
+              onClick={() => setSelectedSlug(filter.slug)}
             >
-              {category}
+              {t(filter.labelKey)}
             </Badge>
           ))}
         </div>
