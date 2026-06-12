@@ -125,5 +125,4 @@ describe('CreateCourse', () => {
     expect(screen.getByText(/course image/i)).toBeInTheDocument();
     expect(screen.getByText(/upload image/i)).toBeInTheDocument();
   });
-  });
 });
