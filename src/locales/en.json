@@ -409,7 +409,9 @@
   },
   "knowledgeBase": {
     "title": "Knowledge Base",
-    "subtitle": "Manage documents that inform your AI-generated content",
+    "titleLead": "Your digital ",
+    "titleAccent": "library.",
+    "subtitle": "Upload your articles, theses, and notes. The AI trains exclusively on your original material.",
     "addDocument": "Add Document",
     "editDocument": "Edit Document",
     "addDesc": "Add a new document to your knowledge base for AI context",
