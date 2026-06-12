@@ -9,7 +9,14 @@ vi.mock('@/contexts/AuthContext', async () => {
 });
 
 vi.mock('@/integrations/supabase/client', () => ({
-  supabase: { auth: { signInWithPassword: vi.fn(), signUp: vi.fn() } },
+  supabase: {
+    auth: {
+      signInWithPassword: vi.fn(),
+      signUp: vi.fn(),
+      onAuthStateChange: vi.fn(() => ({ data: { subscription: { unsubscribe: vi.fn() } } })),
+      getSession: vi.fn(() => Promise.resolve({ data: { session: null }, error: null })),
+    },
+  },
 }));
 
 describe('AuthPage', () => {
