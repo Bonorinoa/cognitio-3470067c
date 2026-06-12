@@ -9,11 +9,10 @@ import RequireAdmin from "@/components/RequireAdmin";
 import RequireAuth from "@/components/RequireAuth";
 import { Loader2 } from "lucide-react";
 import { COMING_SOON_FEATURES } from "@/lib/aiStudioRoutes";
-import { instructorNav, studentNav, adminNav } from "@/config/panelNav";
+import { instructorNav, studentNav, adminNav, aiStudioNav } from "@/config/panelNav";
 
 // Lazy-loaded layouts - only loaded when user navigates to protected routes
 const PanelLayout = lazy(() => import("./components/panel/PanelLayout"));
-const AIStudioLayout = lazy(() => import("./components/AIStudioLayout"));
 
 // Lazy-loaded page components - only loaded when user navigates to them
 const Index = lazy(() => import("./pages/Index"));
@@ -98,7 +97,8 @@ const App = () => (
               </Route>
               
               {/* AI Studio routes with dedicated layout */}
-              <Route path="/ai-studio" element={<AIStudioLayout />}>
+              {/* AI Studio routes — share the unified panel shell */}
+              <Route path="/ai-studio" element={<PanelLayout nav={aiStudioNav} />}>
                 <Route index element={<AIStudioLanding />} />
                 <Route path="knowledge" element={<AIStudioKnowledge />} />
                 <Route path="settings" element={<AIStudioSettings />} />
