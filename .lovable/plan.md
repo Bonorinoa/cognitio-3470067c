@@ -1,122 +1,89 @@
 
-# Cognitio Positioning, Pricing & Copy Rewrite Plan
+## Goal
 
-## 1. Positioning (the thesis)
+Bring the three logged-in panels — **Mi Aprendizaje**, **Panel de Instructor**, **Panel de Admin** — under a single, cohesive shell that matches the warm/editorial direction of the new public site, while rethinking what each panel surfaces. Start with the Instructor panel (biggest surface, highest priority).
 
-**One-line pitch (ES):** *Tecnología educativa con IA, diseñada para que instructores enseñen mejor y ganen más — no para reemplazarlos.*
+## What exists today
 
-**One-line pitch (EN):** *Ed-tech with AI, built so instructors teach better and earn more — not to replace them.*
+- `InstructorLayout` + `InstructorSidebar` already provide a collapsible sidebar with sub-routes (`/instructor`, `/courses`, `/create`, `/analytics`, `/guide`, `/settings`) and a link to AI Studio.
+- `Dashboard.tsx` (student) and `AdminPanel.tsx` are flat pages that just render the public `<Navbar />` on top — no shell, no sidebar.
+- A reusable `src/components/sidebar/` primitive set already exists (`SidebarHeader`, `SidebarNavItem`, `SidebarUserDropdown`, `SidebarCollapseButton`) — we'll build on these.
+- `AdminPanel` is tiny (28 lines, 2 cards). It needs IA work, not just paint.
 
-**What Cognitio is:** An ed-tech studio specializing in AI-augmented learning. We build and operate a light, innovative LMS that complements institutional platforms (Canvas, Moodle), with thoughtful AI features baked in. The LMS is the showcase; add-ons, bundles, and custom work extend it.
+## Phase 1 — Unified Panel shell (foundation)
 
-**Audiences (dual, no split home page):**
-- **Instructors & academics** — self-serve, mostly free, optional paid add-ons.
-- **Institutions, programs, small businesses** — contact us for custom solutions; their fees subsidize instructor features.
-
-## 2. Pricing model
-
-A **Core + Add-ons + Tiers + Custom** structure. Three surfaces:
-
-### A. Free Core (always free for verified instructors and their students)
-The "public good" baseline. Showcases our craft.
-- Light LMS: courses, chapters, video (Mux), resources, progress, discussions
-- Student–instructor messaging
-- Basic AI features that are *education-specific* (not generic copywriting):
-  - **AI Tutor** in chapters (already built) — limited daily questions
-  - **AI-generated transcripts & chapter summaries** (already built via Mux webhook)
-  - **AI study guide / flashcards from a chapter** (new, small)
-- Instructor public profile + course catalog listing
-
-### B. Paid Add-ons (à la carte, one-time or low monthly)
-For instructors who want more reach or revenue.
-- **Consultorías marketplace listing** — small monthly fee or revenue share (enforce: all consultants must be instructors)
-- **AI Studio · Marketing bundle** ($19/mo) — Blog (live), LinkedIn, Twitter, Newsletter (keep as Coming Soon, ship next)
-- **AI Studio · Academic bundle** ($19/mo) — Lit review, paper formatter, editor (Coming Soon)
-- **AI Studio · Pro** ($29/mo) — both bundles
-
-Keeps the existing Stripe subscription plumbing; just reframes it as add-ons to a free core instead of the whole product.
-
-### C. Institutional / Custom (contact form)
-A single **"Para Instituciones"** page with a short intake form:
-- White-label LMS deployment
-- Custom AI workflows (grading assistants, curriculum tools, cohort analytics)
-- Private cohort hosting (the existing `private` course visibility)
-- Training & integration with Canvas/Moodle
-
-Pricing: "Desde $X" anchor, real number quoted after the form. These fees explicitly subsidize the free core — we say this on the page.
-
-## 3. Information architecture changes
-
-Current nav: Home, Courses, Instructores, Consultorías, AI Studio.
-
-Proposed nav: **Home, Plataforma, Cursos, Instructores, Consultorías, Para Instituciones, AI Studio.**
-
-- **/** (Home) — rewritten around the thesis, not the founders' bios
-- **/plataforma** (new) — what the LMS does, AI features, free for instructors
-- **/courses** — unchanged structurally, lighter copy
-- **/instructores** — unchanged, add "Solicitar invitación" subtle CTA
-- **/consultorias** — clarify these are services by enrolled instructors
-- **/instituciones** (new) — custom solutions + contact form
-- **/ai-studio** — reframed as one of several add-ons to the free core
-- **Founders' Story** — demoted from home hero to an "Equipo" section lower on home, or moved to `/about`
-
-## 4. Home page rewrite (structure)
+Build one `PanelLayout` shell used by all three panels, role-aware.
 
 ```text
-[Hero]
-  H1: Tecnología educativa con IA, hecha para instructores.
-  Sub: Una plataforma ligera que complementa Canvas y Moodle,
-       con IA pensada para enseñar mejor — no para reemplazar.
-  CTAs: [Explorar la plataforma]  [Soy una institución]
-
-[Three pillars — what we do]
-  1. Plataforma LMS gratuita para instructores
-  2. AI Studio: herramientas de contenido y publicación
-  3. Soluciones a medida para instituciones
-
-[Por qué existimos] — short manifesto (the thesis, 2 paragraphs)
-
-[Producto en acción] — 3 screenshots/clips of LMS + AI Tutor + Transcripts
-
-[Add-ons disponibles] — compact grid: Marketing, Academic, Consultorías marketplace
-  with "Próximamente" badges intact
-
-[Quiénes somos] — Founders' Story (demoted, condensed to 2 cards + link to /about)
-
-[CTA institucional] — "¿Representas a una institución?" → /instituciones
+┌─────────────────────────────────────────────────────────┐
+│ Sidebar (role-aware)        │ Topbar: breadcrumbs · ⌘K  │
+│  • Logo / "Volver al sitio" │───────────────────────────│
+│  • Section 1 (Visión)       │                           │
+│  • Section 2 (Trabajo)      │  Page content (Outlet)    │
+│  • Section 3 (Crecimiento)  │                           │
+│  • ─────────                │                           │
+│  • AI Studio / Help         │                           │
+│  • User dropdown            │                           │
+└─────────────────────────────────────────────────────────┘
 ```
 
-## 5. Copy rewrite scope
+Concretely:
 
-Rewrite the visible copy on these pages in both `es.json` and `en.json` (Spanish primary):
-- `Index.tsx` (home) — full rewrite
-- `CoursesPage.tsx` — tighten hero, add "Cursos públicos de instructores Cognitio" framing
-- `InstructorsPage.tsx` — keep, add invite-only note
-- `ServicesPage.tsx` (Consultorías) — clarify "ofrecidas por instructores Cognitio"
-- `AIStudioLanding.tsx` — reframe as add-on, not standalone product; keep Coming Soon
-- `PricingSection.tsx` — add a "Free Core" tier at the front; keep Marketing/Academic/Pro
-- **New:** `PlatformPage.tsx` at `/plataforma`
-- **New:** `InstitutionsPage.tsx` at `/instituciones` with intake form
-- `Navbar.tsx` and `Footer.tsx` — new links
-- `FoundersStorySection.tsx` — keep component, move off home hero
+- New `src/components/panel/PanelLayout.tsx` — sidebar + sticky topbar + `<Outlet />`.
+- New `src/components/panel/PanelSidebar.tsx` — generalizes `InstructorSidebar` to accept a `sections` config (grouped nav with labels like *Visión*, *Trabajo*, *Crecimiento*) and a role badge under the logo.
+- New `src/components/panel/PanelTopbar.tsx` — breadcrumbs derived from the route, a quick-action slot per page, and the user avatar dropdown (replaces the public Navbar inside panels).
+- Wire role config in one file: `src/config/panelNav.ts` exports `studentNav`, `instructorNav`, `adminNav`.
+- Keep the public `<Navbar />` for unauthenticated and marketing routes only; panels stop rendering it.
 
-No business logic, Stripe, or schema changes in this pass except:
-- One new table `institution_inquiries` (name, email, organization, message, created_at) for the contact form, with RLS allowing anonymous insert + admin read.
+## Phase 2 — Instructor panel redesign (first delivery)
 
-## 6. What we are NOT doing in this pass
-- Not shipping LinkedIn/Twitter/Newsletter/Academic tools yet — they stay Coming Soon as you requested (separate plan after this).
-- Not changing existing Stripe products or subscription tiers.
-- Not removing the Founders' Story — just demoting it.
-- Not building white-label deployment infra — that's sold via the contact form, delivered as consulting.
+### Information architecture
 
-## 7. Order of execution (once you approve)
-1. Update `es.json` / `en.json` with the new copy keys (Spanish first, English mirror).
-2. Rewrite `Index.tsx` around the new structure; demote Founders' Story.
-3. Build `PlatformPage.tsx` and `InstitutionsPage.tsx` + route them in `App.tsx`.
-4. Update `Navbar.tsx` + `Footer.tsx`.
-5. Rewrite copy on Courses, Instructores, Consultorías, AI Studio Landing, Pricing.
-6. Migration: `institution_inquiries` table + RLS + GRANTs; wire the form.
-7. QA: visit each page in preview, verify ES/EN parity, verify Coming Soon badges still render.
+Regroup the existing six items into three labelled sections so the sidebar reads like a mental model, not a flat list:
 
-## 8. Open question before I implement
-**Spanish brand voice:** should the home manifesto read more **academic & sober** (matches the founders' bios) or **warm & accessible** (matches the coral palette and "para instructores no técnicos" persona)? I'll default to **warm & accessible** unless you say otherwise — easier for non-technical instructors to feel invited.
+- **Mi trabajo** — Resumen (dashboard), Cursos, Crear curso
+- **Crecimiento** — Analíticas, Ingresos *(new — split from Analytics)*, Estudiantes *(new — directory of enrolled students across courses)*
+- **Mi presencia** — Perfil público, Guía, Ajustes
+
+AI Studio stays as a pinned shortcut at the bottom of the sidebar.
+
+### Dashboard (`/instructor`) redesign
+
+Replace the current "stats row + courses table + recent enrollments" with an editorial layout:
+
+1. **Welcome strip** — greeting, today's date, primary CTA (Crear curso) and secondary (Abrir AI Studio).
+2. **Pulse row** — four KPI tiles (Estudiantes, Ingresos del mes, Cursos publicados, Borradores) with delta vs. last month and a sparkline.
+3. **Two-column working area**
+   - Left (2/3): "Tus cursos" — card list (not table) showing thumbnail, status pill, students, last edit, quick actions. Sort by recently updated. Empty state keeps the existing onboarding card.
+   - Right (1/3): stacked panels — *Actividad reciente* (recent enrollments + last published chapter), *Próximos pasos* (contextual suggestions: complete profile, publish a draft, record first chapter), *AI Studio* teaser card.
+4. **Onboarding card** (`InstructorGettingStartedCard`) moves into the right column and auto-hides once all four steps are done.
+
+### Visual language
+
+Adopt the warm/editorial direction from the public site inside the panel:
+- Warm off-white surface (`--background`), card surfaces in soft cream, coral primary reserved for CTAs and the active sidebar pill.
+- Generous spacing, single-weight section headers in the display font, lighter body.
+- Soft shadows + 1px hairline borders, no heavy chrome.
+- All values via design tokens — no hardcoded colors.
+
+We'll generate three rendered design directions for the dashboard hero+pulse area before implementing, so you pick the exact composition.
+
+## Phase 3 — Student & Admin (follow-ups, separate turns)
+
+- **Mi Aprendizaje** moves into `PanelLayout` with a slimmer sidebar (Resumen, Mis cursos, Certificados *(coming soon)*, Ajustes). Dashboard body keeps current data but adopts the new editorial tile/card language and gets a "Continuar donde dejaste" hero card.
+- **Panel de Admin** moves into `PanelLayout` with sections: *Personas* (usuarios, roles, invitaciones), *Contenido* (cursos, reportes), *Plataforma* (AI tutor settings, flags). Existing `AITutorSettingsCard` + `UserManagementCard` become the first two pages instead of stacking on a single screen.
+
+## Out of scope for this plan
+
+- Pricing/billing UI inside panels.
+- New backend tables or RLS changes — IA work uses existing data only.
+- AI Studio internal redesign (separate effort).
+- The marketing-side cleanup of orphan pages (`PlatformPage`, `InstitutionsPage`).
+
+## Suggested order of implementation
+
+1. Build `PanelLayout` + `PanelSidebar` + `PanelTopbar` primitives (no behavior change yet — Instructor still works).
+2. Migrate `/instructor` routes to the new shell, regroup sidebar into three sections, add the two new sub-routes as Coming Soon stubs.
+3. Generate 3 design directions for the new Instructor dashboard, you pick one, we implement.
+4. (Next turn) Migrate Student dashboard into the shell.
+5. (Next turn) Split Admin panel into sections inside the shell.
