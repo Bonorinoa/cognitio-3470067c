@@ -30,18 +30,8 @@ vi.mock('@tanstack/react-query', async () => {
     ...actual,
     useQuery: () => ({
       data: [
-        {
-          id: 'user-1',
-          email: 'admin@example.com',
-          full_name: 'Admin User',
-          role: 'admin',
-        },
-        {
-          id: 'user-2',
-          email: 'instructor@example.com',
-          full_name: 'Instructor User',
-          role: 'instructor',
-        },
+        { id: 'user-1', email: 'admin@example.com', full_name: 'Admin User', roles: ['admin'] },
+        { id: 'user-2', email: 'instructor@example.com', full_name: 'Instructor User', roles: ['instructor'] },
       ],
       isLoading: false,
       error: null,

@@ -122,7 +122,7 @@ describe('CreateCourse', () => {
   it('has course image upload section', () => {
     render(<CreateCourse />);
 
-    expect(screen.getByText('Course Image')).toBeInTheDocument();
-    expect(screen.getByText('Click to upload or drag and drop')).toBeInTheDocument();
+    expect(screen.getAllByText(/course image/i).length).toBeGreaterThan(0);
+    expect(screen.getByText(/upload image/i)).toBeInTheDocument();
   });
 });

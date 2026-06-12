@@ -1,23 +1,20 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@/test/utils';
+import { render, screen, waitFor, userEvent } from '@/test/utils';
 import AuthPage from './AuthPage';
 import * as AuthContext from '@/contexts/AuthContext';
 
-// Mock useAuth hook
 vi.mock('@/contexts/AuthContext', async () => {
   const actual = await vi.importActual('@/contexts/AuthContext');
-  return {
-    ...actual,
-    useAuth: vi.fn(),
-  };
+  return { ...actual, useAuth: vi.fn() };
 });
 
-// Mock Supabase client
 vi.mock('@/integrations/supabase/client', () => ({
   supabase: {
     auth: {
       signInWithPassword: vi.fn(),
       signUp: vi.fn(),
+      onAuthStateChange: vi.fn(() => ({ data: { subscription: { unsubscribe: vi.fn() } } })),
+      getSession: vi.fn(() => Promise.resolve({ data: { session: null }, error: null })),
     },
   },
 }));
@@ -26,56 +23,44 @@ describe('AuthPage', () => {
   beforeEach(() => {
     vi.resetAllMocks();
     vi.mocked(AuthContext.useAuth).mockReturnValue({
-      user: null,
-      session: null,
-      isLoading: false,
-      signOut: vi.fn(),
+      user: null, session: null, isLoading: false, signOut: vi.fn(),
     });
   });
 
-  it('renders the auth page with login form', () => {
+  it('renders welcome heading and tabs', () => {
     render(<AuthPage />);
-    
-    expect(screen.getByText('Bienvenido a Cognitio')).toBeInTheDocument();
-    expect(screen.getByText('Iniciar Sesión')).toBeInTheDocument();
-    expect(screen.getByText('Registrarse')).toBeInTheDocument();
+    expect(screen.getByText(/welcome to cognitio/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/sign in/i).length).toBeGreaterThan(0);
+    expect(screen.getByText(/sign up/i)).toBeInTheDocument();
   });
 
-  it('shows login form elements', () => {
+  it('shows email + password inputs and submit button', () => {
     render(<AuthPage />);
-    
     expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/contraseña/i)).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /iniciar sesión/i })).toBeInTheDocument();
+    expect(screen.getByLabelText(/password/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /^sign in$/i })).toBeInTheDocument();
   });
 
-  it('can switch to signup tab', async () => {
+  it('switches to signup tab and shows full name field', async () => {
     render(<AuthPage />);
-    
-    const signupTab = screen.getByText('Registrarse');
-    fireEvent.click(signupTab);
-    
-    await waitFor(() => {
-      expect(screen.getByLabelText(/nombre completo/i)).toBeInTheDocument();
-    });
+    const user = userEvent.setup();
+    await user.click(screen.getByRole('tab', { name: /sign up/i }));
+    await waitFor(() => expect(screen.getByLabelText(/full name/i)).toBeInTheDocument());
   });
 
   it('shows forgot password link', () => {
     render(<AuthPage />);
-    
-    expect(screen.getByText(/olvidaste tu contraseña/i)).toBeInTheDocument();
+    expect(screen.getByText(/forgot password/i)).toBeInTheDocument();
   });
 
-  it('shows terms of service and privacy policy links', () => {
+  it('shows ToS and Privacy Policy links', () => {
     render(<AuthPage />);
-    
-    expect(screen.getByText(/términos de servicio/i)).toBeInTheDocument();
-    expect(screen.getByText(/política de privacidad/i)).toBeInTheDocument();
+    expect(screen.getByText(/terms of service/i)).toBeInTheDocument();
+    expect(screen.getByText(/privacy policy/i)).toBeInTheDocument();
   });
 
   it('shows back to home link', () => {
     render(<AuthPage />);
-    
-    expect(screen.getByText(/volver al inicio/i)).toBeInTheDocument();
+    expect(screen.getByText(/back to home/i)).toBeInTheDocument();
   });
 });

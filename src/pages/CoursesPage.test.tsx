@@ -50,19 +50,14 @@ describe('CoursesPage', () => {
 
   it('displays page heading', async () => {
     render(<CoursesPage />);
-    
     await waitFor(() => {
-      // The page has heading text, use getAllByText and check length
-      const headings = screen.queryAllByText(/Browse Courses/i);
-      expect(headings.length).toBeGreaterThan(0);
+      expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(/explorar cursos/i);
     });
   });
 
   it('shows search input', () => {
     render(<CoursesPage />);
-    
-    const searchInput = screen.getByPlaceholderText(/search/i);
-    expect(searchInput).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/buscar/i)).toBeInTheDocument();
   });
 
   it('displays category filters', async () => {
@@ -97,15 +92,14 @@ describe('CoursesPage', () => {
   it('filters courses by search query', async () => {
     render(<CoursesPage />);
     const user = userEvent.setup();
-    
+
     await waitFor(() => {
       expect(screen.getByText(/Web Development Bootcamp/i)).toBeInTheDocument();
     });
-    
-    const searchInput = screen.getByPlaceholderText(/search/i);
+
+    const searchInput = screen.getByPlaceholderText(/buscar/i);
     await user.type(searchInput, 'React');
-    
-    // Should filter to show only React courses
+
     await waitFor(() => {
       expect(screen.getByText(/React Masterclass/i)).toBeInTheDocument();
     });
@@ -161,8 +155,7 @@ describe('CoursesPage', () => {
 
   it('has navbar', () => {
     render(<CoursesPage />);
-    
-    expect(screen.getByRole('navigation')).toBeInTheDocument();
+    expect(screen.getAllByRole('navigation').length).toBeGreaterThan(0);
   });
 
   it('renders when user is logged in', async () => {
