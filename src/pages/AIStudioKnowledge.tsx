@@ -134,45 +134,45 @@ export default function AIStudioKnowledge() {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground flex items-center gap-3">
-            <Database className="h-7 w-7 text-primary" />
-            {t("knowledgeBase.title")}
+    <div className="max-w-6xl mx-auto space-y-10">
+      {/* Editorial Header */}
+      <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 pb-6 border-b border-border">
+        <div className="space-y-3">
+          <div className="text-primary text-xs font-bold tracking-[0.2em] uppercase">
+            {t("aiStudio.stepKicker1", "Conocimiento")}
+          </div>
+          <h1 className="text-3xl md:text-4xl font-light text-foreground">
+            {t("knowledgeBase.titleLead", "Su biblioteca ")}
+            <span className="italic font-serif">{t("knowledgeBase.titleAccent", "digital.")}</span>
           </h1>
-          <p className="text-muted-foreground">{t("knowledgeBase.subtitle")}</p>
+          <p className="text-muted-foreground font-light max-w-xl">{t("knowledgeBase.subtitle")}</p>
         </div>
-        <Button onClick={handleAdd} className="gap-2">
+        <Button onClick={handleAdd} className="gap-2 rounded-sm self-start md:self-auto">
           <Plus className="h-4 w-4" />
           {t("knowledgeBase.addDocument")}
         </Button>
       </div>
 
-      {/* Token Budget Indicator */}
-      <Card>
-        <CardContent className="py-4">
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-medium">{t("knowledgeBase.tokenBudget")}</span>
-              <HelpPopover title={t("help.aiStudio.tokenBudgetTitle")}>
-                <p>{t("help.aiStudio.tokenBudgetDesc")}</p>
-              </HelpPopover>
-            </div>
-            <span className={`text-sm ${budgetInfo.statusColor}`}>
-              {formatTokenCount(totalTokens)} / {formatTokenCount(budgetInfo.totalBudget)} tokens
+      {/* Token Budget — hairline strip */}
+      <div className="border border-border bg-card/30 p-6 rounded-sm">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <span className="text-xs uppercase tracking-[0.15em] font-semibold text-foreground/70">
+              {t("knowledgeBase.tokenBudget")}
             </span>
+            <HelpPopover title={t("help.aiStudio.tokenBudgetTitle")}>
+              <p>{t("help.aiStudio.tokenBudgetDesc")}</p>
+            </HelpPopover>
           </div>
-          <Progress 
-            value={budgetInfo.percentUsed} 
-            className="h-2"
-          />
-          <p className="text-xs text-muted-foreground mt-2">
-            {t("knowledgeBase.budgetHint", { count: activeDocuments.length })}
-          </p>
-        </CardContent>
-      </Card>
+          <span className={`text-sm font-light ${budgetInfo.statusColor}`}>
+            {formatTokenCount(totalTokens)} / {formatTokenCount(budgetInfo.totalBudget)}
+          </span>
+        </div>
+        <Progress value={budgetInfo.percentUsed} className="h-1" />
+        <p className="text-xs text-muted-foreground mt-3 font-light">
+          {t("knowledgeBase.budgetHint", { count: activeDocuments.length })}
+        </p>
+      </div>
 
       {/* Documents Grid */}
       {documents.length === 0 ? (
