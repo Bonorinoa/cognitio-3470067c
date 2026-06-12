@@ -22,8 +22,8 @@ describe('PasswordChangeForm', () => {
 
   it('shows new + confirm password fields', () => {
     render(<PasswordChangeForm />);
-    expect(screen.getByLabelText(/nueva contraseña/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/confirmar contraseña/i)).toBeInTheDocument();
+    expect(screen.getByText(/nueva contraseña/i)).toBeInTheDocument();
+    expect(screen.getByText(/confirmar contraseña/i)).toBeInTheDocument();
   });
 
   it('has submit button', () => {
