@@ -16,8 +16,6 @@ const AIStudioLayout = lazy(() => import("./components/AIStudioLayout"));
 // Lazy-loaded page components - only loaded when user navigates to them
 const Index = lazy(() => import("./pages/Index"));
 const AboutPage = lazy(() => import("./pages/AboutPage"));
-const PlatformPage = lazy(() => import("./pages/PlatformPage"));
-const InstitutionsPage = lazy(() => import("./pages/InstitutionsPage"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const CoursesPage = lazy(() => import("./pages/CoursesPage"));
 const CoursePage = lazy(() => import("./pages/CoursePage"));
