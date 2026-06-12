@@ -3,10 +3,10 @@ import { Link, useSearchParams } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAISubscription } from "@/hooks/useAISubscription";
 import StyleProfileForm from "@/components/ai-studio/StyleProfileForm";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Settings2, Lock, CreditCard, Loader2, AlertCircle, CheckCircle } from "lucide-react";
+import { Lock, Loader2, AlertCircle, CheckCircle } from "lucide-react";
 import { format } from "date-fns";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -118,107 +118,107 @@ export default function AIStudioSettings() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
-      {/* Header */}
-      <div className="space-y-2">
-        <div className="flex items-center gap-3">
-          <div className="p-2 rounded-lg bg-primary/10">
-            <Settings2 className="h-6 w-6 text-primary" />
-          </div>
-          <div>
-            <h1 className="text-3xl font-bold">
-              {t("aiStudio.globalSettings", "Global Settings")}
-            </h1>
-            <p className="text-muted-foreground">
-              {t(
-                "aiStudio.globalSettingsDesc",
-                "Configure your default style preferences for AI-generated content"
-              )}
-            </p>
-          </div>
+    <div className="max-w-4xl mx-auto space-y-12">
+      {/* Editorial Header */}
+      <div className="space-y-3 pb-6 border-b border-border">
+        <div className="text-primary text-xs font-bold tracking-[0.2em] uppercase">
+          {t("aiStudio.stepKicker2", "Estilo")}
         </div>
+        <h1 className="text-3xl md:text-4xl font-light text-foreground">
+          {t("aiStudio.settingsTitleLead", "Su voz, ")}
+          <span className="italic font-serif">{t("aiStudio.settingsTitleAccent", "calibrada.")}</span>
+        </h1>
+        <p className="text-muted-foreground font-light max-w-xl">
+          {t(
+            "aiStudio.globalSettingsDesc",
+            "Configure su tono editorial y gestione su suscripción a AI Studio."
+          )}
+        </p>
       </div>
 
-      {/* Billing & Subscription Section */}
-      <Card className="rounded-xl">
-        <CardHeader>
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-primary/10">
-              <CreditCard className="h-5 w-5 text-primary" />
-            </div>
-            <div>
-              <CardTitle>{t("aiStudio.billingTitle", "Billing & Subscription")}</CardTitle>
-              <CardDescription>
-                {t("aiStudio.billingDesc", "Manage your AI Studio subscription")}
-              </CardDescription>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-4">
+      {/* Billing & Subscription — hairline editorial */}
+      <section className="space-y-4">
+        <div className="flex items-center gap-3">
+          <span className="text-xs uppercase tracking-[0.2em] font-semibold text-primary">
+            {t("aiStudio.billingEyebrow", "Facturación")}
+          </span>
+          <span className="h-px flex-1 bg-border" />
+        </div>
+
+        <div className="border border-border rounded-sm p-6 md:p-8 bg-card/30">
           {isLoadingSubscription || isActivating ? (
-            <div className="flex items-center gap-2 text-muted-foreground">
+            <div className="flex items-center gap-2 text-muted-foreground font-light">
               <Loader2 className="h-4 w-4 animate-spin" />
               {isActivating 
-                ? t("aiStudio.activatingSubscription", "Activating subscription…") 
-                : t("common.loading", "Loading...")}
+                ? t("aiStudio.activatingSubscription", "Activando suscripción…") 
+                : t("common.loading", "Cargando…")}
             </div>
           ) : (
-            <>
-              <div className="flex items-center justify-between">
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <span className="font-medium">{t("aiStudio.currentPlanLabel", "Current Plan:")}</span>
-                    <Badge variant={hasActiveSubscription ? "default" : "secondary"}>
-                      {getBundleDisplayName(subscribedBundle)}
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div className="space-y-2">
+                <div className="flex items-center gap-3 flex-wrap">
+                  <span className="text-2xl font-light text-foreground">
+                    {getBundleDisplayName(subscribedBundle)}
+                  </span>
+                  {hasActiveSubscription && (
+                    <span className="inline-flex items-center gap-1.5 text-xs uppercase tracking-[0.15em] font-semibold text-primary">
+                      <CheckCircle className="h-3 w-3" />
+                      {t("aiStudio.activeStatus", "Activo")}
+                    </span>
+                  )}
+                  {isTrialing && (
+                    <Badge variant="outline" className="rounded-sm text-[10px] uppercase tracking-wider">
+                      {t("aiStudio.trial", "Prueba")}
                     </Badge>
-                    {isTrialing && (
-                      <Badge variant="outline">{t("aiStudio.trial", "Trial")}</Badge>
-                    )}
-                  </div>
-                  {hasActiveSubscription && subscription?.current_period_end && (
-                    <p className="text-sm text-muted-foreground">
-                      {willCancel ? (
-                        <span className="flex items-center gap-1 text-destructive">
-                          <AlertCircle className="h-4 w-4" />
-                          {t("aiStudio.cancelsOn", "Cancels on")} {format(new Date(subscription.current_period_end), "MMM d, yyyy")}
-                        </span>
-                      ) : (
-                        <>
-                          {t("aiStudio.renewsOn", "Renews on")} {format(new Date(subscription.current_period_end), "MMM d, yyyy")}
-                        </>
-                      )}
-                    </p>
                   )}
                 </div>
-                {hasActiveSubscription ? (
-                  <Button
-                    variant="outline"
-                    onClick={() => openPortal()}
-                    disabled={isOpeningPortal}
-                  >
-                    {isOpeningPortal && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
-                    {t("aiStudio.manageSubscription", "Manage Subscription")}
-                  </Button>
-                ) : (
-                  <Link to="/ai-studio#pricing">
-                    <Button>
-                      {t("aiStudio.upgradePlan", "Upgrade Plan")}
-                    </Button>
-                  </Link>
+                {hasActiveSubscription && subscription?.current_period_end && (
+                  <p className="text-sm text-muted-foreground font-light">
+                    {willCancel ? (
+                      <span className="flex items-center gap-1.5 text-destructive">
+                        <AlertCircle className="h-3.5 w-3.5" />
+                        {t("aiStudio.cancelsOn", "Se cancela el")} {format(new Date(subscription.current_period_end), "d MMM yyyy")}
+                      </span>
+                    ) : (
+                      <>
+                        {t("aiStudio.renewsOn", "Se renueva el")} {format(new Date(subscription.current_period_end), "d MMM yyyy")}
+                      </>
+                    )}
+                  </p>
                 )}
               </div>
-            </>
+              {hasActiveSubscription ? (
+                <Button
+                  variant="outline"
+                  className="rounded-sm"
+                  onClick={() => openPortal()}
+                  disabled={isOpeningPortal}
+                >
+                  {isOpeningPortal && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
+                  {t("aiStudio.manageSubscription", "Gestionar suscripción")}
+                </Button>
+              ) : (
+                <Link to="/ai-studio#pricing">
+                  <Button className="rounded-sm">
+                    {t("aiStudio.upgradePlan", "Ver planes")}
+                  </Button>
+                </Link>
+              )}
+            </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </section>
 
-      {/* Style Profile Form */}
-      <div>
-        <h2 className="text-xl font-semibold mb-4">
-          {t("aiStudio.styleSettings", "Style Settings")}
-        </h2>
+      {/* Style Profile */}
+      <section className="space-y-4">
+        <div className="flex items-center gap-3">
+          <span className="text-xs uppercase tracking-[0.2em] font-semibold text-primary">
+            {t("aiStudio.styleEyebrow", "Voz Editorial")}
+          </span>
+          <span className="h-px flex-1 bg-border" />
+        </div>
         <StyleProfileForm embedded={false} />
-      </div>
+      </section>
     </div>
   );
 }

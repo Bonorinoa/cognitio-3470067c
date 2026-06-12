@@ -27,7 +27,6 @@ import {
   Trash2, 
   Eye, 
   EyeOff,
-  Database,
   BookOpen,
   Lightbulb,
   GraduationCap,
@@ -38,7 +37,7 @@ import {
 import { toast } from "sonner";
 import { formatTokenCount, getBudgetDisplayInfo } from "@/lib/tokenUtils";
 import { HelpPopover } from "@/components/ui/help-popover";
-import type { KnowledgeBaseDocument, DocumentFormData, DocumentType, ContextRole } from "@/types/aiStudio";
+import type { KnowledgeBaseDocument, DocumentFormData, DocumentType } from "@/types/aiStudio";
 
 // Icons for document types
 const DOC_TYPE_ICONS: Record<DocumentType, React.ElementType> = {
@@ -50,12 +49,6 @@ const DOC_TYPE_ICONS: Record<DocumentType, React.ElementType> = {
   other: FileQuestion,
 };
 
-// Colors for context roles
-const CONTEXT_ROLE_COLORS: Record<ContextRole, string> = {
-  style_reference: "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300",
-  topic_source: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300",
-  background_context: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300",
-};
 
 export default function AIStudioKnowledge() {
   const { t } = useTranslation();
@@ -134,45 +127,45 @@ export default function AIStudioKnowledge() {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground flex items-center gap-3">
-            <Database className="h-7 w-7 text-primary" />
-            {t("knowledgeBase.title")}
+    <div className="max-w-6xl mx-auto space-y-10">
+      {/* Editorial Header */}
+      <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 pb-6 border-b border-border">
+        <div className="space-y-3">
+          <div className="text-primary text-xs font-bold tracking-[0.2em] uppercase">
+            {t("aiStudio.stepKicker1", "Conocimiento")}
+          </div>
+          <h1 className="text-3xl md:text-4xl font-light text-foreground">
+            {t("knowledgeBase.titleLead", "Su biblioteca ")}
+            <span className="italic font-serif">{t("knowledgeBase.titleAccent", "digital.")}</span>
           </h1>
-          <p className="text-muted-foreground">{t("knowledgeBase.subtitle")}</p>
+          <p className="text-muted-foreground font-light max-w-xl">{t("knowledgeBase.subtitle")}</p>
         </div>
-        <Button onClick={handleAdd} className="gap-2">
+        <Button onClick={handleAdd} className="gap-2 rounded-sm self-start md:self-auto">
           <Plus className="h-4 w-4" />
           {t("knowledgeBase.addDocument")}
         </Button>
       </div>
 
-      {/* Token Budget Indicator */}
-      <Card>
-        <CardContent className="py-4">
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-medium">{t("knowledgeBase.tokenBudget")}</span>
-              <HelpPopover title={t("help.aiStudio.tokenBudgetTitle")}>
-                <p>{t("help.aiStudio.tokenBudgetDesc")}</p>
-              </HelpPopover>
-            </div>
-            <span className={`text-sm ${budgetInfo.statusColor}`}>
-              {formatTokenCount(totalTokens)} / {formatTokenCount(budgetInfo.totalBudget)} tokens
+      {/* Token Budget — hairline strip */}
+      <div className="border border-border bg-card/30 p-6 rounded-sm">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <span className="text-xs uppercase tracking-[0.15em] font-semibold text-foreground/70">
+              {t("knowledgeBase.tokenBudget")}
             </span>
+            <HelpPopover title={t("help.aiStudio.tokenBudgetTitle")}>
+              <p>{t("help.aiStudio.tokenBudgetDesc")}</p>
+            </HelpPopover>
           </div>
-          <Progress 
-            value={budgetInfo.percentUsed} 
-            className="h-2"
-          />
-          <p className="text-xs text-muted-foreground mt-2">
-            {t("knowledgeBase.budgetHint", { count: activeDocuments.length })}
-          </p>
-        </CardContent>
-      </Card>
+          <span className={`text-sm font-light ${budgetInfo.statusColor}`}>
+            {formatTokenCount(totalTokens)} / {formatTokenCount(budgetInfo.totalBudget)}
+          </span>
+        </div>
+        <Progress value={budgetInfo.percentUsed} className="h-1" />
+        <p className="text-xs text-muted-foreground mt-3 font-light">
+          {t("knowledgeBase.budgetHint", { count: activeDocuments.length })}
+        </p>
+      </div>
 
       {/* Documents Grid */}
       {documents.length === 0 ? (
@@ -190,29 +183,31 @@ export default function AIStudioKnowledge() {
           {documents.map((doc) => {
             const Icon = DOC_TYPE_ICONS[doc.document_type] || FileText;
             return (
-              <Card 
-                key={doc.id} 
-                className={`transition-opacity ${!doc.is_active ? "opacity-60" : ""}`}
+              <Card
+                key={doc.id}
+                className={`rounded-sm border shadow-none transition-all hover:border-primary/40 ${!doc.is_active ? "opacity-60" : ""}`}
               >
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex items-center gap-2 min-w-0">
-                      <Icon className="h-5 w-5 text-muted-foreground shrink-0" />
-                      <CardTitle className="text-base truncate">{doc.title}</CardTitle>
+                      <Icon className="h-4 w-4 text-primary shrink-0" strokeWidth={1.5} />
+                      <CardTitle className="text-base font-light truncate">{doc.title}</CardTitle>
                     </div>
                     {!doc.is_active && (
-                      <Badge variant="secondary" className="shrink-0">
+                      <Badge variant="outline" className="shrink-0 rounded-sm text-[10px] uppercase tracking-wider font-normal">
                         {t("knowledgeBase.inactive")}
                       </Badge>
                     )}
                   </div>
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <Badge variant="outline" className="text-xs">
+                  <div className="flex items-center gap-2 flex-wrap pt-1">
+                    <span className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground font-semibold">
                       {t(`knowledgeBase.docTypes.${doc.document_type}`)}
-                    </Badge>
-                    <Badge className={`text-xs ${CONTEXT_ROLE_COLORS[doc.context_role]}`}>
+                    </span>
+                    <span className="text-muted-foreground/40">·</span>
+                    <span className={`text-[10px] uppercase tracking-[0.15em] font-semibold inline-flex items-center gap-1.5 ${doc.context_role === "style_reference" ? "text-primary" : "text-foreground/60"}`}>
+                      {doc.context_role === "style_reference" && <span className="w-1 h-1 rounded-full bg-primary" />}
                       {t(`knowledgeBase.contextRoles.${doc.context_role}`)}
-                    </Badge>
+                    </span>
                   </div>
                 </CardHeader>
                 <CardContent>
