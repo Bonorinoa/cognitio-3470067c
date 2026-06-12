@@ -70,16 +70,16 @@ const Index = () => {
             Gratis para instructores y estudiantes — sostenida por las instituciones que apuestan por mejor educación.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link to="/plataforma">
+            <Link to="/instructors">
               <Button size="lg" className="min-w-[200px]">
                 Explorar la plataforma
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
-            <Link to="/instituciones">
+            <Link to="/services">
               <Button size="lg" variant="outline" className="min-w-[200px]">
                 <Building2 className="mr-2 h-5 w-5" />
-                Soy una institución
+                Servicios y precios
               </Button>
             </Link>
           </div>
@@ -98,7 +98,7 @@ const Index = () => {
 
           <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             <Link
-              to="/plataforma"
+              to="/instructors"
               className="group bg-card rounded-2xl p-6 border border-border hover:border-primary/40 hover:shadow-lg transition-all"
             >
               <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
@@ -136,21 +136,21 @@ const Index = () => {
             </Link>
 
             <Link
-              to="/instituciones"
+              to="/services"
               className="group bg-card rounded-2xl p-6 border border-border hover:border-primary/40 hover:shadow-lg transition-all"
             >
               <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
                 <Building2 className="h-6 w-6 text-primary" />
               </div>
               <h3 className="text-lg font-semibold text-foreground mb-2">
-                Soluciones a medida
+                Servicios y soluciones a medida
               </h3>
               <p className="text-sm text-muted-foreground mb-4">
-                Para universidades, programas y empresas: despliegues white-label, flujos de IA
-                a la medida e integraciones con su LMS actual.
+                Add-ons, consultorías 1:1 y proyectos institucionales — la mezcla que sostiene
+                el acceso gratuito al núcleo.
               </p>
               <span className="text-sm text-primary font-medium inline-flex items-center gap-1 group-hover:gap-2 transition-all">
-                Hablemos <ArrowRight className="h-3.5 w-3.5" />
+                Ver servicios <ArrowRight className="h-3.5 w-3.5" />
               </span>
             </Link>
           </div>
