@@ -1,89 +1,88 @@
+## AI Studio — Audit
 
-## Goal
+Scoped to `/ai-studio` and the routes it owns: Landing (`/ai-studio`), Knowledge Base (`/knowledge`), Settings (`/settings`), Marketing Hub (`/marketing`), Blog tool (`/marketing/blog`), Academic Hub (`/academic`), Coming-soon stubs, and the AI Studio sidebar/layout.
 
-Bring the three logged-in panels — **Mi Aprendizaje**, **Panel de Instructor**, **Panel de Admin** — under a single, cohesive shell that matches the warm/editorial direction of the new public site, while rethinking what each panel surfaces. Start with the Instructor panel (biggest surface, highest priority).
+Findings are grouped by theme. Each item is tagged **[Visual]**, **[Copy]**, or **[Feature]** so you can pick threads to pursue. Severity: 🔴 high · 🟡 medium · 🟢 polish.
 
-## What exists today
+---
 
-- `InstructorLayout` + `InstructorSidebar` already provide a collapsible sidebar with sub-routes (`/instructor`, `/courses`, `/create`, `/analytics`, `/guide`, `/settings`) and a link to AI Studio.
-- `Dashboard.tsx` (student) and `AdminPanel.tsx` are flat pages that just render the public `<Navbar />` on top — no shell, no sidebar.
-- A reusable `src/components/sidebar/` primitive set already exists (`SidebarHeader`, `SidebarNavItem`, `SidebarUserDropdown`, `SidebarCollapseButton`) — we'll build on these.
-- `AdminPanel` is tiny (28 lines, 2 cards). It needs IA work, not just paint.
+### 1. Shell & navigation
 
-## Phase 1 — Unified Panel shell (foundation)
+- 🔴 **[Visual]** AI Studio uses its **own sidebar shell** (`AIStudioLayout` + `AIStudioSidebar`) that pre-dates the new `PanelLayout`. It diverges from Instructor/Student/Admin in spacing, header treatment, mobile pattern (separate mobile header bar), section dividers, and "Soon" badge style. The platform now has a unified shell — AI Studio is the odd one out.
+- 🟡 **[Visual]** No topbar breadcrumbs. Users in a deep route (e.g. `/marketing/blog`) lose orientation; the other panels now show `Panel → Section`.
+- 🟡 **[Feature]** The sidebar's "Recent" history list is hard-coded to the Blog tool. When LinkedIn/Newsletter ship, history will need to be tool-scoped — current design doesn't anticipate it.
+- 🟢 **[Visual]** Sidebar still uses `Sparkles` next to the "AI Studio" wordmark; the rest of the product uses warmer, more editorial accents.
 
-Build one `PanelLayout` shell used by all three panels, role-aware.
+### 2. Landing page (`/ai-studio`)
 
-```text
-┌─────────────────────────────────────────────────────────┐
-│ Sidebar (role-aware)        │ Topbar: breadcrumbs · ⌘K  │
-│  • Logo / "Volver al sitio" │───────────────────────────│
-│  • Section 1 (Visión)       │                           │
-│  • Section 2 (Trabajo)      │  Page content (Outlet)    │
-│  • Section 3 (Crecimiento)  │                           │
-│  • ─────────                │                           │
-│  • AI Studio / Help         │                           │
-│  • User dropdown            │                           │
-└─────────────────────────────────────────────────────────┘
-```
+- 🔴 **[Copy]** Mixed language: hero is Spanish ("Add-on de publicación con IA — con tu voz"), but CTAs and section headings drop into English ("Choose Your Bundle", "Try Free - 10 generations/day", "Go to Marketing Tools"). Project core rule is Spanish-first, fully bilingual.
+- 🔴 **[Visual]** Hero is generic AI-product centered stack (icon + bold title + subtitle + two CTAs). No editorial typography, no warm coral accent, no anchor to Cognitio's instructor-first story.
+- 🟡 **[Copy]** Headline ("Add-on de publicación con IA") leads with a category label, not a benefit. The product positioning per project knowledge is "AI as content/marketing co-pilot for instructors" — the headline should reflect that.
+- 🟡 **[Visual]** "How It Works" is three centered, equally-weighted cards — visually predictable. No motion, no instructor voice, no example output.
+- 🟡 **[Feature]** Landing CTA "Try Free - 10 generations/day" routes to `/ai-studio/marketing/blog` regardless of whether the user has set up a Style Profile or Knowledge Base, leading to the in-tool setup alert. The flow could route first-timers to Knowledge → Settings → Tool.
+- 🟢 **[Visual]** `PricingSection` uses pure shadcn defaults: 4 equal cards, generic check-marks, no editorial hierarchy. The "Pro" highlight is a 2% scale bump — easy to miss.
+- 🟢 **[Copy]** "Best Value" / "Current" badges, "Switch Plan" microcopy are all untranslated English literals living next to Spanish hero copy.
 
-Concretely:
+### 3. Marketing Bundle Hub (`/ai-studio/marketing`)
 
-- New `src/components/panel/PanelLayout.tsx` — sidebar + sticky topbar + `<Outlet />`.
-- New `src/components/panel/PanelSidebar.tsx` — generalizes `InstructorSidebar` to accept a `sections` config (grouped nav with labels like *Visión*, *Trabajo*, *Crecimiento*) and a role badge under the logo.
-- New `src/components/panel/PanelTopbar.tsx` — breadcrumbs derived from the route, a quick-action slot per page, and the user avatar dropdown (replaces the public Navbar inside panels).
-- Wire role config in one file: `src/config/panelNav.ts` exports `studentNav`, `instructorNav`, `adminNav`.
-- Keep the public `<Navbar />` for unauthenticated and marketing routes only; panels stop rendering it.
+- 🟡 **[Copy]** English-first ("Marketing Bundle", "Blog Posts", "Start →"). Should mirror Spanish-first convention.
+- 🟢 **[Visual]** Generic 3-column grid of `FeatureCard`s; available vs coming-soon look almost identical (just opacity 60 vs 100). Hard to draw the eye to the one usable feature (Blog).
+- 🟢 **[Feature]** No "what's coming next / vote for what we build" hook on the disabled cards — wasted product-roadmap signal.
 
-## Phase 2 — Instructor panel redesign (first delivery)
+### 4. Academic Bundle Hub (`/ai-studio/academic`)
 
-### Information architecture
+- 🟡 **[Visual]** The whole bundle is coming-soon, but the hub still renders four near-identical placeholder cards inside a muted hero — feels empty/unresolved.
+- 🟡 **[Feature]** No way for an interested user to register interest or get notified when academic tools launch.
 
-Regroup the existing six items into three labelled sections so the sidebar reads like a mental model, not a flat list:
+### 5. Knowledge Base (`/ai-studio/knowledge`)
 
-- **Mi trabajo** — Resumen (dashboard), Cursos, Crear curso
-- **Crecimiento** — Analíticas, Ingresos *(new — split from Analytics)*, Estudiantes *(new — directory of enrolled students across courses)*
-- **Mi presencia** — Perfil público, Guía, Ajustes
+- 🟡 **[Visual]** Page header uses bold-icon-next-to-h1 pattern; mismatched with the new editorial welcome strips in Instructor/Student/Admin panels.
+- 🟡 **[Visual]** Context-role badges use raw Tailwind colors (`bg-purple-100`, `bg-blue-100`, `bg-green-100`) — bypasses the semantic token system and breaks the warm coral palette.
+- 🟡 **[Copy]** Mixed languages in the same view: title/badges Spanish, but "tokens" label and token-budget hint are English-tinged.
+- 🟢 **[Feature]** Document content preview is `doc.content.slice(0, 150) + "..."`. We have a `TruncatedText` primitive (per memory) that should be used.
+- 🟢 **[Feature]** No file upload — users must paste content into a textarea. Most instructors will have PDFs/Docx; manual paste is friction. (Per memory, PDF handling exists in AI Studio features — worth verifying this entry point.)
+- 🟢 **[Feature]** No search/filter or sort once a user has more than ~10 documents. Activate/deactivate is the only triage tool.
 
-AI Studio stays as a pinned shortcut at the bottom of the sidebar.
+### 6. Settings (`/ai-studio/settings`)
 
-### Dashboard (`/instructor`) redesign
+- 🟡 **[Visual]** Same out-of-system header treatment (`icon-in-tinted-box + h1`). No welcome strip.
+- 🟡 **[Copy]** "Global Settings", "Billing & Subscription", "Style Settings", "Current Plan:", "Manage Subscription", "Upgrade Plan" — all English. The activation-polling toasts also mix languages.
+- 🟢 **[Feature]** "Upgrade Plan" CTA links to `/ai-studio#pricing` which scrolls only if you're already on Landing — from `/settings` it just navigates and may not scroll reliably depending on hash handling.
 
-Replace the current "stats row + courses table + recent enrollments" with an editorial layout:
+### 7. Blog Generator (`/ai-studio/marketing/blog`)
 
-1. **Welcome strip** — greeting, today's date, primary CTA (Crear curso) and secondary (Abrir AI Studio).
-2. **Pulse row** — four KPI tiles (Estudiantes, Ingresos del mes, Cursos publicados, Borradores) with delta vs. last month and a sparkline.
-3. **Two-column working area**
-   - Left (2/3): "Tus cursos" — card list (not table) showing thumbnail, status pill, students, last edit, quick actions. Sort by recently updated. Empty state keeps the existing onboarding card.
-   - Right (1/3): stacked panels — *Actividad reciente* (recent enrollments + last published chapter), *Próximos pasos* (contextual suggestions: complete profile, publish a draft, record first chapter), *AI Studio* teaser card.
-4. **Onboarding card** (`InstructorGettingStartedCard`) moves into the right column and auto-hides once all four steps are done.
+This is the workhorse — most impactful surface to refine.
 
-### Visual language
+- 🔴 **[Visual]** Two-up grid (Config left, Output right) with three stacked cards on the left. It works at desktop but feels like a settings form, not a creative tool. No sense of "draft → refine → ship" momentum.
+- 🔴 **[Copy]** Default copy is English: "Topic & Instructions", "Context Documents", "Generate Content", "Generated Content", "AI Draft", "Save", "Update", "Refine with AI". Spanish fallbacks exist but the source-of-truth strings are English.
+- 🟡 **[Visual]** Output panel uses a fixed `h-[500px]` ScrollArea/Textarea — clunky for long drafts; no responsive growth.
+- 🟡 **[Feature]** No streaming feedback while generating — just a spinner labelled "Generating...". For 30-60s LLM calls, a shimmer/typing affordance dramatically improves perceived performance.
+- 🟡 **[Feature]** History lives only in the sidebar Collapsible, capped at 10. No way to search, rename, or pin generations. No way to compare versions before/after a Refine.
+- 🟡 **[Feature]** "Refine with AI" appears on text selection but the dialog is modal-only — no inline diff in-place. (Memory note: refinement diff view exists in AI Studio — worth checking it's actually wired here.)
+- 🟢 **[Feature]** No way to seed a generation from an existing course (chapter titles, descriptions). This is the most natural "instructor-first" hook into the AI Studio and it's missing.
+- 🟢 **[Feature]** No prompt templates / quick starts ("Turn this lecture into a newsletter", "Write a launch blog for course X"). New users face an empty topic field.
 
-Adopt the warm/editorial direction from the public site inside the panel:
-- Warm off-white surface (`--background`), card surfaces in soft cream, coral primary reserved for CTAs and the active sidebar pill.
-- Generous spacing, single-weight section headers in the display font, lighter body.
-- Soft shadows + 1px hairline borders, no heavy chrome.
-- All values via design tokens — no hardcoded colors.
+### 8. Coming-soon feature pages (LinkedIn, Twitter, Newsletter, Academic tools)
 
-We'll generate three rendered design directions for the dashboard hero+pulse area before implementing, so you pick the exact composition.
+- 🟢 **[Visual]** Each renders via `ComingSoonFeature` — fine as a holding pattern. Not reviewed in depth since the broader hub redesign will affect them.
 
-## Phase 3 — Student & Admin (follow-ups, separate turns)
+### 9. Pricing & subscription UX (cross-cutting)
 
-- **Mi Aprendizaje** moves into `PanelLayout` with a slimmer sidebar (Resumen, Mis cursos, Certificados *(coming soon)*, Ajustes). Dashboard body keeps current data but adopts the new editorial tile/card language and gets a "Continuar donde dejaste" hero card.
-- **Panel de Admin** moves into `PanelLayout` with sections: *Personas* (usuarios, roles, invitaciones), *Contenido* (cursos, reportes), *Plataforma* (AI tutor settings, flags). Existing `AITutorSettingsCard` + `UserManagementCard` become the first two pages instead of stacking on a single screen.
+- 🟡 **[Copy]** Currency hard-coded to `$` USD. Per project audience (LatAm + global academics), worth noting whether ARS/MXN/local pricing is part of the roadmap.
+- 🟡 **[Copy]** "Free" tier copy ("10 generations/day", "Basic style settings") undersells what's actually included (Blog generation + full Style Profile + Knowledge Base up to budget).
+- 🟢 **[Feature]** Instructor perk ("50 generaciones diarias") is buried in a footnote under the pricing grid — should be a visible badge on the Free tier card for logged-in instructors.
 
-## Out of scope for this plan
+---
 
-- Pricing/billing UI inside panels.
-- New backend tables or RLS changes — IA work uses existing data only.
-- AI Studio internal redesign (separate effort).
-- The marketing-side cleanup of orphan pages (`PlatformPage`, `InstitutionsPage`).
+## Suggested next moves (no implementation yet)
 
-## Suggested order of implementation
+Roughly in priority order:
 
-1. Build `PanelLayout` + `PanelSidebar` + `PanelTopbar` primitives (no behavior change yet — Instructor still works).
-2. Migrate `/instructor` routes to the new shell, regroup sidebar into three sections, add the two new sub-routes as Coming Soon stubs.
-3. Generate 3 design directions for the new Instructor dashboard, you pick one, we implement.
-4. (Next turn) Migrate Student dashboard into the shell.
-5. (Next turn) Split Admin panel into sections inside the shell.
+1. **Unify AI Studio onto the new `PanelLayout` shell** with a dedicated `aiStudioNav` config — gets breadcrumbs, consistent sidebar, consistent collapse state, and removes the parallel mobile header. *(Visual + Feature)*
+2. **Rewrite all AI Studio copy in Spanish-first** with full `en.json` parity, matching the "Servicios / Instructor" tone already set elsewhere. *(Copy, fast win)*
+3. **Redesign the Landing** with an editorial welcome strip ("Tu voz, multiplicada"), an instructor-anchored value prop, and a first-time flow that routes through Knowledge → Style → Tool. *(Visual + Copy)*
+4. **Redesign the Blog Generator workspace**: streaming feedback, full-height composer, prompt quick-starts seeded from the instructor's own courses, and a richer history panel. *(Feature + Visual, biggest user impact)*
+5. **Polish Knowledge Base & Settings** with welcome strips, semantic-token badges, optional file upload audit. *(Visual + Feature)*
+6. **Marketing/Academic hubs** — visual differentiation between available vs coming-soon, plus "notify me" capture on disabled tiles. *(Visual + Feature)*
+
+I'd suggest tackling **#1 + #2 together** as one phase (foundation + copy), then **#3 (Landing)** as a design-direction round, then **#4 (Blog tool)** as its own substantial phase. Want me to plan phase 1 in detail, or would you rather pick a different starting thread?
