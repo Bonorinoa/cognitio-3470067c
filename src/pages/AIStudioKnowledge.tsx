@@ -190,29 +190,31 @@ export default function AIStudioKnowledge() {
           {documents.map((doc) => {
             const Icon = DOC_TYPE_ICONS[doc.document_type] || FileText;
             return (
-              <Card 
-                key={doc.id} 
-                className={`transition-opacity ${!doc.is_active ? "opacity-60" : ""}`}
+              <Card
+                key={doc.id}
+                className={`rounded-sm border shadow-none transition-all hover:border-primary/40 ${!doc.is_active ? "opacity-60" : ""}`}
               >
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex items-center gap-2 min-w-0">
-                      <Icon className="h-5 w-5 text-muted-foreground shrink-0" />
-                      <CardTitle className="text-base truncate">{doc.title}</CardTitle>
+                      <Icon className="h-4 w-4 text-primary shrink-0" strokeWidth={1.5} />
+                      <CardTitle className="text-base font-light truncate">{doc.title}</CardTitle>
                     </div>
                     {!doc.is_active && (
-                      <Badge variant="secondary" className="shrink-0">
+                      <Badge variant="outline" className="shrink-0 rounded-sm text-[10px] uppercase tracking-wider font-normal">
                         {t("knowledgeBase.inactive")}
                       </Badge>
                     )}
                   </div>
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <Badge variant="outline" className="text-xs">
+                  <div className="flex items-center gap-2 flex-wrap pt-1">
+                    <span className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground font-semibold">
                       {t(`knowledgeBase.docTypes.${doc.document_type}`)}
-                    </Badge>
-                    <Badge className={`text-xs ${CONTEXT_ROLE_COLORS[doc.context_role]}`}>
+                    </span>
+                    <span className="text-muted-foreground/40">·</span>
+                    <span className={`text-[10px] uppercase tracking-[0.15em] font-semibold inline-flex items-center gap-1.5 ${doc.context_role === "style_reference" ? "text-primary" : "text-foreground/60"}`}>
+                      {doc.context_role === "style_reference" && <span className="w-1 h-1 rounded-full bg-primary" />}
                       {t(`knowledgeBase.contextRoles.${doc.context_role}`)}
-                    </Badge>
+                    </span>
                   </div>
                 </CardHeader>
                 <CardContent>
