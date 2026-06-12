@@ -7,23 +7,53 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Heart } from "lucide-react";
 
 import gusLooking from "@/assets/founders/gus-looking.jpg";
+import gusReading from "@/assets/founders/gus-reading.jpg";
+import gusHorse from "@/assets/founders/gus-horse.jpg";
+import fatherAndSon from "@/assets/founders/father-and-son.jpg";
 import bonoConference from "@/assets/founders/bono-conference.jpg";
+import bonoClassroom from "@/assets/founders/bono-classroom.jpg";
+import bonoPeople from "@/assets/founders/bono-people.jpg";
 import fatherAndSon3 from "@/assets/founders/father-and-son-3.jpg";
 
 const founderCards = [
   {
     name: "Gustavo Gonzalez Bonorino",
-    bio: "Ph.D. en Ciencias de la Tierra (Canadá). Cinco décadas enseñando geología, evaluación de riesgos naturales y análisis geoespacial. Después de toda una vida frente al aula, sigue convencido de que la mejor herramienta pedagógica es la que libera tiempo para el diálogo con el estudiante.",
+    bio: "Mi formación profesional es en las Ciencias de la Tierra y Ambientales (M.Sc. y Ph.D., Canadá). De este amplio campo me enfoqué en la evaluación y mitigación de los riesgos derivados de fenómenos naturales (inundaciones, terremotos, deslizamientos).",
     image: gusLooking,
   },
   {
+    name: "Gustavo Gonzalez Bonorino",
+    bio: "Debido al impacto significativo de estos eventos en personas y bienes materiales, es esencial evaluar su potencial de daño y probabilidad de ocurrencia de manera cuantitativa y rigurosa para que los resultados sean útiles en la formulación de políticas públicas confiables. Para cumplir con estos requisitos, he incorporado técnicas de análisis geoespacial, modelado físico/probabilístico y simulación computacional a mi experiencia profesional.",
+    image: gusReading,
+  },
+  {
+    name: "Gustavo Gonzalez Bonorino",
+    bio: "Como deporte practiqué rugby, con algunos triunfos de campeonatos en Argentina y Chile. Actualmente, la lectura es mi transporte favorito para explorar escenarios de ciencia ficción y aventuras.",
+    image: gusHorse,
+  },
+  {
+    name: "Gustavo Gonzalez Bonorino",
+    bio: "Cognitio es el lugar donde confluyen mi experiencia, conocimientos y pasión, ofrecidos a ustedes a través de los Cursos. Cada Curso los desafiará a incorporar nuevas habilidades para extender y fortalecer sus aspiraciones en un mercado laboral cada día más competitivo.",
+    image: fatherAndSon,
+  },
+  {
     name: "Augusto Gonzalez Bonorino",
-    bio: "M.Sc. en Economía Cuantitativa (Claremont, CA). Lidera el laboratorio EconLLM en la intersección de procesamiento de lenguaje natural y economía del comportamiento. Profesor adjunto en Pomona College. Cree que la IA, bien diseñada, puede devolverle al instructor lo que la administración le quita: tiempo para enseñar.",
+    bio: "Mi educación superior se concentra en Econometría y Ciencias de Datos Aplicados. Logré el M.Sc en Economía Cuantitativa de Claremont Graduate University, California, donde lidero el laboratorio de investigación EconLLM, enfocado en el diseño y desarrollo de sistemas inteligentes para la economía experimental.",
     image: bonoConference,
   },
   {
-    name: "Padre e Hijo",
-    bio: "Cognitio nació en una sobremesa larga. Dos generaciones, dos disciplinas — geociencias e IA — la misma frustración con plataformas que tratan a los instructores como proveedores de contenido en vez de como autores. Construimos lo que nos hubiese gustado tener: una plataforma curada, ligera, con IA pensada para enseñar, no para automatizar el aula.",
+    name: "Augusto Gonzalez Bonorino",
+    bio: "Desde 2020, mi investigación y experiencia laboral se enfocan en la intersección entre Procesamiento de Lenguaje Natural (NLP) y economía del comportamiento, aplicando enfoques interdisciplinarios a problemas microeconómicos mediante la computación. Actualmente, soy profesor adjunto de estadística y macroeconomía en Pomona College, CA.",
+    image: bonoClassroom,
+  },
+  {
+    name: "Augusto Gonzalez Bonorino",
+    bio: "Argentina, con sus marcadas asimetrías sociales y desafíos desde la Economía, me impulsa a concentrar esfuerzos para descifrar estas complejidades a través de estrategias computacionales, simulaciones, y la lente de la teoría de la información.",
+    image: bonoPeople,
+  },
+  {
+    name: "Augusto Gonzalez Bonorino",
+    bio: "Cognitio es el lugar donde mis experiencias convergen con las de mi padre, donde combinamos métodos clásicos y modernos. El poder enseñar junto a mi padre es un privilegio y juntos les ofrecemos educación relevante, de alta calidad, y a un costo razonable, en idioma español para impulsarlos hacia un mercado laboral global y logren un incremento salarial significativo.",
     image: fatherAndSon3,
   },
 ];
