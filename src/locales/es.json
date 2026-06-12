@@ -1,4 +1,14 @@
 {
+  "courseCategories": {
+    "all": "Todos",
+    "featured": "Destacados",
+    "development": "Desarrollo",
+    "aiMl": "IA & ML",
+    "design": "Diseño",
+    "dataScience": "Ciencia de Datos",
+    "mobile": "Móvil",
+    "business": "Negocios"
+  },
   "nav": {
     "home": "Inicio",
     "courses": "Cursos",

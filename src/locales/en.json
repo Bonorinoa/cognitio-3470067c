@@ -1,4 +1,14 @@
 {
+  "courseCategories": {
+    "all": "All",
+    "featured": "Featured",
+    "development": "Development",
+    "aiMl": "AI & ML",
+    "design": "Design",
+    "dataScience": "Data Science",
+    "mobile": "Mobile",
+    "business": "Business"
+  },
   "nav": {
     "home": "Home",
     "courses": "Courses",
