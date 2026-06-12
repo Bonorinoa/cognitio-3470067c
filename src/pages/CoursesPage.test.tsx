@@ -50,19 +50,14 @@ describe('CoursesPage', () => {
 
   it('displays page heading', async () => {
     render(<CoursesPage />);
-    
     await waitFor(() => {
-      // The page has heading text, use getAllByText and check length
-      const headings = screen.queryAllByText(/Browse Courses/i);
-      expect(headings.length).toBeGreaterThan(0);
+      expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(/explorar cursos/i);
     });
   });
 
   it('shows search input', () => {
     render(<CoursesPage />);
-    
-    const searchInput = screen.getByPlaceholderText(/search/i);
-    expect(searchInput).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/buscar/i)).toBeInTheDocument();
   });
 
   it('displays category filters', async () => {
