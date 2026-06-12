@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@/test/utils';
-import { InstructorServicesManager } from './InstructorServicesManager';
+import InstructorServicesManager from './InstructorServicesManager';
 import * as AuthContext from '@/contexts/AuthContext';
 import { User, Session } from '@supabase/supabase-js';
 
