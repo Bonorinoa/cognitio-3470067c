@@ -2,46 +2,71 @@ import '@testing-library/jest-dom';
 import { cleanup } from '@testing-library/react';
 import { afterEach, beforeAll, afterAll, vi } from 'vitest';
 import { server } from './mocks/server';
+import en from '../locales/en.json';
 
-// Mock i18next to always return the key as-is (simulating English) for tests
+// --- i18n mock --------------------------------------------------------------
+// Tests assert against English copy. Resolve any dotted key against en.json so
+// the entire locale is available without keeping a hand-curated dictionary in
+// sync. Falls back to the supplied defaultValue and then to the key itself
+// (matches i18next's default behavior).
+function resolveKey(key: string): string | undefined {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let node: any = en;
+  for (const part of key.split('.')) {
+    if (node && typeof node === 'object' && part in node) node = node[part];
+    else return undefined;
+  }
+  return typeof node === 'string' ? node : undefined;
+}
+
+function interpolate(
+  template: string,
+  vars?: Record<string, unknown>,
+): string {
+  if (!vars) return template;
+  return template.replace(/\{\{\s*(\w+)\s*\}\}/g, (_, name) =>
+    name in vars ? String(vars[name]) : `{{${name}}}`,
+  );
+}
+
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
-    t: (key: string) => {
-      // Return English strings for known keys
-      const translations: Record<string, string> = {
-        'instructorDashboard.title': 'Instructor Dashboard',
-        'instructorDashboard.subtitle': 'Manage your courses and track performance',
-        'instructorDashboard.createCourse': 'Create Course',
-        'instructorDashboard.totalStudents': 'Total Students',
-        'instructorDashboard.totalRevenue': 'Total Revenue',
-        'instructorDashboard.publishedCourses': 'Published Courses',
-        'instructorDashboard.draftCourses': 'Draft Courses',
-        'instructorDashboard.yourCourses': 'Your Courses',
-        'instructorDashboard.viewAll': 'View All',
-        'instructorDashboard.recentEnrollments': 'Recent Enrollments',
-        'instructorDashboard.noCourses': 'No courses yet',
-        'instructorDashboard.noEnrollments': 'No enrollments yet',
-        'instructorDashboard.published': 'Published',
-        'instructorDashboard.draft': 'Draft',
-        'instructorDashboard.course': 'Course',
-        'instructorDashboard.status': 'Status',
-        'instructorDashboard.students': 'Students',
-        'instructorDashboard.revenue': 'Revenue',
-        'instructorDashboard.view': 'View',
-        'instructorDashboard.edit': 'Edit',
-        'instructorDashboard.createFirst': 'Create your first course',
-        'courseCard.enrollNow': 'Enroll Now',
-        'courseCard.continue': 'Continue',
-        'courseCard.complete': 'complete',
-        'courseCard.chapters': 'chapters',
-      };
-      return translations[key] || key;
+    t: (key: string, optsOrDefault?: unknown, maybeOpts?: unknown) => {
+      const defaultValue =
+        typeof optsOrDefault === 'string' ? optsOrDefault : undefined;
+      const opts =
+        (typeof optsOrDefault === 'object' && optsOrDefault) ||
+        (typeof maybeOpts === 'object' && maybeOpts) ||
+        undefined;
+      const resolved = resolveKey(key) ?? defaultValue ?? key;
+      return interpolate(resolved, opts as Record<string, unknown> | undefined);
     },
     i18n: { language: 'en', changeLanguage: vi.fn() },
   }),
-  Trans: ({ children }: { children: React.ReactNode }) => children,
+  Trans: ({
+    children,
+    i18nKey,
+  }: {
+    children?: React.ReactNode;
+    i18nKey?: string;
+  }) => children ?? (i18nKey ? resolveKey(i18nKey) ?? i18nKey : null),
   initReactI18next: { type: '3rdParty', init: vi.fn() },
 }));
+
+// --- @mux/mux-player(-react) mock ------------------------------------------
+// The real web-component crashes inside jsdom's disconnectedCallback. Replace
+// with inert stubs so tests can assert on the surrounding UI.
+vi.mock('@mux/mux-player-react', async () => {
+  const React = await import('react');
+  return {
+    default: (props: Record<string, unknown>) =>
+      React.createElement('div', {
+        'data-testid': 'mux-player',
+        'data-playback-id': props.playbackId,
+      }),
+  };
+});
+vi.mock('@mux/mux-player', () => ({ default: class {} }));
 
 // Establish API mocking before all tests
 beforeAll(() => server.listen({ onUnhandledRequest: 'bypass' }));
