@@ -43,7 +43,8 @@ describe('AuthPage', () => {
 
   it('switches to signup tab and shows full name field', async () => {
     render(<AuthPage />);
-    fireEvent.click(screen.getByText(/sign up/i));
+    const user = userEvent.setup();
+    await user.click(screen.getByRole('tab', { name: /sign up/i }));
     await waitFor(() => expect(screen.getByLabelText(/full name/i)).toBeInTheDocument());
   });
 
