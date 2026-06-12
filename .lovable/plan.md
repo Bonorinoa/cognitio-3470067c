@@ -1,6 +1,13 @@
-# Phase C — Cont'd: Decomposition, Lockdown, Architecture Cleanup
+# Phase C — Status
 
-You asked for three big things at once. Bundling them into one turn is how regressions slip in. I propose three sequential batches, each independently reviewable and revertable. I will do them in order and pause after each so you can sanity-check the preview.
+- ✅ Batch 1: categories, AnimatedTabsTrigger, founder IDs in DB
+- ✅ Batch 2: backend lockdown (RLS tightened, SECURITY DEFINER scoped, `resources` bucket private + access-checked)
+- ⏭️ Batch 3: decompose mega-files (AIStudioBlog → EditCourse/CreateCourse → AdminPanel/ChapterResourceManager)
+
+---
+
+## Original plan (kept for reference)
+
 
 ---
 
