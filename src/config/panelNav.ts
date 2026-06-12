@@ -13,6 +13,12 @@ import {
   Shield,
   Building2,
   Cpu,
+  Database,
+  FileEdit,
+  Linkedin,
+  Twitter,
+  Mail,
+  Quote,
   type LucideIcon,
 } from "lucide-react";
 
