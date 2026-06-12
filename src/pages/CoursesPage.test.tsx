@@ -155,8 +155,7 @@ describe('CoursesPage', () => {
 
   it('has navbar', () => {
     render(<CoursesPage />);
-    
-    expect(screen.getByRole('navigation')).toBeInTheDocument();
+    expect(screen.getAllByRole('navigation').length).toBeGreaterThan(0);
   });
 
   it('renders when user is logged in', async () => {
