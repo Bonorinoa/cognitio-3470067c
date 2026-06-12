@@ -3,6 +3,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAISubscription } from "@/hooks/useAISubscription";
 import StyleProfileForm from "@/components/ai-studio/StyleProfileForm";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Lock, Loader2, AlertCircle, CheckCircle } from "lucide-react";
