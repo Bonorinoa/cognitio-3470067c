@@ -1,4 +1,3 @@
-import { lazy, Suspense } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
@@ -15,17 +14,6 @@ import {
   FileText,
   Heart,
 } from "lucide-react";
-
-// Lazy load heavy scroll-animated component
-const FoundersStorySection = lazy(() => import("@/components/FoundersStorySection"));
-
-const FoundersStorySkeleton = () => (
-  <div className="space-y-6">
-    {[1, 2, 3].map((i) => (
-      <div key={i} className="bg-primary/10 rounded-2xl h-48 animate-pulse" />
-    ))}
-  </div>
-);
 
 // Founder images (kept, condensed cards below)
 import gusLooking from "@/assets/founders/gus-looking.jpg";
@@ -74,12 +62,12 @@ const Index = () => {
             <Sparkles className="h-3.5 w-3.5" />
             Ed-tech con IA, hecha para instructores
           </div>
-          <h1 className="mb-6 text-4xl font-bold leading-tight text-foreground sm:text-5xl md:text-6xl">
-            Tecnología educativa que <span className="text-primary">aumenta</span> al instructor — no lo reemplaza.
+          <h1 className="mb-6 text-4xl font-bold leading-[1.1] tracking-tight text-foreground sm:text-5xl md:text-6xl">
+            IA que <span className="text-primary">aumenta</span> al instructor.
           </h1>
           <p className="mx-auto mb-8 max-w-2xl text-lg text-muted-foreground sm:text-xl">
             Una plataforma ligera que complementa Canvas y Moodle, con IA pensada para enseñar mejor.
-            Gratis para instructores y sus estudiantes. Sostenida por instituciones que invierten en mejor educación.
+            Gratis para instructores y estudiantes — sostenida por las instituciones que apuestan por mejor educación.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link to="/plataforma">
@@ -231,7 +219,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Founders — demoted */}
+      {/* Founders — demoted to clean grid */}
       <section className="py-20 bg-secondary/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12 max-w-3xl mx-auto">
@@ -240,9 +228,27 @@ const Index = () => {
               Padre e hijo. Geociencias y econometría / IA. Una década enseñando — y rediseñando cómo se enseña.
             </p>
           </div>
-          <Suspense fallback={<FoundersStorySkeleton />}>
-            <FoundersStorySection cards={founderCards} />
-          </Suspense>
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            {founderCards.map((c) => (
+              <article
+                key={c.name}
+                className="bg-card border border-border rounded-2xl overflow-hidden flex flex-col"
+              >
+                <div className="aspect-[4/3] overflow-hidden bg-muted">
+                  <img
+                    src={c.image}
+                    alt={`Foto de ${c.name}`}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                </div>
+                <div className="p-6 flex flex-col flex-1">
+                  <h3 className="text-base font-semibold text-foreground mb-2">{c.name}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{c.bio}</p>
+                </div>
+              </article>
+            ))}
+          </div>
         </div>
       </section>
 

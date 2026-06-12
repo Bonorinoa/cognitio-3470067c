@@ -24,7 +24,7 @@
   },
   "services": {
     "title": "Consultorías",
-    "subtitle": "Conecta directamente con nuestros instructores para consultoría personalizada, coaching y mentoría",
+    "subtitle": "Asesorías 1:1 con instructores de Cognitio. Diagnóstico, mentoría y proyectos puntuales — directamente con quien sabe del tema.",
     "noServices": "Aún no hay servicios disponibles.",
     "unknownInstructor": "Instructor",
     "contactCTA": "Consultar",
@@ -128,8 +128,8 @@
     }
   },
   "instructors": {
-    "title": "Nuestros Instructores",
-    "subtitle": "Expertos dedicados a tu crecimiento profesional",
+    "title": "Instructores",
+    "subtitle": "Una red curada de académicos, investigadores y profesionales que enseñan lo que practican.",
     "viewProfile": "Ver Perfil",
     "founderBadge": "Fundador",
     "noInstructors": "Aún no hay instructores disponibles."

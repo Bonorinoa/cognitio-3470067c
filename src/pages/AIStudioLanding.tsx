@@ -49,15 +49,15 @@ export default function AIStudioLanding() {
             {t("aiStudio.landingTitle", "AI Studio")}
           </h1>
         </div>
-        
+
         <h2 className="text-2xl md:text-3xl font-semibold text-foreground">
-          {t("aiStudio.landingSubtitle", "Your AI-Powered Content Creation Companion")}
+          {t("aiStudio.landingSubtitle", "Add-on de publicación con IA — con tu voz.")}
         </h2>
-        
+
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
           {t(
             "aiStudio.landingDescription",
-            "Create professional content in minutes, not hours. Powered by your knowledge base and personal style."
+            "Convertí tu base de conocimiento en blogs, newsletters y contenido académico. Generación anclada en tu estilo y tu material — no en plantillas genéricas."
           )}
         </p>
 
