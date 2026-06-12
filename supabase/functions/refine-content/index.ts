@@ -80,6 +80,14 @@ async function getUserTierAndLimit(supabase: any, userId: string): Promise<{ tie
 }
 
 serve(async (req) => {
+  const origin = req.headers.get("origin");
+  const corsHeaders = buildCors(origin);
+  if (req.method !== "OPTIONS" && origin && !isOriginAllowed(origin)) {
+    return new Response(JSON.stringify({ error: "Origin not allowed" }), {
+      status: 403,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
