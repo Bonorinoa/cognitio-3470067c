@@ -1,10 +1,19 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
+const allowedOriginPatterns = [
+  /^https:\/\/[a-z0-9-]+\.lovable\.app$/,
+  /^https:\/\/[a-z0-9-]+\.lovableproject\.com$/,
+  /^https:\/\/cognitio\.lovable\.app$/,
+  /^http:\/\/localhost:(5173|8080|3000)$/,
+];
+const isOriginAllowed = (origin: string | null) =>
+  !!origin && allowedOriginPatterns.some((p) => p.test(origin));
+const buildCors = (origin: string | null) => ({
+  "Access-Control-Allow-Origin": isOriginAllowed(origin) ? origin! : "",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
+  "Access-Control-Allow-Credentials": "true",
+});
 
 const RESET_HOUR_UTC = 9; // 6am Argentina = 09:00 UTC
 
@@ -71,6 +80,14 @@ async function getUserTierAndLimit(supabase: any, userId: string): Promise<{ tie
 }
 
 serve(async (req) => {
+  const origin = req.headers.get("origin");
+  const corsHeaders = buildCors(origin);
+  if (req.method !== "OPTIONS" && origin && !isOriginAllowed(origin)) {
+    return new Response(JSON.stringify({ error: "Origin not allowed" }), {
+      status: 403,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
