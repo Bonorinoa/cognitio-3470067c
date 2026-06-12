@@ -25,37 +25,37 @@ const coreFeatures: Feature[] = [
   {
     icon: BookOpen,
     title: "Cursos con capítulos y recursos",
-    desc: "Estructura tu curso en capítulos, sube videos, PDFs y recursos descargables. Visibilidad pública, privada o por enlace.",
+    desc: "Estructurá tu curso en capítulos. Subí videos, PDFs y materiales. Elegí visibilidad pública, privada o por enlace.",
     available: true,
   },
   {
     icon: Video,
     title: "Reproductor de video con Mux",
-    desc: "Streaming adaptativo, calidad automática, sin anuncios, sin distracciones.",
+    desc: "Streaming adaptativo, sin anuncios, sin distracciones. Calidad automática según conexión.",
     available: true,
   },
   {
     icon: FileText,
     title: "Transcripciones automáticas",
-    desc: "Cada video se transcribe con marcas de tiempo, listo para búsqueda y referencias.",
+    desc: "Cada video se transcribe con marcas de tiempo, listo para búsqueda, citas y referencias.",
     available: true,
   },
   {
     icon: MessageCircleQuestion,
     title: "Tutor IA por capítulo",
-    desc: "Tus estudiantes hacen preguntas y reciben respuestas ancladas al contenido del capítulo, con citas al minuto del video.",
+    desc: "Los estudiantes preguntan y reciben respuestas ancladas al contenido del capítulo, citando el minuto exacto del video.",
     available: true,
   },
   {
     icon: Users,
-    title: "Discusiones por curso y capítulo",
-    desc: "Foros enlazados al momento exacto del video, con menciones y votos.",
+    title: "Discusiones con contexto",
+    desc: "Foros por curso y por capítulo, enlazados al momento exacto del video. Con menciones y votos.",
     available: true,
   },
   {
     icon: Sparkles,
     title: "Guías de estudio generadas",
-    desc: "Resúmenes, flashcards y preguntas de práctica a partir del capítulo. (Próximamente)",
+    desc: "Resúmenes, flashcards y preguntas de práctica a partir de cada capítulo.",
     available: false,
   },
 ];
@@ -65,76 +65,107 @@ const PlatformPage = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
 
-      <main className="pt-24 pb-20">
-        <div className="container mx-auto px-4">
-          {/* Hero */}
-          <header className="max-w-3xl mx-auto text-center mb-16">
-            <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/5 px-4 py-1.5 mb-6 text-sm text-primary">
-              Plataforma core · Gratis para instructores invitados
-            </div>
-            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-              Un LMS ligero, con IA bien pensada.
-            </h1>
-            <p className="text-lg text-muted-foreground">
-              Lo opuesto a un LMS institucional pesado. Lo opuesto a un marketplace masivo.
-              Una plataforma enfocada en enseñar, complementaria a Canvas o Moodle.
-            </p>
-          </header>
+      <main className="pt-16">
+        {/* Hero with warm gradient */}
+        <section className="relative overflow-hidden bg-gradient-to-b from-primary/10 via-primary/5 to-transparent pt-20 pb-16">
+          <div className="absolute inset-0 -z-10">
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 h-[500px] w-[900px] rounded-full bg-primary/20 blur-3xl opacity-40" />
+          </div>
+          <div className="container mx-auto px-4">
+            <header className="max-w-3xl mx-auto text-center">
+              <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-card/80 backdrop-blur px-4 py-1.5 mb-6 text-sm text-primary font-medium">
+                <Sparkles className="h-3.5 w-3.5" />
+                Plataforma core · Gratis para instructores invitados
+              </div>
+              <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-6 leading-[1.1]">
+                Un LMS ligero,
+                <br />
+                <span className="text-primary">con IA bien pensada.</span>
+              </h1>
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                Lo opuesto a un LMS institucional pesado. Lo opuesto a un marketplace masivo.
+                Una plataforma enfocada en enseñar — complementaria a Canvas o Moodle.
+              </p>
+            </header>
+          </div>
+        </section>
 
+        <div className="container mx-auto px-4 pb-20">
           {/* Free core block */}
-          <section className="max-w-5xl mx-auto mb-20">
-            <div className="grid md:grid-cols-2 gap-8 items-start">
-              <div>
-                <h2 className="text-2xl font-bold text-foreground mb-4">El núcleo, gratis.</h2>
+          <section className="max-w-6xl mx-auto mb-24 -mt-4">
+            <div className="grid lg:grid-cols-[1fr_1.2fr] gap-12 items-start">
+              {/* Left: pitch */}
+              <div className="lg:sticky lg:top-24">
+                <div className="inline-flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-primary mb-3">
+                  <span className="h-1 w-6 bg-primary rounded-full" />
+                  El núcleo
+                </div>
+                <h2 className="text-3xl font-bold text-foreground mb-4">Gratis. Y de verdad.</h2>
                 <p className="text-muted-foreground mb-4 leading-relaxed">
-                  Si sos instructor invitado a Cognitio, tenés acceso completo al núcleo de la plataforma
-                  — para vos y para todos tus estudiantes. Sin límite de cursos, sin sorpresas en la facturación.
+                  Si sos instructor invitado a Cognitio, tenés acceso completo al núcleo de la
+                  plataforma — para vos y para todos tus estudiantes. Sin límite de cursos, sin
+                  sorpresas en la facturación.
                 </p>
                 <p className="text-muted-foreground mb-6 leading-relaxed">
-                  El acceso es por invitación. Mantenemos la red curada para que la calidad del catálogo
-                  no dependa de algoritmos de descubrimiento.
+                  El acceso es por invitación. Mantenemos la red curada para que la calidad del
+                  catálogo no dependa de algoritmos de descubrimiento.
                 </p>
-                <ul className="space-y-2 mb-6">
+                <ul className="space-y-3 mb-8">
                   {[
                     "Cursos públicos (con cobros vía Stripe) y privados (cohorte cerrada)",
-                    "Perfil público de instructor + listado en el catálogo",
+                    "Perfil público de instructor en el catálogo",
                     "Sin comisiones sobre cursos privados",
                     "Sin publicidad, sin venta de datos",
                   ].map((item) => (
-                    <li key={item} className="flex items-start gap-2 text-sm text-muted-foreground">
-                      <Check className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+                    <li key={item} className="flex items-start gap-3 text-sm text-foreground/80">
+                      <span className="mt-0.5 h-5 w-5 rounded-full bg-primary/15 flex items-center justify-center shrink-0">
+                        <Check className="h-3 w-3 text-primary" strokeWidth={3} />
+                      </span>
                       {item}
                     </li>
                   ))}
                 </ul>
                 <Link to="/courses">
-                  <Button variant="outline">
+                  <Button variant="outline" className="group">
                     Ver cursos actuales
-                    <ArrowRight className="ml-2 h-4 w-4" />
+                    <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
                   </Button>
                 </Link>
               </div>
 
-              <div className="grid sm:grid-cols-2 gap-4">
+              {/* Right: clean feature list */}
+              <div className="space-y-3">
                 {coreFeatures.map((f) => (
                   <div
                     key={f.title}
-                    className={`rounded-2xl p-5 border ${
+                    className={`group flex gap-4 rounded-2xl p-5 border transition-all ${
                       f.available
-                        ? "border-border bg-card"
-                        : "border-dashed border-border bg-muted/40"
+                        ? "border-border bg-card hover:border-primary/40 hover:shadow-md"
+                        : "border-dashed border-border/60 bg-muted/30"
                     }`}
                   >
-                    <f.icon className="h-6 w-6 text-primary mb-3" />
-                    <h3 className="text-sm font-semibold text-foreground mb-1 flex items-center gap-2">
-                      {f.title}
-                      {!f.available && (
-                        <span className="text-[10px] uppercase tracking-wide text-muted-foreground bg-muted px-2 py-0.5 rounded">
-                          Pronto
-                        </span>
-                      )}
-                    </h3>
-                    <p className="text-xs text-muted-foreground leading-relaxed">{f.desc}</p>
+                    <div
+                      className={`h-11 w-11 shrink-0 rounded-xl flex items-center justify-center ${
+                        f.available ? "bg-primary/10" : "bg-muted"
+                      }`}
+                    >
+                      <f.icon
+                        className={`h-5 w-5 ${
+                          f.available ? "text-primary" : "text-muted-foreground"
+                        }`}
+                      />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-base font-semibold text-foreground mb-1 flex items-center gap-2 flex-wrap">
+                        {f.title}
+                        {!f.available && (
+                          <span className="text-[10px] uppercase tracking-wider text-muted-foreground bg-muted px-2 py-0.5 rounded-full font-medium">
+                            Pronto
+                          </span>
+                        )}
+                      </h3>
+                      <p className="text-sm text-muted-foreground leading-relaxed">{f.desc}</p>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -142,58 +173,74 @@ const PlatformPage = () => {
           </section>
 
           {/* Add-ons */}
-          <section className="max-w-5xl mx-auto mb-20">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold text-foreground mb-3">Add-ons opcionales</h2>
+          <section className="max-w-5xl mx-auto mb-24">
+            <div className="text-center mb-10">
+              <div className="inline-flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-primary mb-3">
+                <span className="h-1 w-6 bg-primary rounded-full" />
+                Add-ons opcionales
+              </div>
+              <h2 className="text-3xl font-bold text-foreground mb-3">Cuando necesitás más.</h2>
               <p className="text-muted-foreground max-w-2xl mx-auto">
                 ¿Querés publicar más allá de tus cursos? ¿Ofrecer consultoría? Los add-ons amplían
-                la plataforma cuando los necesitás.
+                la plataforma cuando los necesitás — y solo entonces.
               </p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-6">
               <Link
                 to="/ai-studio"
-                className="group bg-card rounded-2xl p-6 border border-border hover:border-primary/40 hover:shadow-lg transition-all"
+                className="group bg-card rounded-2xl p-6 border border-border hover:border-primary/40 hover:shadow-lg transition-all flex flex-col"
               >
-                <div className="flex items-center justify-between mb-3">
-                  <Sparkles className="h-7 w-7 text-primary" />
-                  <span className="text-xs font-medium text-primary">desde $19/mes</span>
+                <div className="flex items-center justify-between mb-4">
+                  <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                    <Sparkles className="h-5 w-5 text-primary" />
+                  </div>
+                  <span className="text-xs font-semibold text-primary bg-primary/10 px-2.5 py-1 rounded-full">
+                    desde $19/mes
+                  </span>
                 </div>
                 <h3 className="font-semibold text-foreground mb-2">AI Studio · Marketing</h3>
-                <p className="text-sm text-muted-foreground mb-4">
+                <p className="text-sm text-muted-foreground mb-4 flex-1">
                   Blog (disponible), LinkedIn, X, Newsletter (próximamente). Generación con la voz
-                  del instructor a partir de su base de conocimiento.
+                  del instructor.
                 </p>
                 <span className="text-sm text-primary font-medium inline-flex items-center gap-1 group-hover:gap-2 transition-all">
                   Ver detalle <ArrowRight className="h-3.5 w-3.5" />
                 </span>
               </Link>
 
-              <div className="bg-muted/40 rounded-2xl p-6 border border-dashed border-border">
-                <div className="flex items-center justify-between mb-3">
-                  <BookOpen className="h-7 w-7 text-muted-foreground" />
-                  <span className="text-xs font-medium text-muted-foreground">próximamente</span>
+              <div className="bg-muted/40 rounded-2xl p-6 border border-dashed border-border flex flex-col">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="h-10 w-10 rounded-xl bg-muted flex items-center justify-center">
+                    <BookOpen className="h-5 w-5 text-muted-foreground" />
+                  </div>
+                  <span className="text-xs font-medium text-muted-foreground bg-background px-2.5 py-1 rounded-full border border-border">
+                    próximamente
+                  </span>
                 </div>
                 <h3 className="font-semibold text-foreground mb-2">AI Studio · Académico</h3>
-                <p className="text-sm text-muted-foreground">
-                  Revisión de literatura, formateo de papers, edición. Diseñado para investigadores
-                  que enseñan.
+                <p className="text-sm text-muted-foreground flex-1">
+                  Revisión de literatura, formateo de papers, edición. Para investigadores que
+                  también enseñan.
                 </p>
               </div>
 
               <Link
                 to="/services"
-                className="group bg-card rounded-2xl p-6 border border-border hover:border-primary/40 hover:shadow-lg transition-all"
+                className="group bg-card rounded-2xl p-6 border border-border hover:border-primary/40 hover:shadow-lg transition-all flex flex-col"
               >
-                <div className="flex items-center justify-between mb-3">
-                  <Users className="h-7 w-7 text-primary" />
-                  <span className="text-xs font-medium text-primary">listado público</span>
+                <div className="flex items-center justify-between mb-4">
+                  <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                    <Users className="h-5 w-5 text-primary" />
+                  </div>
+                  <span className="text-xs font-semibold text-primary bg-primary/10 px-2.5 py-1 rounded-full">
+                    listado público
+                  </span>
                 </div>
-                <h3 className="font-semibold text-foreground mb-2">Consultorías marketplace</h3>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Publicá servicios de consultoría 1:1 en el catálogo de Cognitio. Reservado para
-                  instructores enrolados.
+                <h3 className="font-semibold text-foreground mb-2">Consultorías</h3>
+                <p className="text-sm text-muted-foreground mb-4 flex-1">
+                  Publicá servicios 1:1 en el catálogo de Cognitio. Reservado para instructores
+                  enrolados.
                 </p>
                 <span className="text-sm text-primary font-medium inline-flex items-center gap-1 group-hover:gap-2 transition-all">
                   Ver consultorías <ArrowRight className="h-3.5 w-3.5" />
@@ -204,21 +251,26 @@ const PlatformPage = () => {
 
           {/* Institutional bridge */}
           <section className="max-w-4xl mx-auto">
-            <div className="rounded-3xl border border-primary/30 bg-gradient-to-br from-primary/5 to-primary/10 p-10 text-center">
-              <Building2 className="h-10 w-10 text-primary mx-auto mb-4" />
-              <h2 className="text-2xl font-bold text-foreground mb-3">
-                ¿Necesitás algo más a la medida?
-              </h2>
-              <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-                Despliegues white-label, integraciones con Canvas/Moodle, flujos de IA personalizados
-                para tu programa o institución.
-              </p>
-              <Link to="/instituciones">
-                <Button size="lg">
-                  Hablemos de tu proyecto
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
+            <div className="relative overflow-hidden rounded-3xl border border-primary/30 bg-gradient-to-br from-primary/10 via-primary/5 to-background p-10 md:p-12 text-center">
+              <div className="absolute -top-20 -right-20 h-64 w-64 rounded-full bg-primary/20 blur-3xl opacity-50" />
+              <div className="relative">
+                <div className="inline-flex h-12 w-12 rounded-2xl bg-primary/15 items-center justify-center mb-5">
+                  <Building2 className="h-6 w-6 text-primary" />
+                </div>
+                <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-3">
+                  ¿Necesitás algo más a la medida?
+                </h2>
+                <p className="text-muted-foreground mb-7 max-w-2xl mx-auto leading-relaxed">
+                  Despliegues white-label, integraciones con Canvas y Moodle, flujos de IA
+                  personalizados para tu programa o institución.
+                </p>
+                <Link to="/instituciones">
+                  <Button size="lg" className="group">
+                    Hablemos de tu proyecto
+                    <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
+                  </Button>
+                </Link>
+              </div>
             </div>
           </section>
         </div>
