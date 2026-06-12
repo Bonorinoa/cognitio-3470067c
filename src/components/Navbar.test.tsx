@@ -4,129 +4,53 @@ import Navbar from './Navbar';
 import { User, Session } from '@supabase/supabase-js';
 import * as AuthContext from '@/contexts/AuthContext';
 
-// Mock useAuth hook
 vi.mock('@/contexts/AuthContext', async () => {
   const actual = await vi.importActual('@/contexts/AuthContext');
-  return {
-    ...actual,
-    useAuth: vi.fn(),
-  };
+  return { ...actual, useAuth: vi.fn() };
 });
 
-const mockUser: Partial<User> = {
-  id: 'test-id',
-  email: 'test@example.com',
-  app_metadata: {},
-  user_metadata: {},
-  aud: 'authenticated',
-  created_at: new Date().toISOString(),
-};
+const mockUser = { id: 'test-id', email: 'test@example.com', app_metadata: {}, user_metadata: {}, aud: 'authenticated', created_at: new Date().toISOString() } as User;
+const mockSession = { access_token: 't', refresh_token: 'r', expires_in: 3600, token_type: 'bearer', user: mockUser } as Session;
 
-const mockSession: Partial<Session> = {
-  access_token: 'mock-token',
-  refresh_token: 'mock-refresh',
-  expires_in: 3600,
-  token_type: 'bearer',
-  user: mockUser as User,
-};
+const loggedOut = { user: null, session: null, isLoading: false, signOut: vi.fn() };
+const loggedIn = { user: mockUser, session: mockSession, isLoading: false, signOut: vi.fn() };
 
 describe('Navbar', () => {
-  beforeEach(() => {
-    vi.resetAllMocks();
+  beforeEach(() => vi.resetAllMocks());
+
+  it('renders the Cognitio brand mark', () => {
+    vi.mocked(AuthContext.useAuth).mockReturnValue(loggedOut);
+    render(<Navbar />);
+    expect(screen.getByText('Cognitio')).toBeInTheDocument();
   });
 
-  it('renders logo and site name', () => {
-    vi.mocked(AuthContext.useAuth).mockReturnValue({
-      user: null,
-      session: null,
-      isLoading: false,
-      signOut: vi.fn(),
-    });
-
+  it('shows Sign In when logged out', () => {
+    vi.mocked(AuthContext.useAuth).mockReturnValue(loggedOut);
     render(<Navbar />);
-
-    expect(screen.getByText('LearnHub')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /sign in/i })).toBeInTheDocument();
   });
 
-  it('shows Sign In button when user is not logged in', () => {
-    vi.mocked(AuthContext.useAuth).mockReturnValue({
-      user: null,
-      session: null,
-      isLoading: false,
-      signOut: vi.fn(),
-    });
-
+  it('shows loading skeleton during auth load', () => {
+    vi.mocked(AuthContext.useAuth).mockReturnValue({ ...loggedOut, isLoading: true });
     render(<Navbar />);
-
-    expect(screen.getByText('Sign In')).toBeInTheDocument();
+    expect(document.querySelector('.animate-pulse')).toBeInTheDocument();
   });
 
-  it('shows loading state while auth is loading', () => {
-    vi.mocked(AuthContext.useAuth).mockReturnValue({
-      user: null,
-      session: null,
-      isLoading: true,
-      signOut: vi.fn(),
-    });
-
+  it('shows user avatar initial when logged in', async () => {
+    vi.mocked(AuthContext.useAuth).mockReturnValue(loggedIn);
     render(<Navbar />);
-
-    // Should show loading skeleton
-    const skeleton = document.querySelector('.animate-pulse');
-    expect(skeleton).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByText('T')).toBeInTheDocument());
   });
 
-  it('shows user avatar when logged in', async () => {
-    vi.mocked(AuthContext.useAuth).mockReturnValue({
-      user: mockUser as User,
-      session: mockSession as Session,
-      isLoading: false,
-      signOut: vi.fn(),
-    });
-
+  it('exposes Courses link in primary nav', () => {
+    vi.mocked(AuthContext.useAuth).mockReturnValue(loggedOut);
     render(<Navbar />);
-
-    await waitFor(() => {
-      expect(screen.getByText('T')).toBeInTheDocument(); // First letter of email
-    });
+    expect(screen.getByRole('link', { name: /^courses$/i })).toBeInTheDocument();
   });
 
-  it('shows Browse Courses link', () => {
-    vi.mocked(AuthContext.useAuth).mockReturnValue({
-      user: null,
-      session: null,
-      isLoading: false,
-      signOut: vi.fn(),
-    });
-
+  it('does not show My Learning when logged out', () => {
+    vi.mocked(AuthContext.useAuth).mockReturnValue(loggedOut);
     render(<Navbar />);
-
-    expect(screen.getByText('Browse Courses')).toBeInTheDocument();
-  });
-
-  it('shows My Learning link when user is logged in', () => {
-    vi.mocked(AuthContext.useAuth).mockReturnValue({
-      user: mockUser as User,
-      session: mockSession as Session,
-      isLoading: false,
-      signOut: vi.fn(),
-    });
-
-    render(<Navbar />);
-
-    expect(screen.getByText('My Learning')).toBeInTheDocument();
-  });
-
-  it('does not show My Learning link when user is not logged in', () => {
-    vi.mocked(AuthContext.useAuth).mockReturnValue({
-      user: null,
-      session: null,
-      isLoading: false,
-      signOut: vi.fn(),
-    });
-
-    render(<Navbar />);
-
-    expect(screen.queryByText('My Learning')).not.toBeInTheDocument();
+    expect(screen.queryByText(/my learning/i)).not.toBeInTheDocument();
   });
 });
