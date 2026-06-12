@@ -8,9 +8,10 @@ import RequireInstructor from "@/components/RequireInstructor";
 import RequireAdmin from "@/components/RequireAdmin";
 import { Loader2 } from "lucide-react";
 import { COMING_SOON_FEATURES } from "@/lib/aiStudioRoutes";
+import { instructorNav } from "@/config/panelNav";
 
 // Lazy-loaded layouts - only loaded when user navigates to protected routes
-const InstructorLayout = lazy(() => import("./components/InstructorLayout"));
+const PanelLayout = lazy(() => import("./components/panel/PanelLayout"));
 const AIStudioLayout = lazy(() => import("./components/AIStudioLayout"));
 
 // Lazy-loaded page components - only loaded when user navigates to them
@@ -80,7 +81,7 @@ const App = () => (
               <Route path="/course/:id" element={<CoursePage />} />
               
               {/* Instructor routes with shared layout */}
-              <Route path="/instructor" element={<RequireInstructor><InstructorLayout /></RequireInstructor>}>
+              <Route path="/instructor" element={<RequireInstructor><PanelLayout nav={instructorNav} /></RequireInstructor>}>
                 <Route index element={<InstructorDashboard />} />
                 <Route path="courses" element={<InstructorCourses />} />
                 <Route path="create" element={<CreateCourse />} />
