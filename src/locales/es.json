@@ -414,7 +414,9 @@
   },
   "knowledgeBase": {
     "title": "Base de Conocimiento",
-    "subtitle": "Gestiona los documentos que informan tu contenido generado por IA",
+    "titleLead": "Su biblioteca ",
+    "titleAccent": "digital.",
+    "subtitle": "Cargue sus artículos, tesis y notas. La IA se entrenará exclusivamente con su material original.",
     "addDocument": "Agregar Documento",
     "editDocument": "Editar Documento",
     "addDesc": "Agrega un nuevo documento a tu base de conocimiento para contexto de IA",
