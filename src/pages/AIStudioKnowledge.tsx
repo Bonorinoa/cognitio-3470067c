@@ -27,7 +27,6 @@ import {
   Trash2, 
   Eye, 
   EyeOff,
-  Database,
   BookOpen,
   Lightbulb,
   GraduationCap,
