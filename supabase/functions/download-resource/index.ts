@@ -6,7 +6,6 @@ const corsHeaders = {
 };
 
 Deno.serve(async (req) => {
-  // Handle CORS preflight
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
@@ -16,66 +15,88 @@ Deno.serve(async (req) => {
     const resourceId = url.searchParams.get("id");
 
     if (!resourceId) {
-      return new Response(
-        JSON.stringify({ error: "Missing resource ID" }),
-        { 
-          status: 400, 
-          headers: { ...corsHeaders, "Content-Type": "application/json" } 
-        }
-      );
+      return new Response(JSON.stringify({ error: "Missing resource ID" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
-    // Initialize Supabase client
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+    const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+    const admin = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Get resource from database
-    const { data: resource, error: dbError } = await supabase
+    // Require authenticated caller
+    const authHeader = req.headers.get("Authorization") ?? "";
+    const token = authHeader.replace(/^Bearer\s+/i, "");
+    if (!token) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const userClient = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: `Bearer ${token}` } },
+    });
+    const { data: userRes, error: userErr } = await userClient.auth.getUser();
+    if (userErr || !userRes?.user) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const userId = userRes.user.id;
+
+    // Load resource + parent chapter to find course_id
+    const { data: resource, error: dbError } = await admin
       .from("chapter_resources")
-      .select("url, title, resource_type")
+      .select("url, title, resource_type, chapter_id, chapters!inner(course_id)")
       .eq("id", resourceId)
       .single();
 
     if (dbError || !resource) {
-      console.error("Resource not found:", dbError);
-      return new Response(
-        JSON.stringify({ error: "Resource not found" }),
-        { 
-          status: 404, 
-          headers: { ...corsHeaders, "Content-Type": "application/json" } 
-        }
-      );
+      return new Response(JSON.stringify({ error: "Resource not found" }), {
+        status: 404,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
-    // Check if this is a Supabase storage URL
-    const resourceUrl = resource.url;
+    const courseId = (resource as unknown as { chapters: { course_id: string } }).chapters.course_id;
+
+    // Enforce access via has_course_access
+    const { data: hasAccess, error: accessErr } = await admin.rpc("has_course_access", {
+      _user_id: userId,
+      _course_id: courseId,
+    });
+    if (accessErr || !hasAccess) {
+      return new Response(JSON.stringify({ error: "Forbidden" }), {
+        status: 403,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const resourceUrl = resource.url as string;
     const isStorageUrl = resourceUrl.includes("supabase.co/storage");
 
     if (isStorageUrl) {
-      // Extract bucket and path from URL
-      // URL format: https://xxx.supabase.co/storage/v1/object/public/bucket/path
-      const urlMatch = resourceUrl.match(/\/storage\/v1\/object\/public\/([^/]+)\/(.+)$/);
-      
+      const urlMatch = resourceUrl.match(/\/storage\/v1\/object\/(?:public|sign)\/([^/]+)\/([^?]+)/);
       if (!urlMatch) {
-        // If URL doesn't match expected pattern, redirect to original
         return Response.redirect(resourceUrl, 302);
       }
-
       const [, bucket, filePath] = urlMatch;
-      
-      // Download file from storage
-      const { data: fileData, error: storageError } = await supabase.storage
+
+      const { data: fileData, error: storageError } = await admin.storage
         .from(bucket)
         .download(decodeURIComponent(filePath));
 
       if (storageError || !fileData) {
         console.error("Storage download error:", storageError);
-        // Fallback: redirect to original URL
-        return Response.redirect(resourceUrl, 302);
+        return new Response(JSON.stringify({ error: "Download failed" }), {
+          status: 500,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
       }
 
-      // Determine content type
       const contentTypeMap: Record<string, string> = {
         pdf: "application/pdf",
         video: "video/mp4",
@@ -83,32 +104,26 @@ Deno.serve(async (req) => {
         link: "text/html",
         other: "application/octet-stream",
       };
-      
-      const contentType = contentTypeMap[resource.resource_type] || "application/octet-stream";
-      
-      // Get filename from path
-      const fileName = filePath.split("/").pop() || resource.title;
+      const contentType = contentTypeMap[resource.resource_type as string] || "application/octet-stream";
+      const fileName = filePath.split("/").pop() || (resource.title as string);
 
       return new Response(fileData, {
         headers: {
           ...corsHeaders,
           "Content-Type": contentType,
           "Content-Disposition": `inline; filename="${encodeURIComponent(fileName)}"`,
-          "Cache-Control": "public, max-age=3600",
+          "Cache-Control": "private, max-age=300",
         },
       });
-    } else {
-      // External URL - redirect directly
-      return Response.redirect(resourceUrl, 302);
     }
+
+    // External URL
+    return Response.redirect(resourceUrl, 302);
   } catch (error) {
     console.error("Download proxy error:", error);
-    return new Response(
-      JSON.stringify({ error: "Internal server error" }),
-      { 
-        status: 500, 
-        headers: { ...corsHeaders, "Content-Type": "application/json" } 
-      }
-    );
+    return new Response(JSON.stringify({ error: "Internal server error" }), {
+      status: 500,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   }
 });
