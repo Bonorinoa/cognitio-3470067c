@@ -113,7 +113,7 @@ const InstructorsPage = () => {
                 </p>
                 <ul className="space-y-3 mb-8">
                   {[
-                    "Cursos públicos (con cobros vía Stripe) y privados (cohorte cerrada)",
+                    "Cursos públicos (con cobros vía Stripe) y privados (cohorte cerrada para tus clases de universidad)",
                     "Perfil público de instructor en el catálogo",
                     "Sin comisiones sobre cursos privados",
                     "Sin publicidad, sin venta de datos",
