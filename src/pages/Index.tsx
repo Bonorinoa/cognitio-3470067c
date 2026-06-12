@@ -231,7 +231,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Founders — demoted */}
+      {/* Founders — demoted to clean grid */}
       <section className="py-20 bg-secondary/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12 max-w-3xl mx-auto">
@@ -240,9 +240,27 @@ const Index = () => {
               Padre e hijo. Geociencias y econometría / IA. Una década enseñando — y rediseñando cómo se enseña.
             </p>
           </div>
-          <Suspense fallback={<FoundersStorySkeleton />}>
-            <FoundersStorySection cards={founderCards} />
-          </Suspense>
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            {founderCards.map((c) => (
+              <article
+                key={c.name}
+                className="bg-card border border-border rounded-2xl overflow-hidden flex flex-col"
+              >
+                <div className="aspect-[4/3] overflow-hidden bg-muted">
+                  <img
+                    src={c.image}
+                    alt={`Foto de ${c.name}`}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                </div>
+                <div className="p-6 flex flex-col flex-1">
+                  <h3 className="text-base font-semibold text-foreground mb-2">{c.name}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{c.bio}</p>
+                </div>
+              </article>
+            ))}
+          </div>
         </div>
       </section>
 
