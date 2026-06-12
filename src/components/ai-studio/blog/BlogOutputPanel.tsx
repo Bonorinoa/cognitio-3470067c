@@ -185,7 +185,7 @@ export function BlogOutputPanel({
                   onMouseUp={onSelectionChange}
                   onKeyUp={onSelectionChange}
                   className="h-[500px] font-mono text-sm resize-none"
-                  placeholder="Edit your content here..."
+                  placeholder={t("aiStudio.editPlaceholder", "Edit your content here…")}
                 />
               ) : (
                 <ScrollArea className="h-[500px]">
