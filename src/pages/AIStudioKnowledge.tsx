@@ -50,11 +50,11 @@ const DOC_TYPE_ICONS: Record<DocumentType, React.ElementType> = {
   other: FileQuestion,
 };
 
-// Colors for context roles
+// Neutral hairline pill styles for context roles (coral accent dot)
 const CONTEXT_ROLE_COLORS: Record<ContextRole, string> = {
-  style_reference: "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300",
-  topic_source: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300",
-  background_context: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300",
+  style_reference: "border-primary/40 text-foreground/70 bg-transparent",
+  topic_source: "border-foreground/20 text-foreground/70 bg-transparent",
+  background_context: "border-muted-foreground/30 text-muted-foreground bg-transparent",
 };
 
 export default function AIStudioKnowledge() {
