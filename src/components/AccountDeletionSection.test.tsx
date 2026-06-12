@@ -12,6 +12,10 @@ vi.mock('@/contexts/AuthContext', async () => {
 vi.mock('@/integrations/supabase/client', () => ({
   supabase: {
     functions: { invoke: vi.fn(() => Promise.resolve({ data: { success: true }, error: null })) },
+    auth: {
+      onAuthStateChange: vi.fn(() => ({ data: { subscription: { unsubscribe: vi.fn() } } })),
+      getSession: vi.fn(() => Promise.resolve({ data: { session: null }, error: null })),
+    },
   },
 }));
 
