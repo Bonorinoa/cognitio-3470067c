@@ -13,6 +13,12 @@ import {
   Shield,
   Building2,
   Cpu,
+  Database,
+  FileEdit,
+  Linkedin,
+  Twitter,
+  Mail,
+  Quote,
   type LucideIcon,
 } from "lucide-react";
 
@@ -135,3 +141,39 @@ export const adminNav: PanelNavConfig = {
     },
   ],
 };
+
+// -----------------------------------------------------------------------------
+// AI Studio
+// -----------------------------------------------------------------------------
+export const aiStudioNav: PanelNavConfig = {
+  roleLabel: "AI Studio",
+  layoutId: "ai-studio-panel-indicator",
+  sections: [
+    {
+      label: "Studio",
+      items: [
+        { href: "/ai-studio", icon: LayoutDashboard, label: "Resumen", exact: true },
+        { href: "/ai-studio/knowledge", icon: Database, label: "Conocimiento" },
+        { href: "/ai-studio/settings", icon: Settings, label: "Ajustes" },
+      ],
+    },
+    {
+      label: "Marketing",
+      items: [
+        { href: "/ai-studio/marketing/blog", icon: FileEdit, label: "Blog" },
+        { href: "/ai-studio/marketing/linkedin", icon: Linkedin, label: "LinkedIn", comingSoon: true },
+        { href: "/ai-studio/marketing/twitter", icon: Twitter, label: "X / Twitter", comingSoon: true },
+        { href: "/ai-studio/marketing/newsletter", icon: Mail, label: "Newsletter", comingSoon: true },
+      ],
+    },
+    {
+      label: "Académico",
+      items: [
+        { href: "/ai-studio/academic/literature-review", icon: BookOpen, label: "Revisión de literatura", comingSoon: true },
+        { href: "/ai-studio/academic/paper-formatter", icon: FileEdit, label: "Formateador de papers", comingSoon: true },
+        { href: "/ai-studio/academic/paper-editor", icon: Quote, label: "Editor de papers", comingSoon: true },
+      ],
+    },
+  ],
+};
+
