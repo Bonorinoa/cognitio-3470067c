@@ -87,16 +87,20 @@ export default function ResourcesTab({ chapterId }: ResourcesTabProps) {
       return;
     }
 
-    // For files: download directly to bypass ad blockers
+    // For files: download via authenticated proxy to bypass ad blockers and enforce access
     const toastId = toast.loading(t("resources.downloading"));
     try {
-      const res = await fetch(resourceUrl, { method: "GET" });
+      const { data: sessionData } = await supabase.auth.getSession();
+      const accessToken = sessionData.session?.access_token;
+      const res = await fetch(resourceUrl, {
+        method: "GET",
+        headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
+      });
       if (!res.ok) throw new Error(`Failed to fetch resource: ${res.status}`);
 
       const blob = await res.blob();
       const blobUrl = URL.createObjectURL(blob);
-      
-      // Trigger download instead of opening
+
       const link = document.createElement("a");
       link.href = blobUrl;
       link.download = resource.title;
@@ -104,7 +108,7 @@ export default function ResourcesTab({ chapterId }: ResourcesTabProps) {
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(blobUrl);
-      
+
       toast.success(t("resources.downloadComplete"), { id: toastId });
     } catch (e) {
       console.error("Resource download failed", e);
