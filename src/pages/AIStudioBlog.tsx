@@ -23,12 +23,12 @@ export default function AIStudioBlog() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const aiStudioContext = useAIStudioContext();
   const { user } = useAuth();
   const { activeDocuments, isLoading: docsLoading } = useKnowledgeBase();
   const { isLoading: styleLoading, hasCompletedSetup } = useStyleProfile();
   const { generate, reset, isGenerating, generatedContent, error } = useContentGeneration();
-  const { history, saveGeneration, updateGeneration, deleteGeneration } = useGenerationHistory();
+  const { history, isLoading: historyLoading, saveGeneration, updateGeneration, deleteGeneration } = useGenerationHistory();
+  const { remaining, limit, isLoading: usageLoading } = useGenerationUsage();
   const refine = useRefine();
 
   const [topic, setTopic] = useState("");
@@ -73,14 +73,7 @@ export default function AIStudioBlog() {
     }
   }, [loadedHistoryId, deleteGeneration, t]);
 
-  useEffect(() => {
-    if (aiStudioContext) {
-      aiStudioContext.setHandlers({
-        onLoadHistory: handleLoadHistory,
-        onDeleteHistory: handleDeleteHistory,
-      });
-    }
-  });
+  // History handlers are wired directly into the in-page panel below — no context shuttling needed.
 
   useEffect(() => {
     if (generatedContent && !isGenerating) {
