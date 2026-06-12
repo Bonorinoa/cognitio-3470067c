@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 import type { PanelNavConfig } from "@/config/panelNav";
+import UsageIndicator from "./UsageIndicator";
 
 interface PanelTopbarProps {
   nav: PanelNavConfig;
@@ -15,7 +16,6 @@ interface Crumb {
 
 function buildBreadcrumbs(pathname: string, nav: PanelNavConfig): Crumb[] {
   const allItems = nav.sections.flatMap((s) => s.items);
-  // Find longest matching item href
   const matches = allItems
     .filter((item) => pathname === item.href || pathname.startsWith(item.href + "/"))
     .sort((a, b) => b.href.length - a.href.length);
@@ -33,9 +33,16 @@ function buildBreadcrumbs(pathname: string, nav: PanelNavConfig): Crumb[] {
 export default function PanelTopbar({ nav, actions }: PanelTopbarProps) {
   const location = useLocation();
   const crumbs = buildBreadcrumbs(location.pathname, nav);
+  const isAIStudio = nav.layoutId === "ai-studio-panel-indicator";
 
   return (
-    <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-4 border-b border-border bg-background/80 px-6 backdrop-blur-md">
+    <header
+      className={
+        isAIStudio
+          ? "sticky top-0 z-30 flex h-14 items-center justify-between gap-4 border-b border-border bg-background px-6"
+          : "sticky top-0 z-30 flex h-14 items-center justify-between gap-4 border-b border-border bg-background/80 px-6 backdrop-blur-md"
+      }
+    >
       <nav aria-label="Breadcrumb" className="flex min-w-0 items-center gap-1.5 text-sm">
         {crumbs.map((crumb, idx) => {
           const isLast = idx === crumbs.length - 1;
@@ -47,7 +54,11 @@ export default function PanelTopbar({ nav, actions }: PanelTopbarProps) {
               {crumb.href && !isLast ? (
                 <Link
                   to={crumb.href}
-                  className="truncate text-muted-foreground transition-colors hover:text-foreground"
+                  className={
+                    isAIStudio
+                      ? "truncate text-muted-foreground font-light transition-colors hover:text-primary"
+                      : "truncate text-muted-foreground transition-colors hover:text-foreground"
+                  }
                 >
                   {crumb.label}
                 </Link>
@@ -55,7 +66,9 @@ export default function PanelTopbar({ nav, actions }: PanelTopbarProps) {
                 <span
                   className={
                     isLast
-                      ? "truncate font-medium text-foreground"
+                      ? isAIStudio
+                        ? "truncate font-light text-foreground"
+                        : "truncate font-medium text-foreground"
                       : "truncate text-muted-foreground"
                   }
                 >
@@ -67,7 +80,11 @@ export default function PanelTopbar({ nav, actions }: PanelTopbarProps) {
         })}
       </nav>
 
-      {actions && <div className="flex shrink-0 items-center gap-2">{actions}</div>}
+      <div className="flex shrink-0 items-center gap-4">
+        {isAIStudio && <UsageIndicator />}
+        {actions && <div className="flex items-center gap-2">{actions}</div>}
+      </div>
     </header>
   );
 }
+
