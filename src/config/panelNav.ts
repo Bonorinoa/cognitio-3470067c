@@ -163,16 +163,13 @@ export const aiStudioNav: PanelNavConfig = {
       ],
     },
     {
-      label: "Marketing",
+      label: "Herramientas",
       items: [
         { href: "/ai-studio/marketing/blog", icon: FileEdit, label: "Blog" },
-        { href: "/ai-studio/marketing/linkedin", icon: Linkedin, label: "LinkedIn", comingSoon: true },
-        { href: "/ai-studio/marketing/twitter", icon: Twitter, label: "X / Twitter", comingSoon: true },
-        { href: "/ai-studio/marketing/newsletter", icon: Mail, label: "Newsletter", comingSoon: true },
       ],
     },
     {
-      label: "Académico",
+      label: "Próximamente",
       items: [
         { href: "/ai-studio/academic/literature-review", icon: BookOpen, label: "Revisión de literatura", comingSoon: true },
         { href: "/ai-studio/academic/paper-formatter", icon: FileEdit, label: "Formateador de papers", comingSoon: true },
