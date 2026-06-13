@@ -13,6 +13,7 @@ import {
   Shield,
   Building2,
   Cpu,
+  Activity,
   Database,
   FileEdit,
   Linkedin,
