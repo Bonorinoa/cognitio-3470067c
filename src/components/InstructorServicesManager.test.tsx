@@ -36,7 +36,7 @@ describe('InstructorServicesManager', () => {
 
   it('renders services title', () => {
     render(<InstructorServicesManager />);
-    expect(screen.getByText(/consulting services/i)).toBeInTheDocument();
+    expect(screen.getByText(/servicios de consultoría/i)).toBeInTheDocument();
   });
 
   it('displays existing service', () => {
@@ -46,7 +46,7 @@ describe('InstructorServicesManager', () => {
 
   it('shows add service button', () => {
     render(<InstructorServicesManager />);
-    expect(screen.getByRole('button', { name: /add service/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /agregar servicio/i })).toBeInTheDocument();
   });
 
   it('displays service price', () => {
