@@ -27,7 +27,7 @@ describe('Navbar', () => {
   it('shows Sign In when logged out', () => {
     vi.mocked(AuthContext.useAuth).mockReturnValue(loggedOut);
     render(<Navbar />);
-    expect(screen.getByRole('button', { name: /sign in/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /iniciar sesión/i })).toBeInTheDocument();
   });
 
   it('shows loading skeleton during auth load', () => {
@@ -45,7 +45,7 @@ describe('Navbar', () => {
   it('exposes Courses link in primary nav', () => {
     vi.mocked(AuthContext.useAuth).mockReturnValue(loggedOut);
     render(<Navbar />);
-    expect(screen.getByRole('link', { name: /^courses$/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /^cursos$/i })).toBeInTheDocument();
   });
 
   it('does not show My Learning when logged out', () => {

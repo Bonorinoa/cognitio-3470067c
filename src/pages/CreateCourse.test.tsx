@@ -1,26 +1,18 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@/test/utils';
+import { render, screen, fireEvent } from '@/test/utils';
 import CreateCourse from './CreateCourse';
 import { User, Session } from '@supabase/supabase-js';
 import * as AuthContext from '@/contexts/AuthContext';
 
-// Mock useAuth hook
 vi.mock('@/contexts/AuthContext', async () => {
   const actual = await vi.importActual('@/contexts/AuthContext');
-  return {
-    ...actual,
-    useAuth: vi.fn(),
-  };
+  return { ...actual, useAuth: vi.fn() };
 });
 
-// Mock react-router-dom navigation
 const mockNavigate = vi.fn();
 vi.mock('react-router-dom', async () => {
   const actual = await vi.importActual('react-router-dom');
-  return {
-    ...actual,
-    useNavigate: () => mockNavigate,
-  };
+  return { ...actual, useNavigate: () => mockNavigate };
 });
 
 const mockUser: Partial<User> = {
@@ -53,76 +45,58 @@ describe('CreateCourse', () => {
 
   it('renders the create course form', () => {
     render(<CreateCourse />);
-
-    expect(screen.getByText('Create New Course')).toBeInTheDocument();
-    expect(screen.getByText('Basic Information')).toBeInTheDocument();
-    expect(screen.getByText('Course Chapters')).toBeInTheDocument();
+    expect(screen.getByText('Crear Nuevo Curso')).toBeInTheDocument();
+    expect(screen.getByText('Información Básica')).toBeInTheDocument();
+    expect(screen.getByText('Capítulos del Curso')).toBeInTheDocument();
   });
 
   it('has title input field', () => {
     render(<CreateCourse />);
-
-    const titleInput = screen.getByPlaceholderText(/Complete Web Development Bootcamp/i);
-    expect(titleInput).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/Bootcamp Completo/i)).toBeInTheDocument();
   });
 
   it('has description textarea', () => {
     render(<CreateCourse />);
-
-    const descriptionInput = screen.getByPlaceholderText(/Describe what students will learn/i);
-    expect(descriptionInput).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/los estudiantes aprenderán/i)).toBeInTheDocument();
   });
 
   it('has price input', () => {
     render(<CreateCourse />);
-
-    const priceInput = screen.getByPlaceholderText('99.99');
-    expect(priceInput).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('99.99')).toBeInTheDocument();
   });
 
   it('has Save Draft and Publish buttons', () => {
     render(<CreateCourse />);
-
-    expect(screen.getByText('Save Draft')).toBeInTheDocument();
-    expect(screen.getByText('Publish Course')).toBeInTheDocument();
+    expect(screen.getByText('Guardar Borrador')).toBeInTheDocument();
+    expect(screen.getByText('Publicar Curso')).toBeInTheDocument();
   });
 
   it('has Add Chapter button', () => {
     render(<CreateCourse />);
-
-    expect(screen.getByText('Add Chapter')).toBeInTheDocument();
+    expect(screen.getByText('Agregar Capítulo')).toBeInTheDocument();
   });
 
   it('allows adding new chapters', () => {
     render(<CreateCourse />);
-
-    const addButton = screen.getByText('Add Chapter');
-    fireEvent.click(addButton);
-
-    // Should now have 2 chapter inputs (one default + one new)
-    const chapterInputs = screen.getAllByPlaceholderText('Chapter title');
+    fireEvent.click(screen.getByText('Agregar Capítulo'));
+    const chapterInputs = screen.getAllByPlaceholderText('Título del capítulo');
     expect(chapterInputs.length).toBe(2);
   });
 
   it('navigates back when clicking Back button', () => {
     render(<CreateCourse />);
-
-    const backButton = screen.getByText('Back');
-    fireEvent.click(backButton);
-
+    fireEvent.click(screen.getByText('Volver'));
     expect(mockNavigate).toHaveBeenCalledWith('/instructor');
   });
 
   it('has category selector', () => {
     render(<CreateCourse />);
-
-    expect(screen.getByText('Select category')).toBeInTheDocument();
+    expect(screen.getByText('Seleccionar categoría')).toBeInTheDocument();
   });
 
   it('has course image upload section', () => {
     render(<CreateCourse />);
-
-    expect(screen.getAllByText(/course image/i).length).toBeGreaterThan(0);
-    expect(screen.getByText(/upload image/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/imagen del curso/i).length).toBeGreaterThan(0);
+    expect(screen.getByText(/subir imagen/i)).toBeInTheDocument();
   });
 });
