@@ -75,7 +75,7 @@
     "account": "Cuenta",
     "accountDesc": "Estado y privilegios de tu cuenta",
     "instructorAccount": "Cuenta de Instructor",
-    "instructorPrivileges": "Tienes privilegios de instructor en esta plataforma",
+    "instructorPrivileges": "Tenés privilegios de instructor en esta plataforma",
     "active": "Activo",
     "saveChanges": "Guardar Cambios",
     "saving": "Guardando...",
@@ -189,7 +189,7 @@
     "instructor": "Instructor",
     "freePreview": "Vista Previa Gratis",
     "yourCourse": "Tu Curso",
-    "hasAccess": "Tienes acceso a este curso",
+    "hasAccess": "Tenés acceso a este curso",
     "verifyingAccess": "Verificando acceso...",
     "signInToPurchase": "Inicia sesión para comprar",
     "signInHint": "Iniciá sesión o creá una cuenta para comprar",
@@ -416,7 +416,7 @@
     "title": "Base de Conocimiento",
     "titleLead": "Su biblioteca ",
     "titleAccent": "digital.",
-    "subtitle": "Cargue sus artículos, tesis y notas. La IA se entrenará exclusivamente con su material original.",
+    "subtitle": "Cargá tus artículos, tesis y notas. La IA se entrena exclusivamente con tu material original.",
     "addDocument": "Agregar Documento",
     "editDocument": "Editar Documento",
     "addDesc": "Agrega un nuevo documento a tu base de conocimiento para contexto de IA",
@@ -536,7 +536,7 @@
     "subtitle": "Gestiona y organiza el contenido de tus cursos",
     "createCourse": "Crear Curso",
     "noCourses": "Aún no hay cursos",
-    "noCoursesHint": "Comienza creando tu primer curso",
+    "noCoursesHint": "Comenzá creando tu primer curso",
     "chapters": "capítulos",
     "students": "estudiantes",
     "price": "precio",
@@ -662,20 +662,20 @@
     "inProgress": "En Progreso",
     "completed": "Completados",
     "noCoursesYet": "Aún no tienes cursos",
-    "startLearning": "Comienza tu viaje de aprendizaje inscribiéndote en un curso.",
+    "startLearning": "Comenzá tu viaje de aprendizaje inscribiéndote en un curso.",
     "browseCourses": "Explorar Cursos",
     "noCoursesFound": "No se encontraron cursos",
     "tryDifferentSearch": "Intenta con otro término de búsqueda."
   },
   "styleProfile": {
     "title": "Estilo de Escritura IA",
-    "subtitle": "Configura cómo la IA genera contenido para ti. Estas preferencias dan forma a tu voz única.",
+    "subtitle": "Configurá cómo la IA genera contenido para vos. Estas preferencias dan forma a tu voz única.",
     "helpTitle": "Acerca del Perfil de Estilo",
     "helpDescription": "Estas configuraciones personalizan cómo la IA genera contenido para ti. El tono define la formalidad, la audiencia objetivo ayuda a adaptar el nivel de complejidad, y las instrucciones personalizadas te permiten especificar preferencias únicas (como evitar cierta jerga o incluir siempre tu metodología de investigación).",
     "helpCustomization": "¿Necesitas parámetros adicionales de personalización? Contáctanos directamente en contacto@cognitio.education y estaremos encantados de ayudarte a configurar opciones avanzadas.",
     "setupComplete": "Preferencias de estilo configuradas",
     "tone": "Tono de Escritura",
-    "toneDesc": "Selecciona el tono general para tu contenido generado por IA",
+    "toneDesc": "Elegí el tono general para tu contenido generado por IA",
     "tones": {
       "formal": "Formal",
       "conversational": "Conversacional",
@@ -719,21 +719,21 @@
   },
   "aiStudio": {
     "heroEyebrow": "Exclusivo para Instructores",
-    "heroLine1": "Su base de conocimiento,",
+    "heroLine1": "Tu base de conocimiento,",
     "heroLine2": "amplificada por IA.",
-    "heroDescription": "Una herramienta de creación diseñada para académicos y especialistas. Preserve su voz original mientras escala su producción de contenido.",
+    "heroDescription": "Una herramienta de creación pensada para académicos y especialistas. Preservá tu voz original mientras escalás tu producción de contenido.",
     "startCreating": "Empezar Creación",
     "seeMethodology": "Ver Metodología",
     "processTitle": "El Proceso Editorial",
     "stepKicker1": "Conocimiento",
-    "stepTitle1": "Su Biblioteca Digital",
-    "stepDesc1": "Cargue sus artículos, tesis y notas de clase. La IA se entrena exclusivamente con su material original.",
+    "stepTitle1": "Tu biblioteca digital",
+    "stepDesc1": "Cargá tus artículos, tesis y notas de clase. La IA se entrena exclusivamente con tu material original.",
     "stepKicker2": "Estilo",
     "stepTitle2": "Voz y Rigor",
-    "stepDesc2": "Defina el tono académico y el nivel de complejidad. Asegure que cada palabra suene auténticamente como usted.",
+    "stepDesc2": "Definí el tono académico y el nivel de complejidad. Asegurate de que cada palabra suene auténticamente como vos.",
     "stepKicker3": "Herramienta",
     "stepTitle3": "Producción Fluida",
-    "stepDesc3": "Genere artículos de blog, newsletters o revisiones bibliográficas en segundos, manteniendo la integridad científica.",
+    "stepDesc3": "Generá artículos de blog, newsletters o revisiones bibliográficas en segundos, manteniendo la integridad científica.",
     "bundleMarketingTitle": "Divulgación",
     "bundleMarketingDesc": "Optimizado para marketing de contenidos, LinkedIn y boletines informativos.",
     "bundleAcademicTitle": "Académico",
@@ -770,7 +770,7 @@
     "instructionsPlaceholder": "Puntos específicos a cubrir, ajustes de tono, etc.",
     "instructionsHelp": "Agrega requisitos específicos: audiencia objetivo, tono, puntos clave a incluir, o cosas a evitar.",
     "selectDocuments": "Documentos de Contexto",
-    "selectDocsDesc": "Selecciona documentos para incluir como contexto en la generación",
+    "selectDocsDesc": "Seleccioná los documentos para incluir como contexto en la generación",
     "noDocuments": "Aún no hay documentos en tu base de conocimiento.",
     "noDocumentsDescription": "Agrega documentos a tu base de conocimiento para usarlos como contexto en la generación de contenido.",
     "addDocuments": "Agregar Documentos",
@@ -826,7 +826,7 @@
     "goToTools": "Ir a Herramientas de Marketing",
     "learnMore": "Más Información",
     "chooseBundleTitle": "Elige Tu Paquete",
-    "chooseBundleDesc": "Selecciona las herramientas que se ajusten a tus necesidades",
+    "chooseBundleDesc": "Elegí las herramientas que se ajusten a tus necesidades",
     "marketingBundle": "Paquete Marketing",
     "marketingDesc": "Crea contenido convincente para tu marca y audiencia",
     "academicBundle": "Paquete Académico",
@@ -887,7 +887,7 @@
     "step1DescEnhanced": "Tus documentos, artículos y muestras de escritura para personalizar la IA",
     "step2DescEnhanced": "Tu tono, audiencia e idioma preferido",
     "step3DescEnhanced": "Artículos, posts y más contenido profesional al instante",
-    "instructorPerk": "¿Eres instructor de Cognitio? Disfruta de 50 generaciones diarias.",
+    "instructorPerk": "¿Sos instructor de Cognitio? Disfrutá de 50 generaciones diarias.",
     "freeTierName": "Gratis",
     "freeTierDesc": "Empezá a explorar la IA sin compromiso",
     "freeFeature1": "10 generaciones por día",
@@ -1030,7 +1030,7 @@
     "sections": {
       "gettingStarted": {
         "title": "Primeros Pasos",
-        "description": "Sigue estos pasos para configurar tu presencia en Cognitio"
+        "description": "Seguí estos pasos para configurar tu presencia en Cognitio"
       },
       "profile": {
         "title": "Tu Perfil",
@@ -1062,7 +1062,7 @@
     "menu": {
       "title": "Centro de Ayuda",
       "description": "Guías y consejos para aprovechar la plataforma",
-      "selectTopic": "Selecciona un tema para ver la guía",
+      "selectTopic": "Elegí un tema para ver la guía",
       "showAllTips": "Mostrar todas las guías"
     },
     "categories": {
@@ -1080,14 +1080,14 @@
       "step3Title": "Sube contenido de video",
       "step3Desc": "Nuestro sistema procesa y optimiza tus videos automáticamente",
       "step4Title": "Publica y comparte",
-      "step4Desc": "Configura el precio y visibilidad para comenzar a vender",
+      "step4Desc": "Configurá el precio y la visibilidad para comenzar a vender",
       "stepsCompleted": "completados",
       "dismiss": "Entendido, ocultar esta guía"
     },
     "topics": {
       "firstSteps": {
         "title": "Primeros Pasos como Instructor",
-        "intro": "Sigue estos pasos para configurar tu presencia en Cognitio:"
+        "intro": "Seguí estos pasos para configurar tu presencia en Cognitio:"
       },
       "profileTips": {
         "title": "Consejos para tu Perfil",
@@ -1160,7 +1160,7 @@
       "contextRolesTitle": "Roles de Contexto",
       "contextRolesDesc": "'Referencia de Estilo' para imitar tu voz, 'Fuente de Tema' para información factual, 'Contexto de Fondo' para conocimiento general sobre ti.",
       "refineTitle": "Refinamiento de Texto",
-      "refineDesc": "Selecciona cualquier texto en el editor y usa 'Refinar' para mejorarlo con IA. Puedes pedir que sea más conciso, cambie el tono, agregue ejemplos, o cualquier otra mejora específica."
+      "refineDesc": "Seleccioná cualquier texto en el editor y usá 'Refinar' para mejorarlo con IA. Podés pedir que sea más conciso, que cambie el tono, que agregue ejemplos o cualquier otra mejora específica."
     },
     "aiTutor": {
       "title": "CognitioAI - Tu Tutor de IA",
@@ -1170,7 +1170,7 @@
       "capabilities": "Capacidades",
       "capabilitiesDesc": "CognitioAI tiene acceso a la transcripción completa del video y sabe en qué momento estás viendo. Puede explicar conceptos, resolver dudas y profundizar en temas específicos.",
       "limits": "Límites Diarios",
-      "limitsDesc": "Tienes un número limitado de llamadas de IA por día para asegurar un servicio de calidad para todos los estudiantes.",
+      "limitsDesc": "Tenés un número limitado de llamadas de IA por día para garantizar un servicio de calidad para todos los estudiantes.",
       "dismiss": "Entendido"
     }
   }
