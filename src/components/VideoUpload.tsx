@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { Upload, CheckCircle, Loader2, AlertCircle } from "lucide-react";
+import { Upload, CheckCircle, Loader2, AlertCircle, RotateCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { supabase } from "@/integrations/supabase/client";
@@ -20,53 +20,44 @@ const VideoUpload = ({ chapterId, onUploadComplete, currentPlaybackId }: VideoUp
   const [status, setStatus] = useState<UploadStatus>(currentPlaybackId ? "ready" : "idle");
   const [progress, setProgress] = useState(0);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [lastFile, setLastFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    // Validate file type
+  const runUpload = async (file: File) => {
     if (!file.type.startsWith("video/")) {
-      toast.error("Invalid file type: Please select a video file");
+      toast.error(t("videoUpload.invalidType", "Tipo de archivo inválido: seleccione un video"));
       return;
     }
 
+    setLastFile(file);
     setStatus("uploading");
     setProgress(0);
     setErrorMessage(null);
 
     try {
-      // Step 1: Get direct upload URL from Mux
       const { data: uploadData, error: uploadError } = await supabase.functions.invoke("mux-upload", {
         body: { action: "create-upload" },
       });
 
       if (uploadError || !uploadData?.uploadUrl) {
-        throw new Error(uploadError?.message || "Failed to create upload URL");
+        throw new Error(uploadError?.message || t("videoUpload.uploadUrlFailed", "No se pudo crear la URL de subida"));
       }
 
       const { uploadUrl, uploadId } = uploadData;
 
-      // Step 2: Upload file directly to Mux
       const xhr = new XMLHttpRequest();
-      
       xhr.upload.onprogress = (event) => {
         if (event.lengthComputable) {
-          const percent = Math.round((event.loaded / event.total) * 100);
-          setProgress(percent);
+          setProgress(Math.round((event.loaded / event.total) * 100));
         }
       };
 
       await new Promise<void>((resolve, reject) => {
         xhr.onload = () => {
-          if (xhr.status >= 200 && xhr.status < 300) {
-            resolve();
-          } else {
-            reject(new Error(`Upload failed with status ${xhr.status}`));
-          }
+          if (xhr.status >= 200 && xhr.status < 300) resolve();
+          else reject(new Error(t("videoUpload.uploadFailedStatus", "Subida fallida (estado {{s}})", { s: xhr.status })));
         };
-        xhr.onerror = () => reject(new Error("Upload failed"));
+        xhr.onerror = () => reject(new Error(t("videoUpload.uploadFailed", "Subida fallida")));
         xhr.open("PUT", uploadUrl);
         xhr.send(file);
       });
@@ -74,79 +65,56 @@ const VideoUpload = ({ chapterId, onUploadComplete, currentPlaybackId }: VideoUp
       setStatus("processing");
       setProgress(100);
 
-      // Step 3: Poll for asset ready status
       let assetId: string | null = null;
       let attempts = 0;
-      const maxAttempts = 60; // 5 minutes max
+      const maxAttempts = 60;
 
       while (!assetId && attempts < maxAttempts) {
-        await new Promise((resolve) => setTimeout(resolve, 5000));
-        
+        await new Promise((r) => setTimeout(r, 5000));
         const { data: checkData, error: checkError } = await supabase.functions.invoke("mux-upload", {
           body: { action: "check-upload", uploadId },
         });
-
-        if (checkError) {
-          console.error("Check upload error:", checkError);
-          attempts++;
-          continue;
-        }
-
-        if (checkData?.assetId) {
-          assetId = checkData.assetId;
-        }
+        if (!checkError && checkData?.assetId) assetId = checkData.assetId;
         attempts++;
       }
+      if (!assetId) throw new Error(t("videoUpload.processingTimeout", "Tiempo agotado esperando procesamiento"));
 
-      if (!assetId) {
-        throw new Error("Timed out waiting for video processing");
-      }
-
-      // Step 4: Get asset details (playback ID)
       let playbackId: string | null = null;
       attempts = 0;
-
       while (!playbackId && attempts < 30) {
         const { data: assetData, error: assetError } = await supabase.functions.invoke("mux-upload", {
           body: { action: "get-asset", assetId, chapterId },
         });
-
-        if (assetError) {
-          console.error("Get asset error:", assetError);
-          attempts++;
-          await new Promise((resolve) => setTimeout(resolve, 3000));
-          continue;
+        if (!assetError) {
+          if (assetData?.status === "ready" && assetData?.playbackId) playbackId = assetData.playbackId;
+          else if (assetData?.status === "errored") throw new Error(t("videoUpload.processingFailed", "El procesamiento del video falló"));
         }
-
-        if (assetData?.status === "ready" && assetData?.playbackId) {
-          playbackId = assetData.playbackId;
-        } else if (assetData?.status === "errored") {
-          throw new Error("Video processing failed");
-        } else {
-          attempts++;
-          await new Promise((resolve) => setTimeout(resolve, 3000));
-        }
+        attempts++;
+        if (!playbackId) await new Promise((r) => setTimeout(r, 3000));
       }
-
-      if (!playbackId) {
-        throw new Error("Timed out waiting for playback ID");
-      }
+      if (!playbackId) throw new Error(t("videoUpload.playbackTimeout", "Tiempo agotado esperando playback ID"));
 
       setStatus("ready");
       onUploadComplete(playbackId, assetId);
-
-      toast.success("Video uploaded successfully");
+      toast.success(t("videoUpload.success", "Video subido correctamente"));
     } catch (error) {
       console.error("Upload error:", error);
       setStatus("error");
-      setErrorMessage(error instanceof Error ? error.message : "Upload failed");
-      toast.error(error instanceof Error ? error.message : "Upload failed");
+      const msg = error instanceof Error ? error.message : t("videoUpload.uploadFailed", "Subida fallida");
+      setErrorMessage(msg);
+      toast.error(msg);
     }
+  };
 
-    // Reset file input
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
+  const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) await runUpload(file);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const handleRetry = async () => {
+    if (lastFile) await runUpload(lastFile);
+    else fileInputRef.current?.click();
   };
 
   return (
@@ -161,17 +129,22 @@ const VideoUpload = ({ chapterId, onUploadComplete, currentPlaybackId }: VideoUp
       />
 
       {status === "idle" && (
-        <div className="flex items-center gap-2">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => fileInputRef.current?.click()}
-            className="flex-1"
-          >
-            <Upload className="h-4 w-4 mr-2" />
-            Upload Video
-          </Button>
-          <HelpTooltip content={t("help.videoUpload.helpTooltip")} />
+        <div className="space-y-1.5">
+          <div className="flex items-center gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => fileInputRef.current?.click()}
+              className="flex-1"
+            >
+              <Upload className="h-4 w-4 mr-2" />
+              {t("videoUpload.upload", "Subir Video")}
+            </Button>
+            <HelpTooltip content={t("help.videoUpload.helpTooltip")} />
+          </div>
+          <p className="text-xs text-muted-foreground">
+            {t("videoUpload.processingHint", "El procesamiento suele tardar 1-2 minutos por cada 10 minutos de video.")}
+          </p>
         </div>
       )}
 
@@ -179,7 +152,7 @@ const VideoUpload = ({ chapterId, onUploadComplete, currentPlaybackId }: VideoUp
         <div className="space-y-2">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Loader2 className="h-4 w-4 animate-spin" />
-            Uploading... {progress}%
+            {t("videoUpload.uploading", "Subiendo")}... {progress}%
           </div>
           <Progress value={progress} />
         </div>
@@ -188,7 +161,7 @@ const VideoUpload = ({ chapterId, onUploadComplete, currentPlaybackId }: VideoUp
       {status === "processing" && (
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <Loader2 className="h-4 w-4 animate-spin" />
-          Processing video... This may take a few minutes
+          {t("videoUpload.processing", "Procesando video... esto puede tardar unos minutos")}
         </div>
       )}
 
@@ -196,7 +169,7 @@ const VideoUpload = ({ chapterId, onUploadComplete, currentPlaybackId }: VideoUp
         <div className="space-y-2">
           <div className="flex items-center gap-2 text-sm text-primary">
             <CheckCircle className="h-4 w-4" />
-            Video ready
+            {t("videoUpload.ready", "Video listo")}
           </div>
           <Button
             type="button"
@@ -204,28 +177,36 @@ const VideoUpload = ({ chapterId, onUploadComplete, currentPlaybackId }: VideoUp
             size="sm"
             onClick={() => fileInputRef.current?.click()}
           >
-            Replace Video
+            {t("videoUpload.replace", "Reemplazar Video")}
           </Button>
         </div>
       )}
 
       {status === "error" && (
         <div className="space-y-2">
-          <div className="flex items-center gap-2 text-sm text-destructive">
-            <AlertCircle className="h-4 w-4" />
-            {errorMessage || "Upload failed"}
+          <div className="flex items-start gap-2 text-sm text-destructive">
+            <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" />
+            <span>{errorMessage || t("videoUpload.uploadFailed", "Subida fallida")}</span>
           </div>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              setStatus("idle");
-              setErrorMessage(null);
-            }}
-          >
-            Try Again
-          </Button>
+          <div className="flex gap-2">
+            <Button type="button" variant="default" size="sm" onClick={handleRetry}>
+              <RotateCw className="h-3.5 w-3.5 mr-1.5" />
+              {lastFile
+                ? t("videoUpload.retrySame", "Reintentar con el mismo archivo")
+                : t("videoUpload.tryAgain", "Intentar de nuevo")}
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setStatus("idle");
+                setErrorMessage(null);
+              }}
+            >
+              {t("videoUpload.cancel", "Cancelar")}
+            </Button>
+          </div>
         </div>
       )}
     </div>

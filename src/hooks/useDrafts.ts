@@ -32,7 +32,6 @@ interface UseDraftsOptions {
 
 /**
  * Rolling auto-archive cap. Pinned drafts are never archived.
- * Raised from 10 → 25 in the Drafts sprint so the library is meaningful.
  */
 export const DRAFTS_CAP = 25;
 
@@ -80,7 +79,6 @@ export function useDrafts(options: UseDraftsOptions = {}) {
   const saveDraft = async (params: SaveDraftParams): Promise<string | null> => {
     if (!user?.id) return null;
 
-    // Count active, NON-pinned drafts. Pinned drafts are exempt from the cap.
     const { count } = await supabase
       .from("ai_generation_history")
       .select("*", { count: "exact", head: true })
@@ -150,6 +148,49 @@ export function useDrafts(options: UseDraftsOptions = {}) {
     invalidate();
   };
 
+  const renameMutation = useMutation({
+    mutationFn: async ({ id, topic }: { id: string; topic: string }) => {
+      if (!user?.id) throw new Error("Not authenticated");
+      const trimmed = topic.trim().slice(0, 200);
+      if (!trimmed) throw new Error("Topic cannot be empty");
+      const { error } = await supabase
+        .from("ai_generation_history")
+        .update({ topic: trimmed, updated_at: new Date().toISOString() })
+        .eq("id", id)
+        .eq("user_id", user.id);
+      if (error) throw error;
+    },
+    onSuccess: invalidate,
+  });
+
+  const duplicateMutation = useMutation({
+    mutationFn: async (id: string) => {
+      if (!user?.id) throw new Error("Not authenticated");
+      const { data: source, error: fetchError } = await supabase
+        .from("ai_generation_history")
+        .select("content_type, topic, generated_content, additional_instructions, selected_document_ids, model_used")
+        .eq("id", id)
+        .eq("user_id", user.id)
+        .single();
+      if (fetchError) throw fetchError;
+
+      const { error: insertError } = await supabase
+        .from("ai_generation_history")
+        .insert({
+          user_id: user.id,
+          content_type: source.content_type,
+          topic: `${source.topic} (copia)`.slice(0, 200),
+          generated_content: source.generated_content,
+          additional_instructions: source.additional_instructions,
+          selected_document_ids: source.selected_document_ids || [],
+          status: "completed",
+          model_used: source.model_used || "google/gemini-2.5-flash",
+        });
+      if (insertError) throw insertError;
+    },
+    onSuccess: invalidate,
+  });
+
   const pinMutation = useMutation({
     mutationFn: async ({ id, pinned }: { id: string; pinned: boolean }) => {
       if (!user?.id) throw new Error("Not authenticated");
@@ -182,16 +223,19 @@ export function useDrafts(options: UseDraftsOptions = {}) {
     saveDraft,
     updateDraft,
     deleteDraft,
+    renameDraft: (id: string, topic: string) => renameMutation.mutateAsync({ id, topic }),
+    duplicateDraft: (id: string) => duplicateMutation.mutateAsync(id),
     pinDraft: (id: string) => pinMutation.mutate({ id, pinned: true }),
     unpinDraft: (id: string) => pinMutation.mutate({ id, pinned: false }),
     restoreDraft: restoreMutation.mutate,
     isPinning: pinMutation.isPending,
+    isRenaming: renameMutation.isPending,
+    isDuplicating: duplicateMutation.isPending,
     isRestoring: restoreMutation.isPending,
     invalidate,
   };
 }
 
-// Relative time helper, locale-aware
 export function formatRelativeTime(dateString: string, locale = "es"): string {
   const date = new Date(dateString);
   const now = new Date();

@@ -9,6 +9,8 @@ import {
 import { HelpPopover } from "@/components/ui/help-popover";
 import { COURSE_CATEGORIES } from "@/lib/courseCategories";
 
+export type CourseVisibility = "public" | "private" | "unlisted";
+
 interface CreateCourseBasicInfoProps {
   title: string;
   setTitle: (v: string) => void;
@@ -18,8 +20,8 @@ interface CreateCourseBasicInfoProps {
   setPrice: (v: string) => void;
   category: string;
   setCategory: (v: string) => void;
-  visibility: "public" | "private";
-  setVisibility: (v: "public" | "private") => void;
+  visibility: CourseVisibility;
+  setVisibility: (v: CourseVisibility) => void;
 }
 
 export function CreateCourseBasicInfo(props: CreateCourseBasicInfoProps) {
@@ -108,7 +110,7 @@ export function CreateCourseBasicInfo(props: CreateCourseBasicInfoProps) {
           </div>
           <Select
             value={visibility}
-            onValueChange={(value: "public" | "private") => setVisibility(value)}
+            onValueChange={(value: CourseVisibility) => setVisibility(value)}
           >
             <SelectTrigger className="bg-background border-border">
               <SelectValue placeholder={t("createCourse.selectVisibility")} />
@@ -118,6 +120,12 @@ export function CreateCourseBasicInfo(props: CreateCourseBasicInfoProps) {
                 <div className="flex flex-col">
                   <span>{t("createCourse.public")}</span>
                   <span className="text-xs text-muted-foreground">{t("createCourse.publicDesc")}</span>
+                </div>
+              </SelectItem>
+              <SelectItem value="unlisted">
+                <div className="flex flex-col">
+                  <span>{t("createCourse.unlisted", "No listado")}</span>
+                  <span className="text-xs text-muted-foreground">{t("createCourse.unlistedDesc", "Accesible solo con el enlace directo")}</span>
                 </div>
               </SelectItem>
               <SelectItem value="private">
@@ -130,6 +138,9 @@ export function CreateCourseBasicInfo(props: CreateCourseBasicInfoProps) {
           </Select>
           {visibility === "private" && (
             <p className="text-xs text-muted-foreground mt-1">{t("createCourse.privateNote")}</p>
+          )}
+          {visibility === "unlisted" && (
+            <p className="text-xs text-muted-foreground mt-1">{t("createCourse.unlistedNote", "El curso no aparecerá en el catálogo, pero cualquiera con el enlace podrá acceder.")}</p>
           )}
         </div>
       </CardContent>

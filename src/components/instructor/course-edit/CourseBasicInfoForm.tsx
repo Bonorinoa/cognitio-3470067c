@@ -7,6 +7,7 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import { COURSE_CATEGORIES } from "@/lib/courseCategories";
+import type { CourseVisibility } from "@/components/instructor/course-create/CreateCourseBasicInfo";
 
 interface CourseBasicInfoFormProps {
   title: string;
@@ -17,8 +18,8 @@ interface CourseBasicInfoFormProps {
   setPrice: (v: string) => void;
   category: string;
   setCategory: (v: string) => void;
-  visibility: "public" | "private";
-  setVisibility: (v: "public" | "private") => void;
+  visibility: CourseVisibility;
+  setVisibility: (v: CourseVisibility) => void;
 }
 
 export function CourseBasicInfoForm(props: CourseBasicInfoFormProps) {
@@ -31,25 +32,25 @@ export function CourseBasicInfoForm(props: CourseBasicInfoFormProps) {
   return (
     <Card className="border-border bg-card">
       <CardHeader>
-        <CardTitle className="text-foreground">Basic Information</CardTitle>
-        <CardDescription>Update the main details about your course</CardDescription>
+        <CardTitle className="text-foreground">{t("createCourse.basicInfo")}</CardTitle>
+        <CardDescription>{t("createCourse.editSubtitle")}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="title">Course Title</Label>
+          <Label htmlFor="title">{t("createCourse.courseTitle")}</Label>
           <Input
             id="title"
-            placeholder="e.g., Complete Web Development Bootcamp"
+            placeholder={t("createCourse.courseTitlePlaceholder")}
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             className="bg-background border-border"
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="description">Description</Label>
+          <Label htmlFor="description">{t("createCourse.description")}</Label>
           <Textarea
             id="description"
-            placeholder="Describe what students will learn..."
+            placeholder={t("createCourse.descriptionPlaceholder")}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             className="min-h-[120px] bg-background border-border"
@@ -57,7 +58,7 @@ export function CourseBasicInfoForm(props: CourseBasicInfoFormProps) {
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="price">Price ($)</Label>
+            <Label htmlFor="price">{t("createCourse.price")}</Label>
             <Input
               id="price"
               type="number"
@@ -84,16 +85,38 @@ export function CourseBasicInfoForm(props: CourseBasicInfoFormProps) {
           </div>
         </div>
         <div className="space-y-2">
-          <Label>Course Visibility</Label>
-          <Select value={visibility} onValueChange={(value: "public" | "private") => setVisibility(value)}>
+          <Label>{t("createCourse.visibility")}</Label>
+          <Select value={visibility} onValueChange={(value: CourseVisibility) => setVisibility(value)}>
             <SelectTrigger className="bg-background border-border">
-              <SelectValue placeholder="Select visibility" />
+              <SelectValue placeholder={t("createCourse.selectVisibility")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="public">Public - Visible in catalog</SelectItem>
-              <SelectItem value="private">Private - Enrolled students only</SelectItem>
+              <SelectItem value="public">
+                <div className="flex flex-col">
+                  <span>{t("createCourse.public")}</span>
+                  <span className="text-xs text-muted-foreground">{t("createCourse.publicDesc")}</span>
+                </div>
+              </SelectItem>
+              <SelectItem value="unlisted">
+                <div className="flex flex-col">
+                  <span>{t("createCourse.unlisted", "No listado")}</span>
+                  <span className="text-xs text-muted-foreground">{t("createCourse.unlistedDesc", "Accesible solo con el enlace directo")}</span>
+                </div>
+              </SelectItem>
+              <SelectItem value="private">
+                <div className="flex flex-col">
+                  <span>{t("createCourse.private")}</span>
+                  <span className="text-xs text-muted-foreground">{t("createCourse.privateDesc")}</span>
+                </div>
+              </SelectItem>
             </SelectContent>
           </Select>
+          {visibility === "private" && (
+            <p className="text-xs text-muted-foreground mt-1">{t("createCourse.privateNote")}</p>
+          )}
+          {visibility === "unlisted" && (
+            <p className="text-xs text-muted-foreground mt-1">{t("createCourse.unlistedNote", "El curso no aparecerá en el catálogo, pero cualquiera con el enlace podrá acceder.")}</p>
+          )}
         </div>
       </CardContent>
     </Card>
