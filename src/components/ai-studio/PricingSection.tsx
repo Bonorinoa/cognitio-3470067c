@@ -51,17 +51,6 @@ export default function PricingSection() {
       comingSoon: true,
     },
     {
-      bundle: "academic",
-      name: t("aiStudio.academicBundle", "Académico"),
-      price: 19,
-      tagline: t("aiStudio.academicPricingDesc", "Herramientas de escritura académica"),
-      features: [
-        t("aiStudio.academicFeature1", "200 generaciones/día"),
-        t("aiStudio.academicFeature2", "Literature review, citas, papers"),
-      ],
-      comingSoon: true,
-    },
-    {
       bundle: "pro",
       name: t("aiStudio.proBundleName", "Pro"),
       price: 29,
