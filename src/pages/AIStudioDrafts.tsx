@@ -192,7 +192,7 @@ export default function AIStudioDrafts() {
         <div className="flex items-center gap-1 text-sm flex-wrap">
           {FILTERS.map((f, i) => (
             <div key={f.value} className="flex items-center">
-              {i > 0 && <span className="text-muted-foreground/40 px-2">·</span>}
+              {i > 0 && <span className="text-muted-foreground/70 px-2">·</span>}
               <button
                 onClick={() => !f.comingSoon && setFilter(f.value)}
                 disabled={f.comingSoon}
@@ -201,7 +201,7 @@ export default function AIStudioDrafts() {
                   filter === f.value
                     ? "text-primary"
                     : f.comingSoon
-                    ? "text-muted-foreground/40 cursor-not-allowed"
+                    ? "text-muted-foreground/70 cursor-not-allowed"
                     : "text-muted-foreground hover:text-foreground"
                 )}
               >

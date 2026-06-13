@@ -50,7 +50,7 @@ export function SidebarNavItem({
     isActive
       ? "text-foreground"
       : disabled
-      ? "text-muted-foreground/50 cursor-default"
+      ? "text-muted-foreground/70 cursor-default"
       : "text-muted-foreground hover:bg-muted hover:text-foreground",
     collapsed && "justify-center px-2"
   );
