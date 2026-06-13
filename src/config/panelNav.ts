@@ -137,6 +137,7 @@ export const adminNav: PanelNavConfig = {
     {
       label: "Plataforma",
       items: [
+        { href: "/admin/ai", icon: Activity, label: "Uso de IA" },
         { href: "/admin/ai-tutor", icon: Cpu, label: "AI Tutor" },
         { href: "/admin/security", icon: Shield, label: "Seguridad", comingSoon: true },
       ],
