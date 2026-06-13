@@ -47,6 +47,48 @@ serve(async (req) => {
 
     const { discussion_id, chapter_id, video_timestamp_seconds, user_message, language } = await req.json();
 
+    // Input validation: cap user_message length to prevent token/storage exhaustion
+    const MAX_USER_MESSAGE_LENGTH = 4000;
+    if (typeof user_message !== "string" || user_message.trim().length === 0) {
+      return new Response(JSON.stringify({ error: "user_message is required" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    if (user_message.length > MAX_USER_MESSAGE_LENGTH) {
+      return new Response(JSON.stringify({ error: `user_message exceeds ${MAX_USER_MESSAGE_LENGTH} characters` }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    if (typeof discussion_id !== "string" || typeof chapter_id !== "string") {
+      return new Response(JSON.stringify({ error: "discussion_id and chapter_id are required" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // Verify the caller has access to the course owning this chapter
+    const { data: chapterCourse, error: chapterCourseError } = await supabaseClient
+      .from("chapters")
+      .select("course_id")
+      .eq("id", chapter_id)
+      .single();
+    if (chapterCourseError || !chapterCourse?.course_id) {
+      return new Response(JSON.stringify({ error: "Chapter not found" }), {
+        status: 404,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const { data: hasAccess, error: accessError } = await supabaseClient
+      .rpc("has_course_access", { _user_id: user.id, _course_id: chapterCourse.course_id });
+    if (accessError || !hasAccess) {
+      return new Response(JSON.stringify({ error: "Forbidden: no access to this course" }), {
+        status: 403,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     // Parallel fetch: settings, usage count, discussion, chapter, and recent replies
     log("Starting parallel DB queries");
     const [

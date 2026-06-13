@@ -155,6 +155,20 @@ serve(async (req) => {
       });
     }
 
+    // Input validation: cap to prevent token exhaustion
+    const MAX_SELECTED_TEXT = 10000;
+    const MAX_INSTRUCTION = 2000;
+    if (typeof selected_text !== "string" || selected_text.length > MAX_SELECTED_TEXT) {
+      return new Response(JSON.stringify({ error: `selected_text exceeds ${MAX_SELECTED_TEXT} characters` }), {
+        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    if (typeof instruction !== "string" || instruction.length > MAX_INSTRUCTION) {
+      return new Response(JSON.stringify({ error: `instruction exceeds ${MAX_INSTRUCTION} characters` }), {
+        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     console.log("Refining content for user:", user.id);
     console.log("Instruction:", instruction);
     console.log("Text length:", selected_text.length);
