@@ -9,6 +9,8 @@ import {
 import { HelpPopover } from "@/components/ui/help-popover";
 import { COURSE_CATEGORIES } from "@/lib/courseCategories";
 
+export type CourseVisibility = "public" | "private" | "unlisted";
+
 interface CreateCourseBasicInfoProps {
   title: string;
   setTitle: (v: string) => void;
@@ -18,8 +20,8 @@ interface CreateCourseBasicInfoProps {
   setPrice: (v: string) => void;
   category: string;
   setCategory: (v: string) => void;
-  visibility: "public" | "private";
-  setVisibility: (v: "public" | "private") => void;
+  visibility: CourseVisibility;
+  setVisibility: (v: CourseVisibility) => void;
 }
 
 export function CreateCourseBasicInfo(props: CreateCourseBasicInfoProps) {
