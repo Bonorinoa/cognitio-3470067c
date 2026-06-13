@@ -76,27 +76,23 @@ describe('AdminPanel', () => {
 
   it('renders the admin panel', () => {
     render(<AdminPanel />);
-    
-    expect(screen.getByText('Admin Panel')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 1, name: /panel de administración/i })).toBeInTheDocument();
   });
 
   it('displays user management section', () => {
     render(<AdminPanel />);
-    
-    expect(screen.getByText('User Management')).toBeInTheDocument();
+    expect(screen.getByText(/gestión de usuarios/i)).toBeInTheDocument();
   });
 
   it('shows user table with columns', () => {
     render(<AdminPanel />);
-    
-    expect(screen.getByText('User')).toBeInTheDocument();
-    expect(screen.getByText('Email')).toBeInTheDocument();
-    expect(screen.getByText('Roles')).toBeInTheDocument();
+    expect(screen.getByRole('columnheader', { name: /usuario/i })).toBeInTheDocument();
+    expect(screen.getByRole('columnheader', { name: /email/i })).toBeInTheDocument();
+    expect(screen.getByRole('columnheader', { name: /roles/i })).toBeInTheDocument();
   });
 
   it('has a search input', () => {
     render(<AdminPanel />);
-    
-    expect(screen.getByPlaceholderText(/search by name or email/i)).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/buscar por nombre o email/i)).toBeInTheDocument();
   });
 });
