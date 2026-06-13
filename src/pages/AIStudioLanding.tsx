@@ -6,7 +6,7 @@ import PricingSection from "@/components/ai-studio/PricingSection";
 import { useAISubscription } from "@/hooks/useAISubscription";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
-import { Megaphone, GraduationCap, ArrowRight, Clock } from "lucide-react";
+import { FileEdit, GraduationCap, ArrowRight, Clock } from "lucide-react";
 import WaitlistForm from "@/components/ai-studio/WaitlistForm";
 import { SEO } from "@/components/SEO";
 
@@ -92,7 +92,7 @@ export default function AIStudioLanding() {
           {subscriptionLoading ? (
             <div className="h-12 w-48 bg-muted animate-pulse rounded-md" />
           ) : (
-            <Link to={hasActiveSubscription ? "/ai-studio/marketing/blog" : user ? "/ai-studio/marketing/blog" : "/auth"}>
+            <Link to={user ? "/ai-studio/marketing/blog" : "/auth"}>
               <Button size="lg" className="gap-2 rounded-sm">
                 {hasActiveSubscription
                   ? t("aiStudio.goToTools", "Ir a Herramientas")
@@ -136,38 +136,37 @@ export default function AIStudioLanding() {
       {/* Bundles */}
       <section id="bundles" className="py-24">
         <div className="grid md:grid-cols-2 gap-8 px-2">
-          {/* Marketing — live */}
+          {/* Blog — live */}
           <Link
-            to="/ai-studio/marketing"
+            to="/ai-studio/marketing/blog"
             className="group p-10 md:p-12 border border-border bg-card/50 hover:border-primary/40 hover:bg-card transition-all flex flex-col"
           >
             <div className="w-12 h-12 mb-8 flex items-center justify-center bg-primary/10 text-primary rounded-sm">
-              <Megaphone className="w-6 h-6" strokeWidth={1.5} />
+              <FileEdit className="w-6 h-6" strokeWidth={1.5} />
             </div>
             <h3 className="text-3xl font-light mb-3 text-foreground">
-              {t("aiStudio.bundleMarketingTitle", "Divulgación")}
+              {t("aiStudio.blogToolTitle", "Generador de Blog")}
             </h3>
             <p className="text-muted-foreground mb-8 font-light">
               {t(
-                "aiStudio.bundleMarketingDesc",
-                "Optimizado para marketing de contenidos, LinkedIn y boletines informativos."
+                "aiStudio.blogToolDesc",
+                "Convertí tus materiales de investigación y notas en artículos de blog cuidadosamente redactados."
               )}
             </p>
             <ul className="space-y-3 text-sm text-foreground/80 mb-10 border-t border-border pt-6">
               {[
-                t("aiStudio.blogPosts", "Blog Posts"),
-                t("aiStudio.linkedinPosts", "LinkedIn Posts"),
-                t("aiStudio.twitterPosts", "X/Twitter Posts"),
-                t("aiStudio.newsletters", "Newsletters"),
-              ].map((f, i) => (
+                t("aiStudio.blogFeatureKB", "Usa tu base de conocimiento"),
+                t("aiStudio.blogFeatureStyle", "Respeta tu perfil de estilo"),
+                t("aiStudio.blogFeatureRefine", "Refinado contextual línea por línea"),
+              ].map((f) => (
                 <li key={f} className="flex items-center gap-3">
                   <span className="w-1 h-1 rounded-full bg-primary" />
-                  <span className={i === 0 ? "" : "text-muted-foreground"}>{f}</span>
+                  <span>{f}</span>
                 </li>
               ))}
             </ul>
             <span className="mt-auto text-sm font-bold tracking-[0.2em] uppercase text-primary group-hover:underline underline-offset-4">
-              {t("aiStudio.exploreToolsCTA", "Explorar Herramientas →")}
+              {t("aiStudio.openBlogCTA", "Abrir →")}
             </span>
           </Link>
 

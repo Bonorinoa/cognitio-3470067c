@@ -13,11 +13,9 @@ import {
   Shield,
   Building2,
   Cpu,
+  Activity,
   Database,
   FileEdit,
-  Linkedin,
-  Twitter,
-  Mail,
   Quote,
   Archive,
   type LucideIcon,
@@ -76,6 +74,7 @@ export const instructorNav: PanelNavConfig = {
       label: "Crecimiento",
       items: [
         { href: "/instructor/analytics", icon: BarChart3, label: "Analíticas" },
+        { href: "/instructor/ai-insights", icon: Sparkles, label: "IA en tus cursos" },
         { href: "/instructor/revenue", icon: DollarSign, label: "Ingresos", comingSoon: true },
         { href: "/instructor/students", icon: Users, label: "Estudiantes", comingSoon: true },
       ],
@@ -136,6 +135,7 @@ export const adminNav: PanelNavConfig = {
     {
       label: "Plataforma",
       items: [
+        { href: "/admin/ai", icon: Activity, label: "Uso de IA" },
         { href: "/admin/ai-tutor", icon: Cpu, label: "AI Tutor" },
         { href: "/admin/security", icon: Shield, label: "Seguridad", comingSoon: true },
       ],
@@ -160,16 +160,13 @@ export const aiStudioNav: PanelNavConfig = {
       ],
     },
     {
-      label: "Marketing",
+      label: "Herramientas",
       items: [
         { href: "/ai-studio/marketing/blog", icon: FileEdit, label: "Blog" },
-        { href: "/ai-studio/marketing/linkedin", icon: Linkedin, label: "LinkedIn", comingSoon: true },
-        { href: "/ai-studio/marketing/twitter", icon: Twitter, label: "X / Twitter", comingSoon: true },
-        { href: "/ai-studio/marketing/newsletter", icon: Mail, label: "Newsletter", comingSoon: true },
       ],
     },
     {
-      label: "Académico",
+      label: "Próximamente",
       items: [
         { href: "/ai-studio/academic/literature-review", icon: BookOpen, label: "Revisión de literatura", comingSoon: true },
         { href: "/ai-studio/academic/paper-formatter", icon: FileEdit, label: "Formateador de papers", comingSoon: true },

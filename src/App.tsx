@@ -45,6 +45,8 @@ const EditCourse = lazy(() => import("./pages/EditCourse"));
 const AuthPage = lazy(() => import("./pages/AuthPage"));
 const AdminUsers = lazy(() => import("./pages/AdminUsers"));
 const AdminAITutor = lazy(() => import("./pages/AdminAITutor"));
+const AdminAIOverview = lazy(() => import("./pages/AdminAIOverview"));
+const InstructorAIInsights = lazy(() => import("./pages/InstructorAIInsights"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const ForgotPasswordPage = lazy(() => import("./pages/ForgotPasswordPage"));
 const ResetPasswordPage = lazy(() => import("./pages/ResetPasswordPage"));
@@ -98,6 +100,7 @@ const App = () => (
                   <Route path="courses" element={<InstructorCourses />} />
                   <Route path="create" element={<CreateCourse />} />
                   <Route path="analytics" element={<InstructorAnalytics />} />
+                  <Route path="ai-insights" element={<InstructorAIInsights />} />
                   <Route path="guide" element={<InstructorGuide />} />
                   <Route path="settings" element={<InstructorSettings />} />
                   <Route path="edit/:id" element={<EditCourse />} />
@@ -145,6 +148,7 @@ const App = () => (
                 <Route path="/admin" element={<RequireAdmin><PanelLayout nav={adminNav} /></RequireAdmin>}>
                   <Route index element={<AdminUsers />} />
                   <Route path="ai-tutor" element={<AdminAITutor />} />
+                  <Route path="ai" element={<AdminAIOverview />} />
                 </Route>
                 {/* Legacy route redirects for backward compatibility */}
                 <Route path="/teacher" element={<Navigate to="/instructor" replace />} />
