@@ -22,7 +22,7 @@ const AdminAITutor = () => {
             <span className="font-serif italic">AI Tutor</span>
           </h1>
           <p className="text-sm text-muted-foreground sm:text-base">
-            Configura el modelo, la temperatura y el prompt base que guía las
+            Configurá el modelo, la temperatura y el prompt base que guía las
             respuestas del tutor en toda la plataforma.
           </p>
         </div>
