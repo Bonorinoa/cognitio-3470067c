@@ -774,7 +774,6 @@ export type Database = {
           id: string
           linkedin_url: string | null
           onboarding_completed_at: string | null
-          role: string | null
           twitter_url: string | null
           updated_at: string
           website_url: string | null
@@ -791,7 +790,6 @@ export type Database = {
           id: string
           linkedin_url?: string | null
           onboarding_completed_at?: string | null
-          role?: string | null
           twitter_url?: string | null
           updated_at?: string
           website_url?: string | null
@@ -808,7 +806,6 @@ export type Database = {
           id?: string
           linkedin_url?: string | null
           onboarding_completed_at?: string | null
-          role?: string | null
           twitter_url?: string | null
           updated_at?: string
           website_url?: string | null
@@ -1054,7 +1051,6 @@ export type Database = {
           headline: string
           id: string
           linkedin_url: string
-          role: string
           twitter_url: string
           website_url: string
         }[]
