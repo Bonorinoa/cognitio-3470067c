@@ -64,6 +64,8 @@ const Index = () => {
             src={heroImage}
             alt="Fondo de aprendizaje"
             className="h-full w-full object-cover opacity-30"
+            width={1920}
+            height={1080}
             loading="eager"
             fetchPriority="high"
           />
