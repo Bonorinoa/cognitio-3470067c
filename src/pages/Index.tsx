@@ -56,7 +56,7 @@ const Index = () => {
       />
       <Navbar />
 
-
+      <main id="main">
       {/* Hero */}
       <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden pt-16">
         <div className="absolute inset-0">
