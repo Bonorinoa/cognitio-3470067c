@@ -151,17 +151,17 @@ const StudentDashboard = () => {
             </h1>
             <p className="max-w-xl text-sm text-muted-foreground sm:text-base">
               {enrolledCourses.length > 0
-                ? `Llevas ${totalChaptersDone} ${
+                ? `Llevás ${totalChaptersDone} ${
                     totalChaptersDone === 1 ? "capítulo" : "capítulos"
-                  } completados y ${overallProgress}% de avance general. Sigue tu ritmo.`
-                : "Explora el catálogo y comienza tu primer curso cuando quieras."}
+                  } completados y ${overallProgress}% de avance general. Seguí tu ritmo.`
+                : "Explorá el catálogo y comenzá tu primer curso cuando quieras."}
             </p>
           </div>
           <div className="flex shrink-0 flex-wrap gap-3">
             <Button asChild variant="outline" size="lg" className="rounded-full">
               <Link to="/courses">
                 <Compass className="mr-2 h-4 w-4" />
-                Explorar catálogo
+                Explorá el catálogo
               </Link>
             </Button>
             {resumeCourse && (

@@ -17,13 +17,13 @@ export default function UsageIndicator() {
   const pct = limit > 0 ? Math.max(0, Math.min(100, (remaining / limit) * 100)) : 0;
 
   return (
-    <div className="flex items-center gap-2.5 text-xs">
+    <div className="flex items-center gap-2 text-xs">
       <Zap className="h-3 w-3 text-primary" strokeWidth={2} />
-      <span className="hidden sm:inline uppercase tracking-[0.15em] font-semibold text-muted-foreground">
-        {t("aiStudioNav.generationsLeft", "Restantes")}
-      </span>
       <span className="font-light text-foreground tabular-nums">
         {isLoading ? "…" : `${remaining}/${limit}`}
+      </span>
+      <span className="hidden md:inline text-muted-foreground">
+        {t("aiStudioNav.generationsLeft", "generaciones")}
       </span>
       {!isLoading && (
         <div className="h-px w-16 overflow-hidden bg-border hidden md:block">

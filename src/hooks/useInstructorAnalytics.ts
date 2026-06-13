@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { startOfMonth, subMonths, format, eachDayOfInterval, subDays } from "date-fns";
+import { es } from "date-fns/locale";
 
 export interface CourseAnalytics {
   id: string;
@@ -232,7 +233,7 @@ export const useInstructorAnalytics = () => {
 
       const recentPurchases = recentPurchaseData.map((p) => ({
         id: p.id,
-        date: format(new Date(p.created_at), "dd MMM yyyy"),
+        date: format(new Date(p.created_at), "dd MMM yyyy", { locale: es }),
         amount: Number(p.amount),
         course: courseMap.get(p.course_id) || "Curso desconocido",
         studentName: profileMap.get(p.user_id) || "Usuario",

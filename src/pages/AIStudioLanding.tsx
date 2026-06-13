@@ -32,28 +32,28 @@ export default function AIStudioLanding() {
     {
       number: "01",
       kicker: t("aiStudio.stepKicker1", "Conocimiento"),
-      title: t("aiStudio.stepTitle1", "Su Biblioteca Digital"),
+      title: t("aiStudio.stepTitle1", "Tu biblioteca digital"),
       desc: t(
         "aiStudio.stepDesc1",
-        "Cargue sus artículos, tesis y notas de clase. La IA se entrena exclusivamente con su material original."
+        "Cargá tus artículos, tesis y notas de clase. La IA se entrena exclusivamente con tu material original."
       ),
     },
     {
       number: "02",
       kicker: t("aiStudio.stepKicker2", "Estilo"),
-      title: t("aiStudio.stepTitle2", "Voz y Rigor"),
+      title: t("aiStudio.stepTitle2", "Voz y rigor"),
       desc: t(
         "aiStudio.stepDesc2",
-        "Defina el tono académico y el nivel de complejidad. Asegure que cada palabra suene auténticamente como usted."
+        "Definí el tono académico y el nivel de complejidad. Asegurate de que cada palabra suene auténticamente como vos."
       ),
     },
     {
       number: "03",
       kicker: t("aiStudio.stepKicker3", "Herramienta"),
-      title: t("aiStudio.stepTitle3", "Producción Fluida"),
+      title: t("aiStudio.stepTitle3", "Producción fluida"),
       desc: t(
         "aiStudio.stepDesc3",
-        "Genere artículos de blog, newsletters o revisiones bibliográficas en segundos, manteniendo la integridad científica."
+        "Generá artículos de blog, newsletters o revisiones bibliográficas en segundos, manteniendo la integridad científica."
       ),
     },
   ];
@@ -76,7 +76,7 @@ export default function AIStudioLanding() {
           <span className="h-px w-8 bg-primary" />
         </div>
         <h1 className="text-4xl md:text-6xl font-light tracking-tight leading-[1.1] text-foreground">
-          {t("aiStudio.heroLine1", "Su base de conocimiento,")}
+          {t("aiStudio.heroLine1", "Tu base de conocimiento,")}
           <br />
           <span className="italic font-serif">
             {t("aiStudio.heroLine2", "amplificada por IA.")}
@@ -85,7 +85,7 @@ export default function AIStudioLanding() {
         <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed mt-8 mb-10 font-light">
           {t(
             "aiStudio.heroDescription",
-            "Una herramienta de creación diseñada para académicos y especialistas. Preserve su voz original mientras escala su producción de contenido."
+            "Una herramienta de creación pensada para académicos y especialistas. Preservá tu voz original mientras escalás tu producción de contenido."
           )}
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">

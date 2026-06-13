@@ -287,7 +287,7 @@ const ServicesPage = () => {
                 Soluciones a medida
               </div>
               <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-                Construimos contigo el ed-tech que tu programa necesita.
+                Construimos con vos el ed-tech que tu programa necesita.
               </h2>
               <p className="text-muted-foreground max-w-2xl mx-auto">
                 Universidades, programas de posgrado, escuelas técnicas, equipos de aprendizaje

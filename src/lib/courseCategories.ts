@@ -37,6 +37,17 @@ export const getCategoryLabel = (t: TFunction, slug: string): string => {
   return cat ? t(cat.labelKey) : slug;
 };
 
+/** Resolve a stored DB category value to its localized label.
+ *  Falls back to the DB value if no mapping is found. */
+export const getCategoryLabelFromDb = (
+  t: TFunction,
+  dbValue: string | null | undefined
+): string => {
+  if (!dbValue) return "";
+  const cat = COURSE_CATEGORIES.find((c) => c.dbValue === dbValue);
+  return cat ? t(cat.labelKey) : dbValue;
+};
+
 export const slugToDbValue = (slug: string): string | undefined =>
   COURSE_CATEGORIES.find((c) => c.slug === slug)?.dbValue;
 

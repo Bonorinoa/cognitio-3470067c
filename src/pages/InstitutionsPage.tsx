@@ -117,7 +117,7 @@ const InstitutionsPage = () => {
               Para instituciones y empresas
             </div>
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-              Construimos contigo el ed-tech con IA que tu programa necesita.
+              Construimos con vos el ed-tech con IA que tu programa necesita.
             </h1>
             <p className="text-lg text-muted-foreground">
               Universidades, programas de posgrado, escuelas técnicas, equipos de aprendizaje

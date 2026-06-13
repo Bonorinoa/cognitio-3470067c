@@ -61,9 +61,9 @@ const InstructorAnalytics = () => {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Analytics</h1>
+          <h1 className="text-2xl font-bold text-foreground">Analíticas</h1>
           <p className="text-sm text-muted-foreground">
-            Monitorea el rendimiento de tus cursos en tiempo real
+            Monitoreá el rendimiento de tus cursos en tiempo real
           </p>
         </div>
         <Button onClick={handleExport} disabled={!data || isLoading} variant="outline" size="sm">

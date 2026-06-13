@@ -197,7 +197,7 @@ const InstructorDashboard = () => {
             </h1>
             <p className="max-w-xl text-sm text-muted-foreground sm:text-base">
               {hasCourses
-                ? `Tienes ${publishedCourses} ${
+                ? `Tenés ${publishedCourses} ${
                     publishedCourses === 1 ? "curso publicado" : "cursos publicados"
                   } y ${totalStudents} ${
                     totalStudents === 1 ? "estudiante" : "estudiantes"
