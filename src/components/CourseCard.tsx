@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { BookOpen, Clock, PlayCircle, Star } from "lucide-react";
+import { getCategoryLabelFromDb } from "@/lib/courseCategories";
 
 interface CourseCardProps {
   id: string;
@@ -32,17 +34,20 @@ const CourseCard = ({
   averageRating,
   ratingCount = 0,
 }: CourseCardProps) => {
+  const { t } = useTranslation();
   const formatTotalDuration = (seconds: number) => {
     if (seconds === 0) return null;
     const hours = Math.floor(seconds / 3600);
     const mins = Math.floor((seconds % 3600) / 60);
     if (hours > 0) {
-      return `${hours}h ${mins}m`;
+      return `${hours} h ${mins} min`;
     }
-    return `${mins}m`;
+    return `${mins} min`;
   };
 
   const durationDisplay = formatTotalDuration(totalDurationSeconds);
+  const categoryLabel = getCategoryLabelFromDb(t, category);
+  const chapterWord = chaptersCount === 1 ? "capítulo" : "capítulos";
   return (
     <Link to={`/course/${id}`}>
       <Card className="group overflow-hidden rounded-xl border-border bg-card transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
@@ -62,7 +67,7 @@ const CourseCard = ({
             </div>
           )}
           <Badge className="absolute top-3 left-3 bg-primary/90 text-primary-foreground">
-            {category}
+            {categoryLabel}
           </Badge>
           {isFeatured && (
             <Badge className="absolute top-3 right-3 bg-accent text-accent-foreground flex items-center gap-1">
@@ -81,7 +86,7 @@ const CourseCard = ({
           <div className="flex items-center gap-4 text-sm text-muted-foreground">
             <span className="flex items-center gap-1">
               <BookOpen className="h-4 w-4" />
-              {chaptersCount} chapters
+              {chaptersCount} {chapterWord}
             </span>
             {durationDisplay && (
               <span className="flex items-center gap-1">
@@ -101,7 +106,7 @@ const CourseCard = ({
         <CardFooter className="border-t border-border p-4">
           <div className="flex w-full items-center justify-between">
             {progress !== undefined ? (
-              <span className="text-sm text-accent">{progress}% complete</span>
+              <span className="text-sm text-accent">{progress}% completado</span>
             ) : (
               <span className="text-lg font-bold text-foreground">
                 ${price.toFixed(2)}

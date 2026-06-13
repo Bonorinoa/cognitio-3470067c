@@ -31,7 +31,7 @@ describe('CourseCard', () => {
   it('renders progress percentage when progress is provided', () => {
     render(<CourseCard {...defaultProps} progress={75} />);
     
-    expect(screen.getByText('75% complete')).toBeInTheDocument();
+    expect(screen.getByText('75% completado')).toBeInTheDocument();
     // Component uses Spanish: "Continuar"
     expect(screen.getByText('Continuar')).toBeInTheDocument();
     expect(screen.queryByText('$99.99')).not.toBeInTheDocument();
@@ -40,19 +40,25 @@ describe('CourseCard', () => {
   it('renders chapter count', () => {
     render(<CourseCard {...defaultProps} />);
     
-    expect(screen.getByText('10 chapters')).toBeInTheDocument();
+    expect(screen.getByText('10 capítulos')).toBeInTheDocument();
   });
 
-  it('renders category badge', () => {
+  it('renders singular chapter label when count is 1', () => {
+    render(<CourseCard {...defaultProps} chaptersCount={1} />);
+
+    expect(screen.getByText('1 capítulo')).toBeInTheDocument();
+  });
+
+  it('renders translated category badge for known DB values', () => {
     render(<CourseCard {...defaultProps} />);
-    
-    expect(screen.getByText('Development')).toBeInTheDocument();
+    // "Development" → "Desarrollo" via courseCategories label map
+    expect(screen.getByText('Desarrollo')).toBeInTheDocument();
   });
 
   it('renders duration when provided', () => {
     render(<CourseCard {...defaultProps} totalDurationSeconds={3660} />);
-    
-    expect(screen.getByText('1h 1m')).toBeInTheDocument();
+
+    expect(screen.getByText('1 h 1 min')).toBeInTheDocument();
   });
 
   it('links to the course page', () => {

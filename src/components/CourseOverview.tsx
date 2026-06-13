@@ -7,6 +7,7 @@ import { BookOpen, Clock, Star, Check, ShoppingCart, Loader2, LogIn, Play } from
 import { useTranslation } from "react-i18next";
 import CourseRatingCard from "@/components/CourseRatingCard";
 import CourseReviewsList from "@/components/CourseReviewsList";
+import { getCategoryLabelFromDb } from "@/lib/courseCategories";
 
 interface Chapter {
   id: string;
@@ -123,7 +124,7 @@ const CourseOverview = ({
                 {totalDuration}
               </span>
               {course.category && (
-                <Badge variant="secondary">{course.category}</Badge>
+                <Badge variant="secondary">{getCategoryLabelFromDb(t, course.category)}</Badge>
               )}
             </div>
             <Link

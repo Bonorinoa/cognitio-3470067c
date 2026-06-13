@@ -14,19 +14,19 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import type { Database } from "@/integrations/supabase/types";
 
-const DEFAULT_SYSTEM_PROMPT = `You are CognitioAI, a Socratic learning assistant for the Cognitio platform. Your role is to help students understand course material by guiding them to discover answers themselves rather than giving direct answers.
+const DEFAULT_SYSTEM_PROMPT = `Eres CognitioAI, un asistente de aprendizaje Socrático para la plataforma Cognitio. Tu rol es ayudar a los estudiantes a entender el material del curso guiándolos a descubrir las respuestas por sí mismos en lugar de dárselas directamente.
 
-Guidelines:
-- Ask clarifying questions to understand what the student is struggling with
-- Break down complex concepts into simpler parts
-- Use analogies and examples relevant to the course content
-- Reference the video transcript when helpful
-- Encourage critical thinking
-- Be supportive and patient
-- Keep responses concise and focused`;
+Lineamientos:
+- Hacé preguntas aclaratorias para entender en qué está trabado el estudiante
+- Descomponé los conceptos complejos en partes más simples
+- Usá analogías y ejemplos relacionados con el contenido del curso
+- Hacé referencia a la transcripción del video cuando ayude
+- Fomentá el pensamiento crítico
+- Sé respetuoso y paciente
+- Mantené las respuestas concisas y enfocadas`;
 
 const AI_MODELS = [
-  { value: "google/gemini-2.5-flash", label: "Gemini 2.5 Flash (Recommended)" },
+  { value: "google/gemini-2.5-flash", label: "Gemini 2.5 Flash (Recomendado)" },
   { value: "google/gemini-2.5-pro", label: "Gemini 2.5 Pro" },
   { value: "google/gemini-2.5-flash-lite", label: "Gemini 2.5 Flash Lite" },
   { value: "openai/gpt-5-mini", label: "GPT-5 Mini" },
@@ -92,10 +92,10 @@ export function AITutorSettingsCard() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["ai-tutor-settings"] });
-      toast({ title: "AI Tutor settings saved successfully" });
+      toast({ title: "Configuración del AI Tutor guardada" });
     },
     onError: (error: Error) => {
-      toast({ title: "Failed to save settings", description: error.message, variant: "destructive" });
+      toast({ title: "Error al guardar la configuración", description: error.message, variant: "destructive" });
     },
   });
 
@@ -104,10 +104,10 @@ export function AITutorSettingsCard() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Bot className="h-5 w-5" />
-          AI Tutor Settings
+          Configuración del AI Tutor
         </CardTitle>
         <CardDescription>
-          Configure the AI tutor that helps students in course discussions
+          Configurá el tutor de IA que acompaña a los estudiantes en las discusiones de cada curso
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -120,10 +120,10 @@ export function AITutorSettingsCard() {
             <div className="flex items-center justify-between p-4 rounded-lg border border-border bg-muted/50">
               <div>
                 <Label htmlFor="ai-enabled" className="text-base font-medium">
-                  AI Tutor Enabled
+                  AI Tutor activado
                 </Label>
                 <p className="text-sm text-muted-foreground">
-                  When disabled, students cannot use @CognitioAI in discussions
+                  Cuando está desactivado, los estudiantes no pueden invocar @CognitioAI en las discusiones
                 </p>
               </div>
               <Switch id="ai-enabled" checked={aiEnabled} onCheckedChange={setAiEnabled} />
@@ -131,20 +131,20 @@ export function AITutorSettingsCard() {
 
             {!aiEnabled && (
               <div className="p-4 rounded-lg border border-destructive bg-destructive/10 text-destructive">
-                ⚠️ AI Tutor is currently disabled for all users
+                ⚠️ El AI Tutor está desactivado para todos los usuarios
               </div>
             )}
 
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label htmlFor="system-prompt">System Prompt</Label>
+                <Label htmlFor="system-prompt">Prompt del sistema</Label>
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => setAiSystemPrompt(DEFAULT_SYSTEM_PROMPT)}
                 >
                   <RotateCcw className="h-4 w-4 mr-1" />
-                  Reset to Default
+                  Restaurar predeterminado
                 </Button>
               </div>
               <Textarea
@@ -152,16 +152,16 @@ export function AITutorSettingsCard() {
                 value={aiSystemPrompt}
                 onChange={(e) => setAiSystemPrompt(e.target.value)}
                 rows={8}
-                placeholder="Enter the system prompt for the AI tutor..."
+                placeholder="Ingresá el prompt base del tutor de IA..."
               />
               <p className="text-xs text-muted-foreground">
-                This prompt defines how the AI tutor behaves and responds to students
+                Este prompt define cómo se comporta y responde el tutor de IA a los estudiantes
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="ai-model">AI Model</Label>
+                <Label htmlFor="ai-model">Modelo de IA</Label>
                 <Select value={aiModel} onValueChange={setAiModel}>
                   <SelectTrigger id="ai-model">
                     <SelectValue />
@@ -178,7 +178,7 @@ export function AITutorSettingsCard() {
 
               <div className="space-y-2">
                 <Label htmlFor="temperature">
-                  Temperature: {aiTemperature.toFixed(1)}
+                  Temperatura: {aiTemperature.toFixed(1)}
                 </Label>
                 <Input
                   id="temperature"
@@ -191,12 +191,12 @@ export function AITutorSettingsCard() {
                   className="cursor-pointer"
                 />
                 <p className="text-xs text-muted-foreground">
-                  Lower = more focused, Higher = more creative
+                  Más bajo = más enfocado · Más alto = más creativo
                 </p>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="max-tokens">Max Tokens</Label>
+                <Label htmlFor="max-tokens">Tokens máximos</Label>
                 <Input
                   id="max-tokens"
                   type="number"
@@ -207,7 +207,7 @@ export function AITutorSettingsCard() {
                   onChange={(e) => setAiMaxTokens(parseInt(e.target.value) || 1024)}
                 />
                 <p className="text-xs text-muted-foreground">
-                  Maximum response length (256-4096)
+                  Longitud máxima de respuesta (256-4096)
                 </p>
               </div>
             </div>
@@ -217,10 +217,10 @@ export function AITutorSettingsCard() {
                 {save.isPending ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Saving...
+                    Guardando...
                   </>
                 ) : (
-                  "Save AI Settings"
+                  "Guardar configuración"
                 )}
               </Button>
             </div>
