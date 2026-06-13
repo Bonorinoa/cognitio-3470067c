@@ -49,6 +49,12 @@ const InstructorDashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [hasProfile, setHasProfile] = useState(false);
 
+  const onboarding = useInstructorOnboarding();
+  const [onboardingOpen, setOnboardingOpen] = useState(false);
+  useEffect(() => {
+    if (onboarding.shouldShow) setOnboardingOpen(true);
+  }, [onboarding.shouldShow]);
+
   useEffect(() => {
     if (user) fetchInstructorData();
   }, [user]);
