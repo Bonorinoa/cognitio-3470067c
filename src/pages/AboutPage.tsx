@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import FoundersStorySection from "@/components/FoundersStorySection";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Heart } from "lucide-react";
+import { SEO } from "@/components/SEO";
 
 import gusLooking from "@/assets/founders/gus-looking.jpg";
 import gusReading from "@/assets/founders/gus-reading.jpg";
@@ -61,7 +62,13 @@ const founderCards = [
 const AboutPage = () => {
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title="Nuestra historia"
+        description="Cognitio nació de la convicción de que la mejor tecnología educativa la diseñan quienes enseñan. Conocé a los fundadores."
+        path="/about"
+      />
       <Navbar />
+
 
       <main className="pt-16">
         {/* Hero */}

@@ -18,6 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Search } from "lucide-react";
+import { SEO } from "@/components/SEO";
 
 interface ServiceWithInstructor {
   id: string;
@@ -114,7 +115,13 @@ const ServicesCatalogPage = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      <SEO
+        title="Catálogo de servicios"
+        description="Consultoría, mentoría y servicios profesionales ofrecidos por instructores invitados de Cognitio."
+        path="/services/catalog"
+      />
       <Navbar />
+
 
       <main className="flex-1 pt-24 pb-16">
         <div className="container mx-auto px-4">

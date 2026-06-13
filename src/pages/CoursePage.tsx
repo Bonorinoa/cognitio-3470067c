@@ -9,6 +9,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
 import { getErrorMessage } from "@/lib/errorUtils";
+import { SEO } from "@/components/SEO";
 
 interface Chapter {
   id: string;
@@ -353,7 +354,20 @@ const CoursePage = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      {course && (
+        <SEO
+          title={course.title}
+          description={
+            course.description?.slice(0, 155) ??
+            `Curso de ${course.instructor?.full_name ?? "instructor invitado"} en Cognitio.`
+          }
+          path={`/course/${course.id}`}
+          image={course.image_url ?? undefined}
+          type="article"
+        />
+      )}
       <Navbar />
+
 
       <main className="pt-16">
         {viewMode === "overview" ? (

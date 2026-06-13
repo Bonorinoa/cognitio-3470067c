@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import HeroBackground from "@/components/HeroBackground";
+import { SEO } from "@/components/SEO";
 import heroImage from "@/assets/hero-bg.jpg";
 import {
   ArrowRight,
@@ -41,7 +42,20 @@ const founderCards = [
 const Index = () => {
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title="Cognitio — Cursos y consultoría de instructores expertos"
+        description="Plataforma académica curada para hispanohablantes: cursos en video, consultoría 1 a 1 y publicaciones de instructores invitados. Conocimiento riguroso, en español."
+        path="/"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "Cognitio",
+          url: "https://cognitio.lovable.app",
+          inLanguage: "es",
+        }}
+      />
       <Navbar />
+
 
       {/* Hero */}
       <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden pt-16">
