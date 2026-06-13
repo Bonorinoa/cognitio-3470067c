@@ -113,7 +113,7 @@ const CoursesPage = () => {
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-2">Explorar Cursos</h1>
           <p className="text-muted-foreground">
-            Descubre nuestra biblioteca de cursos y comienza a aprender hoy
+            Descubrí nuestra biblioteca de cursos y comenzá a aprender hoy
           </p>
         </div>
 
