@@ -197,7 +197,7 @@ const TermsOfService = () => {
             </div>
           </CardContent>
         </Card>
-      </div>
+      </main>
     </div>
   );
 };
