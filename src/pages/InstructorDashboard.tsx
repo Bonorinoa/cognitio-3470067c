@@ -20,6 +20,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
 import { InstructorGettingStartedCard } from "@/components/help/InstructorGettingStartedCard";
+import { InstructorOnboardingModal } from "@/components/instructor/InstructorOnboardingModal";
+import { useInstructorOnboarding } from "@/hooks/useInstructorOnboarding";
 
 interface CourseWithStats {
   id: string;
