@@ -124,6 +124,25 @@ serve(async (req) => {
 
     const { content_type, topic, additional_instructions, selected_document_ids } = await req.json();
 
+    // Input validation: cap text inputs to prevent token exhaustion
+    const MAX_TOPIC = 2000;
+    const MAX_INSTRUCTIONS = 2000;
+    if (typeof topic !== "string" || topic.trim().length === 0) {
+      return new Response(JSON.stringify({ error: "topic is required" }), {
+        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    if (topic.length > MAX_TOPIC) {
+      return new Response(JSON.stringify({ error: `topic exceeds ${MAX_TOPIC} characters` }), {
+        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    if (additional_instructions && typeof additional_instructions === "string" && additional_instructions.length > MAX_INSTRUCTIONS) {
+      return new Response(JSON.stringify({ error: `additional_instructions exceeds ${MAX_INSTRUCTIONS} characters` }), {
+        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     console.log("Generating content for user:", user.id);
     console.log("Content type:", content_type, "Topic:", topic);
     console.log("Selected documents:", selected_document_ids);
