@@ -224,24 +224,45 @@ export type Database = {
       }
       ai_usage_logs: {
         Row: {
+          chapter_id: string | null
+          completion_tokens: number | null
           content_type: string
+          course_id: string | null
           created_at: string
+          function_name: string | null
           id: string
+          latency_ms: number | null
           model_used: string | null
+          prompt_tokens: number | null
+          total_tokens: number | null
           user_id: string
         }
         Insert: {
+          chapter_id?: string | null
+          completion_tokens?: number | null
           content_type?: string
+          course_id?: string | null
           created_at?: string
+          function_name?: string | null
           id?: string
+          latency_ms?: number | null
           model_used?: string | null
+          prompt_tokens?: number | null
+          total_tokens?: number | null
           user_id: string
         }
         Update: {
+          chapter_id?: string | null
+          completion_tokens?: number | null
           content_type?: string
+          course_id?: string | null
           created_at?: string
+          function_name?: string | null
           id?: string
+          latency_ms?: number | null
           model_used?: string | null
+          prompt_tokens?: number | null
+          total_tokens?: number | null
           user_id?: string
         }
         Relationships: []
