@@ -1050,6 +1050,8 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_admin_ai_overview: { Args: never; Returns: Json }
+      get_instructor_ai_insights: { Args: never; Returns: Json }
       get_instructor_catalog: {
         Args: never
         Returns: {
