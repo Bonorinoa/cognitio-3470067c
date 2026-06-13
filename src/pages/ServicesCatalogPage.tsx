@@ -110,22 +110,22 @@ const ServicesCatalogPage = () => {
   }, [services, searchQuery, sortBy]);
 
   if (!authLoading && !user) {
-    return <Navigate to="/auth" replace state={{ from: "/services/catalog" }} />;
+    return <Navigate to="/auth" replace state={{ from: "/consultorias" }} />;
   }
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <SEO
-        title="Catálogo de servicios"
-        description="Consultoría, mentoría y servicios profesionales ofrecidos por instructores invitados de Cognitio."
-        path="/services/catalog"
+        title="Consultorías 1:1"
+        description="Consultoría, mentoría y servicios profesionales ofrecidos directamente por instructores invitados de Cognitio."
+        path="/consultorias"
       />
       <Navbar />
 
 
       <main className="flex-1 pt-24 pb-16">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-8">
+          <div className="text-center mb-6">
             <h1 className="text-4xl font-bold text-foreground mb-4">
               {t("services.title")}
             </h1>
@@ -133,6 +133,12 @@ const ServicesCatalogPage = () => {
               {t("services.subtitle")}
             </p>
           </div>
+
+          <p className="text-xs text-muted-foreground max-w-2xl mx-auto text-center mb-8 px-4">
+            Estas asesorías las presta directamente cada instructor. Cognitio facilita el contacto;
+            no forman parte de los planes de la plataforma.
+          </p>
+
 
           <div className="flex flex-col sm:flex-row gap-4 mb-8 max-w-2xl mx-auto">
             <div className="relative flex-1">
