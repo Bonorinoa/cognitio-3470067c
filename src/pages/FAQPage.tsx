@@ -9,6 +9,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import Footer from "@/components/Footer";
+import { SEO } from "@/components/SEO";
 
 const FAQPage = () => {
   const { t } = useTranslation();
@@ -71,7 +72,22 @@ const FAQPage = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      <SEO
+        title="Preguntas frecuentes"
+        description="Respuestas sobre cómo funciona Cognitio para estudiantes e instructores: compras, accesos, contenido y soporte."
+        path="/faq"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: [...studentQuestions, ...instructorQuestions].map(({ q, a }) => ({
+            "@type": "Question",
+            name: q,
+            acceptedAnswer: { "@type": "Answer", text: a },
+          })),
+        }}
+      />
       <div className="flex-1 container mx-auto px-4 py-8 max-w-4xl">
+
         <Link
           to="/"
           className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-8"

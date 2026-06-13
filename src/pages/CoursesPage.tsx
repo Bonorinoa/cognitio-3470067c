@@ -18,6 +18,7 @@ import { Search, Filter, BookOpen } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { COURSE_FILTER_SLUGS, slugToDbValue } from "@/lib/courseCategories";
+import { SEO } from "@/components/SEO";
 
 const CoursesPage = () => {
   const { t } = useTranslation();
@@ -99,7 +100,13 @@ const CoursesPage = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title="Explorar cursos"
+        description="Cursos curados por instructores invitados: ciencia, economía, humanidades y más. Aprendé con expertos en español."
+        path="/courses"
+      />
       <Navbar />
+
 
       <main className="container mx-auto px-4 pt-24 pb-12">
         {/* Header */}

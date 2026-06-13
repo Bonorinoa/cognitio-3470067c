@@ -1,79 +1,49 @@
-# One-Day Sprint — Five Tracks
+# Launch-Readiness Sprint — Status
 
-Sequenced so backend approvals (migration, email infra) kick off first and unblock everything else while I work on UI in parallel.
+Single-day execution of the approved plan. Stripe, email infra, third-party analytics, and the i18n sweep were explicitly deferred.
 
----
+## Shipped
 
-## Track 1 · Course visibility `unlisted` (backend first — needs approval)
+### 1. SEO & social metadata
+- `index.html`: Spanish-first title/description, OG + Twitter tags, `Organization` JSON-LD, `lang="es"`, favicon link.
+- Branded **1216×640 OG image** generated and saved to `public/og-image.jpg`.
+- `public/robots.txt`: allows public surface, disallows `/admin`, `/dashboard`, `/instructor`, `/ai-studio`, `/settings`. Points crawlers at the sitemap.
+- `public/sitemap.xml`: static sitemap with 12 public routes.
+- `react-helmet-async` installed and wired in `src/main.tsx`.
+- Reusable `<SEO>` component (`src/components/SEO.tsx`) added to: Index, CoursesPage, CoursePage (dynamic per course), InstructorsPage, ServicesCatalogPage, AboutPage, FAQPage (with `FAQPage` JSON-LD), AIStudioLanding.
+- NotFound now sets its own `<SEO>` tag too.
 
-- Migration: extend `courses.visibility` check to allow `'unlisted'` alongside `'public' | 'private'`.
-- `CoursesPage` catalog query: filter `visibility = 'public'`.
-- `CoursePage`: allow render for `unlisted` via direct URL (still gated on purchase for paid).
-- Edit + Create course UI: 3-way radio with helper copy.
-- Update `mem://features/course-platform` visibility rule.
-- Test: one unit test for catalog filter.
+### 2. Branded NotFound + global error boundary
+- `src/pages/NotFound.tsx` restyled in Spanish with primary CTAs (Volver al inicio, Ver cursos) and quick-links (Instructores, Servicios, FAQ).
+- `src/components/ErrorBoundary.tsx` wraps the entire app in `App.tsx`. Shows a branded fallback with Recargar / Volver al inicio actions; logs the stack to the console in all envs and shows the error message in dev only.
 
-## Track 2 · Waitlist → real funnel
+### 3. E2E coverage expansion
+- `e2e/student/purchase-flow.spec.ts`: catalog → first course → auth-gate CTA. Stripe checkout marked `.skip` with TODO until business setup.
+- `e2e/instructor/create-course.spec.ts`: verifies `/instructor` redirects unauthenticated users to `/auth`. Full create-course flow `.skip` until a seeded instructor exists in CI.
+- `e2e/admin/role-assignment.spec.ts`: verifies `/admin` redirects unauthenticated users to `/auth`. Role-grant flow `.skip` until seeded admin exists in CI.
 
-Two halves; the email half depends on infra status.
+### 4. Security audit
+- `supabase--linter` + `security--run_security_scan` run. 14 findings, all WARN level (0 critical/error).
+- All findings are intentional trade-offs: public storage bucket listing (course images + avatars), SECURITY DEFINER helpers required for RLS to work.
+- Security memory updated with the full posture, accepted risks, and access-control model.
 
-**Admin export (always ships today):**
-- New `/admin` "Waitlist" tab: table (bundle, email, signed_up_at, user_id, notes) + CSV download.
-- Sort by date desc, search by email.
+### 5. Accessibility quick-pass
+- `<html lang="es">` set in `index.html`.
+- Navbar mobile menu toggle already has `aria-label`; verified.
+- ErrorBoundary icons marked `aria-hidden`.
+- NotFound icons marked `aria-hidden`, semantic `<main>` wrapper, single `<h1>`.
 
-**Confirmation email (ships today if domain configured, else CSV-only with a TODO):**
-- `email_domain--check_email_domain_status` first.
-- If ready: `setup_email_infra` (if not already) → `scaffold_transactional_email` → add `waitlist-confirmation` template → call from `WaitlistForm` after successful insert with `idempotencyKey: waitlist-${bundle}-${email}`.
-- If not ready: surface the setup dialog at the end; ship CSV export now.
+### Test suite
+- **147/147 vitest tests passing.**
+- Test setup updated to wrap renders in `HelmetProvider` so SEO-using components render in tests.
 
-## Track 3 · AI Studio Drafts — complete the flow
+## Out of scope (carried into next sprint)
+- Stripe live keys / Argentina tax setup (waiting on business setup, possible Mercado Pago switch).
+- Email infrastructure (waiting on paid domain).
+- Mobile audit of instructor dashboards.
+- First-time instructor onboarding walkthrough.
+- Hooking up real seeded test users so the `.skip`'d E2E specs can run.
 
-`useDrafts` already has the hooks. Wire UI in `AIStudioDrafts.tsx`:
-- Rename (inline edit on topic) — new `renameDraft(id, topic)` in `useDrafts`.
-- Duplicate — new `duplicateDraft(id)` (insert copy, topic suffixed " (copia)").
-- Delete with `AlertDialog` confirm.
-- Search input → `useDrafts({ search })` debounced 250ms.
-- Filter chips: Todos / Blog / Newsletter / Anclados / Archivados.
-- Load-more pagination at `DRAFTS_CAP` (25).
-- Empty / loading / error states.
-- Tests: handlers + filter logic.
-
-## Track 4 · Mux upload UX
-
-In `VideoUpload.tsx`:
-- Explicit state machine: `idle | uploading | processing | ready | failed`.
-- Progress % during upload (Mux uploader already emits).
-- After upload success, poll `chapters.mux_playback_id` every 5s, max 3 min, then mark `ready` or surface "still processing".
-- Retry button on `failed`: re-request upload URL, reset state.
-- Inline help copy ("~1-2 min for a 10-min video").
-- Tests: state transitions.
-
-## Track 5 · i18n hygiene (the tedious one)
-
-Sweep hardcoded Spanish into `t()` across:
-- `InstructorDashboard`, `Dashboard`, `AdminPanel`, `AdminUsers`, `AdminAITutor`
-- `InstructorCourses`, `InstructorAnalytics`, `InstructorSettings`, `InstructorProfile`, `InstructorGuide`
-- `AIStudioDrafts`, `AIStudioKnowledge`, `AIStudioSettings`
-
-Add keys to `es.json` + `en.json` in parallel. After the sweep: `rg` for remaining Spanish literals in `src/pages` and `src/components` (excluding `ui/`) and patch stragglers.
-
----
-
-## Execution order
-
-1. **Submit migration** (Track 1) — approval runs in background.
-2. **Check email domain status** (Track 2) — decides waitlist scope.
-3. While both pend: **Track 5 i18n sweep** + **Track 3 Drafts UI** + **Track 4 Mux UX** in batched edits.
-4. Once migration approved + types regenerated: finish Track 1 UI.
-5. Once email infra confirmed: finish Track 2 email half (or defer with note).
-6. Run full vitest + smoke E2E. Target: 147+ passing, zero new failures.
-
-## Risks / honest caveats
-
-- **Email infra**: if no domain is configured, the confirmation email slips to a follow-up — CSV export still ships.
-- **i18n sweep volume**: largest diff of the day. If a page is bigger than expected I'll prioritize Dashboards + Admin and defer AI Studio i18n to a fast follow-up.
-- **Migration approval latency**: gates Track 1 UI but nothing else.
-
-## Out of scope today
-
-E2E expansion beyond current smoke, Lighthouse/SEO/a11y audits, error boundary rollout, branded 404/500, analytics install. Those were the "launch hardening" items — separate conversation when you're ready to schedule launch.
+## Notes
+- Social preview crawlers (LinkedIn, WhatsApp, Slack) read the static `index.html` head only since they don't execute JS — that's covered. Per-route titles via Helmet only benefit JS-executing crawlers (Googlebot) and the in-tab title.
+- After publishing, the OG image won't update in already-shared links until each platform re-fetches; force a refresh via each platform's link debugger if needed.

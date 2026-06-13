@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useAuth } from "@/contexts/AuthContext";
+import { SEO } from "@/components/SEO";
 import {
   ArrowRight,
   BookOpen,
@@ -66,7 +67,13 @@ const InstructorsPage = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title="Para instructores"
+        description="Cognitio es invitación-solo. Si das clases, investigás o consultás, conocé cómo publicar cursos, ofrecer servicios y multiplicar tu alcance."
+        path="/instructors"
+      />
       <Navbar />
+
 
       <main className="pt-16">
         {/* Hero */}

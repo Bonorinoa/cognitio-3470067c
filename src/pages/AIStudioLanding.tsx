@@ -8,6 +8,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { Megaphone, GraduationCap, ArrowRight, Clock } from "lucide-react";
 import WaitlistForm from "@/components/ai-studio/WaitlistForm";
+import { SEO } from "@/components/SEO";
 
 export default function AIStudioLanding() {
   const { t } = useTranslation();
@@ -59,7 +60,13 @@ export default function AIStudioLanding() {
 
   return (
     <div className="max-w-6xl mx-auto pb-20">
+      <SEO
+        title="AI Studio para instructores"
+        description="Convertí tu investigación y materiales de curso en publicaciones de blog, newsletters y guiones, asistido por IA. Exclusivo para instructores de Cognitio."
+        path="/ai-studio"
+      />
       {/* Hero */}
+
       <section className="text-center pt-12 pb-24 max-w-3xl mx-auto px-2">
         <div className="inline-flex items-center gap-3 mb-8">
           <span className="h-px w-8 bg-primary" />
