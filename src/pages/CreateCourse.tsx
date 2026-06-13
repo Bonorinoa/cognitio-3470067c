@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { getErrorMessage } from "@/lib/errorUtils";
 import { useAuth } from "@/contexts/AuthContext";
-import { CreateCourseBasicInfo } from "@/components/instructor/course-create/CreateCourseBasicInfo";
+import { CreateCourseBasicInfo, type CourseVisibility } from "@/components/instructor/course-create/CreateCourseBasicInfo";
 import {
   CreateCourseChaptersList,
   NewChapter,
@@ -25,7 +25,7 @@ const CreateCourse = () => {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("");
-  const [visibility, setVisibility] = useState<"public" | "private">("public");
+  const [visibility, setVisibility] = useState<CourseVisibility>("public");
   const [chapters, setChapters] = useState<NewChapter[]>([
     { id: "1", title: "", videoUrl: "", isFreePreview: false },
   ]);
