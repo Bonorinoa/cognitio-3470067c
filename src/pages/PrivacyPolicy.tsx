@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 const PrivacyPolicy = () => {
   return (
     <div className="min-h-screen bg-background">
-      <div className="container max-w-4xl mx-auto py-12 px-4">
+      <main id="main" className="container max-w-4xl mx-auto py-12 px-4">
         {/* Back link */}
         <Link
           to="/auth"
