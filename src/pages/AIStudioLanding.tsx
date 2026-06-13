@@ -92,7 +92,7 @@ export default function AIStudioLanding() {
           {subscriptionLoading ? (
             <div className="h-12 w-48 bg-muted animate-pulse rounded-md" />
           ) : (
-            <Link to={hasActiveSubscription ? "/ai-studio/marketing/blog" : user ? "/ai-studio/marketing/blog" : "/auth"}>
+            <Link to={user ? "/ai-studio/marketing/blog" : "/auth"}>
               <Button size="lg" className="gap-2 rounded-sm">
                 {hasActiveSubscription
                   ? t("aiStudio.goToTools", "Ir a Herramientas")
