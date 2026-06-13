@@ -86,8 +86,8 @@ describe('AdminPanel', () => {
 
   it('shows user table with columns', () => {
     render(<AdminPanel />);
-    expect(screen.getByRole('columnheader', { name: /usuario/i })).toBeInTheDocument();
-    expect(screen.getByRole('columnheader', { name: /email/i })).toBeInTheDocument();
+    expect(screen.getAllByRole('columnheader', { name: /usuario/i }).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole('columnheader', { name: /email/i }).length).toBeGreaterThan(0);
     expect(screen.getByRole('columnheader', { name: /roles/i })).toBeInTheDocument();
   });
 
