@@ -36,8 +36,14 @@ const Footer = () => {
               <Link to="/instructors" className="text-muted-foreground hover:text-foreground transition-colors">
                 {t("nav.instructors")}
               </Link>
-              <Link to="/services" className="text-muted-foreground hover:text-foreground transition-colors">
-                {t("nav.services", "Servicios")}
+              <Link to="/planes" className="text-muted-foreground hover:text-foreground transition-colors">
+                {t("nav.plans", "Planes")}
+              </Link>
+              <Link to="/consultorias" className="text-muted-foreground hover:text-foreground transition-colors">
+                {t("nav.consultancies", "Consultorías")}
+              </Link>
+              <Link to="/instituciones" className="text-muted-foreground hover:text-foreground transition-colors">
+                {t("nav.institutions", "Instituciones")}
               </Link>
               <Link to="/about" className="text-muted-foreground hover:text-foreground transition-colors">
                 {t("nav.about", "Nuestra historia")}

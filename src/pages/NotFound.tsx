@@ -68,7 +68,7 @@ const NotFound = () => {
               </Link>
               <span className="text-muted-foreground">·</span>
               <Link
-                to="/services"
+                to="/planes"
                 className="inline-flex items-center gap-1.5 text-primary hover:underline underline-offset-4"
               >
                 <Search className="h-3.5 w-3.5" aria-hidden="true" />

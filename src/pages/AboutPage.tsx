@@ -127,7 +127,7 @@ const AboutPage = () => {
                     <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
                   </Button>
                 </Link>
-                <Link to="/services">
+                <Link to="/planes">
                   <Button size="lg" variant="outline">
                     Ver servicios y precios
                   </Button>

@@ -37,7 +37,7 @@ const Navbar = () => {
     { to: "/", label: t("nav.home", "Inicio") },
     { to: "/courses", label: t("nav.courses") },
     { to: "/instructors", label: t("nav.instructors") },
-    { to: "/services", label: t("nav.services", "Servicios") },
+    { to: "/planes", label: t("nav.plans", "Planes") },
   ];
 
   return (

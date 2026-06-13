@@ -226,7 +226,7 @@ const PlatformPage = () => {
               </div>
 
               <Link
-                to="/services"
+                to="/planes"
                 className="group bg-card rounded-2xl p-6 border border-border hover:border-primary/40 hover:shadow-lg transition-all flex flex-col"
               >
                 <div className="flex items-center justify-between mb-4">

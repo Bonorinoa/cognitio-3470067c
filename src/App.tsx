@@ -23,8 +23,9 @@ const CoursesPage = lazy(() => import("./pages/CoursesPage"));
 const CoursePage = lazy(() => import("./pages/CoursePage"));
 const InstructorsPage = lazy(() => import("./pages/InstructorsPage"));
 const InstructorsDirectoryPage = lazy(() => import("./pages/InstructorsDirectoryPage"));
-const ServicesPage = lazy(() => import("./pages/ServicesPage"));
-const ServicesCatalogPage = lazy(() => import("./pages/ServicesCatalogPage"));
+const PlanesPage = lazy(() => import("./pages/ServicesPage"));
+const ConsultoriasPage = lazy(() => import("./pages/ServicesCatalogPage"));
+const InstitutionsPage = lazy(() => import("./pages/InstitutionsPage"));
 const InstructorDashboard = lazy(() => import("./pages/InstructorDashboard"));
 const InstructorCourses = lazy(() => import("./pages/InstructorCourses"));
 const InstructorAnalytics = lazy(() => import("./pages/InstructorAnalytics"));
@@ -74,12 +75,15 @@ const App = () => (
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/plataforma" element={<Navigate to="/instructors" replace />} />
                 <Route path="/platform" element={<Navigate to="/instructors" replace />} />
-                <Route path="/instituciones" element={<Navigate to="/services" replace />} />
-                <Route path="/institutions" element={<Navigate to="/services" replace />} />
+                <Route path="/instituciones" element={<InstitutionsPage />} />
+                <Route path="/institutions" element={<Navigate to="/instituciones" replace />} />
                 <Route path="/instructors" element={<InstructorsPage />} />
                 <Route path="/instructors/directory" element={<InstructorsDirectoryPage />} />
-                <Route path="/services" element={<ServicesPage />} />
-                <Route path="/services/catalog" element={<ServicesCatalogPage />} />
+                <Route path="/planes" element={<PlanesPage />} />
+                <Route path="/consultorias" element={<ConsultoriasPage />} />
+                {/* Legacy redirects */}
+                <Route path="/services" element={<Navigate to="/planes" replace />} />
+                <Route path="/services/catalog" element={<Navigate to="/consultorias" replace />} />
                 <Route path="/courses" element={<CoursesPage />} />
                 <Route path="/course/:id" element={<CoursePage />} />
 

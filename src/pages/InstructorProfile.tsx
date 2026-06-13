@@ -267,6 +267,13 @@ const InstructorProfile = () => {
         <section className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <InstructorServicesDisplay instructorId={instructor.id} />
+            <div className="mt-4 flex justify-end">
+              <Link to="/consultorias">
+                <Button variant="outline" size="sm">
+                  Ver todas las consultorías
+                </Button>
+              </Link>
+            </div>
           </div>
         </section>
 
