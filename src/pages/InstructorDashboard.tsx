@@ -190,6 +190,14 @@ const InstructorDashboard = () => {
 
   return (
     <div className="space-y-8 lg:space-y-10">
+      {onboarding.profile && (
+        <InstructorOnboardingModal
+          open={onboardingOpen}
+          onOpenChange={setOnboardingOpen}
+          profile={onboarding.profile}
+          onComplete={onboarding.markComplete}
+        />
+      )}
       {/* Welcome Strip */}
       <motion.section
         initial={{ opacity: 0, y: 8 }}
