@@ -40,14 +40,15 @@ export default function PricingSection() {
       ],
     },
     {
-      bundle: "marketing",
-      name: t("aiStudio.marketingBundle", "Divulgación"),
+      bundle: "academic",
+      name: t("aiStudio.academicBundle", "Académico"),
       price: 19,
-      tagline: t("aiStudio.marketingPricingDesc", "Todas las herramientas de divulgación"),
+      tagline: t("aiStudio.academicPricingDesc", "Herramientas de escritura académica"),
       features: [
-        t("aiStudio.marketingFeature1", "200 generaciones/día"),
-        t("aiStudio.marketingFeature2", "Blog, LinkedIn, X, Newsletters"),
+        t("aiStudio.academicFeature1", "200 generaciones/día"),
+        t("aiStudio.academicFeature2", "Literature review, citas, papers"),
       ],
+      comingSoon: true,
     },
     {
       bundle: "academic",
