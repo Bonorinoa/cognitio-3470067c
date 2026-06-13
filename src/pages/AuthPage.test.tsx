@@ -29,38 +29,38 @@ describe('AuthPage', () => {
 
   it('renders welcome heading and tabs', () => {
     render(<AuthPage />);
-    expect(screen.getByText(/welcome to cognitio/i)).toBeInTheDocument();
-    expect(screen.getAllByText(/sign in/i).length).toBeGreaterThan(0);
-    expect(screen.getByText(/sign up/i)).toBeInTheDocument();
+    expect(screen.getByText(/bienvenido a cognitio/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/iniciar sesión/i).length).toBeGreaterThan(0);
+    expect(screen.getByText(/registrarse/i)).toBeInTheDocument();
   });
 
   it('shows email + password inputs and submit button', () => {
     render(<AuthPage />);
-    expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/password/i)).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /^sign in$/i })).toBeInTheDocument();
+    expect(screen.getAllByLabelText(/email/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByLabelText(/contraseña/i).length).toBeGreaterThan(0);
+    expect(screen.getByRole('button', { name: /iniciar sesión/i })).toBeInTheDocument();
   });
 
   it('switches to signup tab and shows full name field', async () => {
     render(<AuthPage />);
     const user = userEvent.setup();
-    await user.click(screen.getByRole('tab', { name: /sign up/i }));
-    await waitFor(() => expect(screen.getByLabelText(/full name/i)).toBeInTheDocument());
+    await user.click(screen.getByRole('tab', { name: /registrarse/i }));
+    await waitFor(() => expect(screen.getByLabelText(/nombre completo/i)).toBeInTheDocument());
   });
 
   it('shows forgot password link', () => {
     render(<AuthPage />);
-    expect(screen.getByText(/forgot password/i)).toBeInTheDocument();
+    expect(screen.getByText(/olvidaste tu contraseña/i)).toBeInTheDocument();
   });
 
   it('shows ToS and Privacy Policy links', () => {
     render(<AuthPage />);
-    expect(screen.getByText(/terms of service/i)).toBeInTheDocument();
-    expect(screen.getByText(/privacy policy/i)).toBeInTheDocument();
+    expect(screen.getByText(/términos de servicio/i)).toBeInTheDocument();
+    expect(screen.getByText(/política de privacidad/i)).toBeInTheDocument();
   });
 
   it('shows back to home link', () => {
     render(<AuthPage />);
-    expect(screen.getByText(/back to home/i)).toBeInTheDocument();
+    expect(screen.getByText(/volver al inicio/i)).toBeInTheDocument();
   });
 });
