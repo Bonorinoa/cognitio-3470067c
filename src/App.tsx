@@ -75,12 +75,15 @@ const App = () => (
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/plataforma" element={<Navigate to="/instructors" replace />} />
                 <Route path="/platform" element={<Navigate to="/instructors" replace />} />
-                <Route path="/instituciones" element={<Navigate to="/services" replace />} />
-                <Route path="/institutions" element={<Navigate to="/services" replace />} />
+                <Route path="/instituciones" element={<InstitutionsPage />} />
+                <Route path="/institutions" element={<Navigate to="/instituciones" replace />} />
                 <Route path="/instructors" element={<InstructorsPage />} />
                 <Route path="/instructors/directory" element={<InstructorsDirectoryPage />} />
-                <Route path="/services" element={<ServicesPage />} />
-                <Route path="/services/catalog" element={<ServicesCatalogPage />} />
+                <Route path="/planes" element={<PlanesPage />} />
+                <Route path="/consultorias" element={<ConsultoriasPage />} />
+                {/* Legacy redirects */}
+                <Route path="/services" element={<Navigate to="/planes" replace />} />
+                <Route path="/services/catalog" element={<Navigate to="/consultorias" replace />} />
                 <Route path="/courses" element={<CoursesPage />} />
                 <Route path="/course/:id" element={<CoursePage />} />
 
