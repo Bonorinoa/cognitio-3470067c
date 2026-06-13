@@ -6,7 +6,7 @@ import PricingSection from "@/components/ai-studio/PricingSection";
 import { useAISubscription } from "@/hooks/useAISubscription";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
-import { Megaphone, GraduationCap, ArrowRight, Clock } from "lucide-react";
+import { FileEdit, GraduationCap, ArrowRight, Clock } from "lucide-react";
 import WaitlistForm from "@/components/ai-studio/WaitlistForm";
 import { SEO } from "@/components/SEO";
 
