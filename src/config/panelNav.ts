@@ -76,6 +76,7 @@ export const instructorNav: PanelNavConfig = {
       label: "Crecimiento",
       items: [
         { href: "/instructor/analytics", icon: BarChart3, label: "Analíticas" },
+        { href: "/instructor/ai-insights", icon: Sparkles, label: "IA en tus cursos" },
         { href: "/instructor/revenue", icon: DollarSign, label: "Ingresos", comingSoon: true },
         { href: "/instructor/students", icon: Users, label: "Estudiantes", comingSoon: true },
       ],
