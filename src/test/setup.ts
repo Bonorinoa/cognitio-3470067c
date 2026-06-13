@@ -2,16 +2,15 @@ import '@testing-library/jest-dom';
 import { cleanup } from '@testing-library/react';
 import { afterEach, beforeAll, afterAll, vi } from 'vitest';
 import { server } from './mocks/server';
-import en from '../locales/en.json';
+import es from '../locales/es.json';
 
 // --- i18n mock --------------------------------------------------------------
-// Tests assert against English copy. Resolve any dotted key against en.json so
-// the entire locale is available without keeping a hand-curated dictionary in
-// sync. Falls back to the supplied defaultValue and then to the key itself
-// (matches i18next's default behavior).
+// Cognitio is Spanish-only. Resolve any dotted key against es.json; falls back
+// to the supplied defaultValue and then to the key itself (matches i18next's
+// default behavior).
 function resolveKey(key: string): string | undefined {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let node: any = en;
+  let node: any = es;
   for (const part of key.split('.')) {
     if (node && typeof node === 'object' && part in node) node = node[part];
     else return undefined;
@@ -41,7 +40,7 @@ vi.mock('react-i18next', () => ({
       const resolved = resolveKey(key) ?? defaultValue ?? key;
       return interpolate(resolved, opts as Record<string, unknown> | undefined);
     },
-    i18n: { language: 'en', changeLanguage: vi.fn() },
+    i18n: { language: 'es', changeLanguage: vi.fn() },
   }),
   Trans: ({
     children,
