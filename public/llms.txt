@@ -1,0 +1,21 @@
+# Cognitio
+
+> Cognitio es una plataforma académica de cursos online dirigida a profesionales, investigadores y consultores. Conecta a instructores seleccionados con estudiantes que buscan formación de nicho, de alta calidad.
+
+## Páginas
+
+- [Inicio](/): Descubrí cursos de nicho con instructores seleccionados y conocé la plataforma.
+- [Cursos](/courses): Catálogo de cursos públicos — temas académicos y profesionales.
+- [Instructores](/instructors): Directorio de instructores verificados y sus perfiles públicos.
+- [Servicios](/services): Servicios de consultoría y asesoramiento ofrecidos por instructores.
+- [Instituciones](/instituciones): Soluciones para instituciones educativas y organizaciones.
+- [Plataforma](/plataforma): Funcionalidades y características de la plataforma Cognitio.
+- [Sobre Nosotros](/about): Historia del equipo fundador, visión y valores.
+- [Preguntas Frecuentes](/faq): Respuestas sobre cómo funcionan los cursos, pagos y acceso.
+- [Términos de Servicio](/terms): Condiciones de uso de la plataforma.
+- [Política de Privacidad](/privacy): Cómo recopilamos, usamos y protegemos los datos.
+- [Curso](/course/introduccion-a-la-economia-avanzada): Ejemplo de página pública de un curso — descripción, instructor, contenido y opciones de inscripción.
+
+## Optional
+
+- [Blog / Recursos](/blog): Artículos, guías y recursos para instructores y estudiantes (próximamente).
