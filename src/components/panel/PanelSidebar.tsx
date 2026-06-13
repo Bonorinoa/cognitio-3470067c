@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { LayoutGroup } from "framer-motion";
+import { LayoutGroup, AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ChevronDown, Clock } from "lucide-react";
 import {
   SidebarNavItem,
   SidebarUserDropdown,
@@ -23,6 +23,7 @@ export default function PanelSidebar({
 }: PanelSidebarProps) {
   const location = useLocation();
   const [internalCollapsed, setInternalCollapsed] = useState(false);
+  const [expandedComingSoon, setExpandedComingSoon] = useState<Record<number, boolean>>({});
   const isCollapsed = onCollapsedChange ? collapsedProp ?? false : internalCollapsed;
   const setIsCollapsed = onCollapsedChange ?? setInternalCollapsed;
 
@@ -103,36 +104,105 @@ export default function PanelSidebar({
       {/* Nav sections */}
       <nav className="flex-1 space-y-5 overflow-y-auto px-3 pb-2 pt-4">
         <LayoutGroup id={nav.layoutId}>
-          {nav.sections.map((section, sectionIdx) => (
-            <div key={section.label ?? `section-${sectionIdx}`} className="space-y-1">
-              {section.label && !isCollapsed && (
-                <p className={cn(
-                  "px-3 pb-1 text-[10px] font-semibold uppercase tracking-[0.15em]",
-                  isAIStudio ? "text-primary/70" : "text-muted-foreground/70"
-                )}>
-                  {section.label}
-                </p>
-              )}
-              <div className="space-y-0.5">
-                {section.items.map((item) => (
-                  <SidebarNavItem
-                    key={item.href}
-                    href={item.href}
-                    icon={item.icon}
-                    label={item.label}
-                    isActive={!item.comingSoon && isItemActive(item.href, item.exact)}
-                    layoutId={nav.layoutId}
-                    collapsed={isCollapsed}
-                    disabled={item.comingSoon}
-                    badge={
-                      item.badge ??
-                      (item.comingSoon && !isCollapsed ? "Pronto" : undefined)
-                    }
-                  />
-                ))}
+          {nav.sections.map((section, sectionIdx) => {
+            const activeItems = section.items.filter((i) => !i.comingSoon);
+            const comingSoonItems = section.items.filter((i) => i.comingSoon);
+            const isExpanded = expandedComingSoon[sectionIdx] ?? false;
+            return (
+              <div key={section.label ?? `section-${sectionIdx}`} className="space-y-1">
+                {section.label && !isCollapsed && (
+                  <p className={cn(
+                    "px-3 pb-1 text-[10px] font-semibold uppercase tracking-[0.15em]",
+                    isAIStudio ? "text-primary/70" : "text-muted-foreground/70"
+                  )}>
+                    {section.label}
+                  </p>
+                )}
+                <div className="space-y-0.5">
+                  {activeItems.map((item) => (
+                    <SidebarNavItem
+                      key={item.href}
+                      href={item.href}
+                      icon={item.icon}
+                      label={item.label}
+                      isActive={isItemActive(item.href, item.exact)}
+                      layoutId={nav.layoutId}
+                      collapsed={isCollapsed}
+                      badge={item.badge}
+                    />
+                  ))}
+
+                  {comingSoonItems.length > 0 && !isCollapsed && (
+                    <>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setExpandedComingSoon((prev) => ({
+                            ...prev,
+                            [sectionIdx]: !isExpanded,
+                          }))
+                        }
+                        className="mt-1 flex w-full items-center gap-3 rounded-lg px-3 py-2 text-xs font-medium text-muted-foreground/80 transition-colors hover:bg-muted hover:text-foreground"
+                        aria-expanded={isExpanded}
+                      >
+                        <Clock className="h-3.5 w-3.5 shrink-0" />
+                        <span>Próximamente ({comingSoonItems.length})</span>
+                        <ChevronDown
+                          className={cn(
+                            "ml-auto h-3.5 w-3.5 transition-transform",
+                            isExpanded && "rotate-180"
+                          )}
+                        />
+                      </button>
+                      <AnimatePresence initial={false}>
+                        {isExpanded && (
+                          <motion.div
+                            key="coming-soon"
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.18, ease: "easeOut" }}
+                            className="overflow-hidden"
+                          >
+                            <div className="space-y-0.5 pt-0.5">
+                              {comingSoonItems.map((item) => (
+                                <SidebarNavItem
+                                  key={item.href}
+                                  href={item.href}
+                                  icon={item.icon}
+                                  label={item.label}
+                                  isActive={false}
+                                  layoutId={nav.layoutId}
+                                  collapsed={isCollapsed}
+                                  disabled
+                                  badge={item.badge ?? "Pronto"}
+                                />
+                              ))}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </>
+                  )}
+
+                  {/* When sidebar is icon-collapsed, still render coming-soon items as disabled icons */}
+                  {comingSoonItems.length > 0 && isCollapsed &&
+                    comingSoonItems.map((item) => (
+                      <SidebarNavItem
+                        key={item.href}
+                        href={item.href}
+                        icon={item.icon}
+                        label={item.label}
+                        isActive={false}
+                        layoutId={nav.layoutId}
+                        collapsed={isCollapsed}
+                        disabled
+                      />
+                    ))}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </LayoutGroup>
 
         {nav.footer && nav.footer.length > 0 && (
