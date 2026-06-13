@@ -20,6 +20,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
 import { InstructorGettingStartedCard } from "@/components/help/InstructorGettingStartedCard";
+import { InstructorOnboardingModal } from "@/components/instructor/InstructorOnboardingModal";
+import { useInstructorOnboarding } from "@/hooks/useInstructorOnboarding";
 
 interface CourseWithStats {
   id: string;
@@ -46,6 +48,12 @@ const InstructorDashboard = () => {
   const [recentEnrollments, setRecentEnrollments] = useState<RecentEnrollment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [hasProfile, setHasProfile] = useState(false);
+
+  const onboarding = useInstructorOnboarding();
+  const [onboardingOpen, setOnboardingOpen] = useState(false);
+  useEffect(() => {
+    if (onboarding.shouldShow) setOnboardingOpen(true);
+  }, [onboarding.shouldShow]);
 
   useEffect(() => {
     if (user) fetchInstructorData();
@@ -182,6 +190,14 @@ const InstructorDashboard = () => {
 
   return (
     <div className="space-y-8 lg:space-y-10">
+      {onboarding.profile && (
+        <InstructorOnboardingModal
+          open={onboardingOpen}
+          onOpenChange={setOnboardingOpen}
+          profile={onboarding.profile}
+          onComplete={onboarding.markComplete}
+        />
+      )}
       {/* Welcome Strip */}
       <motion.section
         initial={{ opacity: 0, y: 8 }}

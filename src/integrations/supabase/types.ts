@@ -773,6 +773,7 @@ export type Database = {
           headline: string | null
           id: string
           linkedin_url: string | null
+          onboarding_completed_at: string | null
           role: string | null
           twitter_url: string | null
           updated_at: string
@@ -789,6 +790,7 @@ export type Database = {
           headline?: string | null
           id: string
           linkedin_url?: string | null
+          onboarding_completed_at?: string | null
           role?: string | null
           twitter_url?: string | null
           updated_at?: string
@@ -805,6 +807,7 @@ export type Database = {
           headline?: string | null
           id?: string
           linkedin_url?: string | null
+          onboarding_completed_at?: string | null
           role?: string | null
           twitter_url?: string | null
           updated_at?: string
