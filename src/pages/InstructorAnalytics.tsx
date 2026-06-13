@@ -6,6 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { HelpTooltip } from "@/components/ui/help-tooltip";
+import { ErrorState } from "@/components/ErrorState";
 import {
   Table,
   TableBody,
@@ -40,7 +41,7 @@ import {
 
 const InstructorAnalytics = () => {
   const { t } = useTranslation();
-  const { data, isLoading, error } = useInstructorAnalytics();
+  const { data, isLoading, error, refetch } = useInstructorAnalytics();
 
   const handleExport = () => {
     if (data) {
@@ -50,9 +51,11 @@ const InstructorAnalytics = () => {
 
   if (error) {
     return (
-      <div className="text-center py-12">
-        <p className="text-destructive">Error al cargar analytics</p>
-      </div>
+      <ErrorState
+        title="No pudimos cargar las analíticas"
+        description="Hubo un problema al traer tus métricas. Probá de nuevo."
+        onRetry={() => refetch()}
+      />
     );
   }
 
