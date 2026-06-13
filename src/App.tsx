@@ -100,6 +100,7 @@ const App = () => (
                   <Route path="courses" element={<InstructorCourses />} />
                   <Route path="create" element={<CreateCourse />} />
                   <Route path="analytics" element={<InstructorAnalytics />} />
+                  <Route path="ai-insights" element={<InstructorAIInsights />} />
                   <Route path="guide" element={<InstructorGuide />} />
                   <Route path="settings" element={<InstructorSettings />} />
                   <Route path="edit/:id" element={<EditCourse />} />
