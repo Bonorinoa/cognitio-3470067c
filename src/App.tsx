@@ -45,6 +45,8 @@ const EditCourse = lazy(() => import("./pages/EditCourse"));
 const AuthPage = lazy(() => import("./pages/AuthPage"));
 const AdminUsers = lazy(() => import("./pages/AdminUsers"));
 const AdminAITutor = lazy(() => import("./pages/AdminAITutor"));
+const AdminAIOverview = lazy(() => import("./pages/AdminAIOverview"));
+const InstructorAIInsights = lazy(() => import("./pages/InstructorAIInsights"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const ForgotPasswordPage = lazy(() => import("./pages/ForgotPasswordPage"));
 const ResetPasswordPage = lazy(() => import("./pages/ResetPasswordPage"));
