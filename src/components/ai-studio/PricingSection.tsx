@@ -54,7 +54,7 @@ export default function PricingSection() {
       bundle: "pro",
       name: t("aiStudio.proBundleName", "Pro"),
       price: 29,
-      tagline: t("aiStudio.proPricingDesc", "Divulgación + Académico"),
+      tagline: t("aiStudio.proPricingDesc", "Acceso completo a todas las herramientas"),
       features: [
         t("aiStudio.proFeature1", "500 generaciones/día"),
         t("aiStudio.proFeature3", "Todas las herramientas"),
