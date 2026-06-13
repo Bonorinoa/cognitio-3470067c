@@ -1,43 +1,69 @@
-## Instructor Onboarding Modal
+# Restructure: Cognitio plans vs. instructor consulting
 
-A one-time, dismissible 3-step welcome that greets a newly approved instructor the first time they land in the instructor panel.
+Clean split so the navigation maps 1:1 to revenue sources and stops conflating "what Cognitio sells" with "what instructors sell."
 
-### Trigger
-- Add `onboarding_completed_at` (timestamptz, nullable) to `profiles`.
-- On `/instructor` mount, if the user has the `instructor` role AND `onboarding_completed_at IS NULL`, open the modal.
-- Marking as complete (Finish, Skip, or closing on step 3) sets the timestamp.
+## New information architecture
 
-### Steps (voseo, Spanish)
+```text
+Cognitio sells (a + b)              Instructors sell (c, commissioned)
+────────────────────────            ─────────────────────────────
+/planes      ← NEW pricing page     /consultorias   ← renamed catalog
+/ai-studio                          (also surfaced on each
+/instituciones                       instructor profile)
+/plataforma
+```
 
-**1. Bienvenido a Cognitio**
-   - Saludo personalizado ("¡Bienvenido, {nombre}!").
-   - Resumen corto del recorrido (3 pasos, ~2 min).
-   - CTA: "Empezar".
+### Navbar change
+- "Servicios" → **"Planes"** (links to `/planes`)
+- "Consultorías" stays out of the main nav; promoted contextually from instructor profiles and a small entry point on `/planes` + footer.
 
-**2. Completá tu perfil**
-   - Explica por qué importa (los alumnos eligen instructores con bio + foto).
-   - Mini checklist en vivo (foto, bio, headline) leyendo `profiles`.
-   - CTAs: "Ir al perfil" (lleva a `/instructor/profile`, deja el modal abierto para retomar) + "Siguiente".
+## Page-by-page changes
 
-**3. Tus herramientas**
-   - Tres tarjetas: **Crear curso** (`/instructor/courses/new`), **AI Studio** (`/instructor/ai-studio`), **Guía** (`/instructor/guide`).
-   - CTA principal: "Finalizar" → cierra y marca `onboarding_completed_at = now()`.
+### 1. `/planes` (new, replaces current `/servicios`)
+Cognitio-as-suite pricing. Three tiers, all framed as "what Cognitio offers":
+- **Plataforma core** — Gratis (instructores invitados + alumnos)
+- **AI Studio** — $19/mes add-on
+- **Instituciones** — A medida (CTA to contact form / `/instituciones`)
 
-### UX details
-- shadcn `Dialog`, no overlay dismiss on steps 1–2 (force the user to click Skip/Next), default close on step 3.
-- "Saltar por ahora" link bottom-left en todos los pasos → marca completo.
-- Progress dots arriba.
-- Framer Motion fade/slide entre pasos (consistente con el resto del proyecto).
-- Mobile-friendly (stack vertical en <640px).
+Remove the "¿Buscás consultoría 1:1?" block and the long custom-build contact section (that content already lives on `/instituciones`; keep `/planes` focused and short).
 
-### Files
-- `supabase/migrations/*` — `ALTER TABLE profiles ADD COLUMN onboarding_completed_at timestamptz`.
-- `src/components/instructor/InstructorOnboardingModal.tsx` — nuevo.
-- `src/hooks/useInstructorOnboarding.ts` — fetch + mutate flag con TanStack Query.
-- `src/pages/InstructorDashboard.tsx` — montar el modal.
-- `src/locales/es.json` — strings nuevos bajo `instructor.onboarding.*`.
+### 2. `/consultorias` (rename of `/services/catalog`)
+- Route rename: `/services/catalog` → `/consultorias`
+- Add a short hero clarifying: *"Asesorías 1:1 ofrecidas por instructores de Cognitio. Cognitio facilita el contacto y el pago; el servicio lo presta el instructor."*
+- Keep auth-gated (as today).
 
-### Out of scope
-- Tour interactivo sobre la UI (overlay/coachmarks).
-- Recordatorios por email.
-- Reabrir el modal desde Settings (lo dejamos para una próxima iteración si lo piden).
+### 3. Instructor profile pages
+- Already display `InstructorServicesDisplay`. Add a small "Reservar consultoría" CTA that deep-links into `/consultorias?instructor=<id>` (or scrolls to that instructor's section). No business-logic changes — presentation only.
+
+### 4. `/servicios` → 301-style redirect
+Keep the path alive by redirecting `/servicios` → `/planes` in `App.tsx` so existing links, sitemap entries, and `llms.txt` keep working until updated.
+
+### 5. Footer + `llms.txt` + `sitemap.xml` + `es.json`
+Update the four spots that reference "Servicios":
+- `Footer.tsx` link label + href
+- `public/llms.txt` entries
+- `public/sitemap.xml` (and `scripts/generate-sitemap.ts`)
+- `src/locales/es.json` nav keys
+
+## Files touched (estimate)
+
+- `src/App.tsx` — add `/planes`, `/consultorias` routes + redirect for `/servicios` and `/services/catalog`
+- `src/pages/ServicesPage.tsx` → rename to `PlanesPage.tsx`, trim to plans-only
+- `src/pages/ServicesCatalogPage.tsx` → rename to `ConsultoriasPage.tsx`, add hero
+- `src/components/Navbar.tsx` — label/href update
+- `src/components/Footer.tsx` — label/href update
+- `src/pages/InstructorProfile.tsx` — add "Reservar consultoría" CTA near services
+- `src/locales/es.json` — copy keys
+- `public/sitemap.xml`, `scripts/generate-sitemap.ts`, `public/llms.txt`
+
+No database or edge-function changes. Voseo and existing design tokens preserved throughout.
+
+## Out of scope (for this pass)
+- Actual pricing for AI Studio tiers beyond what already exists
+- Commission % on consultorías (still TBD — flagged for a separate decision)
+- Moving consulting payments through Stripe Connect (today they're handled via the existing services/inquiries flow)
+
+## Open question before I build
+Two small naming calls — happy to default if you don't care:
+1. `/planes` vs `/precios` for the new pricing route?
+2. Keep "Consultorías" as the user-facing label, or prefer "Asesorías"?
