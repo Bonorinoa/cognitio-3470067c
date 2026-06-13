@@ -92,7 +92,7 @@ const Index = () => {
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
-            <Link to="/services">
+            <Link to="/planes">
               <Button size="lg" variant="outline" className="min-w-[200px]">
                 <Building2 className="mr-2 h-5 w-5" />
                 Servicios y precios
@@ -152,7 +152,7 @@ const Index = () => {
             </Link>
 
             <Link
-              to="/services"
+              to="/planes"
               className="group bg-card rounded-2xl p-6 border border-border hover:border-primary/40 hover:shadow-lg transition-all"
             >
               <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
@@ -286,7 +286,7 @@ const Index = () => {
               para universidades, programas y empresas. Cada proyecto financia el acceso gratuito de
               instructores independientes.
             </p>
-            <Link to="/services#contacto">
+            <Link to="/instituciones">
               <Button size="lg">
                 Conversemos
                 <ArrowRight className="ml-2 h-5 w-5" />
