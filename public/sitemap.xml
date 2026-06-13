@@ -21,13 +21,18 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://cognitio.lovable.app/services</loc>
+    <loc>https://cognitio.lovable.app/planes</loc>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://cognitio.lovable.app/services/catalog</loc>
+    <loc>https://cognitio.lovable.app/consultorias</loc>
     <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://cognitio.lovable.app/instituciones</loc>
+    <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>

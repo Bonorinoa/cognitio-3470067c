@@ -7,10 +7,11 @@
 - [Inicio](/): Descubrí cursos de nicho con instructores seleccionados y conocé la plataforma.
 - [Cursos](/courses): Catálogo de cursos públicos — temas académicos y profesionales.
 - [Instructores](/instructors): Directorio de instructores verificados y sus perfiles públicos.
-- [Servicios](/services): Servicios de consultoría y asesoramiento ofrecidos por instructores.
-- [Instituciones](/instituciones): Soluciones para instituciones educativas y organizaciones.
-- [Plataforma](/plataforma): Funcionalidades y características de la plataforma Cognitio.
+- [Planes](/planes): Planes y precios de Cognitio — plataforma core gratis, AI Studio add-on, soluciones a medida.
+- [Consultorías](/consultorias): Asesorías 1:1 ofrecidas directamente por instructores invitados.
+- [Instituciones](/instituciones): Soluciones a medida para universidades, programas y empresas.
 - [Sobre Nosotros](/about): Historia del equipo fundador, visión y valores.
+- [AI Studio](/ai-studio): Suite de IA para que instructores generen blogs, newsletters y contenido a partir de sus cursos.
 - [Preguntas Frecuentes](/faq): Respuestas sobre cómo funcionan los cursos, pagos y acceso.
 - [Términos de Servicio](/terms): Condiciones de uso de la plataforma.
 - [Política de Privacidad](/privacy): Cómo recopilamos, usamos y protegemos los datos.
