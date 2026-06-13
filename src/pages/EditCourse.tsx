@@ -18,6 +18,7 @@ import {
   ChapterDraft,
 } from "@/components/instructor/course-edit/CourseChaptersEditor";
 import { useCourseImageUpload } from "@/components/instructor/course-edit/useCourseImageUpload";
+import type { CourseVisibility } from "@/components/instructor/course-create/CreateCourseBasicInfo";
 
 interface CourseData {
   id: string;
@@ -25,7 +26,7 @@ interface CourseData {
   description: string | null;
   price: number;
   category: string | null;
-  visibility: "public" | "private";
+  visibility: CourseVisibility;
   is_published: boolean;
   image_url: string | null;
   instructor_id: string;
@@ -41,7 +42,7 @@ const EditCourse = () => {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("");
-  const [visibility, setVisibility] = useState<"public" | "private">("public");
+  const [visibility, setVisibility] = useState<CourseVisibility>("public");
   const [isPublished, setIsPublished] = useState(false);
   const [chapters, setChapters] = useState<ChapterDraft[]>([]);
   const [isSaving, setIsSaving] = useState(false);
