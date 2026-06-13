@@ -139,6 +139,7 @@ const FAQPage = () => {
               </a>
             </CardContent>
           </Card>
+        </div>
       </main>
       <Footer />
     </div>
