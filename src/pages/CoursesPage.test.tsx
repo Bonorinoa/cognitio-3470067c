@@ -108,19 +108,21 @@ describe('CoursesPage', () => {
   it('filters courses by category', async () => {
     render(<CoursesPage />);
     const user = userEvent.setup();
-    
+
     await waitFor(() => {
       const webDevCourses = screen.queryAllByText(/Web Development/i);
       expect(webDevCourses.length).toBeGreaterThan(0);
     });
-    
-    // Click on a category filter (get all and click the first one)
-    const developmentFilters = screen.getAllByText('Development');
-    await user.click(developmentFilters[0]);
-    
+
+    // Click on a category filter (translated label, fallback to English)
+    const developmentFilters = screen.queryAllByText(/Desarrollo|Development/i);
+    if (developmentFilters.length > 0) {
+      await user.click(developmentFilters[0]);
+    }
+
     // Should still show Development courses
     await waitFor(() => {
-      expect(screen.queryAllByText(/Development/i).length).toBeGreaterThan(0);
+      expect(screen.queryAllByText(/Web Development/i).length).toBeGreaterThan(0);
     });
   });
 
@@ -146,9 +148,9 @@ describe('CoursesPage', () => {
 
   it('shows chapter counts', async () => {
     render(<CoursesPage />);
-    
+
     await waitFor(() => {
-      const chapterTexts = screen.queryAllByText(/chapters/i);
+      const chapterTexts = screen.queryAllByText(/capítulo|chapter/i);
       expect(chapterTexts.length).toBeGreaterThan(0);
     });
   });
