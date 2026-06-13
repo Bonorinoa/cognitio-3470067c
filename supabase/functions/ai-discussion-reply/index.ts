@@ -1,96 +1,153 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
+import {
+  buildCors, isOriginAllowed, getUserTier, checkRateLimits,
+  rateLimitResponse, logUsage, getPlatformDefaults,
+  wrapUserContent, INJECTION_GUARD_NOTE,
+} from "../_shared/ai.ts";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
-
+const FUNCTION_NAME = "ai-discussion-reply";
 const AI_TUTOR_LIMIT = 5;
 
-serve(async (req) => {
-  const startTime = Date.now();
-  const log = (msg: string) => console.log(`[${Date.now() - startTime}ms] ${msg}`);
+// Rough token estimate: 4 chars/token.
+const estimateTokens = (s: string) => Math.ceil(s.length / 4);
+const TRANSCRIPT_FULL_BUDGET = 2500; // tokens — below this, send full transcript
 
-  if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+const formatTime = (s: number) =>
+  `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
+
+interface TranscriptSegment { start: number; text: string }
+
+/**
+ * Build transcript context. When the transcript is short, send it whole.
+ * Otherwise send a ±2 min window around the student's current timestamp,
+ * plus a coarse outline (first sentence of every 5-min block) so the model
+ * still knows the lecture's overall shape.
+ */
+function buildTranscriptContext(
+  segments: TranscriptSegment[],
+  currentSeconds: number | null | undefined,
+): string {
+  if (!segments.length) return "";
+  const totalDuration = segments[segments.length - 1].start;
+  const full = segments.map((s) => `[${formatTime(s.start)}] ${s.text}`).join("\n");
+  const fullTokens = estimateTokens(full);
+
+  let body: string;
+  if (fullTokens <= TRANSCRIPT_FULL_BUDGET) {
+    body = `FULL TRANSCRIPT:\n${full}`;
+  } else {
+    // Outline: first segment in each 5-minute (300s) block.
+    const blockSize = 300;
+    const outlineSegs: TranscriptSegment[] = [];
+    let nextBlock = 0;
+    for (const seg of segments) {
+      if (seg.start >= nextBlock) {
+        outlineSegs.push(seg);
+        nextBlock = Math.floor(seg.start / blockSize) * blockSize + blockSize;
+      }
+    }
+    const outline = outlineSegs
+      .map((s) => `[${formatTime(s.start)}] ${s.text.split(/[.!?]/)[0].slice(0, 140)}…`)
+      .join("\n");
+
+    // Window: ±2 min around current position (default to start if unknown).
+    const pos = typeof currentSeconds === "number" && currentSeconds > 0 ? currentSeconds : 0;
+    const windowStart = Math.max(0, pos - 120);
+    const windowEnd = pos + 120;
+    const windowSegs = segments.filter((s) => s.start >= windowStart && s.start <= windowEnd);
+    const windowText = windowSegs.length
+      ? windowSegs.map((s) => `[${formatTime(s.start)}] ${s.text}`).join("\n")
+      : "(no segments in this window)";
+
+    body =
+      `LECTURE OUTLINE (one line per 5-min block):\n${outline}\n\n` +
+      `TRANSCRIPT WINDOW around ${formatTime(pos)} (±2 min):\n${windowText}\n\n` +
+      `NOTE: Full transcript was truncated for context size. If the student references content outside this window, ask them which timestamp they mean.`;
   }
 
+  let header = `VIDEO TRANSCRIPT (total duration: ${formatTime(totalDuration)})\n`;
+  if (typeof currentSeconds === "number" && currentSeconds > 0) {
+    header += `Student's current position: ${formatTime(currentSeconds)}\n\n`;
+  } else {
+    header += "\n";
+  }
+  return wrapUserContent("TRANSCRIPT", header + body);
+}
+
+serve(async (req) => {
+  const origin = req.headers.get("origin");
+  const corsHeaders = buildCors(origin);
+  if (req.method !== "OPTIONS" && origin && !isOriginAllowed(origin)) {
+    return new Response(JSON.stringify({ error: "Origin not allowed" }), {
+      status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
+  if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+
+  const startTime = Date.now();
   try {
-    log("Request received");
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const lovableApiKey = Deno.env.get("LOVABLE_API_KEY")!;
 
-    // Get user from JWT
     const authHeader = req.headers.get("Authorization");
     if (!authHeader) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
-
     const supabaseClient = createClient(supabaseUrl, supabaseServiceKey);
     const userClient = createClient(supabaseUrl, Deno.env.get("SUPABASE_ANON_KEY")!, {
       global: { headers: { Authorization: authHeader } },
     });
-
     const { data: { user }, error: userError } = await userClient.auth.getUser();
     if (userError || !user) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
-    log("User authenticated");
 
     const { discussion_id, chapter_id, video_timestamp_seconds, user_message, language } = await req.json();
-
-    // Input validation: cap user_message length to prevent token/storage exhaustion
     const MAX_USER_MESSAGE_LENGTH = 4000;
     if (typeof user_message !== "string" || user_message.trim().length === 0) {
       return new Response(JSON.stringify({ error: "user_message is required" }), {
-        status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
     if (user_message.length > MAX_USER_MESSAGE_LENGTH) {
       return new Response(JSON.stringify({ error: `user_message exceeds ${MAX_USER_MESSAGE_LENGTH} characters` }), {
-        status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
     if (typeof discussion_id !== "string" || typeof chapter_id !== "string") {
       return new Response(JSON.stringify({ error: "discussion_id and chapter_id are required" }), {
-        status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    // Verify the caller has access to the course owning this chapter
+    // Access check
     const { data: chapterCourse, error: chapterCourseError } = await supabaseClient
-      .from("chapters")
-      .select("course_id")
-      .eq("id", chapter_id)
-      .single();
+      .from("chapters").select("course_id").eq("id", chapter_id).single();
     if (chapterCourseError || !chapterCourse?.course_id) {
       return new Response(JSON.stringify({ error: "Chapter not found" }), {
-        status: 404,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+    const courseId = chapterCourse.course_id;
     const { data: hasAccess, error: accessError } = await supabaseClient
-      .rpc("has_course_access", { _user_id: user.id, _course_id: chapterCourse.course_id });
+      .rpc("has_course_access", { _user_id: user.id, _course_id: courseId });
     if (accessError || !hasAccess) {
       return new Response(JSON.stringify({ error: "Forbidden: no access to this course" }), {
-        status: 403,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    // Parallel fetch: settings, usage count, discussion, chapter, and recent replies
-    log("Starting parallel DB queries");
+    // Tier + rate limits (daily + per-minute, beyond the per-chapter cap).
+    const tier = await getUserTier(supabaseClient, user.id);
+    const rl = await checkRateLimits(supabaseClient, user.id, FUNCTION_NAME, tier);
+    if (!rl.ok) return rateLimitResponse(rl, tier, corsHeaders);
+
     const [
       enabledSettingResult,
       usageCountResult,
@@ -98,6 +155,7 @@ serve(async (req) => {
       chapterResult,
       recentRepliesResult,
       settingsResult,
+      defaultsResolved,
     ] = await Promise.all([
       supabaseClient.from("platform_settings").select("value").eq("key", "ai_tutor_enabled").single(),
       supabaseClient.from("ai_tutor_usage").select("*", { count: "exact", head: true }).eq("user_id", user.id).eq("chapter_id", chapter_id),
@@ -105,61 +163,43 @@ serve(async (req) => {
       supabaseClient.from("chapters").select("title, description, course_id").eq("id", chapter_id).single(),
       supabaseClient.from("discussion_replies").select("content, is_ai_generated").eq("discussion_id", discussion_id).order("created_at", { ascending: false }).limit(5),
       supabaseClient.from("platform_settings").select("key, value").in("key", ["ai_tutor_system_prompt", "ai_tutor_model", "ai_tutor_temperature", "ai_tutor_max_tokens"]),
+      getPlatformDefaults(supabaseClient),
     ]);
-    log("Parallel DB queries complete");
 
-    // Check if AI tutor is enabled
     if (!enabledSettingResult.data?.value) {
       return new Response(JSON.stringify({ error: "AI tutor is currently disabled" }), {
-        status: 403,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    // Check rate limit
     const usageCount = usageCountResult.count ?? 0;
     if (usageCount >= AI_TUTOR_LIMIT) {
-      return new Response(JSON.stringify({ 
+      return new Response(JSON.stringify({
         error: "AI tutor limit reached for this chapter",
-        used: usageCount,
-        limit: AI_TUTOR_LIMIT,
-      }), {
-        status: 429,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+        used: usageCount, limit: AI_TUTOR_LIMIT,
+      }), { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
     const discussion = discussionResult.data;
     const chapter = chapterResult.data;
     const recentReplies = recentRepliesResult.data;
 
-    // Fetch course, instructor, and transcript in parallel (dependent on chapter)
-    log("Fetching course/instructor/transcript");
+    // Course + instructor + transcript in parallel
     let courseContext = "";
     let instructorContext = "";
-    let transcriptExcerpt = "";
-
+    let transcriptContext = "";
     if (chapter?.course_id) {
       const [courseResult, transcriptResult] = await Promise.all([
         supabaseClient.from("courses").select("title, description, category, instructor_id").eq("id", chapter.course_id).single(),
         supabaseClient.from("chapter_transcripts").select("transcript_json").eq("chapter_id", chapter_id).eq("status", "ready").single(),
       ]);
-
       if (courseResult.data) {
         const course = courseResult.data;
         courseContext = `Course: "${course.title}"${course.category ? ` (${course.category})` : ""}`;
-        if (course.description) {
-          courseContext += `\nCourse Description: ${course.description.slice(0, 500)}`;
-        }
-
-        // Fetch instructor
+        if (course.description) courseContext += `\nCourse Description: ${course.description.slice(0, 500)}`;
         if (course.instructor_id) {
           const { data: instructor } = await supabaseClient
-            .from("profiles")
-            .select("full_name, affiliation, headline")
-            .eq("id", course.instructor_id)
-            .single();
-
+            .from("profiles").select("full_name, affiliation, headline").eq("id", course.instructor_id).single();
           if (instructor) {
             instructorContext = `Instructor: ${instructor.full_name || "Unknown"}`;
             if (instructor.affiliation) instructorContext += `, ${instructor.affiliation}`;
@@ -167,186 +207,134 @@ serve(async (req) => {
           }
         }
       }
-
-      // Always include full transcript when available
       if (transcriptResult.data?.transcript_json) {
-        const segments = transcriptResult.data.transcript_json as Array<{ start: number; text: string }>;
-        if (segments.length > 0) {
-          const formatTime = (s: number) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
-          const totalDuration = segments[segments.length - 1].start;
-          
-          // Format full transcript with timestamps
-          const fullTranscript = segments
-            .map((s) => `[${formatTime(s.start)}] ${s.text}`)
-            .join("\n");
-          
-          // Build transcript context with position awareness
-          transcriptExcerpt = `VIDEO TRANSCRIPT (Duration: ${formatTime(totalDuration)})\n`;
-          
-          if (video_timestamp_seconds !== undefined && video_timestamp_seconds !== null && video_timestamp_seconds > 0) {
-            transcriptExcerpt += `Student's current position in video: ${formatTime(video_timestamp_seconds)}\n`;
-            transcriptExcerpt += `(The student may be asking about content around this timestamp)\n\n`;
-          }
-          
-          transcriptExcerpt += fullTranscript;
-        }
+        const segments = transcriptResult.data.transcript_json as TranscriptSegment[];
+        transcriptContext = buildTranscriptContext(segments, video_timestamp_seconds);
       }
     }
-    log("Context fetched");
 
-    // Parse settings
-    const settingsMap = (settingsResult.data || []).reduce((acc, s) => {
-      acc[s.key] = s.value;
-      return acc;
+    // Per-tutor overrides win over platform defaults; platform defaults win over hard-coded.
+    const settingsMap = (settingsResult.data || []).reduce((acc: Record<string, unknown>, s: { key: string; value: unknown }) => {
+      acc[s.key] = s.value; return acc;
     }, {} as Record<string, unknown>);
-
-    const systemPrompt = (settingsMap.ai_tutor_system_prompt as string) || 
+    const systemPrompt = (settingsMap.ai_tutor_system_prompt as string) ||
       "You are CognitioAI, a Socratic learning assistant. Guide students toward understanding without giving direct answers.";
-    const model = (settingsMap.ai_tutor_model as string) || "google/gemini-2.5-flash";
-    const temperature = (settingsMap.ai_tutor_temperature as number) || 0.7;
-    const maxTokens = (settingsMap.ai_tutor_max_tokens as number) || 1024;
+    const model = (settingsMap.ai_tutor_model as string) || defaultsResolved.model;
+    const temperature = (settingsMap.ai_tutor_temperature as number) ?? defaultsResolved.temperature;
+    const maxTokens = (settingsMap.ai_tutor_max_tokens as number) ?? defaultsResolved.maxTokens;
 
-    // Build context
-    const contextParts = [];
+    const contextParts: string[] = [];
     if (courseContext) contextParts.push(courseContext);
     if (instructorContext) contextParts.push(instructorContext);
     if (chapter) {
       contextParts.push(`Chapter: ${chapter.title}`);
       if (chapter.description) contextParts.push(`Chapter Description: ${chapter.description}`);
     }
-    if (transcriptExcerpt) {
-      contextParts.push(`\n${transcriptExcerpt}`);
-    }
+    if (transcriptContext) contextParts.push(`\n${transcriptContext}`);
 
-    const conversationContext = recentReplies?.reverse().map((r) =>
-      `${r.is_ai_generated ? "AI" : "Student"}: ${r.content}`
-    ).join("\n") || "";
+    const conversationContext = recentReplies?.reverse().map((r: { content: string; is_ai_generated: boolean }) =>
+      `${r.is_ai_generated ? "AI" : "Student"}: ${r.content}`).join("\n") || "";
 
-    // Determine response language
-    const langInstruction = language === "es" 
-      ? "IMPORTANT: Respond in Spanish (Español)." 
-      : language === "en" 
+    const langInstruction = language === "es"
+      ? "IMPORTANT: Respond in Spanish (Español)."
+      : language === "en"
         ? "IMPORTANT: Respond in English."
         : "IMPORTANT: Respond in the same language as the student's message.";
 
     const fullPrompt = `${systemPrompt}
 
+${INJECTION_GUARD_NOTE}
+
 ${langInstruction}
 
 ${contextParts.length > 0 ? `Context:\n${contextParts.join("\n")}\n` : ""}
-Original Question: ${discussion?.title}
-${discussion?.content}
+${wrapUserContent("DISCUSSION_TITLE", String(discussion?.title || ""))}
+${wrapUserContent("DISCUSSION_BODY", String(discussion?.content || ""))}
 
 ${conversationContext ? `Recent Discussion:\n${conversationContext}\n` : ""}
-Student's message: ${user_message}
+${wrapUserContent("STUDENT_MESSAGE", user_message)}
 
-IMPORTANT: You have access to the complete video transcript above with timestamps. If the student asks about a specific moment (e.g., "at 4:13" or "what does this mean here"), refer to their current position timestamp to understand what they're watching. You can reference and connect concepts from different parts of the lecture. When referencing specific moments, include the timestamp so the student can navigate there.`;
+ANSWER RULES:
+- When referencing a moment in the video, ALWAYS cite the timestamp as [M:SS] so the student can click to seek there.
+- If you need information that isn't in the transcript window above, ask the student to point you to the timestamp.`;
 
     // Insert user's prompt first
-    log("Inserting user prompt to DB");
     const { data: promptReply, error: promptError } = await supabaseClient
-      .from("discussion_replies")
-      .insert({
-        discussion_id,
-        user_id: user.id,
-        content: user_message,
-        is_ai_generated: false,
-      })
-      .select()
-      .single();
+      .from("discussion_replies").insert({
+        discussion_id, user_id: user.id, content: user_message, is_ai_generated: false,
+      }).select().single();
+    if (promptError) throw promptError;
 
-    if (promptError) {
-      console.error("Error inserting user prompt:", promptError);
-      throw promptError;
-    }
-    log("Calling AI gateway (non-streaming)");
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 30000);
-
     let aiResponse;
     try {
       aiResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${lovableApiKey}`,
-          "Content-Type": "application/json",
-        },
+        headers: { Authorization: `Bearer ${lovableApiKey}`, "Content-Type": "application/json" },
         body: JSON.stringify({
           model,
           messages: [{ role: "user", content: fullPrompt }],
-          temperature,
-          max_tokens: maxTokens,
+          temperature, max_tokens: maxTokens,
         }),
         signal: controller.signal,
       });
     } catch (fetchError) {
       clearTimeout(timeoutId);
       if (fetchError instanceof Error && fetchError.name === "AbortError") {
-        log("AI gateway timeout");
         return new Response(JSON.stringify({ error: "AI response timed out. Please try again." }), {
-          status: 504,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 504, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
       throw fetchError;
     }
     clearTimeout(timeoutId);
-    log("AI gateway responded");
 
     if (!aiResponse.ok) {
       const errorText = await aiResponse.text();
       console.error("AI Gateway error:", aiResponse.status, errorText);
       return new Response(JSON.stringify({ error: "AI service error" }), {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
     const aiData = await aiResponse.json();
     const aiContent = aiData.choices?.[0]?.message?.content || "I apologize, I couldn't generate a response.";
-    log("AI response parsed");
+    const usage = aiData.usage || {};
 
-    // Insert AI reply
-    log("Inserting AI reply to DB");
     const { data: newReply, error: replyError } = await supabaseClient
-      .from("discussion_replies")
-      .insert({
-        discussion_id,
-        user_id: user.id,
-        content: aiContent,
-        is_ai_generated: true,
-        parent_reply_id: promptReply.id,
-      })
-      .select()
-      .single();
+      .from("discussion_replies").insert({
+        discussion_id, user_id: user.id, content: aiContent,
+        is_ai_generated: true, parent_reply_id: promptReply.id,
+      }).select().single();
+    if (replyError) throw replyError;
 
-    if (replyError) {
-      console.error("Error inserting AI reply:", replyError);
-      throw replyError;
-    }
-
-    // Update flags and record usage in parallel
     await Promise.all([
       supabaseClient.from("discussions").update({ has_ai_response: true }).eq("id", discussion_id),
       supabaseClient.from("ai_tutor_usage").insert({ user_id: user.id, chapter_id, discussion_id }),
-      supabaseClient.from("ai_usage_logs").insert({ user_id: user.id, content_type: "discussion_assist", model_used: model }),
+      logUsage(supabaseClient, {
+        userId: user.id,
+        functionName: FUNCTION_NAME,
+        contentType: "discussion_assist",
+        model,
+        promptTokens: usage.prompt_tokens,
+        completionTokens: usage.completion_tokens,
+        totalTokens: usage.total_tokens,
+        latencyMs: Date.now() - startTime,
+        courseId,
+        chapterId: chapter_id,
+      }),
     ]);
-    log("Complete");
 
-    return new Response(JSON.stringify({ 
-      success: true, 
-      reply: newReply,
-      remaining: AI_TUTOR_LIMIT - usageCount - 1,
-    }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    return new Response(JSON.stringify({
+      success: true, reply: newReply, remaining: AI_TUTOR_LIMIT - usageCount - 1,
+    }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
 
   } catch (error: unknown) {
     console.error("ai-discussion-reply error:", error);
     const message = error instanceof Error ? error.message : "An unexpected error occurred";
     return new Response(JSON.stringify({ error: message }), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
 });
