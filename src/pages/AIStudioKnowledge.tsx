@@ -203,7 +203,7 @@ export default function AIStudioKnowledge() {
                     <span className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground font-semibold">
                       {t(`knowledgeBase.docTypes.${doc.document_type}`)}
                     </span>
-                    <span className="text-muted-foreground/40">·</span>
+                    <span className="text-muted-foreground/70">·</span>
                     <span className={`text-[10px] uppercase tracking-[0.15em] font-semibold inline-flex items-center gap-1.5 ${doc.context_role === "style_reference" ? "text-primary" : "text-foreground/60"}`}>
                       {doc.context_role === "style_reference" && <span className="w-1 h-1 rounded-full bg-primary" />}
                       {t(`knowledgeBase.contextRoles.${doc.context_role}`)}
