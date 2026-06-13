@@ -148,6 +148,7 @@ const App = () => (
                 <Route path="/admin" element={<RequireAdmin><PanelLayout nav={adminNav} /></RequireAdmin>}>
                   <Route index element={<AdminUsers />} />
                   <Route path="ai-tutor" element={<AdminAITutor />} />
+                  <Route path="ai" element={<AdminAIOverview />} />
                 </Route>
                 {/* Legacy route redirects for backward compatibility */}
                 <Route path="/teacher" element={<Navigate to="/instructor" replace />} />
