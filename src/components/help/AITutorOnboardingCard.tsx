@@ -77,6 +77,15 @@ export const AITutorOnboardingCard = () => {
               <p className="text-xs text-muted-foreground">{t("help.aiTutor.limitsDesc")}</p>
             </div>
           </div>
+          <div className="flex items-start gap-2">
+            <Eye className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+            <div>
+              <p className="text-xs font-medium">Qué ve el tutor</p>
+              <p className="text-xs text-muted-foreground">
+                El título del curso, tu capítulo actual, la transcripción del video alrededor del momento en el que estás, y tus últimos mensajes en este hilo. Nada más.
+              </p>
+            </div>
+          </div>
         </div>
 
         <div className="mt-3 pt-2 border-t border-border">
