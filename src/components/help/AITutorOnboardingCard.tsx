@@ -2,11 +2,12 @@ import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { 
-  Sparkles, 
-  AtSign, 
-  Clock, 
+import {
+  Sparkles,
+  AtSign,
+  Clock,
   MessageSquare,
+  Eye,
   X
 } from "lucide-react";
 import { isHelpDismissed, dismissHelp } from "@/lib/helpStorage";
