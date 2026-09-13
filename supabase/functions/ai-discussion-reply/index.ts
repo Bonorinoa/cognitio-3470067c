@@ -222,7 +222,7 @@ serve(async (req) => {
       defaultsResolved,
     ] = await Promise.all([
       supabaseClient.from("platform_settings").select("value").eq("key", "ai_tutor_enabled").single(),
-      supabaseClient.from("ai_tutor_usage").select("*", { count: "exact", head: true }).eq("user_id", user.id).eq("chapter_id", chapter_id),
+      supabaseClient.from("ai_tutor_usage").select("*", { count: "exact", head: true }).eq("user_id", user.id).eq("chapter_id", chapter_id).gte("created_at", getDayStart().toISOString()),
       supabaseClient.from("discussions").select("title, content").eq("id", discussion_id).single(),
       supabaseClient.from("chapters").select("title, description, course_id").eq("id", chapter_id).single(),
       supabaseClient.from("discussion_replies").select("content, is_ai_generated").eq("discussion_id", discussion_id).order("created_at", { ascending: false }).limit(5),
@@ -239,7 +239,7 @@ serve(async (req) => {
     const usageCount = usageCountResult.count ?? 0;
     if (usageCount >= AI_TUTOR_LIMIT) {
       return new Response(JSON.stringify({
-        error: "AI tutor limit reached for this chapter",
+        error: `Alcanzaste el límite diario del tutor en este capítulo (${AI_TUTOR_LIMIT} mensajes). Se reinicia a las 6 AM hora Argentina.`,
         used: usageCount, limit: AI_TUTOR_LIMIT,
       }), { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
@@ -273,7 +273,8 @@ serve(async (req) => {
       }
       if (transcriptResult.data?.transcript_json) {
         const segments = transcriptResult.data.transcript_json as TranscriptSegment[];
-        transcriptContext = buildTranscriptContext(segments, video_timestamp_seconds);
+        transcriptContext = buildTranscriptContext(segments, video_timestamp_seconds, user_message);
+        console.log(`Transcript context: ${segments.length} segments, ~${Math.ceil(transcriptContext.length / 4)} tokens sent`);
       }
     }
 
