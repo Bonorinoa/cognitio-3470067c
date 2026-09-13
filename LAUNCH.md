@@ -14,13 +14,13 @@ This is the working soft-launch checklist for Cognitio (Argentina-first). Update
 
 ## Deferred / not yet shipped
 
-- **Payments**: live Stripe is configured but we still need to decide between Stripe and Mercado Pago for Argentina. Hold the live launch behind this decision.
+- **Payments**: deferred by decision — all pilot users are private (free, hand-enrolled), so no payment processing is needed. When payments ship, the provider is **Mercado Pago**: Stripe does not operate in Argentina / parts of South America. Existing Stripe wiring stays dormant.
 - **Transactional email**: no paid domain yet; do not call `email_domain--*` tools or wire Resend / SES until the business account exists. Contact and waitlist submissions live in the database; admin reviews via `/admin`.
 - **Certificates** of completion — sidebar shows "Pronto".
 - **AI Studio extras**: LinkedIn, X/Twitter, Newsletter generators, Academic bundle (literature review, paper formatter, paper editor) — "Pronto".
 - **Instructor invitations workflow** — for now, admin grants the role manually from `/admin`.
 - **Mobile audit** of instructor + AI Studio dashboards.
-- **Currency**: prices display USD. ARS localization to be revisited together with the payments decision.
+- **Currency**: prices display USD. ARS localization to be revisited when Mercado Pago integration ships.
 - **Chapter resources are not read by the AI** — only stored and downloadable.
 
 (Instructor onboarding modal and empty/error-state polish shipped.)
