@@ -4,11 +4,11 @@ This is the working soft-launch checklist for Cognitio (Argentina-first). Update
 
 ## What's shipped (live in production)
 
-- **Marketing site** in Spanish (voseo): home, `/courses`, `/instructors`, `/services`, `/about`, `/faq`, `/terms`, `/privacy`.
+- **Marketing site** in Spanish (voseo): home, `/courses`, `/instructors`, `/planes`, `/consultorias`, `/instituciones`, `/about`, `/faq`, `/terms`, `/privacy`. (`/servicios` and `/services/catalog` redirect for compatibility.)
 - **Auth**: email/password + magic link via Lovable Cloud.
 - **Student**: catálogo, enrollment via Stripe Checkout (placeholder), `/dashboard`, course player with chapters, transcript, resources, discussions, AI tutor by chapter, rating & reviews.
 - **Instructor** (invite-only, admin-granted): panel, course CRUD, chapter editor, Mux video upload + auto-transcription, services manager, analytics (revenue / students / completion), guide.
-- **AI Studio** (instructors only): knowledge base upload, blog generator, drafts, style profile, subscription tiers (Marketing/Académico/Pro) — Stripe wiring exists, billing button currently goes to placeholder.
+- **AI Studio** (instructors only): knowledge base upload (PDF / .docx / text), blog generator, drafts, style profile, subscription tiers (Académico/Pro; Marketing archived to waitlist) — Stripe wiring exists, billing button currently goes to placeholder.
 - **Admin**: `/admin/users` (asignar/quitar instructor), `/admin/ai-tutor` (modelo, prompt base, temperatura), waitlist review with CSV export.
 - **Security**: Supabase RLS on every public table, security definer `has_role` / `has_course_access`, no realtime leak on votes, scoped storage policies for resources.
 
@@ -19,10 +19,16 @@ This is the working soft-launch checklist for Cognitio (Argentina-first). Update
 - **Certificates** of completion — sidebar shows "Pronto".
 - **AI Studio extras**: LinkedIn, X/Twitter, Newsletter generators, Academic bundle (literature review, paper formatter, paper editor) — "Pronto".
 - **Instructor invitations workflow** — for now, admin grants the role manually from `/admin/users`.
-- **Instructor onboarding modal** — to be built next sprint.
 - **Mobile audit** of instructor + AI Studio dashboards.
-- **Empty / error state polish** across all list views.
 - **Currency**: prices display USD. ARS localization to be revisited together with the payments decision.
+- **Chapter resources are not read by the AI** — only stored and downloadable.
+
+(Instructor onboarding modal and empty/error-state polish shipped.)
+
+## Classroom pilot
+
+See [`docs/piloto-aula.md`](./docs/piloto-aula.md) for the operational checklist
+(language selection on video upload, tutor limits, what the knowledge base accepts).
 
 ## Admin runbook
 
