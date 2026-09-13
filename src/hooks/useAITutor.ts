@@ -47,7 +47,7 @@ export function useAITutorSettings() {
         return {
           enabled: true,
           systemPrompt: "",
-          model: "google/gemini-2.5-flash",
+          model: "google/gemini-3-flash-preview",
           temperature: 0.7,
           maxTokens: 1024,
         };
@@ -61,7 +61,7 @@ export function useAITutorSettings() {
       return {
         enabled: settingsMap.ai_tutor_enabled as boolean ?? true,
         systemPrompt: settingsMap.ai_tutor_system_prompt as string ?? "",
-        model: settingsMap.ai_tutor_model as string ?? "google/gemini-2.5-flash",
+        model: settingsMap.ai_tutor_model as string ?? "google/gemini-3-flash-preview",
         temperature: settingsMap.ai_tutor_temperature as number ?? 0.7,
         maxTokens: settingsMap.ai_tutor_max_tokens as number ?? 1024,
       };
@@ -73,7 +73,7 @@ export function useAITutorSettings() {
     settings: settings ?? {
       enabled: true,
       systemPrompt: "",
-      model: "google/gemini-2.5-flash",
+      model: "google/gemini-3-flash-preview",
       temperature: 0.7,
       maxTokens: 1024,
     },
