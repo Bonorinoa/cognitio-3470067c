@@ -364,6 +364,7 @@ export type Database = {
           mux_playback_id: string | null
           position: number
           title: string
+          transcript_language: string
           updated_at: string
           upload_status: string | null
           video_url: string | null
@@ -379,6 +380,7 @@ export type Database = {
           mux_playback_id?: string | null
           position?: number
           title: string
+          transcript_language?: string
           updated_at?: string
           upload_status?: string | null
           video_url?: string | null
@@ -394,6 +396,7 @@ export type Database = {
           mux_playback_id?: string | null
           position?: number
           title?: string
+          transcript_language?: string
           updated_at?: string
           upload_status?: string | null
           video_url?: string | null
