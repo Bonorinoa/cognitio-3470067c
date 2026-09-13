@@ -23,15 +23,35 @@ const formatTime = (s: number) =>
 
 interface TranscriptSegment { start: number; text: string }
 
+// Spanish + English stopwords, so keyword scoring isn't dominated by glue words.
+const STOPWORDS = new Set([
+  "que", "para", "como", "pero", "porque", "cuando", "donde", "esta", "este", "esto",
+  "esos", "esas", "una", "unos", "unas", "con", "los", "las", "del", "por", "the",
+  "and", "for", "that", "this", "with", "from", "what", "how", "why", "was", "were",
+  "hay", "más", "mas", "muy", "sus", "ser", "son", "sobre", "entre", "cual", "cuál",
+]);
+
+function keywords(text: string): string[] {
+  return Array.from(new Set(
+    text.toLowerCase()
+      .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+      .split(/[^a-z0-9áéíóúñ]+/i)
+      .filter((w) => w.length > 3 && !STOPWORDS.has(w)),
+  ));
+}
+
 /**
- * Build transcript context. When the transcript is short, send it whole.
- * Otherwise send a ±2 min window around the student's current timestamp,
- * plus a coarse outline (first sentence of every 5-min block) so the model
- * still knows the lecture's overall shape.
+ * Build transcript context.
+ *
+ * A full 75-minute lecture fits inside TRANSCRIPT_FULL_BUDGET, so in practice
+ * the tutor sees the whole class. Only multi-hour recordings fall back to
+ * excerpting: a coarse outline of the whole lecture, the window around where
+ * the student is, plus the passages most relevant to what they actually asked.
  */
 function buildTranscriptContext(
   segments: TranscriptSegment[],
   currentSeconds: number | null | undefined,
+  question: string,
 ): string {
   if (!segments.length) return "";
   const totalDuration = segments[segments.length - 1].start;
@@ -65,10 +85,49 @@ function buildTranscriptContext(
       ? windowSegs.map((s) => `[${formatTime(s.start)}] ${s.text}`).join("\n")
       : "(no segments in this window)";
 
+    // Relevance: score every segment against the student's keywords and keep
+    // the best passages from ANYWHERE in the lecture, not just nearby.
+    const kws = keywords(question);
+    let relevantText = "";
+    if (kws.length) {
+      const scored = segments
+        .map((s, i) => {
+          const hay = s.text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+          const score = kws.reduce((n, k) => (hay.includes(k) ? n + 1 : n), 0);
+          return { i, score };
+        })
+        .filter((s) => s.score > 0)
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 12)
+        .sort((a, b) => a.i - b.i);
+
+      // Give each hit one segment of surrounding context, then dedupe.
+      const keep = new Set<number>();
+      for (const { i } of scored) {
+        for (let j = Math.max(0, i - 1); j <= Math.min(segments.length - 1, i + 1); j++) {
+          keep.add(j);
+        }
+      }
+      const ordered = Array.from(keep).sort((a, b) => a - b);
+      if (ordered.length) {
+        const lines: string[] = [];
+        let prev = -2;
+        for (const i of ordered) {
+          if (i !== prev + 1 && lines.length) lines.push("…");
+          lines.push(`[${formatTime(segments[i].start)}] ${segments[i].text}`);
+          prev = i;
+        }
+        relevantText = lines.join("\n");
+      }
+    }
+
     body =
       `LECTURE OUTLINE (one line per 5-min block):\n${outline}\n\n` +
+      (relevantText
+        ? `PASSAGES MOST RELEVANT TO THE STUDENT'S QUESTION (from anywhere in the lecture):\n${relevantText}\n\n`
+        : "") +
       `TRANSCRIPT WINDOW around ${formatTime(pos)} (±2 min):\n${windowText}\n\n` +
-      `NOTE: Full transcript was truncated for context size. If the student references content outside this window, ask them which timestamp they mean.`;
+      `NOTE: This recording is long, so the transcript above is excerpted. If the student references content you cannot see, ask them which timestamp they mean.`;
   }
 
   let header = `VIDEO TRANSCRIPT (total duration: ${formatTime(totalDuration)})\n`;
