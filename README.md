@@ -71,14 +71,14 @@ Cognitio no es un marketplace abierto. Es un "Instructor Studio" curado: LMS lig
 #### AI Studio - Plataforma de Contenido Pública (v4.0) ✅
 
 - **Landing Page Pública**: Hero, showcase de bundles, cómo funciona, pricing
-- **Arquitectura por Bundles**: Bundles Marketing y Académico con rutas separadas
+- **Arquitectura por Bundles**: Bundle Académico activo; el bundle Marketing quedó archivado (solo lista de espera)
 - **Base de Conocimiento**: Gestión global de documentos con tipos y roles de contexto
 - **Configuración de Estilo**: Configuración simplificada (tono, audiencia, idioma, instrucciones)
 - **Generador de Blog**: Generación con streaming, edición y refinamiento
 - **Editor Rico**: Modos preview/edit con ReactMarkdown
 - **Refinamiento de Contenido**: Edición inline con instrucciones de IA
 - **Historial de Generaciones**: Guardar, cargar y gestionar generaciones (FIFO 10 items)
-- **Sistema de Suscripciones**: Integración Stripe con Marketing ($19/mes), Academic ($19/mes), y Pro ($29/mes)
+- **Sistema de Suscripciones**: Integración Stripe con Academic ($19/mes) y Pro ($29/mes). Stripe **no está en modo live** todavía.
 - **Límites Dinámicos por Tier**: 
   - Free: 10 generaciones/día
   - Instructor perk: 50 generaciones/día
