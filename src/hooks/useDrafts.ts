@@ -116,7 +116,7 @@ export function useDrafts(options: UseDraftsOptions = {}) {
         additional_instructions: params.additional_instructions,
         selected_document_ids: params.selected_document_ids || [],
         status: "completed",
-        model_used: "google/gemini-2.5-flash",
+        model_used: "google/gemini-3-flash-preview",
       })
       .select("id")
       .single();
@@ -184,7 +184,7 @@ export function useDrafts(options: UseDraftsOptions = {}) {
           additional_instructions: source.additional_instructions,
           selected_document_ids: source.selected_document_ids || [],
           status: "completed",
-          model_used: source.model_used || "google/gemini-2.5-flash",
+          model_used: source.model_used || "google/gemini-3-flash-preview",
         });
       if (insertError) throw insertError;
     },

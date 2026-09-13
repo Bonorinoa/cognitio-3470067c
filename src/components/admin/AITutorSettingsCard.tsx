@@ -26,11 +26,11 @@ Lineamientos:
 - Mantené las respuestas concisas y enfocadas`;
 
 const AI_MODELS = [
-  { value: "google/gemini-2.5-flash", label: "Gemini 2.5 Flash (Recomendado)" },
-  { value: "google/gemini-2.5-pro", label: "Gemini 2.5 Pro" },
-  { value: "google/gemini-2.5-flash-lite", label: "Gemini 2.5 Flash Lite" },
-  { value: "openai/gpt-5-mini", label: "GPT-5 Mini" },
-  { value: "openai/gpt-5-nano", label: "GPT-5 Nano" },
+  { value: "google/gemini-3-flash-preview", label: "Gemini 3 Flash (Recomendado)" },
+  { value: "google/gemini-3.8-flash", label: "Gemini 3.8 Flash" },
+  { value: "google/gemini-3.1-flash-lite", label: "Gemini 3.1 Flash Lite" },
+  { value: "google/gemini-3.1-pro-preview", label: "Gemini 3.1 Pro" },
+  { value: "openai/gpt-5.4-mini", label: "GPT-5.4 Mini" },
 ];
 
 export function AITutorSettingsCard() {

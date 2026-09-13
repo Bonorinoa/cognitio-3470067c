@@ -4,7 +4,20 @@ import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 
+// Messages per chapter PER DAY. Must stay in sync with AI_TUTOR_LIMIT in the
+// ai-discussion-reply edge function.
 const AI_TUTOR_LIMIT_PER_CHAPTER = 5;
+
+// Quota day boundary: 06:00 Argentina = 09:00 UTC. Mirrors getDayStart() in
+// supabase/functions/_shared/ai.ts.
+const RESET_HOUR_UTC = 9;
+function getDayStart(): Date {
+  const now = new Date();
+  const dayStart = new Date(now);
+  dayStart.setUTCHours(RESET_HOUR_UTC, 0, 0, 0);
+  if (now < dayStart) dayStart.setUTCDate(dayStart.getUTCDate() - 1);
+  return dayStart;
+}
 
 export interface AITutorSettings {
   enabled: boolean;
@@ -34,7 +47,7 @@ export function useAITutorSettings() {
         return {
           enabled: true,
           systemPrompt: "",
-          model: "google/gemini-2.5-flash",
+          model: "google/gemini-3-flash-preview",
           temperature: 0.7,
           maxTokens: 1024,
         };
@@ -48,7 +61,7 @@ export function useAITutorSettings() {
       return {
         enabled: settingsMap.ai_tutor_enabled as boolean ?? true,
         systemPrompt: settingsMap.ai_tutor_system_prompt as string ?? "",
-        model: settingsMap.ai_tutor_model as string ?? "google/gemini-2.5-flash",
+        model: settingsMap.ai_tutor_model as string ?? "google/gemini-3-flash-preview",
         temperature: settingsMap.ai_tutor_temperature as number ?? 0.7,
         maxTokens: settingsMap.ai_tutor_max_tokens as number ?? 1024,
       };
@@ -60,7 +73,7 @@ export function useAITutorSettings() {
     settings: settings ?? {
       enabled: true,
       systemPrompt: "",
-      model: "google/gemini-2.5-flash",
+      model: "google/gemini-3-flash-preview",
       temperature: 0.7,
       maxTokens: 1024,
     },
@@ -80,7 +93,8 @@ export function useAITutorUsage(chapterId: string | undefined) {
         .from("ai_tutor_usage")
         .select("*", { count: "exact", head: true })
         .eq("user_id", user.id)
-        .eq("chapter_id", chapterId);
+        .eq("chapter_id", chapterId)
+        .gte("created_at", getDayStart().toISOString());
 
       if (error) {
         console.error("Error fetching AI tutor usage:", error);

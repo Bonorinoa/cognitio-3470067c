@@ -30,10 +30,13 @@ Cognitio no es un marketplace abierto. Es un "Instructor Studio" curado: LMS lig
 
 ---
 
-## 📍 Estado Actual: v4.0.5
+## 📍 Estado Actual: v4.2
 
-**Última Actualización:** 7 de Enero, 2026  
-**Estado:** MVP listo para testers iniciales 🚀
+**Última Actualización:** Septiembre 2026  
+**Estado:** MVP en preparación para el primer piloto en aula real 🚀
+
+> Uso real hasta hoy: ~5 usuarios, 6 cursos, 10 capítulos, 1 transcripción, 9 discusiones,
+> 28 llamadas de IA. Nada fue ejercitado a volumen todavía.
 
 ### ✅ Funcionalidades Completas
 
@@ -52,7 +55,7 @@ Cognitio no es un marketplace abierto. Es un "Instructor Studio" curado: LMS lig
 - Analytics de instructor con métricas reales
 - Servicios de consultoría de instructor
 - Sistema de diseño con tema claro cálido
-- Internacionalización completa (Español/Inglés)
+- Interfaz 100% en español rioplatense (scaffold i18n conservado; no hay contenido en inglés)
 - Auditoría de seguridad completada: 0 vulnerabilidades críticas
 
 #### Experiencia de Aprendizaje (v4.0.2 - v4.0.5) ✅
@@ -60,7 +63,7 @@ Cognitio no es un marketplace abierto. Es un "Instructor Studio" curado: LMS lig
 - **Sistema de Valoraciones**: Calificaciones 1-5 estrellas con reseñas, promedio visible en catálogo
 - **Ordenar por Valoración**: Filtro "Mejor Valorados" en el catálogo de cursos
 - **Discussion Threads**: Q&A por capítulo con upvoting, timestamps, @menciones
-- **AI Tutor (CognitioAI)**: Mentoría socrática con límite de 5 llamadas/día por capítulo
+- **AI Tutor (CognitioAI)**: Mentoría socrática anclada a la transcripción, con citas de timestamp y límite de 5 mensajes por capítulo por día (reinicia 6 AM ART)
 - **Pestaña Recursos**: PDFs, links, notebooks por capítulo con gestión de instructor
 - **Pestaña Transcripción**: Transcripciones automáticas de video con click-to-seek
 - **Reproductor de Video**: Mux-powered con navegación de capítulos y seguimiento de progreso
@@ -68,29 +71,41 @@ Cognitio no es un marketplace abierto. Es un "Instructor Studio" curado: LMS lig
 #### AI Studio - Plataforma de Contenido Pública (v4.0) ✅
 
 - **Landing Page Pública**: Hero, showcase de bundles, cómo funciona, pricing
-- **Arquitectura por Bundles**: Bundles Marketing y Académico con rutas separadas
+- **Arquitectura por Bundles**: Bundle Académico activo; el bundle Marketing quedó archivado (solo lista de espera)
 - **Base de Conocimiento**: Gestión global de documentos con tipos y roles de contexto
 - **Configuración de Estilo**: Configuración simplificada (tono, audiencia, idioma, instrucciones)
 - **Generador de Blog**: Generación con streaming, edición y refinamiento
 - **Editor Rico**: Modos preview/edit con ReactMarkdown
 - **Refinamiento de Contenido**: Edición inline con instrucciones de IA
 - **Historial de Generaciones**: Guardar, cargar y gestionar generaciones (FIFO 10 items)
-- **Sistema de Suscripciones**: Integración Stripe con Marketing ($19/mes), Academic ($19/mes), y Pro ($29/mes)
+- **Sistema de Suscripciones**: Integración Stripe con Academic ($19/mes) y Pro ($29/mes). Stripe **no está en modo live** todavía.
 - **Límites Dinámicos por Tier**: 
   - Free: 10 generaciones/día
   - Instructor perk: 50 generaciones/día
-  - Marketing/Academic: 200 generaciones/día
+  - Academic: 200 generaciones/día
   - Pro: 500 generaciones/día
 - **Opciones de Exportación**: Descargar contenido como Markdown o TXT
 - **Navegación Móvil**: Sidebar y navegación responsiva
-- **Integración Lovable AI**: Gemini 2.5 Flash vía AI Gateway
+- **Integración Lovable AI**: Gemini 3 Flash vía AI Gateway, con medición de tokens, límites diarios y por minuto
 
-### 🚧 Próximo: v4.1+
+### ⚠️ Limitaciones conocidas (honestas)
 
-- Generador de Posts para LinkedIn (v4.1)
-- Generador para X/Twitter (v4.2)
-- Generador de Newsletter (v4.3)
-- Funcionalidades del Bundle Académico (v5.0+)
+- **Transcripción**: el idioma se elige al subir el video (español por defecto). Videos
+  subidos antes de este cambio se transcribieron en inglés y hay que regenerarlos.
+- **Clases muy largas**: si la transcripción supera el presupuesto de contexto, el tutor
+  recibe un esquema por bloques de 5 minutos + una ventana de ±2 min + los pasajes más
+  relevantes a la pregunta. No es el 100% del texto.
+- **Material de cátedra**: la base de conocimiento lee PDF (con texto), Word `.docx` y
+  archivos de texto. PDF escaneados y presentaciones hay que convertirlos.
+  Los recursos de capítulo se almacenan y se descargan, pero la IA **no** los lee.
+- **Pagos**: Stripe está integrado pero no en modo live. El piloto se inscribe a mano.
+- **Email**: no hay emails transaccionales ni invitaciones. Los formularios quedan en la base.
+- **Escala probada**: ninguna. El piloto es la primera carga real.
+
+### 🚧 Próximo
+
+- Piloto en aula real (ver [`docs/piloto-aula.md`](./docs/piloto-aula.md))
+- Funcionalidades del Bundle Académico
 
 > Roadmap histórico y changelog v1–v4 archivados en [`docs/history/`](./docs/history/).
 > A partir de v4.1 el roadmap se discute directamente con el agente de Lovable.
@@ -129,7 +144,7 @@ Cognitio **NO** es y **NO** construirá:
 Frontend: React 18 + TypeScript + Vite + Tailwind CSS
 UI: shadcn/ui + Radix UI + Framer Motion
 Backend: Supabase (PostgreSQL + Auth + Edge Functions + Storage)
-AI: Lovable AI Gateway (Gemini 2.5 Flash)
+AI: Lovable AI Gateway (Gemini 3 Flash)
 Video: Mux
 Pagos: Stripe
 Estado: TanStack Query
@@ -267,7 +282,7 @@ cognitio/
 │   ├── hooks/             # Hooks personalizados
 │   ├── integrations/      # Supabase client/types
 │   ├── lib/               # Utilidades
-│   ├── locales/           # Traducciones (es.json, en.json)
+│   ├── locales/           # Traducciones (es.json — solo español)
 │   ├── test/              # Mocks y utilidades de test
 │   ├── types/             # TypeScript types
 │   └── assets/            # Assets estáticos

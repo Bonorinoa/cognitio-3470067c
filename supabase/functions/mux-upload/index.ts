@@ -71,7 +71,9 @@ serve(async (req) => {
       });
     }
 
-    const { action, chapterId, assetId, uploadId } = await req.json();
+    const { action, chapterId, assetId, uploadId, language } = await req.json();
+    // Spanish is the default spoken language for Cognitio lectures.
+    const subtitleLanguage = language === "en" ? "en" : "es";
     console.log(`Mux upload action: ${action}, chapterId: ${chapterId}, user: ${user.id}`);
 
     // For chapter-bound actions, verify ownership
@@ -96,7 +98,17 @@ serve(async (req) => {
 
     if (action === "create-upload") {
       // Create a direct upload URL
-      console.log("Creating Mux direct upload URL...");
+      console.log(`Creating Mux direct upload URL (subtitles: ${subtitleLanguage})...`);
+
+      // Remember the spoken language on the chapter so the transcript tab and
+      // the AI tutor know what they are reading.
+      if (chapterId) {
+        await supabase
+          .from("chapters")
+          .update({ transcript_language: subtitleLanguage })
+          .eq("id", chapterId);
+      }
+
       
       const uploadResponse = await fetch("https://api.mux.com/video/v1/uploads", {
         method: "POST",
@@ -108,11 +120,14 @@ serve(async (req) => {
           new_asset_settings: {
             playback_policy: ["public"],
             encoding_tier: "baseline",
-            // Request auto-generated English subtitles for transcription
+            // Auto-generated subtitles in the chapter's spoken language.
+            // Spanish is the platform default (Argentina-first).
             input: [{
               generated_subtitles: [{
-                language_code: "en",
-                name: "English (auto-generated)"
+                language_code: subtitleLanguage,
+                name: subtitleLanguage === "es"
+                  ? "Español (generado automáticamente)"
+                  : "English (auto-generated)",
               }]
             }]
           },
