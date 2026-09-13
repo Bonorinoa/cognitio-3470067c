@@ -42,7 +42,6 @@ async function extractPdf(file: File): Promise<string> {
       .trim();
     if (text) pages.push(text);
   }
-  await doc.destroy();
   return pages.join("\n\n");
 }
 
