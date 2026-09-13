@@ -25,13 +25,14 @@ Este documento describe **qué** features de IA están activas en la plataforma,
 - **Qué ve el modelo**:
   - Título y descripción del curso, instructor, categoría.
   - Título y descripción del capítulo actual.
-  - **Transcripción del video**: si dura poco, se envía completa; si es larga, se envía un *outline* (una línea por bloque de 5 min) + una **ventana de ±2 minutos** alrededor del segundo en el que está el estudiante.
+  - **Transcripción del video**: gracias al contexto largo de Gemini 3, casi siempre se envía **completa** (presupuesto ~60.000 tokens, alcanza para clases de varias horas). Si aun así no entra, se envía un *outline* (una línea por bloque de 5 min) + una **ventana de ±2 minutos** alrededor del segundo en el que está el estudiante + los **pasajes más relevantes** a la pregunta, seleccionados por palabras clave.
+  - El idioma de la transcripción se elige al subir el video (español por defecto).
   - El hilo original y hasta 5 respuestas previas.
   - El mensaje del estudiante.
 - **Qué NO ve**: cursos a los que no tiene acceso, datos privados de otros estudiantes, transcripciones de otros capítulos.
 - **Modelo**: configurable por admin en `/admin/ai-tutor` (default: `google/gemini-3-flash-preview`).
 - **Límites**:
-  - 5 mensajes por estudiante **por capítulo** (cap por capítulo).
+  - 5 mensajes por estudiante **por capítulo y por día** (reinicia 6 AM hora Argentina).
   - Tier diario (ver tabla) y por minuto.
 - **Comportamiento**: cita timestamps `[M:SS]` clicables; si falta contexto, pide al estudiante que apunte al momento del video.
 
