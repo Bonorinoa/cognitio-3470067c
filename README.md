@@ -30,10 +30,13 @@ Cognitio no es un marketplace abierto. Es un "Instructor Studio" curado: LMS lig
 
 ---
 
-## 📍 Estado Actual: v4.0.5
+## 📍 Estado Actual: v4.2
 
-**Última Actualización:** 7 de Enero, 2026  
-**Estado:** MVP listo para testers iniciales 🚀
+**Última Actualización:** Septiembre 2026  
+**Estado:** MVP en preparación para el primer piloto en aula real 🚀
+
+> Uso real hasta hoy: ~5 usuarios, 6 cursos, 10 capítulos, 1 transcripción, 9 discusiones,
+> 28 llamadas de IA. Nada fue ejercitado a volumen todavía.
 
 ### ✅ Funcionalidades Completas
 
@@ -52,7 +55,7 @@ Cognitio no es un marketplace abierto. Es un "Instructor Studio" curado: LMS lig
 - Analytics de instructor con métricas reales
 - Servicios de consultoría de instructor
 - Sistema de diseño con tema claro cálido
-- Internacionalización completa (Español/Inglés)
+- Interfaz 100% en español rioplatense (scaffold i18n conservado; no hay contenido en inglés)
 - Auditoría de seguridad completada: 0 vulnerabilidades críticas
 
 #### Experiencia de Aprendizaje (v4.0.2 - v4.0.5) ✅
@@ -60,7 +63,7 @@ Cognitio no es un marketplace abierto. Es un "Instructor Studio" curado: LMS lig
 - **Sistema de Valoraciones**: Calificaciones 1-5 estrellas con reseñas, promedio visible en catálogo
 - **Ordenar por Valoración**: Filtro "Mejor Valorados" en el catálogo de cursos
 - **Discussion Threads**: Q&A por capítulo con upvoting, timestamps, @menciones
-- **AI Tutor (CognitioAI)**: Mentoría socrática con límite de 5 llamadas/día por capítulo
+- **AI Tutor (CognitioAI)**: Mentoría socrática anclada a la transcripción, con citas de timestamp y límite de 5 mensajes por capítulo por día (reinicia 6 AM ART)
 - **Pestaña Recursos**: PDFs, links, notebooks por capítulo con gestión de instructor
 - **Pestaña Transcripción**: Transcripciones automáticas de video con click-to-seek
 - **Reproductor de Video**: Mux-powered con navegación de capítulos y seguimiento de progreso
@@ -83,7 +86,7 @@ Cognitio no es un marketplace abierto. Es un "Instructor Studio" curado: LMS lig
   - Pro: 500 generaciones/día
 - **Opciones de Exportación**: Descargar contenido como Markdown o TXT
 - **Navegación Móvil**: Sidebar y navegación responsiva
-- **Integración Lovable AI**: Gemini 2.5 Flash vía AI Gateway
+- **Integración Lovable AI**: Gemini 3 Flash vía AI Gateway, con medición de tokens, límites diarios y por minuto
 
 ### 🚧 Próximo: v4.1+
 
