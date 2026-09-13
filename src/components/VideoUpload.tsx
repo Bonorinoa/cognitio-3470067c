@@ -21,6 +21,9 @@ const VideoUpload = ({ chapterId, onUploadComplete, currentPlaybackId }: VideoUp
   const [progress, setProgress] = useState(0);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [lastFile, setLastFile] = useState<File | null>(null);
+  // Spoken language of the lecture — drives Mux auto-subtitles and, through
+  // them, everything the AI tutor reads. Spanish by default.
+  const [language, setLanguage] = useState<"es" | "en">("es");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const runUpload = async (file: File) => {
@@ -36,7 +39,7 @@ const VideoUpload = ({ chapterId, onUploadComplete, currentPlaybackId }: VideoUp
 
     try {
       const { data: uploadData, error: uploadError } = await supabase.functions.invoke("mux-upload", {
-        body: { action: "create-upload" },
+        body: { action: "create-upload", chapterId, language },
       });
 
       if (uploadError || !uploadData?.uploadUrl) {
