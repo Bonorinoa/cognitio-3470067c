@@ -108,11 +108,14 @@ serve(async (req) => {
           new_asset_settings: {
             playback_policy: ["public"],
             encoding_tier: "baseline",
-            // Request auto-generated English subtitles for transcription
+            // Auto-generated subtitles in the chapter's spoken language.
+            // Spanish is the platform default (Argentina-first).
             input: [{
               generated_subtitles: [{
-                language_code: "en",
-                name: "English (auto-generated)"
+                language_code: subtitleLanguage,
+                name: subtitleLanguage === "es"
+                  ? "Español (generado automáticamente)"
+                  : "English (auto-generated)",
               }]
             }]
           },
