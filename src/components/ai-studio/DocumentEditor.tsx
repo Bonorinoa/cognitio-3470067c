@@ -25,6 +25,13 @@ import { Loader2, AlertCircle, Upload } from "lucide-react";
 import { estimateTokens, formatTokenCount, TOKEN_LIMITS } from "@/lib/tokenUtils";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/lib/errorUtils";
+import {
+  extractTextFromFile,
+  ACCEPTED_FILE_ACCEPT,
+  MAX_UPLOAD_BYTES,
+  UnsupportedFileError,
+  EmptyDocumentError,
+} from "@/lib/fileTextExtraction";
 import type { 
   DocumentFormData, 
   DocumentType, 
