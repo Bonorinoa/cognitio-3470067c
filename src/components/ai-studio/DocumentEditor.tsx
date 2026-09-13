@@ -102,32 +102,25 @@ export default function DocumentEditor({
     const file = event.target.files?.[0];
     if (!file || !user) return;
 
-    // Validate file size (max 5MB for text files)
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error("File size must be less than 5MB");
-      return;
-    }
-
-    // Only accept text-based files
-    const textExtensions = [".txt", ".md", ".csv", ".json", ".xml", ".html", ".py", ".js", ".ts"];
     const fileName = file.name.toLowerCase();
-    const isTextFile = textExtensions.some(ext => fileName.endsWith(ext));
 
-    if (!isTextFile && file.type !== "text/plain") {
-      toast.error("Please upload a text-based file (.txt, .md, .csv, etc.)");
+    if (file.size > MAX_UPLOAD_BYTES) {
+      toast.error("El archivo supera los 15 MB. Subí una versión más liviana.");
+      if (fileInputRef.current) fileInputRef.current.value = "";
       return;
     }
 
     setIsUploading(true);
     try {
-      // Read file content
-      const content = await file.text();
-      
+      // Reads PDF, Word (.docx) and plain-text formats.
+      const content = await extractTextFromFile(file);
+
       // Auto-detect document type based on file extension
       let detectedType: DocumentType = "other";
-      if (fileName.endsWith(".md")) detectedType = "writing_sample";
+      if (fileName.endsWith(".pdf")) detectedType = "academic_paper";
+      else if (fileName.endsWith(".docx") || fileName.endsWith(".md")) detectedType = "writing_sample";
       else if (fileName.endsWith(".py") || fileName.endsWith(".js") || fileName.endsWith(".ts")) detectedType = "methodology";
-      
+
       // Pre-fill form with file content
       setFormData(prev => ({
         ...prev,
@@ -136,10 +129,14 @@ export default function DocumentEditor({
         document_type: detectedType,
         context_role: getDefaultContextRole(detectedType),
       }));
-      
-      toast.success("File content loaded! Review and save the document.");
+
+      toast.success("Texto cargado. Revisalo y guardá el documento.");
     } catch (err) {
-      toast.error(getErrorMessage(err));
+      if (err instanceof UnsupportedFileError || err instanceof EmptyDocumentError) {
+        toast.error(err.message);
+      } else {
+        toast.error(getErrorMessage(err));
+      }
     } finally {
       setIsUploading(false);
       // Reset file input
