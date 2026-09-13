@@ -7,7 +7,7 @@ y los dos profesores del piloto (~20 estudiantes, ~20 horas de video en español
 
 ## 1. Antes de arrancar
 
-- [ ] Admin otorga el rol **instructor** a cada profesor desde `/admin/usuarios`.
+- [ ] Admin otorga el rol **instructor** a cada profesor desde `/admin`.
 - [ ] Cada profesor completa su perfil (nombre, bio, afiliación) en `/instructor/configuracion`.
 - [ ] Crear el curso con visibilidad **privada** y precio `0`.
 - [ ] Cargar los estudiantes a mano desde la gestión de inscripciones del curso.

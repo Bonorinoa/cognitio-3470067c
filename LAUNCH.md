@@ -9,7 +9,7 @@ This is the working soft-launch checklist for Cognitio (Argentina-first). Update
 - **Student**: catálogo, enrollment via Stripe Checkout (placeholder), `/dashboard`, course player with chapters, transcript, resources, discussions, AI tutor by chapter, rating & reviews.
 - **Instructor** (invite-only, admin-granted): panel, course CRUD, chapter editor, Mux video upload + auto-transcription, services manager, analytics (revenue / students / completion), guide.
 - **AI Studio** (instructors only): knowledge base upload (PDF / .docx / text), blog generator, drafts, style profile, subscription tiers (Académico/Pro; Marketing archived to waitlist) — Stripe wiring exists, billing button currently goes to placeholder.
-- **Admin**: `/admin/users` (asignar/quitar instructor), `/admin/ai-tutor` (modelo, prompt base, temperatura), waitlist review with CSV export.
+- **Admin**: `/admin` (asignar/quitar instructor), `/admin/ai-tutor` (modelo, prompt base, temperatura), waitlist review with CSV export.
 - **Security**: Supabase RLS on every public table, security definer `has_role` / `has_course_access`, no realtime leak on votes, scoped storage policies for resources.
 
 ## Deferred / not yet shipped
@@ -18,7 +18,7 @@ This is the working soft-launch checklist for Cognitio (Argentina-first). Update
 - **Transactional email**: no paid domain yet; do not call `email_domain--*` tools or wire Resend / SES until the business account exists. Contact and waitlist submissions live in the database; admin reviews via `/admin`.
 - **Certificates** of completion — sidebar shows "Pronto".
 - **AI Studio extras**: LinkedIn, X/Twitter, Newsletter generators, Academic bundle (literature review, paper formatter, paper editor) — "Pronto".
-- **Instructor invitations workflow** — for now, admin grants the role manually from `/admin/users`.
+- **Instructor invitations workflow** — for now, admin grants the role manually from `/admin`.
 - **Mobile audit** of instructor + AI Studio dashboards.
 - **Currency**: prices display USD. ARS localization to be revisited together with the payments decision.
 - **Chapter resources are not read by the AI** — only stored and downloadable.
@@ -34,7 +34,7 @@ See [`docs/piloto-aula.md`](./docs/piloto-aula.md) for the operational checklist
 
 ### Granting the instructor role
 
-1. Go to `/admin/users`.
+1. Go to `/admin`.
 2. Search the target user by name or email.
 3. Click **Hacer instructor**. The badge updates in place; the user can sign back in and access `/instructor`.
 4. To revoke, click **Remover instructor** on the same row.
@@ -43,9 +43,7 @@ See [`docs/piloto-aula.md`](./docs/piloto-aula.md) for the operational checklist
 
 ### Reviewing the waitlist
 
-1. The legacy `/admin` page is retired; waitlist surfacing currently lives inside the legacy `WaitlistManagementCard`. Re-expose via a future `/admin/waitlist` route if needed.
-2. Until that route exists, query the table directly via the database tool: `select * from ai_bundle_waitlist` or `select * from institution_inquiries`.
-3. CSV export is built into the card; copy it onto a future admin route before launch.
+1. `/admin` is the user management page (assign/remove instructor); the waitlist with CSV export lives on the same page.
 
 ### Tuning the AI tutor
 
