@@ -3,15 +3,20 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 import {
   buildCors, isOriginAllowed, getUserTier, checkRateLimits,
   rateLimitResponse, logUsage, getPlatformDefaults,
-  wrapUserContent, INJECTION_GUARD_NOTE,
+  wrapUserContent, INJECTION_GUARD_NOTE, getDayStart,
 } from "../_shared/ai.ts";
 
 const FUNCTION_NAME = "ai-discussion-reply";
+// Messages per chapter PER DAY (resets at 06:00 Argentina, same as the other
+// AI quotas). A 3-month course would otherwise burn a lifetime cap in week one.
 const AI_TUTOR_LIMIT = 5;
 
 // Rough token estimate: 4 chars/token.
 const estimateTokens = (s: string) => Math.ceil(s.length / 4);
-const TRANSCRIPT_FULL_BUDGET = 2500; // tokens — below this, send full transcript
+// Gemini 3 Flash has a very large context window, so a full 75-minute lecture
+// (~15k tokens) fits comfortably. Only multi-hour recordings fall back to
+// relevance-based excerpting below.
+const TRANSCRIPT_FULL_BUDGET = 60000;
 
 const formatTime = (s: number) =>
   `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
