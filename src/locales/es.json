@@ -1176,5 +1176,11 @@
       "limitsDesc": "Tenés un número limitado de llamadas de IA por día para garantizar un servicio de calidad para todos los estudiantes.",
       "dismiss": "Entendido"
     }
+  },
+  "videoUpload": {
+    "languageLabel": "Idioma hablado en la clase",
+    "languageEs": "Español",
+    "languageEn": "Inglés",
+    "languageHint": "La transcripción automática se genera en este idioma. Elegilo antes de subir el video."
   }
 }
