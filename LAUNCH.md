@@ -44,8 +44,6 @@ See [`docs/piloto-aula.md`](./docs/piloto-aula.md) for the operational checklist
 ### Reviewing the waitlist
 
 1. `/admin` is the user management page (assign/remove instructor); the waitlist with CSV export lives on the same page.
-2. Until that route exists, query the table directly via the database tool: `select * from ai_bundle_waitlist` or `select * from institution_inquiries`.
-3. CSV export is built into the card; copy it onto a future admin route before launch.
 
 ### Tuning the AI tutor
 
