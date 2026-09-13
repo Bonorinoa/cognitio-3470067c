@@ -71,7 +71,9 @@ serve(async (req) => {
       });
     }
 
-    const { action, chapterId, assetId, uploadId } = await req.json();
+    const { action, chapterId, assetId, uploadId, language } = await req.json();
+    // Spanish is the default spoken language for Cognitio lectures.
+    const subtitleLanguage = language === "en" ? "en" : "es";
     console.log(`Mux upload action: ${action}, chapterId: ${chapterId}, user: ${user.id}`);
 
     // For chapter-bound actions, verify ownership
