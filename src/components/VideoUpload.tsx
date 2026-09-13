@@ -145,6 +145,23 @@ const VideoUpload = ({ chapterId, onUploadComplete, currentPlaybackId }: VideoUp
             </Button>
             <HelpTooltip content={t("help.videoUpload.helpTooltip")} />
           </div>
+          <div className="flex items-center gap-2">
+            <Label htmlFor="lecture-language" className="text-xs text-muted-foreground shrink-0">
+              {t("videoUpload.languageLabel", "Idioma hablado en la clase")}
+            </Label>
+            <Select value={language} onValueChange={(v) => setLanguage(v as "es" | "en")}>
+              <SelectTrigger id="lecture-language" className="h-8 w-40 text-xs">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="es">{t("videoUpload.languageEs", "Español")}</SelectItem>
+                <SelectItem value="en">{t("videoUpload.languageEn", "Inglés")}</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <p className="text-xs text-muted-foreground">
+            {t("videoUpload.languageHint", "La transcripción automática se genera en este idioma. Elegilo antes de subir el video.")}
+          </p>
           <p className="text-xs text-muted-foreground">
             {t("videoUpload.processingHint", "El procesamiento suele tardar 1-2 minutos por cada 10 minutos de video.")}
           </p>
