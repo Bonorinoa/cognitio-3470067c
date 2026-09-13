@@ -82,7 +82,7 @@ Cognitio no es un marketplace abierto. Es un "Instructor Studio" curado: LMS lig
 - **Límites Dinámicos por Tier**: 
   - Free: 10 generaciones/día
   - Instructor perk: 50 generaciones/día
-  - Marketing/Academic: 200 generaciones/día
+  - Academic: 200 generaciones/día
   - Pro: 500 generaciones/día
 - **Opciones de Exportación**: Descargar contenido como Markdown o TXT
 - **Navegación Móvil**: Sidebar y navegación responsiva
@@ -132,7 +132,7 @@ Cognitio **NO** es y **NO** construirá:
 Frontend: React 18 + TypeScript + Vite + Tailwind CSS
 UI: shadcn/ui + Radix UI + Framer Motion
 Backend: Supabase (PostgreSQL + Auth + Edge Functions + Storage)
-AI: Lovable AI Gateway (Gemini 2.5 Flash)
+AI: Lovable AI Gateway (Gemini 3 Flash)
 Video: Mux
 Pagos: Stripe
 Estado: TanStack Query
