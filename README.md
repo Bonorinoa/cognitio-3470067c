@@ -282,7 +282,7 @@ cognitio/
 │   ├── hooks/             # Hooks personalizados
 │   ├── integrations/      # Supabase client/types
 │   ├── lib/               # Utilidades
-│   ├── locales/           # Traducciones (es.json, en.json)
+│   ├── locales/           # Traducciones (es.json — solo español)
 │   ├── test/              # Mocks y utilidades de test
 │   ├── types/             # TypeScript types
 │   └── assets/            # Assets estáticos
