@@ -98,7 +98,17 @@ serve(async (req) => {
 
     if (action === "create-upload") {
       // Create a direct upload URL
-      console.log("Creating Mux direct upload URL...");
+      console.log(`Creating Mux direct upload URL (subtitles: ${subtitleLanguage})...`);
+
+      // Remember the spoken language on the chapter so the transcript tab and
+      // the AI tutor know what they are reading.
+      if (chapterId) {
+        await supabase
+          .from("chapters")
+          .update({ transcript_language: subtitleLanguage })
+          .eq("id", chapterId);
+      }
+
       
       const uploadResponse = await fetch("https://api.mux.com/video/v1/uploads", {
         method: "POST",
