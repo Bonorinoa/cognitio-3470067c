@@ -65,6 +65,6 @@ where title in ('Test Final', 'test 1', 'final test', 'Test privado');
 
 ## Open questions
 
-- Stripe vs Mercado Pago for Argentina.
+- Mercado Pago integration details (checkout, webhooks, ARS pricing) — provider chosen, implementation pending.
 - Keep USD as the display currency, or localize to ARS (`$ 35.000` format).
 - Custom domain (cognitio.com.ar?) and the matching paid email mailbox.
