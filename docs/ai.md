@@ -43,7 +43,7 @@ Este documento describe **qué** features de IA están activas en la plataforma,
 - **Qué ve el modelo**:
   - Perfil del usuario (nombre, headline, bio, afiliación, credenciales).
   - Perfil de estilo (`user_style_profile`): tono, longitud, idioma, instrucciones custom.
-  - Documentos seleccionados de su base de conocimiento (`user_knowledge_base`), envueltos por rol: `STYLE_REF`, `TOPIC_SOURCE`, `BACKGROUND`.
+  - Documentos seleccionados de su base de conocimiento (`user_knowledge_base`), envueltos por rol: `STYLE_REF`, `TOPIC_SOURCE`, `BACKGROUND`. La carga acepta PDF con texto, Word `.docx` y archivos de texto (hasta 15 MB); se guarda el texto extraído, no el archivo.
   - Tópico e instrucciones del usuario.
 - **Modelo**: `google/gemini-3-flash-preview` (default platform).
 - **Salida**: streaming SSE. Los tokens consumidos se registran al final del stream.
