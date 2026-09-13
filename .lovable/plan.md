@@ -1,130 +1,78 @@
+# Aula real: preparar Cognitio para el piloto
 
-# AI Infrastructure Hardening Sprint
+Piloto: 20 estudiantes, 2 profesores, ~20 horas de video en español a lo largo de 3 meses.
 
-Goal: make the AI layer secure, efficient, observable, and properly documented before we design any new AI features. No new user-facing features — only foundation work.
-
-## Scope at a glance
-
-| Area | Status today | After sprint |
-|---|---|---|
-| Default model | `gemini-2.5-flash` hardcoded in 2 of 3 functions | `gemini-3-flash-preview` everywhere, admin-configurable |
-| Transcript context | Full transcript injected every turn | Chunked window around student timestamp + "expand" |
-| Per-minute rate limit | Schema-only, not enforced | Enforced per user, per function |
-| Token metering | Only call count | Tokens in/out persisted per call |
-| Prompt injection | Untreated | Sandboxed user content with delimiters + system guard |
-| Dashboards | None for AI usage | Admin AI overview, instructor "AI in my courses", student "your AI use" |
-| Documentation | None | `docs/ai.md` + in-app explainers |
-| Marketing bundle | Live but waitlisted | Removed from UI; data preserved |
+Todo lo de abajo apunta a que ese piloto funcione de verdad. Nada de funcionalidades nuevas de producto.
 
 ---
 
-## Day 1 — Database & metering foundation
+## 1. Transcripción en español (bloqueante)
 
-**Migration 1: extend `ai_usage_logs`**
-- Add `prompt_tokens int`, `completion_tokens int`, `total_tokens int`, `latency_ms int`, `function_name text`, `course_id uuid null`, `chapter_id uuid null`.
-- Backfill `function_name` from `content_type` where possible.
-- Index on `(user_id, created_at desc)` and `(function_name, created_at desc)`.
+Hoy el sistema le pide a Mux subtítulos automáticos **en inglés**. Una clase en español sale como texto sin sentido, y ese texto es justamente lo que lee el tutor de IA.
 
-**Migration 2: per-minute rate limiting**
-- New table `ai_rate_limit_events(user_id, function_name, created_at)` with TTL-style cleanup (delete > 1h).
-- Or simpler: reuse `ai_usage_logs` with the new `function_name` column and count last 60s. Pick reuse to avoid a second write path.
-- Read `ai_tier_limits.requests_per_minute` (already exists) inside each edge function.
+- Pedir los subtítulos automáticos en español por defecto.
+- Agregar un selector de idioma al subir el video (Español / Inglés), guardado por capítulo, por si en algún momento hay material en inglés.
+- Verificar con una clase real en español de punta a punta: subida, transcripción lista, texto legible, click en un momento del texto que salta al video.
 
-**Migration 3: platform settings keys**
-- Add `ai_default_model`, `ai_default_temperature`, `ai_default_max_tokens` rows so all functions read from one place (tutor settings already exist; generalize the pattern).
+## 2. Clases largas: que el tutor vea la clase entera
 
-## Day 2 — Edge function refactor
+Hoy, pasados unos 20 minutos de habla, el tutor solo recibe un resumen grueso más una ventana de dos minutos alrededor de donde está el estudiante. En clases de 75 minutos eso se nota mucho.
 
-Create `supabase/functions/_shared/ai.ts` with:
-- `getUserTier(supabase, userId)` — single cached lookup.
-- `checkRateLimits(supabase, userId, functionName, tier)` — daily + per-minute, returns 429 with `{ retry_after, used, limit }`.
-- `logUsage(supabase, { userId, functionName, model, promptTokens, completionTokens, latencyMs, courseId?, chapterId? })`.
-- `wrapUserContent(text)` — wraps untrusted text in `<<<USER_CONTENT>>> … <<<END_USER_CONTENT>>>` and prepends a system guard line.
-- `DEFAULT_MODEL = "google/gemini-3-flash-preview"`.
+- Subir fuerte el límite de transcripción completa, aprovechando que Gemini 3 admite muchísimo más contexto del que estamos usando.
+- Mantener el recorte por ventana solo como red de seguridad para clases muy largas, y cuando se active, elegir los fragmentos relevantes según lo que preguntó el estudiante en vez de solo la ventana temporal.
+- Dejar registrado cuántas palabras de transcripción se enviaron, para medirlo en las métricas de uso.
 
-Apply to all three functions:
-- `ai-discussion-reply`
-- `generate-content`
-- `refine-content`
+## 3. Límites del tutor pensados para un cuatrimestre
 
-Switch the default model to `google/gemini-3-flash-preview`. Re-validate request bodies for the new model (drop unsupported params, confirm streaming SSE still works for `generate-content`).
+- Hoy el tope es **5 mensajes por capítulo para siempre**. En un curso de 3 meses eso se agota en la primera semana. Pasarlo a 5 por capítulo **por día**.
+- Sincronizar el modelo del tutor: la base todavía apunta a Gemini 2.5 mientras el resto de la plataforma usa Gemini 3.
+- Revisar los topes por día y por minuto con 20 estudiantes activos al mismo tiempo y ajustarlos si quedan cortos.
 
-## Day 3 — Smart transcript chunking (the moat work)
+## 4. Subir material en cualquier formato
 
-In `ai-discussion-reply`:
-- If `transcript_json` has ≤ ~2500 tokens, send full (current behavior).
-- Otherwise, send a **window of ±2 minutes** around `video_timestamp_seconds`, plus a 200-word "outline" of the whole lecture (auto-extracted: first sentence of every 5-minute block).
-- Add to the system prompt: "If the student references something outside the included window, ask which timestamp they mean."
-- Always have the model **cite timestamps** in its replies (e.g., `[12:30]`) so the UI can render them as clickable jumps. We already have the seek wiring in `ThreadView`.
+Hoy la base de conocimiento solo acepta texto plano (.txt, .md, .csv). Un profesor va a querer subir un PDF o un Word.
 
-This is the single biggest token-cost reduction and the only change here that also improves answer quality.
+- Aceptar PDF, Word y presentaciones, extrayendo el texto al subirlos.
+- Mensajes claros cuando un archivo no se puede leer (por ejemplo, un PDF escaneado sin texto).
+- Mantener el límite de tamaño y avisarlo antes de subir, no después.
 
-## Day 4 — Dashboards
+## 5. Documentación honesta
 
-**Admin (`/admin/ai`)** — new page (extends existing `AdminAITutor`):
-- Today's calls, tokens, estimated cost.
-- Top 10 users by tokens (last 7d).
-- Per-function breakdown (tutor / generate / refine).
-- Recent rate-limit hits.
+- **README**: sacar la afirmación de soporte español/inglés (somos solo español), corregir el modelo de IA, actualizar fecha y estado real.
+- **Checklist de lanzamiento**: sacar referencias a páginas retiradas, reflejar la estructura actual de planes/consultorías y el estado real de pagos y email.
+- **Documento de IA**: alinear límites, modelos y manejo de transcripciones con lo que el código realmente hace.
+- Agregar una **guía del piloto**: cómo se crea el curso privado, cómo se dan de alta los 20 estudiantes, qué puede y qué no puede hacer el tutor.
 
-**Instructor (`/instructor/ai-insights`)** — new page:
-- "AI tutor activity in your courses" — count of tutor sessions per chapter, top questions (titles only, never private content of other instructors).
-- "What students seem confused about" — chapters with highest tutor usage flagged.
-- Read-only; no settings.
+## 6. Limpieza y alta del aula
 
-**Student (`/ai-studio`)** — extend the existing `UsageIndicator`:
-- Click → small popover showing today's calls, tokens used, per-feature breakdown, reset time, tier limits.
-- Same popover surfaces the per-minute limit clearly.
+- Borrar los cursos de prueba que siguen en producción.
+- Dejar listo el curso privado del piloto y verificar el alta manual de estudiantes (no hay pagos ni emails todavía, así que las altas son a mano).
+- Confirmar que un estudiante inscripto ve el curso, el video, la transcripción, los recursos, las discusiones y el tutor; y que uno no inscripto no ve nada.
 
-## Day 5 — Documentation & cleanup
+## 7. Prueba en vivo de todo
 
-**`docs/ai.md`** — one page covering:
-- What each feature does.
-- What data each feature sees (transcript, KB, style profile, course metadata).
-- Which model is used, where the system prompt lives, who can change it.
-- Limits per tier (daily + per-minute).
-- Privacy: nothing leaves Lovable AI Gateway; no training on user data.
+Recorrido completo con navegador automatizado, con capturas, sobre:
 
-**In-app:**
-- Expand `AITutorOnboardingCard` with a short "what the tutor sees" section.
-- Instructor settings page: add a "AI in your courses" info block (links to the doc).
+- Estudiante: catálogo, curso, reproductor, transcripción, recursos, discusión, tutor, progreso, valoración.
+- Profesor: crear curso, subir video, esperar transcripción, cargar recursos, inscribir estudiantes, analíticas, AI Studio.
+- Admin: usuarios y roles, controles del tutor, panel de uso de IA.
+- Revisión de errores de consola y de red en cada paso.
 
-**Marketing bundle de-prioritization:**
-- Remove `MarketingBundleHub` from navigation, AI Studio landing, and pricing.
-- Keep the route + waitlist table for now (data preserved) but mark as `archived` in `ai_bundle_waitlist`.
-- Leave `AcademicBundleHub` untouched — we'll revisit when discussing new features.
+Si querés sumar a Hermes para el recorrido, sirve sobre todo para la parte de contenido real (subir tus clases de verdad y evaluar la calidad de las respuestas del tutor); la parte funcional la cubro yo con el navegador automatizado.
 
-## Out of scope (explicit)
+---
 
-- No new AI features.
-- No changes to Mux transcription pipeline.
-- No Stripe/billing changes (token metering is for forecasting only this sprint).
-- No email infra (still deferred per project memory).
+## Capacidad: no es un problema
 
-## Technical details
+20 horas de video, 20 estudiantes y 2 profesores está muy por debajo de cualquier límite de la infraestructura. El riesgo del piloto es de **calidad** (transcripción en español, contexto de clases largas), no de escala.
 
-- All edge functions keep `verify_jwt = true` where already set; no config.toml changes needed.
-- New `_shared/ai.ts` is imported via relative path from each function (Deno-friendly).
-- Rate limit enforcement: count `ai_usage_logs` rows where `user_id = ? AND function_name = ? AND created_at > now() - interval '1 minute'`. Cheap with the new index.
-- Token counts come from the AI Gateway response `usage` field (OpenAI-compatible).
-- Prompt-injection guard is defense-in-depth, not a silver bullet — combined with the fact that output is never auto-executed, this closes the realistic risk.
-- Dashboards use TanStack Query + Supabase reads; no new edge functions needed for read-only stats.
+---
 
-## Deliverables checklist
+## Detalles técnicos
 
-- [ ] 3 migrations (usage logs columns, settings keys, indexes)
-- [ ] `_shared/ai.ts` helper
-- [ ] 3 edge functions refactored + model bumped
-- [ ] Chunked transcript logic in tutor
-- [ ] Admin AI overview page
-- [ ] Instructor AI insights page
-- [ ] Student usage popover
-- [ ] `docs/ai.md`
-- [ ] Marketing bundle removed from nav
-- [ ] Tests updated (existing tutor test + new rate-limit test)
-
-## Open question before I start
-
-One decision worth confirming:
-
-**Per-minute rate limits — values?** Schema has 3–20 rpm by tier. Suggest: free=3, instructor=10, pro=20. OK, or adjust?
+- `mux-upload`: `generated_subtitles` pasa de `language_code: "en"` a `"es"`, parametrizado desde el cliente; `chapters` gana una columna de idioma de transcripción.
+- `_shared/ai.ts` y `ai-discussion-reply`: subir `TRANSCRIPT_FULL_BUDGET`, selección de fragmentos por relevancia como fallback, registrar tokens de transcripción en `ai_usage_logs`.
+- `ai_tutor_usage`: el conteo pasa a filtrarse por `created_at >= getDayStart()` junto con `chapter_id`.
+- `platform_settings.ai_tutor_model` → `google/gemini-3-flash-preview`.
+- `DocumentEditor`: extracción de texto de PDF/DOCX antes de guardar en `user_knowledge_base`.
+- Borrado de cursos de prueba vía SQL de datos.
