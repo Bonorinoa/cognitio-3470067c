@@ -29,7 +29,7 @@ const founderCards = [
   },
   {
     name: "Augusto Gonzalez Bonorino",
-    bio: "M.Sc. en Economía Cuantitativa (Claremont, CA). Lidera el laboratorio EconLLM en la intersección de NLP y economía del comportamiento. Profesor adjunto en Pomona College.",
+    bio: "M.Sc. en Economía Cuantitativa (Arizona State University). Lidera el laboratorio EconLLM en la intersección de IA, experimentos de campo, y sociedades artificiales.",
     image: bonoConference,
   },
   {
