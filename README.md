@@ -88,12 +88,24 @@ Cognitio no es un marketplace abierto. Es un "Instructor Studio" curado: LMS lig
 - **Navegación Móvil**: Sidebar y navegación responsiva
 - **Integración Lovable AI**: Gemini 3 Flash vía AI Gateway, con medición de tokens, límites diarios y por minuto
 
-### 🚧 Próximo: v4.1+
+### ⚠️ Limitaciones conocidas (honestas)
 
-- Generador de Posts para LinkedIn (v4.1)
-- Generador para X/Twitter (v4.2)
-- Generador de Newsletter (v4.3)
-- Funcionalidades del Bundle Académico (v5.0+)
+- **Transcripción**: el idioma se elige al subir el video (español por defecto). Videos
+  subidos antes de este cambio se transcribieron en inglés y hay que regenerarlos.
+- **Clases muy largas**: si la transcripción supera el presupuesto de contexto, el tutor
+  recibe un esquema por bloques de 5 minutos + una ventana de ±2 min + los pasajes más
+  relevantes a la pregunta. No es el 100% del texto.
+- **Material de cátedra**: la base de conocimiento lee PDF (con texto), Word `.docx` y
+  archivos de texto. PDF escaneados y presentaciones hay que convertirlos.
+  Los recursos de capítulo se almacenan y se descargan, pero la IA **no** los lee.
+- **Pagos**: Stripe está integrado pero no en modo live. El piloto se inscribe a mano.
+- **Email**: no hay emails transaccionales ni invitaciones. Los formularios quedan en la base.
+- **Escala probada**: ninguna. El piloto es la primera carga real.
+
+### 🚧 Próximo
+
+- Piloto en aula real (ver [`docs/piloto-aula.md`](./docs/piloto-aula.md))
+- Funcionalidades del Bundle Académico
 
 > Roadmap histórico y changelog v1–v4 archivados en [`docs/history/`](./docs/history/).
 > A partir de v4.1 el roadmap se discute directamente con el agente de Lovable.
