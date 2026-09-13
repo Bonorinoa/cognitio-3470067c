@@ -197,7 +197,7 @@ export default function DocumentEditor({
                 ref={fileInputRef}
                 type="file"
                 className="hidden"
-                accept=".txt,.md,.csv,.json,.xml,.html,.py,.js,.ts"
+                accept={ACCEPTED_FILE_ACCEPT}
                 onChange={handleFileUpload}
               />
               <Button
@@ -215,12 +215,12 @@ export default function DocumentEditor({
                 {t("knowledgeBase.uploadFile")}
               </Button>
               <span className="text-xs text-muted-foreground">
-                {t("knowledgeBase.uploadHint")}
+                PDF, Word (.docx) o texto · hasta 15 MB
               </span>
             </div>
           )}
           <p className="text-xs text-muted-foreground -mt-2">
-            {t("knowledgeBase.pdfNotSupported")}
+            Los PDF escaneados (sin texto seleccionable) no se pueden leer: exportá el original o pegá el texto a mano. Las presentaciones hay que pasarlas a PDF.
           </p>
 
           {/* Title */}
