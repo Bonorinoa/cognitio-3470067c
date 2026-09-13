@@ -78,7 +78,7 @@ Cognitio no es un marketplace abierto. Es un "Instructor Studio" curado: LMS lig
 - **Editor Rico**: Modos preview/edit con ReactMarkdown
 - **Refinamiento de Contenido**: Edición inline con instrucciones de IA
 - **Historial de Generaciones**: Guardar, cargar y gestionar generaciones (FIFO 10 items)
-- **Sistema de Suscripciones**: Integración Stripe con Academic ($19/mes) y Pro ($29/mes). Stripe **no está en modo live** todavía.
+- **Sistema de Suscripciones**: Integración Stripe con Academic ($19/mes) y Pro ($29/mes) — código dormido; los cobros se activarán con Mercado Pago.
 - **Límites Dinámicos por Tier**: 
   - Free: 10 generaciones/día
   - Instructor perk: 50 generaciones/día
