@@ -60,6 +60,7 @@ export default function PricingSection() {
         t("aiStudio.proFeature3", "Todas las herramientas"),
       ],
       highlighted: true,
+      comingSoon: true,
     },
   ];
 

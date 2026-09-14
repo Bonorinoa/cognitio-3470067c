@@ -128,7 +128,7 @@ const Navbar = () => {
             </DropdownMenu>
           ) : (
             <Link to="/auth">
-              <Button size="sm" className="font-medium">
+              <Button className="font-medium">
                 {t("nav.login")}
               </Button>
             </Link>

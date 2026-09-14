@@ -74,7 +74,7 @@ const Index = () => {
         </div>
 
         <div className="container relative z-10 mx-auto px-4 py-20 text-center max-w-4xl">
-          <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/5 px-4 py-1.5 mb-6 text-sm text-primary">
+          <div className="inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/10 px-4 py-1.5 mb-6 text-sm font-medium text-primary">
             <Sparkles className="h-3.5 w-3.5" />
             Ed-tech con IA, hecha para instructores
           </div>
@@ -86,9 +86,9 @@ const Index = () => {
             Gratis para instructores y estudiantes — sostenida por las instituciones que apuestan por mejor educación.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link to="/instructors">
+            <Link to="/courses">
               <Button size="lg" className="min-w-[200px]">
-                Explorar la plataforma
+                Ver los cursos
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
@@ -121,9 +121,9 @@ const Index = () => {
                 <BookOpen className="h-6 w-6 text-primary" />
               </div>
               <h3 className="text-lg font-semibold text-foreground mb-2">
-                Plataforma LMS gratuita
+                Plataforma de cursos gratuita
               </h3>
-              <p className="text-sm text-muted-foreground mb-4">
+              <p className="text-base text-muted-foreground mb-4">
                 Cursos, videos con transcripción automática, tutor IA por capítulo, discusiones.
                 Sin costo para instructores invitados y sus estudiantes.
               </p>
@@ -140,9 +140,9 @@ const Index = () => {
                 <Sparkles className="h-6 w-6 text-primary" />
               </div>
               <h3 className="text-lg font-semibold text-foreground mb-2">
-                AI Studio (add-ons)
+                AI Studio (herramientas opcionales)
               </h3>
-              <p className="text-sm text-muted-foreground mb-4">
+              <p className="text-base text-muted-foreground mb-4">
                 Herramientas opcionales para publicar blogs, newsletters y contenido académico
                 con la voz de cada instructor.
               </p>
@@ -161,9 +161,9 @@ const Index = () => {
               <h3 className="text-lg font-semibold text-foreground mb-2">
                 Servicios y soluciones a medida
               </h3>
-              <p className="text-sm text-muted-foreground mb-4">
-                Add-ons, consultorías 1:1 y proyectos institucionales — la mezcla que sostiene
-                el acceso gratuito al núcleo.
+              <p className="text-base text-muted-foreground mb-4">
+                Herramientas opcionales, consultorías 1 a 1 y proyectos institucionales — la mezcla
+                que sostiene el acceso gratuito a lo esencial.
               </p>
               <span className="text-sm text-primary font-medium inline-flex items-center gap-1 group-hover:gap-2 transition-all">
                 Ver servicios <ArrowRight className="h-3.5 w-3.5" />
