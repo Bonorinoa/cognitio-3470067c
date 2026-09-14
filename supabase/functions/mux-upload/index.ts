@@ -123,7 +123,7 @@ serve(async (req) => {
 
       // Remember the spoken language on the chapter so the transcript tab and
       // the AI tutor know what they are reading.
-      if (chapterId) {
+      if (isPersistedChapter) {
         await supabase
           .from("chapters")
           .update({ transcript_language: subtitleLanguage })
