@@ -225,7 +225,7 @@ serve(async (req) => {
       const duration = asset.duration;
 
       // Update chapter with asset info if chapterId provided
-      if (chapterId && playbackId) {
+      if (isPersistedChapter && playbackId) {
         console.log("Updating chapter with playback info:", chapterId);
         const { error: updateError } = await supabase
           .from("chapters")
