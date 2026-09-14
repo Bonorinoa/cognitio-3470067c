@@ -118,7 +118,7 @@ export default function ChapterResourceManager({
         >
           <span className="flex items-center gap-2">
             <FolderOpen className="h-3.5 w-3.5" />
-            <span className="text-xs">Resources ({resources.length})</span>
+            <span className="text-xs">Recursos ({resources.length})</span>
             <HelpTooltip content={t("guide.sections.resources.helpTooltip")} />
           </span>
           <ChevronDown className={`h-3.5 w-3.5 transition-transform ${isOpen ? "rotate-180" : ""}`} />
