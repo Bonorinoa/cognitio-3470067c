@@ -12,6 +12,10 @@ y los dos profesores del piloto (~20 estudiantes, ~20 horas de video en español
 - [ ] Crear el curso con visibilidad **privada** y precio `0`.
 - [ ] Cargar los estudiantes a mano desde la gestión de inscripciones del curso.
 
+> **Sin cobros online**: todos los usuarios del piloto son privados, así que no hay
+> procesamiento de pagos. Cuando se activen, el proveedor elegido es **Mercado Pago**
+> (Stripe no opera en Argentina).
+
 ## 2. Subir una clase
 
 1. Crear el capítulo y subir el video.

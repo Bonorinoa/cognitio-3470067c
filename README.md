@@ -25,7 +25,7 @@ Cognitio no es un marketplace abierto. Es un "Instructor Studio" curado: LMS lig
 
 ### Tipos de Cursos
 
-- **Públicos**: Visibles en catálogo, comprables vía Stripe
+- **Públicos**: Visibles en catálogo; el cobro online está pendiente (proveedor elegido: Mercado Pago)
 - **Privados**: Solo para cohortes específicas (ej: estudiantes universitarios), inscripción manual
 
 ---
@@ -46,7 +46,7 @@ Cognitio no es un marketplace abierto. Es un "Instructor Studio" curado: LMS lig
 - Sistema de roles (admin/instructor/student)
 - Creación y edición de cursos con carga de video Mux
 - Gestión de capítulos con ordenamiento y vista previa gratuita
-- Integración de pagos con Stripe
+- Integración de pagos con Stripe (código dormido: pagos diferidos; el proveedor elegido es Mercado Pago)
 - Navegación y filtrado de cursos (categoría, búsqueda, ordenamiento, destacados, valoración)
 - Dashboards de estudiantes e instructores
 - Sistema de visibilidad de cursos (public/private)
@@ -78,7 +78,7 @@ Cognitio no es un marketplace abierto. Es un "Instructor Studio" curado: LMS lig
 - **Editor Rico**: Modos preview/edit con ReactMarkdown
 - **Refinamiento de Contenido**: Edición inline con instrucciones de IA
 - **Historial de Generaciones**: Guardar, cargar y gestionar generaciones (FIFO 10 items)
-- **Sistema de Suscripciones**: Integración Stripe con Academic ($19/mes) y Pro ($29/mes). Stripe **no está en modo live** todavía.
+- **Sistema de Suscripciones**: Integración Stripe con Academic ($19/mes) y Pro ($29/mes) — código dormido; los cobros se activarán con Mercado Pago.
 - **Límites Dinámicos por Tier**: 
   - Free: 10 generaciones/día
   - Instructor perk: 50 generaciones/día
@@ -98,7 +98,7 @@ Cognitio no es un marketplace abierto. Es un "Instructor Studio" curado: LMS lig
 - **Material de cátedra**: la base de conocimiento lee PDF (con texto), Word `.docx` y
   archivos de texto. PDF escaneados y presentaciones hay que convertirlos.
   Los recursos de capítulo se almacenan y se descargan, pero la IA **no** los lee.
-- **Pagos**: Stripe está integrado pero no en modo live. El piloto se inscribe a mano.
+- **Pagos**: sin procesamiento de pagos — todos los usuarios son privados y se inscriben a mano. Cuando se activen, el proveedor es **Mercado Pago** (Stripe no opera en Argentina); el código Stripe queda dormido.
 - **Email**: no hay emails transaccionales ni invitaciones. Los formularios quedan en la base.
 - **Escala probada**: ninguna. El piloto es la primera carga real.
 
@@ -146,7 +146,7 @@ UI: shadcn/ui + Radix UI + Framer Motion
 Backend: Supabase (PostgreSQL + Auth + Edge Functions + Storage)
 AI: Lovable AI Gateway (Gemini 3 Flash)
 Video: Mux
-Pagos: Stripe
+Pagos: Mercado Pago (elegido, pendiente de implementación; código Stripe dormido)
 Estado: TanStack Query
 i18n: i18next
 Testing: Vitest + React Testing Library + Playwright + MSW
