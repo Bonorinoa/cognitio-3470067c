@@ -11,7 +11,7 @@ import { HelpTooltip } from "@/components/ui/help-tooltip";
 
 interface VideoUploadProps {
   chapterId?: string;
-  onUploadComplete: (playbackId: string, assetId: string) => void;
+  onUploadComplete: (playbackId: string, assetId: string, language?: "es" | "en") => void;
   currentPlaybackId?: string;
 }
 
@@ -100,7 +100,7 @@ const VideoUpload = ({ chapterId, onUploadComplete, currentPlaybackId }: VideoUp
       if (!playbackId) throw new Error(t("videoUpload.playbackTimeout", "Tiempo agotado esperando playback ID"));
 
       setStatus("ready");
-      onUploadComplete(playbackId, assetId);
+      onUploadComplete(playbackId, assetId, language);
       toast.success(t("videoUpload.success", "Video subido correctamente"));
     } catch (error) {
       console.error("Upload error:", error);
