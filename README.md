@@ -146,7 +146,7 @@ UI: shadcn/ui + Radix UI + Framer Motion
 Backend: Supabase (PostgreSQL + Auth + Edge Functions + Storage)
 AI: Lovable AI Gateway (Gemini 3 Flash)
 Video: Mux
-Pagos: Stripe
+Pagos: Mercado Pago (elegido, pendiente de implementación; código Stripe dormido)
 Estado: TanStack Query
 i18n: i18next
 Testing: Vitest + React Testing Library + Playwright + MSW
