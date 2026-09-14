@@ -15,6 +15,7 @@ export interface NewChapter {
   isFreePreview: boolean;
   muxPlaybackId?: string;
   muxAssetId?: string;
+  language?: "es" | "en";
 }
 
 interface CreateCourseChaptersListProps {
@@ -22,7 +23,7 @@ interface CreateCourseChaptersListProps {
   onAdd: () => void;
   onRemove: (id: string) => void;
   onUpdate: (id: string, field: keyof NewChapter, value: string | boolean) => void;
-  onVideoUploaded: (id: string, playbackId: string, assetId: string) => void;
+  onVideoUploaded: (id: string, playbackId: string, assetId: string, language?: "es" | "en") => void;
 }
 
 export function CreateCourseChaptersList({
@@ -84,8 +85,8 @@ export function CreateCourseChaptersList({
               <VideoUpload
                 chapterId={chapter.id}
                 currentPlaybackId={chapter.muxPlaybackId}
-                onUploadComplete={(playbackId, assetId) =>
-                  onVideoUploaded(chapter.id, playbackId, assetId)
+                onUploadComplete={(playbackId, assetId, language) =>
+                  onVideoUploaded(chapter.id, playbackId, assetId, language)
                 }
               />
               <ChapterResourceManager

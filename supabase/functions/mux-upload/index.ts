@@ -76,8 +76,29 @@ serve(async (req) => {
     const subtitleLanguage = language === "en" ? "en" : "es";
     console.log(`Mux upload action: ${action}, chapterId: ${chapterId}, user: ${user.id}`);
 
+    // Chapters that do not exist yet (course creation wizard) send a temporary
+    // client-side id. Those uploads are only bound to a chapter after the course
+    // is saved, so we authorize them by instructor role instead of ownership.
+    const isPersistedChapter =
+      typeof chapterId === "string" &&
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(chapterId);
+
+    if (chapterId && !isPersistedChapter) {
+      const { data: roles } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", user.id);
+      const allowed = (roles ?? []).some((r) => r.role === "instructor" || r.role === "admin");
+      if (!allowed) {
+        return new Response(JSON.stringify({ error: "Forbidden" }), {
+          status: 403,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+    }
+
     // For chapter-bound actions, verify ownership
-    if (chapterId) {
+    if (isPersistedChapter) {
       const { data: chapterRow, error: chapterErr } = await supabase
         .from("chapters")
         .select("id, courses!inner(instructor_id)")
@@ -102,7 +123,7 @@ serve(async (req) => {
 
       // Remember the spoken language on the chapter so the transcript tab and
       // the AI tutor know what they are reading.
-      if (chapterId) {
+      if (isPersistedChapter) {
         await supabase
           .from("chapters")
           .update({ transcript_language: subtitleLanguage })
@@ -204,7 +225,7 @@ serve(async (req) => {
       const duration = asset.duration;
 
       // Update chapter with asset info if chapterId provided
-      if (chapterId && playbackId) {
+      if (isPersistedChapter && playbackId) {
         console.log("Updating chapter with playback info:", chapterId);
         const { error: updateError } = await supabase
           .from("chapters")

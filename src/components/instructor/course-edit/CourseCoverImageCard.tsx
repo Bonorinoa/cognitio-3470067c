@@ -13,8 +13,8 @@ export function CourseCoverImageCard({
   imagePreview,
   isUploadingImage,
   onImageChange,
-  description = "Update your course thumbnail",
-  title = "Cover Image",
+  description = "Actualizá la portada de tu curso",
+  title = "Imagen de Portada",
 }: CourseCoverImageCardProps) {
   return (
     <Card className="border-border bg-card">
@@ -38,22 +38,22 @@ export function CourseCoverImageCard({
             <div className="space-y-3">
               <img
                 src={imagePreview}
-                alt="Course preview"
+                alt="Vista previa del curso"
                 className="mx-auto h-32 w-auto rounded-lg object-cover"
               />
-              <p className="text-sm text-muted-foreground">Click to change image</p>
+              <p className="text-sm text-muted-foreground">Hacé clic para cambiar la imagen</p>
             </div>
           ) : (
             <div className="space-y-2">
               <ImageIcon className="mx-auto h-8 w-8 text-muted-foreground" />
-              <p className="text-sm text-muted-foreground">Click to upload image</p>
+              <p className="text-sm text-muted-foreground">Hacé clic para subir una imagen</p>
             </div>
           )}
         </label>
         {isUploadingImage && (
           <p className="text-sm text-muted-foreground mt-2 text-center">
             <Loader2 className="inline h-4 w-4 animate-spin mr-1" />
-            Uploading...
+            Subiendo...
           </p>
         )}
       </CardContent>

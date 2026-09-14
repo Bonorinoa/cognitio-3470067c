@@ -47,10 +47,17 @@ const CreateCourse = () => {
   const updateChapter = (id: string, field: keyof NewChapter, value: string | boolean) =>
     setChapters(chapters.map((c) => (c.id === id ? { ...c, [field]: value } : c)));
 
-  const handleVideoUpload = (chapterId: string, playbackId: string, assetId: string) =>
+  const handleVideoUpload = (
+    chapterId: string,
+    playbackId: string,
+    assetId: string,
+    language?: "es" | "en"
+  ) =>
     setChapters(
       chapters.map((c) =>
-        c.id === chapterId ? { ...c, muxPlaybackId: playbackId, muxAssetId: assetId } : c
+        c.id === chapterId
+          ? { ...c, muxPlaybackId: playbackId, muxAssetId: assetId, language: language ?? "es" }
+          : c
       )
     );
 
@@ -100,6 +107,7 @@ const CreateCourse = () => {
         mux_asset_id: chapter.muxAssetId || null,
         is_free_preview: chapter.isFreePreview,
         position: index,
+        transcript_language: chapter.language ?? "es",
         upload_status: chapter.muxPlaybackId ? "ready" : "pending",
       }));
 
