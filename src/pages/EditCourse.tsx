@@ -273,16 +273,16 @@ const EditCourse = () => {
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="sm" onClick={() => navigate("/instructor/courses")}>
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Back
+            Volver
           </Button>
           <div>
             <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-bold text-foreground">Edit Course</h1>
+              <h1 className="text-2xl font-bold text-foreground">Editar Curso</h1>
               <Badge variant={isPublished ? "default" : "secondary"}>
-                {isPublished ? "Published" : "Draft"}
+                {isPublished ? "Publicado" : "Borrador"}
               </Badge>
             </div>
-            <p className="text-muted-foreground">Update your course details and content</p>
+            <p className="text-muted-foreground">Actualizá los datos y el contenido de tu curso</p>
           </div>
         </div>
         <div className="flex gap-3">
@@ -290,18 +290,18 @@ const EditCourse = () => {
             {isPublished ? (
               <>
                 <EyeOff className="mr-2 h-4 w-4" />
-                Unpublish
+                Despublicar
               </>
             ) : (
               <>
                 <Eye className="mr-2 h-4 w-4" />
-                Publish
+                Publicar
               </>
             )}
           </Button>
           <Button onClick={handleSave} disabled={isSaving}>
             {isSaving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
-            Save Changes
+            Guardar Cambios
           </Button>
         </div>
       </div>

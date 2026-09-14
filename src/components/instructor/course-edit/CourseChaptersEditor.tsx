@@ -46,21 +46,21 @@ export function CourseChaptersEditor({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div>
-              <CardTitle className="text-foreground">Course Chapters</CardTitle>
-              <CardDescription>Manage your course content</CardDescription>
+              <CardTitle className="text-foreground">Capítulos del Curso</CardTitle>
+              <CardDescription>Gestioná el contenido de tu curso</CardDescription>
             </div>
             <HelpTooltip content={t("help.courseEditing.chaptersDesc")} />
           </div>
           <Button variant="outline" size="sm" onClick={onAdd}>
             <Plus className="mr-2 h-4 w-4" />
-            Add Chapter
+            Agregar Capítulo
           </Button>
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
         {chapters.length === 0 ? (
           <div className="text-center py-8 text-muted-foreground">
-            No chapters yet. Add your first chapter above.
+            Todavía no hay capítulos. Agregá el primero con el botón de arriba.
           </div>
         ) : (
           chapters.map((chapter, index) => (
@@ -75,16 +75,16 @@ export function CourseChaptersEditor({
               <div className="flex-1 min-w-0 space-y-3">
                 <div className="flex items-center gap-3">
                   <span className="text-sm font-medium text-muted-foreground">
-                    Chapter {index + 1}
+                    Capítulo {index + 1}
                   </span>
                   {chapter.isNew && (
                     <Badge variant="secondary" className="text-xs">
-                      New
+                      Nuevo
                     </Badge>
                   )}
                   <div className="flex items-center gap-2 ml-auto">
                     <Label htmlFor={`preview-${chapter.id}`} className="text-xs text-muted-foreground">
-                      Free Preview
+                      Vista Previa Gratis
                     </Label>
                     <HelpTooltip content={t("help.courseEditing.freePreviewDesc")} />
                     <Switch
@@ -95,7 +95,7 @@ export function CourseChaptersEditor({
                   </div>
                 </div>
                 <Input
-                  placeholder="Chapter title"
+                  placeholder="Título del capítulo"
                   value={chapter.title}
                   onChange={(e) => onUpdate(chapter.id, "title", e.target.value)}
                   className="bg-background border-border"
@@ -111,7 +111,7 @@ export function CourseChaptersEditor({
                 </Suspense>
                 <ChapterResourceManager
                   chapterId={chapter.id}
-                  chapterTitle={chapter.title || `Chapter ${index + 1}`}
+                  chapterTitle={chapter.title || `Capítulo ${index + 1}`}
                   isNewChapter={chapter.isNew}
                 />
               </div>
