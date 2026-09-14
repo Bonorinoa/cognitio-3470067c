@@ -44,10 +44,10 @@ const FoundersStorySection = ({ cards }: FoundersStorySectionProps) => {
                 />
               </div>
               <div className="p-6">
-                <p className="text-primary-foreground/90 leading-relaxed text-base mb-4">
+                <p className="text-primary-foreground/90 leading-loose text-base mb-4">
                   {card.bio}
                 </p>
-                <h3 className="text-sm font-bold text-primary-foreground">
+                <h3 className="text-lg font-bold text-primary-foreground">
                   {card.name}
                 </h3>
               </div>
@@ -119,10 +119,10 @@ const StickyCard = ({ card, index, totalCards, scrollYProgress }: StickyCardProp
         <div className="flex flex-row h-[380px]">
           {/* Left side - Bio (60%) */}
           <div className="w-3/5 p-8 flex flex-col justify-between overflow-y-auto">
-            <p className="text-primary-foreground/90 leading-relaxed text-base">
+            <p className="text-primary-foreground/90 leading-loose text-base">
               {card.bio}
             </p>
-            <h3 className="text-sm font-bold text-primary-foreground mt-4">
+            <h3 className="text-lg font-bold text-primary-foreground mt-4">
               {card.name}
             </h3>
           </div>
