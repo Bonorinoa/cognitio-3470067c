@@ -144,24 +144,34 @@ const CoursePage = () => {
     enabled: !!id,
   });
 
-  // Check if user has purchased
+  // Check if user has purchased OR was manually enrolled (private courses)
   const { data: hasPurchased, refetch: refetchPurchase } = useQuery({
     queryKey: ["purchase", id, user?.id],
     queryFn: async () => {
       if (!user) return false;
-      
-      const { data, error } = await supabase
-        .from("purchases")
-        .select("id")
-        .eq("user_id", user.id)
-        .eq("course_id", id)
-        .maybeSingle();
 
-      if (error) throw error;
-      return !!data;
+      const [purchaseRes, membershipRes] = await Promise.all([
+        supabase
+          .from("purchases")
+          .select("id")
+          .eq("user_id", user.id)
+          .eq("course_id", id)
+          .maybeSingle(),
+        supabase
+          .from("course_memberships")
+          .select("id")
+          .eq("user_id", user.id)
+          .eq("course_id", id)
+          .maybeSingle(),
+      ]);
+
+      if (purchaseRes.error) throw purchaseRes.error;
+      if (membershipRes.error) throw membershipRes.error;
+      return !!purchaseRes.data || !!membershipRes.data;
     },
     enabled: !!id && !!user,
   });
+
 
   // Fetch user progress for this course
   const { data: userProgress, refetch: refetchProgress } = useQuery({
