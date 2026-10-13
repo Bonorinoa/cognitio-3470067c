@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@14.21.0?target=deno";
 import { createClient } from "npm:@supabase/supabase-js@2";
+import { getOrCreateStripeCustomerId } from "../_shared/stripeCustomer.ts";
 
 // CORS origin patterns - allows all Lovable preview/production domains
 const allowedOriginPatterns = [
@@ -82,29 +83,39 @@ serve(async (req) => {
     const { courseId } = await req.json();
     logStep("Request parsed", { courseId });
 
-    if (!courseId) throw new Error("Course ID is required");
+    if (typeof courseId !== "string" || !courseId) {
+      return new Response(JSON.stringify({ error: "Course ID is required" }), {
+        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
 
     // Fetch course details from database
     const { data: course, error: courseError } = await supabaseAdmin
       .from("courses")
-      .select("id, title, description, price, stripe_product_id, stripe_price_id")
+      .select("id, title, description, price, stripe_product_id, stripe_price_id, is_published, visibility")
       .eq("id", courseId)
-      .single();
+      .maybeSingle();
 
     if (courseError || !course) {
-      throw new Error(`Course not found: ${courseError?.message || "Unknown error"}`);
+      return new Response(JSON.stringify({ error: "Course not found" }), {
+        status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
-    logStep("Course fetched", { title: course.title, price: course.price });
+
+    const price = Number(course.price);
+    if (course.is_published !== true || course.visibility !== "public" || !Number.isFinite(price) || price <= 0) {
+      logStep("Refused checkout: course not purchasable", { courseId });
+      return new Response(JSON.stringify({ error: "Course is not available for purchase" }), {
+        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    logStep("Course fetched", { title: course.title, price });
 
     const stripe = new Stripe(stripeKey, { apiVersion: "2025-08-27.basil" });
 
-    // Check if customer exists in Stripe
-    const customers = await stripe.customers.list({ email: user.email, limit: 1 });
-    let customerId;
-    if (customers.data.length > 0) {
-      customerId = customers.data[0].id;
-      logStep("Found existing Stripe customer", { customerId });
-    }
+    // Resolve Stripe customer by stored id / metadata.user_id (never by email)
+    const customerId = await getOrCreateStripeCustomerId(stripe, supabaseAdmin, user.id, user.email);
+    logStep("Resolved Stripe customer", { customerId });
 
     const origin = req.headers.get("origin") || "https://preview--hlnvfkturjctxbiikfoe.lovable.app";
     

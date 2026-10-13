@@ -106,6 +106,7 @@ const ChapterView = ({
             <VideoPlayer
               ref={videoRef}
               playbackId={currentChapter?.mux_playback_id || undefined}
+              chapterId={currentChapter?.id}
               poster={course.image_url || "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1200"}
               title={currentChapter?.title}
               onTimeUpdate={handleTimeUpdate}

@@ -1,5 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
+import Stripe from "https://esm.sh/stripe@14.21.0?target=deno";
+import { findStripeCustomerId } from "../_shared/stripeCustomer.ts";
 
 // CORS origin patterns - allows all Lovable preview/production domains
 const allowedOriginPatterns = [
@@ -167,7 +169,24 @@ const handler = async (req: Request): Promise<Response> => {
       console.log("Avatar files deleted");
     }
 
-    // 6. Delete the auth user (this should be last)
+    // 6. Delete the user's Stripe customer (looked up by stored id / metadata.user_id, never email)
+    const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
+    if (stripeKey) {
+      try {
+        const stripe = new Stripe(stripeKey, { apiVersion: "2025-08-27.basil" });
+        const customerId = await findStripeCustomerId(stripe, supabaseAdmin, userId);
+        if (customerId) {
+          await stripe.customers.del(customerId);
+          console.log("Stripe customer deleted");
+        }
+        await supabaseAdmin.from("stripe_customers").delete().eq("user_id", userId);
+      } catch (stripeErr) {
+        console.error("Error deleting Stripe customer:", stripeErr instanceof Error ? stripeErr.message : stripeErr);
+        throw new Error("Failed to delete billing data");
+      }
+    }
+
+    // 7. Delete the auth user (this should be last)
     const { error: deleteUserError } = await supabaseAdmin.auth.admin.deleteUser(userId);
 
     if (deleteUserError) {

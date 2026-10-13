@@ -92,6 +92,15 @@ serve(async (req) => {
           const amountTotal = session.amount_total;
           logStep("Course purchase detected", { userId, courseId, amountTotal });
 
+          // Never grant access on an invalid or zero price / unpaid session.
+          if (typeof amountTotal !== "number" || !Number.isFinite(amountTotal) || amountTotal <= 0 || session.payment_status !== "paid") {
+            logStep("Refusing to record purchase: invalid amount or unpaid", { sessionId: session.id });
+            return new Response(JSON.stringify({ received: true, status: "ignored_invalid_amount" }), {
+              headers: { "Content-Type": "application/json" },
+              status: 200,
+            });
+          }
+
           // Check if purchase already exists (idempotency)
           const { data: existingPurchase } = await supabaseAdmin
             .from("purchases")
