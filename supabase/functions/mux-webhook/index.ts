@@ -149,7 +149,7 @@ serve(async (req) => {
     const { type, data } = body;
     
     console.log(`Mux webhook received: ${type}`);
-    console.log("Event data:", JSON.stringify(data, null, 2));
+    console.log("Event asset/track id:", data?.id ?? null);
 
     // Initialize Supabase client
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
@@ -208,7 +208,7 @@ serve(async (req) => {
           console.error("Failed to fetch track details:", await trackResponse.text());
         } else {
           const trackData = await trackResponse.json();
-          console.log("Track details:", JSON.stringify(trackData, null, 2));
+          console.log("Track details received, status:", trackData?.data?.status ?? null);
         }
         
         // For auto-generated subtitles, we can get the VTT from the playback URL
