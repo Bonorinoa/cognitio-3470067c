@@ -76,25 +76,15 @@ serve(async (req) => {
     const subtitleLanguage = language === "en" ? "en" : "es";
     console.log(`Mux upload action: ${action}, chapterId: ${chapterId}, user: ${user.id}`);
 
-    // Chapters that do not exist yet (course creation wizard) send a temporary
-    // client-side id. Those uploads are only bound to a chapter after the course
-    // is saved, so we authorize them by instructor role instead of ownership.
+    // Every action requires an existing chapter that the caller owns as instructor.
     const isPersistedChapter =
       typeof chapterId === "string" &&
       /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(chapterId);
-
-    if (chapterId && !isPersistedChapter) {
-      const { data: roles } = await supabase
-        .from("user_roles")
-        .select("role")
-        .eq("user_id", user.id);
-      const allowed = (roles ?? []).some((r) => r.role === "instructor" || r.role === "admin");
-      if (!allowed) {
-        return new Response(JSON.stringify({ error: "Forbidden" }), {
-          status: 403,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
+    if (!isPersistedChapter) {
+      return new Response(JSON.stringify({ error: "A saved chapterId is required" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
     // For chapter-bound actions, verify ownership
@@ -139,7 +129,7 @@ serve(async (req) => {
         },
         body: JSON.stringify({
           new_asset_settings: {
-            playback_policy: ["public"],
+            playback_policy: ["signed"],
             encoding_tier: "baseline",
             // Auto-generated subtitles in the chapter's spoken language.
             // Spanish is the platform default (Argentina-first).
@@ -152,7 +142,7 @@ serve(async (req) => {
               }]
             }]
           },
-          cors_origin: "*",
+          cors_origin: origin && isOriginAllowed(origin) ? origin : "https://cognitio.lovable.app",
         }),
       });
 
