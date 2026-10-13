@@ -764,6 +764,24 @@ export type Database = {
           },
         ]
       }
+      mux_signing_keys: {
+        Row: {
+          created_at: string
+          id: string
+          private_key: string
+        }
+        Insert: {
+          created_at?: string
+          id: string
+          private_key: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          private_key?: string
+        }
+        Relationships: []
+      }
       platform_settings: {
         Row: {
           key: string
@@ -870,6 +888,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      stripe_customers: {
+        Row: {
+          created_at: string
+          stripe_customer_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          stripe_customer_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          stripe_customer_id?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       user_knowledge_base: {
         Row: {
